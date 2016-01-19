@@ -648,7 +648,12 @@ int main(int argc, char *argv[])
     //image = esLoadTGA("jan.tga", &width, &height);
     gettimeofday ( &t1 , &tz );
 
-    image = esLoadJPEG("plane.jpg", 1920, 1080, &width, &height);
+    if (argc < 2) {
+        printf("Usage: %s <filename>\n", argv[0]);
+        return -1;
+    }
+    
+    image = esLoadJPEG(argv[1], 1920, 1080, &width, &height);
     if (image == NULL) {
 	fprintf(stderr, "No such image\n");
 	exit(1);

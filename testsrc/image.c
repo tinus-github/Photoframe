@@ -208,7 +208,7 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 			inputptr += 3;
 		}
 		if (current_x_out < outputwidth) {
-			bzero(outputptr, 3 * outputwidth - current_x_out);
+			bzero(outputptr, 3 * (outputwidth - current_x_out));
 		}
 		data->scalerest -= 1.0f;
 		data->current_y++;

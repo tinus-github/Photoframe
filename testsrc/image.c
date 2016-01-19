@@ -196,7 +196,7 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		current_x_out = 0;
 		for (current_x_in = 0; current_x_in < inputwidth; current_x_in++) {
 			x_scalerest += outputwidth;
-			while (x_scalerest > inputwidth) {
+			while (x_scalerest >= inputwidth) {
 				outputptr[0] = inputptr[0];
 				outputptr[1] = inputptr[1];
 				outputptr[2] = inputptr[2];

@@ -11,6 +11,11 @@
 		0D69BD701C4EA0E300A10282 /* jan.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = jan.tga; sourceTree = "<group>"; };
 		0D69BD711C4EA0E300A10282 /* plane.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = plane.jpg; sourceTree = "<group>"; };
 		0D69BD721C4EA0E300A10282 /* trein.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = trein.jpg; sourceTree = "<group>"; };
+		0D69BD741C4EA17900A10282 /* decodejpeg2rgb.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = decodejpeg2rgb.c; sourceTree = "<group>"; };
+		0D69BD751C4EA17900A10282 /* image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = image.c; sourceTree = "<group>"; };
+		0D69BD761C4EA17900A10282 /* jpeg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jpeg.h; sourceTree = "<group>"; };
+		0D69BD771C4EA17900A10282 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		0D69BD781C4EA17900A10282 /* rectangle.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rectangle.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -24,6 +29,7 @@
 		0D69BD6D1C4E9F7E00A10282 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				0D69BD731C4EA16500A10282 /* testsrc */,
 				0D69BD6E1C4E9F9000A10282 /* testdata */,
 			);
 			name = src;
@@ -38,6 +44,18 @@
 				0D69BD721C4EA0E300A10282 /* trein.jpg */,
 			);
 			path = testdata;
+			sourceTree = "<group>";
+		};
+		0D69BD731C4EA16500A10282 /* testsrc */ = {
+			isa = PBXGroup;
+			children = (
+				0D69BD741C4EA17900A10282 /* decodejpeg2rgb.c */,
+				0D69BD751C4EA17900A10282 /* image.c */,
+				0D69BD761C4EA17900A10282 /* jpeg.h */,
+				0D69BD771C4EA17900A10282 /* Makefile */,
+				0D69BD781C4EA17900A10282 /* rectangle.c */,
+			);
+			path = testsrc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

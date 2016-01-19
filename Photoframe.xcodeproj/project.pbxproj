@@ -10,7 +10,23 @@
 		0D07D26B1C4E974B00E42556 = {
 			isa = PBXGroup;
 			children = (
+				0D69BD6D1C4E9F7E00A10282 /* src */,
 			);
+			sourceTree = "<group>";
+		};
+		0D69BD6D1C4E9F7E00A10282 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				0D69BD6E1C4E9F9000A10282 /* testdata */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		0D69BD6E1C4E9F9000A10282 /* testdata */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = testdata;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

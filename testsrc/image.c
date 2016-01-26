@@ -279,6 +279,7 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		}
 		
 	} while (1);
+	assert (data->current_y < outputheight);
 }
 
 void done_upscale(struct upscalestruct *data)

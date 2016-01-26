@@ -177,6 +177,10 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 	unsigned int current_x_in;
 	unsigned int current_x_out;
 	unsigned int x_scalerest;
+	unsigned int x_total[3];
+	unsigned int x_contribution;
+	unsigned int x_complete_contribution;
+	unsigned int x_remaining_contribution;
 	char *outputptr;
 	char *inputptr;
 	
@@ -194,17 +198,35 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		outputptr = outputbuf + 3 * outputwidth * data->current_y;
 		inputptr = inputbuf;
 		current_x_out = 0;
+		x_total[0] = x_total[1] = x_total[2] = 0;
 		for (current_x_in = 0; current_x_in < inputwidth; current_x_in++) {
-			x_scalerest += outputwidth;
-			while (x_scalerest >= inputwidth) {
-				outputptr[0] = inputptr[0];
-				outputptr[1] = inputptr[1];
-				outputptr[2] = inputptr[2];
-				outputptr += 3;
-				
-				x_scalerest -= inputwidth;
-				current_x_out++;
-			}
+			x_complete_contribution = x_remaining_contribution = outputwidth;
+			do {
+				x_possible_contribution = inputwidth - x_scalerest;
+				if (x_possible_contribution <= x_remaining_contribution) {
+					x_contribution = x_possible_contribution;
+					x_total[0] += x_contribution * inputptr[0];
+					x_total[1] += x_contribution * inputptr[1];
+					x_total[2] += x_contribution * inputptr[2];
+					outputptr[0] = x_total[0] / inputwidth;
+					outputptr[1] = x_total[1] / inputwidth;
+					outputptr[2] = x_total[2] / inputwidth;
+					outputptr += 3;
+					
+					current_x_out++;
+					x_total[0] = x_total[1] = x_total[2] = 0;
+					x_remaining_contribution -= x_contribution;
+					x_scalerest = 0;
+					continue;
+				} else {
+					x_contribution = x_remaining_contribution;
+					x_total[0] += x_contribution * inputptr[0];
+					x_total[1] += x_contribution * inputptr[1];
+					x_total[2] += x_contribution * inputptr[2];
+					x_scalerest += x_remaining_contribution;
+				}
+			} while (0);
+			
 			inputptr += 3;
 		}
 		if (current_x_out < outputwidth) {

@@ -67,6 +67,7 @@ void *setup_upscale();
 void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data);
+void done_upscale(struct upscalestruct *data);
 
 
 char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,

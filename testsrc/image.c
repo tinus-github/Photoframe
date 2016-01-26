@@ -152,6 +152,7 @@ char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	jpeg_finish_decompress(&cinfo);
 	jpeg_destroy_decompress(&cinfo);
 	free(scanbuf);
+	free(row_pointers);
 	fclose(f);
 	
 	return buffer;

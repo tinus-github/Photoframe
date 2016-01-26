@@ -113,9 +113,7 @@ char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 		scalefactor = scalefactortmp;
 	}
 	
-	if (scalefactor > 1) {
-		scaledata = setup_upscale();
-	}
+	scaledata = setup_upscale();
 	
 	*width = cinfo.output_width * scalefactor;
 	*height = cinfo.output_height * scalefactor;
@@ -149,9 +147,7 @@ char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 		lines_in_buf++;
 	}
 	
-	if (scalefactor > 1.0f) {
-		done_upscale(scaledata);
-	}
+	done_upscale(scaledata);
 	
 	jpeg_finish_decompress(&cinfo);
 	jpeg_destroy_decompress(&cinfo);

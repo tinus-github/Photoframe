@@ -270,6 +270,7 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 			data->scalerest = 0;
 			continue;
 		} else {
+			outputptr = outputbuf + 3 * outputwidth * data->current_y;
 			for (counter = (3 * inputwidth) - 1 ; counter >= 0; counter--) {
 				data->y_contributions[counter] += y_contribution * outputptr[counter];
 			}

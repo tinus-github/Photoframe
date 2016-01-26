@@ -224,8 +224,9 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 					x_total[1] += x_contribution * inputptr[1];
 					x_total[2] += x_contribution * inputptr[2];
 					x_scalerest += x_remaining_contribution;
+					break;
 				}
-			} while (0);
+			} while (1);
 			
 			inputptr += 3;
 		}

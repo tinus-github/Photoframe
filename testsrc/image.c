@@ -205,12 +205,18 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 				x_possible_contribution = inputwidth - x_scalerest;
 				if (x_possible_contribution <= x_remaining_contribution) {
 					x_contribution = x_possible_contribution;
-					x_total[0] += x_contribution * inputptr[0];
-					x_total[1] += x_contribution * inputptr[1];
-					x_total[2] += x_contribution * inputptr[2];
-					outputptr[0] = x_total[0] / inputwidth;
-					outputptr[1] = x_total[1] / inputwidth;
-					outputptr[2] = x_total[2] / inputwidth;
+					if (x_contribution == inputwidth) {
+						outputptr[0] = inputptr[0];
+						outputptr[1] = inputptr[1];
+						outputptr[2] = inputptr[2];
+					} else {
+						x_total[0] += x_contribution * inputptr[0];
+						x_total[1] += x_contribution * inputptr[1];
+						x_total[2] += x_contribution * inputptr[2];
+						outputptr[0] = x_total[0] / inputwidth;
+						outputptr[1] = x_total[1] / inputwidth;
+						outputptr[2] = x_total[2] / inputwidth;
+					}
 					outputptr += 3;
 					
 					current_x_out++;

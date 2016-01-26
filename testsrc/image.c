@@ -198,6 +198,12 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 	}
 	
 	y_remaining_contribution = outputheight;
+	
+	/* Possible optimization:
+	 * If the image is smaller than the screen, most lines will be scaled horizontally more than once.
+	 * This is not very important because in that case it won't take a lot of time anyway
+	 */
+	
 	do {
 		y_possible_contribution = inputheight - data->scalerest;
 		if (y_possible_contribution <= y_remaining_contribution) {

@@ -55,12 +55,13 @@ char *image;
 int tex;
 
 typedef struct upscalestruct {
-	float scalerest;
+	unsigned int scalerest;
 	float scalefactor;
 	unsigned int current_y;
 	unsigned int total_x;
 	unsigned int total_y;
 	void *outputbuf;
+	unsigned int *y_contributions;
 } upscalestruct;
 
 void *setup_upscale();
@@ -165,9 +166,10 @@ void *setup_upscale()
 {
 	struct upscalestruct *ret = malloc(sizeof(struct upscalestruct));
 	
-	ret->scalerest = 0.0f;
+	ret->scalerest = 0;
 	ret->scalefactor = 0.0f;
 	ret->current_y = 0;
+	ret->y_contributions = NULL;
 	return ret;
 }
 
@@ -182,6 +184,10 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 	unsigned int x_contribution;
 	unsigned int x_possible_contribution;
 	unsigned int x_remaining_contribution;
+	unsigned int y_contribution;
+	unsigned int y_possible_contribution;
+	unsigned int y_remaining_contribution;
+
 	char *outputptr;
 	char *inputptr;
 	
@@ -190,11 +196,18 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		data->total_x = outputwidth;
 		data->total_y = outputheight;
 		data->outputbuf = outputbuf;
+		data->y_contributions = calloc(3 * sizeof(unsigned int), outputwidth);
 	}
 	
-	data->scalerest += data->scalefactor;
-	
-	while (data->scalerest > 0) {
+	y_remaining_contribution = outputheight;
+	do {
+		y_possible_contribution = inputheight - data->scalerest;
+		if (y_possible_contribution <= y_remaining_contribution) {
+			y_contribution = y_possible_contribution;
+		} else {
+			y_contribution = y_remaining_contribution;
+		}
+		
 		x_scalerest = 0;
 		outputptr = outputbuf + 3 * outputwidth * data->current_y;
 		inputptr = inputbuf;
@@ -240,9 +253,29 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		if (current_x_out < outputwidth) {
 			bzero(outputptr, 3 * (outputwidth - current_x_out));
 		}
-		data->scalerest -= 1.0f;
-		data->current_y++;
-	}
+		if (y_contribution != y_remaining_contribution) {
+			if (y_contribution != inputheight) {
+				outputptr = outputbuf + 3 * outputwidth * data->current_y;
+				for (unsigned int counter = (3 * inputwidth) - 1 ; counter >= 0; counter--) {
+					data->y_contributions[counter] += y_contribution * outputptr[counter];
+					outputptr[counter] = data->y_contributions[counter] / inputheight;
+				}
+			}
+			bzero(data->y_contributions, outputwidth * 3 * sizeof(unsigned int));
+
+			data->current_y++;
+			y_remaining_contribution -= y_contribution;
+			data->scalerest = 0;
+			continue;
+		} else {
+			for (unsigned int counter = (3 * inputwidth) - 1 ; counter >= 0; counter--) {
+				data->y_contributions[counter] += y_contribution * outputptr[counter];
+			}
+			data->scalerest += y_remaining_contribution;
+			break;
+		}
+		
+	} while (1);
 }
 
 void done_upscale(struct upscalestruct *data)

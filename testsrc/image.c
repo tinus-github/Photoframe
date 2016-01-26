@@ -290,7 +290,8 @@ void done_upscale(struct upscalestruct *data)
 		bzero(data->outputbuf + 3 * data->total_x * data->current_y,
 		      3 * data->total_x * (data->total_y - data->current_y));
 	}
-	free(data);
+	free (data->y_contributions);
+	free (data);
 }
 
 char* esLoadTGA ( char *fileName, int *width, int *height )

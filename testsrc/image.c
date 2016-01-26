@@ -187,6 +187,8 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 	unsigned int y_contribution;
 	unsigned int y_possible_contribution;
 	unsigned int y_remaining_contribution;
+	
+	int counter;
 
 	char *outputptr;
 	char *inputptr;
@@ -256,7 +258,7 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		if (y_contribution != y_remaining_contribution) {
 			if (y_contribution != inputheight) {
 				outputptr = outputbuf + 3 * outputwidth * data->current_y;
-				for (unsigned int counter = (3 * inputwidth) - 1 ; counter >= 0; counter--) {
+				for (counter = (3 * inputwidth) - 1 ; counter >= 0; counter--) {
 					data->y_contributions[counter] += y_contribution * outputptr[counter];
 					outputptr[counter] = data->y_contributions[counter] / inputheight;
 				}
@@ -268,7 +270,7 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 			data->scalerest = 0;
 			continue;
 		} else {
-			for (unsigned int counter = (3 * inputwidth) - 1 ; counter >= 0; counter--) {
+			for (counter = (3 * inputwidth) - 1 ; counter >= 0; counter--) {
 				data->y_contributions[counter] += y_contribution * outputptr[counter];
 			}
 			data->scalerest += y_remaining_contribution;

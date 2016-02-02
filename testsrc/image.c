@@ -182,7 +182,8 @@ void smoothscale_h(char *inputptr, char *outputptr, unsigned int inputwidth, uns
 	unsigned int current_x_in;
 	unsigned int x_remaining_contribution;
 	unsigned int x_possible_contribution;
-	unsigned int x_scalerest;
+	unsigned int x_scalerest = 0;
+	unsigned int x_contribution;
 	
 	for (current_x_in = 0; current_x_in < inputwidth; current_x_in++) {
 		x_remaining_contribution = outputwidth;
@@ -230,7 +231,6 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data)
 {
-	unsigned int x_contribution;
 	unsigned int y_contribution;
 	unsigned int y_possible_contribution;
 	unsigned int y_remaining_contribution;
@@ -263,7 +263,6 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 			y_contribution = y_remaining_contribution;
 		}
 		
-		x_scalerest = 0;
 		outputptr = outputbuf + 3 * outputwidth * data->current_y;
 		inputptr = inputbuf;
 		

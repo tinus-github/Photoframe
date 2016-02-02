@@ -269,8 +269,6 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		       char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		       unsigned int current_line_inputbuf, struct upscalestruct *data)
 {
-	int counter;
-	
 	char *outputptr;
 	char *inputptr;
 	

@@ -138,7 +138,7 @@ char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 			scanbufcurrentline = scanbuf;
 		}
 		if (scalefactor != 1.0f) {
-			upscaleLine(scanbufcurrentline, cinfo.output_width, cinfo.output_height,
+			upscaleLineSmooth(scanbufcurrentline, cinfo.output_width, cinfo.output_height,
 				    buffer, *width, *height, lines_in_buf, scaledata);
 		} else {
 			memcpy (buffer + 3 * (lines_in_buf * cinfo.output_width),
@@ -269,10 +269,6 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		       char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		       unsigned int current_line_inputbuf, struct upscalestruct *data)
 {
-	unsigned int y_contribution;
-	unsigned int y_possible_contribution;
-	unsigned int y_remaining_contribution;
-	
 	int counter;
 	
 	char *outputptr;
@@ -286,49 +282,22 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		data->y_contributions = calloc(3 * sizeof(unsigned int), outputwidth);
 	}
 	
-	y_remaining_contribution = outputheight;
-	
 	/* Possible optimization:
 	 * If the image is smaller than the screen, most lines will be scaled horizontally more than once.
 	 * This is not very important because in that case it won't take a lot of time anyway
 	 */
 	
-	do {
-		y_possible_contribution = inputheight - data->scalerest;
-		if (y_possible_contribution <= y_remaining_contribution) {
-			y_contribution = y_possible_contribution;
-		} else {
-			y_contribution = y_remaining_contribution;
-		}
-		
+	data->scalerest += outputheight;
+	
+	while (data->scalerest > inputheight) {
 		outputptr = outputbuf + 3 * outputwidth * data->current_y;
 		inputptr = inputbuf;
 		
 		smoothscale_h_fast(inputptr, outputptr, inputwidth, outputwidth);
 		
-		if (y_contribution != y_remaining_contribution) {
-			if (y_contribution != inputheight) {
-				outputptr = outputbuf + 3 * outputwidth * data->current_y;
-				for (counter = (3 * outputwidth) - 1 ; counter >= 0; counter--) {
-					outputptr[counter] =
-					     average_channel(data->y_contributions[counter], outputptr[counter]);
-				}
-			}
-			
-			data->current_y++;
-			y_remaining_contribution -= y_contribution;
-			data->scalerest = 0;
-			continue;
-		} else {
-			outputptr = outputbuf + 3 * outputwidth * data->current_y;
-			for (counter = (3 * outputwidth) - 1 ; counter >= 0; counter--) {
-				data->y_contributions[counter] = outputptr[counter];
-			}
-			data->scalerest += y_remaining_contribution;
-			break;
-		}
-		
-	} while (1);
+		data->current_y++;
+		data->scalerest -= inputheight;
+	}
 }
 
 void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
@@ -357,6 +326,10 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 	/* Possible optimization:
 	 * If the image is smaller than the screen, most lines will be scaled horizontally more than once.
 	 * This is not very important because in that case it won't take a lot of time anyway
+	 */
+	
+	/* Probably the best solution would be to do the smooth bresenham algorithm for the vertical
+	 * direction too, but that's pretty hard because not the whole image is available at once
 	 */
 	
 	do {

@@ -257,7 +257,7 @@ void smoothscale_h_fast(char *inputptr, char *outputptr, unsigned int inputwidth
 		outputptr += 3;
 		
 		accumulated_error += inputwidth;
-		if (accumulated_error >= outputwidth) {
+		while (accumulated_error >= outputwidth) {
 			accumulated_error -= outputwidth;
 			inputptr += 3;
 		}

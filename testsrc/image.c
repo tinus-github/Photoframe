@@ -304,7 +304,7 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		smoothscale_h_fast(inputptr, outputptr, inputwidth, outputwidth);
 		
 		data->current_y++;
-		data->scalerest -= outputheight;
+		data->scalerest -= inputheight;
 	}
 }
 

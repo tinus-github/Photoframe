@@ -174,7 +174,7 @@ void *setup_upscale()
 	return ret;
 }
 
-void smoothscale_h(char *inputptr, char *outputptr, unsigned int inputwidth)
+void smoothscale_h(char *inputptr, char *outputptr, unsigned int inputwidth, unsigned int outputwidth)
 {
 	unsigned int current_x_out = 0;
 	unsigned int x_total[3];

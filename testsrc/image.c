@@ -266,6 +266,8 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		outputptr = outputbuf + 3 * outputwidth * data->current_y;
 		inputptr = inputbuf;
 		
+		smoothscale_h(inputptr, outputptr, inputwidth, outputwidth);
+		
 		if (y_contribution != y_remaining_contribution) {
 			if (y_contribution != inputheight) {
 				outputptr = outputbuf + 3 * outputwidth * data->current_y;

@@ -158,6 +158,10 @@ char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	return buffer;
 }
 
+inline unsigned char average_channel(unsigned int value1, unsigned int value2)
+{
+	return (unsigned char)((value1 + value2) >> 1);
+}
 
 void *setup_upscale()
 {

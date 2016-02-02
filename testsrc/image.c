@@ -246,7 +246,7 @@ void smoothscale_h_fast(char *inputptr, char *outputptr, unsigned int inputwidth
 		pixel_values[1] = inputptr[1];
 		pixel_values[2] = inputptr[2];
 		
-		if ((accumulated_error > mid) && (input_x < inputwidth))) {
+		if ((accumulated_error > mid) && (input_x < inputwidth)) {
 			pixel_values[0] = average_channel(pixel_values[0], inputptr[3]);
 			pixel_values[1] = average_channel(pixel_values[1], inputptr[4]);
 			pixel_values[2] = average_channel(pixel_values[2], inputptr[5]);

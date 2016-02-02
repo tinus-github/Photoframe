@@ -227,6 +227,49 @@ void smoothscale_h(char *inputptr, char *outputptr, unsigned int inputwidth, uns
 	}
 }
 
+/* Smooth Bresenham speed scaling */
+
+void smoothscale_h_fast(char *inputptr, char *outputptr, unsigned int inputwidth, unsigned int outputwidth)
+{
+	unsigned int numpixels = outputwidth;
+	unsigned int mid = outputwidth / 2;
+	int accumulated_error = 0;
+	char pixel_values[3];
+
+	if (outputwidth > inputwidth) {
+		numpixels--;
+	}
+	
+	while (numpixels-- > 0) {
+		pixel_values[0] = inputptr[0];
+		pixel_values[1] = inputptr[1];
+		pixel_values[2] = inputptr[2];
+		
+		if (accumulated_error > mid) {
+			pixel_values[0] = average_channel(pixel_values[0], inputptr[3]);
+			pixel_values[1] = average_channel(pixel_values[1], inputptr[4]);
+			pixel_values[2] = average_channel(pixel_values[2], inputptr[5]);
+		}
+		outputptr[0] = pixel_values[0];
+		outputptr[1] = pixel_values[1];
+		outputptr[2] = pixel_values[2];
+		
+		outputptr += 3;
+		
+		accumulated_error += inputwidth;
+		if (accumulated_error >= outputwidth) {
+			accumulated_error -= outputwidth;
+			inputptr += 3;
+		}
+	}
+	if (outputwidth > inputwidth) {
+		outputptr[0] = inputptr[0];
+		outputptr[1] = inputptr[1];
+		outputptr[2] = inputptr[2];
+	}
+}
+
+
 void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data)
@@ -266,7 +309,7 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		outputptr = outputbuf + 3 * outputwidth * data->current_y;
 		inputptr = inputbuf;
 		
-		smoothscale_h(inputptr, outputptr, inputwidth, outputwidth);
+		smoothscale_h_fast(inputptr, outputptr, inputwidth, outputwidth);
 		
 		if (y_contribution != y_remaining_contribution) {
 			if (y_contribution != inputheight) {

@@ -68,6 +68,10 @@ void *setup_upscale();
 void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data);
+void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
+		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
+		 unsigned int current_line_inputbuf, struct upscalestruct *data);
+
 void done_upscale(struct upscalestruct *data);
 
 
@@ -269,8 +273,42 @@ void smoothscale_h_fast(char *inputptr, char *outputptr, unsigned int inputwidth
 	}
 }
 
-
 void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
+		       char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
+		       unsigned int current_line_inputbuf, struct upscalestruct *data)
+{
+	int counter;
+	
+	char *outputptr;
+	char *inputptr;
+	
+	if (data->scalefactor == 0.0f) {
+		data->scalefactor = (float)outputwidth / inputwidth;
+		data->total_x = outputwidth;
+		data->total_y = outputheight;
+		data->outputbuf = outputbuf;
+		data->y_contributions = calloc(3 * sizeof(unsigned int), outputwidth);
+	}
+	
+	/* Possible optimization:
+	 * If the image is smaller than the screen, most lines will be scaled horizontally more than once.
+	 * This is not very important because in that case it won't take a lot of time anyway
+	 */
+	
+	data->scalerest += outputheight;
+
+	while (data->scalerest > inputheight) {
+		outputptr = outputbuf + 3 * outputwidth * data->current_y;
+		inputptr = inputbuf;
+		
+		smoothscale_h_fast(inputptr, outputptr, inputwidth, outputwidth);
+		
+		data->current_y++;
+		data->scalerest -= outputheight;
+	}
+}
+
+void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data)
 {

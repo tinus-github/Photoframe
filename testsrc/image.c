@@ -362,6 +362,8 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 				smoothscale_h_fast(inputbuf, outputptr, inputwidth, outputwidth);
 				data->current_y_out++;
 				continue;
+			} else {
+				break;
 			}
 		} else {
 			if (wanted_line == data->current_y) {

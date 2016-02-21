@@ -363,6 +363,7 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 				data->current_y_out++;
 				continue;
 			} else {
+				assert (wanted_line > data->current_y);
 				break;
 			}
 		} else {
@@ -379,6 +380,7 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 				data->current_y_out++;
 				continue;
 			} else {
+				assert (wanted_line > data->current_y);
 				break;
 			}
 		}

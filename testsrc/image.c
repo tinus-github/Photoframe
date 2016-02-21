@@ -338,7 +338,7 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 				data->y_used_lines[counter] |= 0x80000000;
 			}
 			accumulated_error += inputheight;
-			while (accumulated_error > = outputheight) {
+			while (accumulated_error >= outputheight) {
 				accumulated_error -= outputheight;
 				current_y++;
 			}
@@ -349,7 +349,7 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 	}
 	
 	unsigned int wanted_line;
-	bool want_combine;
+	int want_combine;
 	
 	do {
 		wanted_line = data->y_used_lines[data->current_y_out];

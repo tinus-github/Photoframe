@@ -180,6 +180,7 @@ void *setup_upscale()
 	ret->scalerest = 0;
 	ret->scalefactor = 0.0f;
 	ret->current_y = 0;
+	ret->current_y_out = 0;
 	ret->y_contributions = NULL;
 	return ret;
 }
@@ -294,12 +295,12 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 	data->scalerest += outputheight;
 	
 	while (data->scalerest > inputheight) {
-		outputptr = outputbuf + 3 * outputwidth * data->current_y;
+		outputptr = outputbuf + 3 * outputwidth * data->current_y_out;
 		inputptr = inputbuf;
 		
 		smoothscale_h_fast(inputptr, outputptr, inputwidth, outputwidth);
 		
-		data->current_y++;
+		data->current_y_out++;
 		data->scalerest -= inputheight;
 	}
 }
@@ -395,9 +396,9 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 
 void done_upscale(struct upscalestruct *data)
 {
-	if (data->current_y < data->total_y) {
-		bzero(data->outputbuf + 3 * data->total_x * data->current_y,
-		      3 * data->total_x * (data->total_y - data->current_y));
+	if (data->current_y_out < data->total_y) {
+		bzero(data->outputbuf + 3 * data->total_x * data->current_y_out,
+		      3 * data->total_x * (data->total_y - data->current_y_out));
 	}
 	free (data->y_contributions);
 	free (data);

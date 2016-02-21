@@ -379,6 +379,8 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 			}
 		}
 	} while (data->current_y_out < outputheight);
+	
+	data->current_y++;
 }
 
 void done_upscale(struct upscalestruct *data)

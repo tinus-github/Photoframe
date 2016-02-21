@@ -351,7 +351,7 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 	unsigned int wanted_line;
 	int want_combine;
 	
-	do {
+	while (data->current_y_out < outputheight) {
 		wanted_line = data->y_used_lines[data->current_y_out];
 		want_combine = !!(wanted_line & 0x80000000);
 		wanted_line &= 0x3fffffff;
@@ -382,7 +382,7 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 				break;
 			}
 		}
-	} while (data->current_y_out < outputheight);
+	}
 	
 	data->current_y++;
 }

@@ -318,7 +318,6 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 	int counter;
 
 	char *outputptr;
-	char *inputptr;
 	
 	if (data->scalefactor == 0.0f) {
 		data->scalefactor = (float)outputwidth / inputwidth;
@@ -359,16 +358,16 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 		if (!want_combine) {
 			if (wanted_line == data->current_y) {
 				outputptr = outputbuf + 3 * outputwidth * data->current_y_out;
-				smoothscale_h_fast(inputptr, outputptr, inputwidth, outputwidth);
+				smoothscale_h_fast(inputbuf, outputptr, inputwidth, outputwidth);
 				data->current_y_out++;
 				continue;
 			}
 		} else {
 			if (wanted_line == data->current_y) {
-				smoothscale_h_fast(inputptr, data->last_line, inputwidth, outputwidth);
+				smoothscale_h_fast(inputbuf, data->last_line, inputwidth, outputwidth);
 				break;
 			} else if (wanted_line == (data->current_y - 1)) {
-				smoothscale_h_fast(inputptr, data->combined_line, inputwidth, outputwidth);
+				smoothscale_h_fast(inputbuf, data->combined_line, inputwidth, outputwidth);
 				outputptr = outputbuf + 3 * outputwidth * data->current_y_out;
 				for (counter = (3 * outputwidth) - 1 ; counter >= 0; counter--) {
 					outputptr[counter] = average_channel(data->last_line[counter],

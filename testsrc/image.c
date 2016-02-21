@@ -386,6 +386,7 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 		}
 	}
 	
+	assert (data->current_y < inputheight);
 	data->current_y++;
 }
 

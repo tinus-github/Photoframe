@@ -376,6 +376,8 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 				}
 				data->current_y_out++;
 				continue;
+			} else {
+				break;
 			}
 		}
 	} while (data->current_y_out < outputheight);

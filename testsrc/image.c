@@ -345,6 +345,7 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 		}
 		data->last_line = calloc(sizeof(char) * 3, outputwidth);
 		data->combined_line = calloc(sizeof(char) * 3, outputwidth);
+		data->current_y_out = 0;
 	}
 	
 	unsigned int wanted_line;

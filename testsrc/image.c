@@ -58,10 +58,16 @@ typedef struct upscalestruct {
 	unsigned int scalerest;
 	float scalefactor;
 	unsigned int current_y;
+	unsigned int current_y_out;
 	unsigned int total_x;
 	unsigned int total_y;
 	void *outputbuf;
 	unsigned int *y_contributions;
+	
+	unsigned int *y_used_lines;
+	unsigned int *y_avgs;
+	char *last_line;
+	char *combined_line;
 } upscalestruct;
 
 void *setup_upscale();
@@ -305,6 +311,9 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 	unsigned int y_contribution;
 	unsigned int y_possible_contribution;
 	unsigned int y_remaining_contribution;
+	unsigned int accumulated_error;
+	unsigned int mid;
+	unsigned int current_y;
 	
 	int counter;
 
@@ -316,58 +325,60 @@ void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inp
 		data->total_x = outputwidth;
 		data->total_y = outputheight;
 		data->outputbuf = outputbuf;
+		data->current_y = 0;
 		data->y_contributions = calloc(3 * sizeof(unsigned int), outputwidth);
+		data->y_used_lines = calloc(sizeof(unsigned int), outputheight);
+		
+		accumulated_error = 0;
+		current_y = 0;
+		mid = outputheight / 2;
+		for (counter = 0; counter < outputheight; counter++) {
+			data->y_used_lines[counter] = current_y;
+			if ((accumulated_error > mid) && (current_y < (inputheight - 1))) {
+				data->y_used_lines[counter] |= 0x80000000;
+			}
+			accumulated_error += inputheight;
+			while (accumulated_error > = outputheight) {
+				accumulated_error -= outputheight;
+				current_y++;
+			}
+			
+		}
+		data->last_line = calloc(sizeof(char) * 3, outputwidth);
+		data->combined_line = calloc(sizeof(char) * 3, outputwidth);
 	}
 	
-	y_remaining_contribution = outputheight;
-	
-	/* Possible optimization:
-	 * If the image is smaller than the screen, most lines will be scaled horizontally more than once.
-	 * This is not very important because in that case it won't take a lot of time anyway
-	 */
-	
-	/* Probably the best solution would be to do the smooth bresenham algorithm for the vertical
-	 * direction too, but that's pretty hard because not the whole image is available at once
-	 */
+	unsigned int wanted_line;
+	bool want_combine;
 	
 	do {
-		y_possible_contribution = inputheight - data->scalerest;
-		if (y_possible_contribution <= y_remaining_contribution) {
-			y_contribution = y_possible_contribution;
+		wanted_line = data->y_used_lines[data->current_y_out];
+		want_combine = !!(wanted_line & 0x80000000);
+		wanted_line &= 0x3fffffff;
+		
+		if (!want_combine) {
+			if (wanted_line == data->current_y) {
+				outputptr = outputbuf + 3 * outputwidth * data->current_y_out;
+				smoothscale_h_fast(inputptr, outputptr, inputwidth, outputwidth);
+				data->current_y_out++;
+				continue;
+			}
 		} else {
-			y_contribution = y_remaining_contribution;
-		}
-		
-		outputptr = outputbuf + 3 * outputwidth * data->current_y;
-		inputptr = inputbuf;
-		
-		smoothscale_h_fast(inputptr, outputptr, inputwidth, outputwidth);
-		
-		if (y_contribution != y_remaining_contribution) {
-			if (y_contribution != inputheight) {
-				outputptr = outputbuf + 3 * outputwidth * data->current_y;
+			if (wanted_line == data->current_y) {
+				smoothscale_h_fast(inputptr, data->last_line, inputwidth, outputwidth);
+				break;
+			} else if (wanted_line == (data->current_y - 1)) {
+				smoothscale_h_fast(inputptr, data->combined_line, inputwidth, outputwidth);
+				outputptr = outputbuf + 3 * outputwidth * data->current_y_out;
 				for (counter = (3 * outputwidth) - 1 ; counter >= 0; counter--) {
-					data->y_contributions[counter] += y_contribution * outputptr[counter];
-					outputptr[counter] = data->y_contributions[counter] / inputheight;
+					outputptr[counter] = average_channel(data->last_line[counter],
+									     data->combined_line[counter]);
 				}
+				data->current_y_out++;
+				continue;
 			}
-			bzero(data->y_contributions, outputwidth * 3 * sizeof(unsigned int));
-
-			data->current_y++;
-			y_remaining_contribution -= y_contribution;
-			data->scalerest = 0;
-			continue;
-		} else {
-			outputptr = outputbuf + 3 * outputwidth * data->current_y;
-			for (counter = (3 * outputwidth) - 1 ; counter >= 0; counter--) {
-				data->y_contributions[counter] += y_contribution * outputptr[counter];
-			}
-			data->scalerest += y_remaining_contribution;
-			break;
 		}
-		
-	} while (1);
-	assert (data->current_y < outputheight);
+	} while (data->current_y_out < outputheight);
 }
 
 void done_upscale(struct upscalestruct *data)

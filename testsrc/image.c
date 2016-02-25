@@ -175,7 +175,7 @@ inline unsigned char average_channel(unsigned int value1, unsigned int value2)
 
 void *setup_upscale()
 {
-	struct upscalestruct *ret = malloc(sizeof(struct upscalestruct));
+	struct upscalestruct *ret = calloc(sizeof(struct upscalestruct), 1);
 	
 	ret->scalerest = 0;
 	ret->scalefactor = 0.0f;
@@ -401,6 +401,9 @@ void done_upscale(struct upscalestruct *data)
 		      3 * data->total_x * (data->total_y - data->current_y_out));
 	}
 	free (data->y_contributions);
+	free (data->y_used_lines);
+	free (data->last_line);
+	free (data->combined_line);
 	free (data);
 }
 

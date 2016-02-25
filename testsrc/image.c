@@ -74,6 +74,9 @@ void *setup_upscale();
 void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data);
+void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
+		       char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
+		       unsigned int current_line_inputbuf, struct upscalestruct *data);
 void upscaleLineSmoothFast(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data);
@@ -303,6 +306,74 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 		data->current_y_out++;
 		data->scalerest -= inputheight;
 	}
+}
+
+void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
+		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
+		 unsigned int current_line_inputbuf, struct upscalestruct *data)
+{
+	unsigned int y_contribution;
+	unsigned int y_possible_contribution;
+	unsigned int y_remaining_contribution;
+	
+	int counter;
+	
+	char *outputptr;
+	char *inputptr;
+	
+	if (data->scalefactor == 0.0f) {
+		data->scalefactor = (float)outputwidth / inputwidth;
+		data->total_x = outputwidth;
+		data->total_y = outputheight;
+		data->outputbuf = outputbuf;
+		data->y_contributions = calloc(3 * sizeof(unsigned int), outputwidth);
+	}
+	
+	y_remaining_contribution = outputheight;
+	
+	/* Possible optimization:
+	 * If the image is smaller than the screen, most lines will be scaled horizontally more than once.
+	 * This is not very important because in that case it won't take a lot of time anyway
+	 */
+	
+	do {
+		y_possible_contribution = inputheight - data->scalerest;
+		if (y_possible_contribution <= y_remaining_contribution) {
+			y_contribution = y_possible_contribution;
+		} else {
+			y_contribution = y_remaining_contribution;
+		}
+		
+		outputptr = outputbuf + 3 * outputwidth * data->current_y;
+		inputptr = inputbuf;
+		
+		smoothscale_h(inputptr, outputptr, inputwidth, outputwidth);
+		
+		if (y_contribution != y_remaining_contribution) {
+			if (y_contribution != inputheight) {
+				outputptr = outputbuf + 3 * outputwidth * data->current_y;
+				for (counter = (3 * outputwidth) - 1 ; counter >= 0; counter--) {
+					data->y_contributions[counter] += y_contribution * outputptr[counter];
+					outputptr[counter] = data->y_contributions[counter] / inputheight;
+				}
+			}
+			bzero(data->y_contributions, outputwidth * 3 * sizeof(unsigned int));
+			
+			data->current_y++;
+			y_remaining_contribution -= y_contribution;
+			data->scalerest = 0;
+			continue;
+		} else {
+			outputptr = outputbuf + 3 * outputwidth * data->current_y;
+			for (counter = (3 * outputwidth) - 1 ; counter >= 0; counter--) {
+				data->y_contributions[counter] += y_contribution * outputptr[counter];
+			}
+			data->scalerest += y_remaining_contribution;
+			break;
+		}
+		
+	} while (1);
+	assert (data->current_y < outputheight);
 }
 
 void upscaleLineSmoothFast(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,

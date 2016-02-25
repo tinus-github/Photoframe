@@ -74,7 +74,7 @@ void *setup_upscale();
 void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data);
-void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
+void upscaleLineSmoothFast(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data);
 
@@ -144,7 +144,7 @@ char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 			scanbufcurrentline = scanbuf;
 		}
 		if (scalefactor != 1.0f) {
-			upscaleLineSmooth(scanbufcurrentline, cinfo.output_width, cinfo.output_height,
+			upscaleLineSmoothFast(scanbufcurrentline, cinfo.output_width, cinfo.output_height,
 				    buffer, *width, *height, lines_in_buf, scaledata);
 		} else {
 			memcpy (buffer + 3 * (lines_in_buf * cinfo.output_width),
@@ -305,7 +305,7 @@ void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheig
 	}
 }
 
-void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
+void upscaleLineSmoothFast(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data)
 {

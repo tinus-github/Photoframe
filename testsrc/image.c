@@ -167,8 +167,8 @@ char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	
 	cinfo.out_color_space = JCS_RGB;
 	
-	scalefactor = (float)wantedwidth / cinfo.output_width;
-	scalefactortmp = (float)wantedheight / cinfo.output_height;
+	scalefactor = (float)wantedwidth / cinfo.image_width;
+	scalefactortmp = (float)wantedheight / cinfo.image_height;
 	
 	if (scalefactortmp < scalefactor) {
 		scalefactor = scalefactortmp;

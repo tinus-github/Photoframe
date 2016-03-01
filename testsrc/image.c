@@ -16,6 +16,8 @@
 
 #include <jpeglib.h>
 
+#include <setjmp.h>
+
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0
@@ -83,12 +85,28 @@ void upscaleLineSmoothFast(char *inputbuf, unsigned int inputwidth, unsigned int
 
 void done_upscale(struct upscalestruct *data);
 
+/* Error handling while decoding */
+
+struct decode_error_manager {
+	struct jpeg_error_mgr org;
+	jmp_buf setjmp_buffer;
+};
+
+typedef struct decode_error_manager * decode_error_manager;
+
+void handle_decode_error(void *info)
+{
+	decode_error_manager jerr = (decode_error_manager)info;
+	(*jerr->org->output_message) (info);
+	longjmp (jerr->setjmp_buffer);
+}
 
 char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 		  int *width, int *height )
 {
 	struct jpeg_decompress_struct cinfo;
-	struct jpeg_error_mgr jerr;
+	
+	struct decode_error_manager jerr;
 	
 	FILE *f;
 	
@@ -100,14 +118,27 @@ char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	unsigned int lines_in_scanbuf = 0;
 	unsigned int lines_in_buf = 0;
 	
-	JSAMPROW *row_pointers;
+	JSAMPROW *row_pointers = NULL;
 	
 	unsigned int counter;
 	
 	float scalefactor, scalefactortmp;
 	void *scaledata;
 	
-	cinfo.err = jpeg_std_error(&jerr);
+	cinfo.err = jpeg_std_error(jerr.org);
+	jerr.org.error_exit = handle_decode_error;
+	if (setjmp(jerr.setjmp_buffer)) {
+		/* Something went wrong, abort! */
+		jpeg_destroy_decompress(&cinfo);
+		if (buffer) {
+			done_upscale(buffer);
+		}
+		fclose(f);
+		free(scanbuf);
+		free(row_pointers);
+		return NULL;
+	}
+	
 	jpeg_create_decompress(&cinfo);
 	
 	f = fopen(fileName, "rb");

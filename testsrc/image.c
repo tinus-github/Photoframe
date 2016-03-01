@@ -101,6 +101,23 @@ void handle_decode_error(j_common_ptr info)
 	longjmp (jerr->setjmp_buffer, 1);
 }
 
+char *setup_dct_scale(jpeg_decompress_struct *cinfo, float scalefactor)
+{
+	/* The library provides for accelerated scaling at fixed ratios of 1/4 and 1/2.
+	 * This keeps some margin to prevent scaling artifacts
+	 */
+	 
+	if (scalefactor < 0.23f) {
+		cinfo->scale_num = 1; cinfo->scale_denom = 4;
+		return;
+	}
+	if (scalefactor < 0.46f) {
+		cinfo->scane_num = 1; cinfo->scale_denom = 2;
+		return;
+	}
+	return;
+}
+
 char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 		  int *width, int *height )
 {
@@ -149,6 +166,15 @@ char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	jpeg_read_header(&cinfo, TRUE);
 	
 	cinfo.out_color_space = JCS_RGB;
+	
+	scalefactor = (float)wantedwidth / cinfo.output_width;
+	scalefactortmp = (float)wantedheight / cinfo.output_height;
+	
+	if (scalefactortmp < scalefactor) {
+		scalefactor = scalefactortmp;
+	}
+	setup_dct_scale(&cinfo, scalefactor);
+	
 	jpeg_start_decompress(&cinfo);
 	
 	scalefactor = (float)wantedwidth / cinfo.output_width;

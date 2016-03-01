@@ -123,17 +123,18 @@ char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	unsigned int counter;
 	
 	float scalefactor, scalefactortmp;
-	void *scaledata;
+	void *scaledata = NULL;
 	
 	cinfo.err = jpeg_std_error(&jerr.org);
 	jerr.org.error_exit = handle_decode_error;
 	if (setjmp(jerr.setjmp_buffer)) {
 		/* Something went wrong, abort! */
 		jpeg_destroy_decompress(&cinfo);
-		if (buffer) {
-			done_upscale(buffer);
+		if (scaledata) {
+			done_upscale(scaledata);
 		}
 		fclose(f);
+		free(buffer);
 		free(scanbuf);
 		free(row_pointers);
 		return NULL;

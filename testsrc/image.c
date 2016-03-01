@@ -97,7 +97,7 @@ typedef struct decode_error_manager * decode_error_manager;
 void handle_decode_error(void *info)
 {
 	decode_error_manager jerr = (decode_error_manager)info;
-	(*jerr->org->output_message) (info);
+	(*jerr->org.output_message) (jerr->org);
 	longjmp (jerr->setjmp_buffer);
 }
 

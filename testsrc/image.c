@@ -94,7 +94,7 @@ struct decode_error_manager {
 
 typedef struct decode_error_manager * decode_error_manager;
 
-void handle_decode_error(j_common_ptr *info)
+void handle_decode_error(j_common_ptr info)
 {
 	decode_error_manager jerr = (decode_error_manager)info->err;
 	(*info->err->output_message) (info);

@@ -112,7 +112,7 @@ void setup_dct_scale(struct jpeg_decompress_struct *cinfo, float scalefactor)
 		return;
 	}
 	if (scalefactor < 0.46f) {
-		cinfo->scane_num = 1; cinfo->scale_denom = 2;
+		cinfo->scale_num = 1; cinfo->scale_denom = 2;
 		return;
 	}
 	return;

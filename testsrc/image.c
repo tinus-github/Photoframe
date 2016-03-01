@@ -101,7 +101,7 @@ void handle_decode_error(j_common_ptr info)
 	longjmp (jerr->setjmp_buffer, 1);
 }
 
-void setup_dct_scale(jpeg_decompress_struct *cinfo, float scalefactor)
+void setup_dct_scale(struct jpeg_decompress_struct *cinfo, float scalefactor)
 {
 	/* The library provides for accelerated scaling at fixed ratios of 1/4 and 1/2.
 	 * This keeps some margin to prevent scaling artifacts

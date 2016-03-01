@@ -94,10 +94,10 @@ struct decode_error_manager {
 
 typedef struct decode_error_manager * decode_error_manager;
 
-void handle_decode_error(void *info)
+void handle_decode_error(j_common_ptr *info)
 {
-	decode_error_manager jerr = (decode_error_manager)info;
-	(*jerr->org.output_message) (jerr->org);
+	decode_error_manager jerr = (decode_error_manager)info->err;
+	(*info->err->output_message) (info);
 	longjmp (jerr->setjmp_buffer);
 }
 
@@ -125,7 +125,7 @@ char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	float scalefactor, scalefactortmp;
 	void *scaledata;
 	
-	cinfo.err = jpeg_std_error(jerr.org);
+	cinfo.err = jpeg_std_error(&jerr.org);
 	jerr.org.error_exit = handle_decode_error;
 	if (setjmp(jerr.setjmp_buffer)) {
 		/* Something went wrong, abort! */

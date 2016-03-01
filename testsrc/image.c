@@ -98,7 +98,7 @@ void handle_decode_error(j_common_ptr info)
 {
 	decode_error_manager jerr = (decode_error_manager)info->err;
 	(*info->err->output_message) (info);
-	longjmp (jerr->setjmp_buffer);
+	longjmp (jerr->setjmp_buffer, 1);
 }
 
 char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,

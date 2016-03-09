@@ -123,7 +123,7 @@ GLuint LoadShader(GLenum type, const GLchar *shaderSrc)
 	return shader;
 }
 
-GLuint LoadProgram ( GLchar *vertShaderSrc, GLchar *fragShaderSrc )
+GLuint LoadProgram ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
 {
 	GLuint vertexShader;
 	GLuint fragmentShader;
@@ -458,4 +458,6 @@ int main(int argc, char *argv[])
 	
 	eglSwapBuffers(p_state->display, p_state->surface);
 	esMainLoop(p_state);
+	
+	return 0; // not reached
 }

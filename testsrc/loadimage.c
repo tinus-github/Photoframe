@@ -363,6 +363,23 @@ void handle_decode_error(j_common_ptr info)
 	longjmp (jerr->setjmp_buffer, 1);
 }
 
+/* optimized builtin scaling */
+void setup_dct_scale(struct jpeg_decompress_struct *cinfo, float scalefactor)
+{
+	/* The library provides for accelerated scaling at fixed ratios of 1/4 and 1/2.
+	 * This keeps some margin to prevent scaling artifacts
+	 */
+	
+	if (scalefactor < 0.23f) {
+		cinfo->scale_num = 1; cinfo->scale_denom = 4;
+		return;
+	}
+	if (scalefactor < 0.46f) {
+		cinfo->scale_num = 1; cinfo->scale_denom = 2;
+		return;
+	}
+	return;
+}
 
 
 char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,

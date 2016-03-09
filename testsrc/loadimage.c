@@ -36,8 +36,8 @@ typedef struct upscalestruct {
 	
 	unsigned int *y_used_lines;
 	unsigned int *y_avgs;
-	char *last_line;
-	char *combined_line;
+	unsigned char *last_line;
+	unsigned char *combined_line;
 } upscalestruct;
 
 /* Scaling functions */
@@ -58,7 +58,8 @@ static void *setup_upscale()
 	return ret;
 }
 
-static void smoothscale_h(char *inputptr, char *outputptr, unsigned int inputwidth, unsigned int outputwidth)
+static void smoothscale_h(unsigned char *inputptr, unsigned char *outputptr,
+			  unsigned int inputwidth, unsigned int outputwidth)
 {
 	unsigned int current_x_out = 0;
 	unsigned int x_total[3];
@@ -113,12 +114,12 @@ static void smoothscale_h(char *inputptr, char *outputptr, unsigned int inputwid
 
 /* Smooth Bresenham speed scaling */
 
-static void smoothscale_h_fast(char *inputptr, char *outputptr, unsigned int inputwidth, unsigned int outputwidth)
+static void smoothscale_h_fast(unsigned char *inputptr, unsigned char *outputptr, unsigned int inputwidth, unsigned int outputwidth)
 {
 	unsigned int numpixels = outputwidth;
 	unsigned int mid = outputwidth / 2;
 	int accumulated_error = 0;
-	char pixel_values[3];
+	unsigned char pixel_values[3];
 	unsigned int input_x = 1;
 	
 	while (numpixels-- > 0) {
@@ -145,12 +146,12 @@ static void smoothscale_h_fast(char *inputptr, char *outputptr, unsigned int inp
 	}
 }
 
-static void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
-		 char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
+static void upscaleLine(unsigned char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
+		 unsigned char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data)
 {
-	char *outputptr;
-	char *inputptr;
+	unsigned char *outputptr;
+	unsigned char *inputptr;
 	
 	if (data->scalefactor == 0.0f) {
 		data->scalefactor = (float)outputwidth / inputwidth;
@@ -178,8 +179,8 @@ static void upscaleLine(char *inputbuf, unsigned int inputwidth, unsigned int in
 	}
 }
 
-static void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
-		       char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
+static void upscaleLineSmooth(unsigned char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
+		       unsigned char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		       unsigned int current_line_inputbuf, struct upscalestruct *data)
 {
 	unsigned int y_contribution;
@@ -188,8 +189,8 @@ static void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned 
 	
 	int counter;
 	
-	char *outputptr;
-	char *inputptr;
+	unsigned char *outputptr;
+	unsigned char *inputptr;
 	
 	if (data->scalefactor == 0.0f) {
 		data->scalefactor = (float)outputwidth / inputwidth;
@@ -246,8 +247,8 @@ static void upscaleLineSmooth(char *inputbuf, unsigned int inputwidth, unsigned 
 	assert (data->current_y < outputheight);
 }
 
-static void upscaleLineSmoothFast(char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
-			   char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
+static void upscaleLineSmoothFast(unsigned char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
+			   unsigned char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 			   unsigned int current_line_inputbuf, struct upscalestruct *data)
 {
 	unsigned int accumulated_error;
@@ -256,7 +257,7 @@ static void upscaleLineSmoothFast(char *inputbuf, unsigned int inputwidth, unsig
 	
 	int counter;
 	
-	char *outputptr;
+	unsigned char *outputptr;
 	
 	if (data->scalefactor == 0.0f) {
 		data->scalefactor = (float)outputwidth / inputwidth;
@@ -391,8 +392,8 @@ char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	
 	char *buffer = NULL;
 	
-	JSAMPROW *scanbuf = NULL;
-	JSAMPROW *scanbufcurrentline;
+	unsigned char *scanbuf = NULL;
+	unsigned char *scanbufcurrentline;
 	unsigned int scanbufheight;
 	unsigned int lines_in_scanbuf = 0;
 	unsigned int lines_in_buf = 0;

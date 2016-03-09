@@ -357,7 +357,7 @@ struct decode_error_manager {
 
 typedef struct decode_error_manager * decode_error_manager;
 
-void handle_decode_error(j_common_ptr info)
+static void handle_decode_error(j_common_ptr info)
 {
 	decode_error_manager jerr = (decode_error_manager)info->err;
 	(*info->err->output_message) (info);
@@ -365,7 +365,7 @@ void handle_decode_error(j_common_ptr info)
 }
 
 /* optimized builtin scaling */
-void setup_dct_scale(struct jpeg_decompress_struct *cinfo, float scalefactor)
+static void setup_dct_scale(struct jpeg_decompress_struct *cinfo, float scalefactor)
 {
 	/* The library provides for accelerated scaling at fixed ratios of 1/4 and 1/2.
 	 * This keeps some margin to prevent scaling artifacts
@@ -383,7 +383,7 @@ void setup_dct_scale(struct jpeg_decompress_struct *cinfo, float scalefactor)
 }
 
 
-char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,
+char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 		  int *width, int *height )
 {
 	struct jpeg_decompress_struct cinfo;

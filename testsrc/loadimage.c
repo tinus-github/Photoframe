@@ -250,7 +250,6 @@ static void upscaleLineSmoothFast(char *inputbuf, unsigned int inputwidth, unsig
 			   char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 			   unsigned int current_line_inputbuf, struct upscalestruct *data)
 {
-	unsigned int y_contribution;
 	unsigned int accumulated_error;
 	unsigned int mid;
 	unsigned int current_y;

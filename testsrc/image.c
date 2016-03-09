@@ -92,7 +92,7 @@ GLuint CreateSimpleTexture2D(int width, int height )
 // Create a shader object, load the shader source, and
 // compile the shader.
 //
-GLuint LoadShader(GLenum type, const char *shaderSrc)
+GLuint LoadShader(GLenum type, GLbyte *shaderSrc)
 {
 	GLuint shader;
 	GLint compiled;

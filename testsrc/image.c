@@ -123,7 +123,7 @@ GLuint LoadShader(GLenum type, const char *shaderSrc)
 	return shader;
 }
 
-GLuint LoadProgram ( const char *vertShaderSrc, const char *fragShaderSrc )
+GLuint LoadProgram ( GLbyte *vertShaderSrc, GLbyte *fragShaderSrc )
 {
 	GLuint vertexShader;
 	GLuint fragmentShader;

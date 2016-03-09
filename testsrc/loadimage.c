@@ -347,6 +347,22 @@ static void done_upscale(struct upscalestruct *data)
 	free (data);
 }
 
+/* Error handling/ignoring */
+
+struct decode_error_manager {
+	struct jpeg_error_mgr org;
+	jmp_buf setjmp_buffer;
+};
+
+typedef struct decode_error_manager * decode_error_manager;
+
+void handle_decode_error(j_common_ptr info)
+{
+	decode_error_manager jerr = (decode_error_manager)info->err;
+	(*info->err->output_message) (info);
+	longjmp (jerr->setjmp_buffer, 1);
+}
+
 
 
 char *esLoadJPEG ( char *fileName, int wantedwidth, int wantedheight,

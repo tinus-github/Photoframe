@@ -1,4 +1,4 @@
-image: image.o
+image: image.o loadimage.o
 	cc -o image -Wl,--whole-archive image.o -L/opt/vc/lib/ \
 	-lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
@@ -16,6 +16,14 @@ image.o: image.c
 	 -I/opt/vc/include/interface/vmcs_host/linux -I./ \
 	 -I/opt/vc/src/hello_pi/libs/ilclient \
 	 -I/opt/vc/src/hello_pi/libs/vgfont -g -c image.c -o image.o \
+	 -Wno-deprecated-declarations
+
+loadimage.o: loadimage.c loadimage.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	 -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	 -ftree-vectorize -pipe -Wno-psabi \
+	 -I/opt/vc/include/ \
+	 -c loadimage.c -o loadimage.o \
 	 -Wno-deprecated-declarations
 
 decodejpeg2rgb: decodejpeg2rgb.o

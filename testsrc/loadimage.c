@@ -390,7 +390,7 @@ char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	
 	FILE *f;
 	
-	char *buffer = NULL;
+	unsigned char *buffer = NULL;
 	
 	unsigned char *scanbuf = NULL;
 	unsigned char *scanbufcurrentline;

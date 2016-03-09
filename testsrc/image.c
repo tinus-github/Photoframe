@@ -482,7 +482,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
-	image = esLoadJPEG(argv[1], 1920, 1080, &width, &height);
+	image = loadJPEG(argv[1], 1920, 1080, &width, &height);
 	if (image == NULL) {
 		fprintf(stderr, "No such image\n");
 		exit(1);

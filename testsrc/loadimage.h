@@ -9,9 +9,9 @@
 #ifndef loadimage_h
 #define loadimage_h
 
-char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
+unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 		  int *width, int *height );
 
-char *loadTGA ( char *fileName, int *width, int *height );
+unsigned char *loadTGA ( char *fileName, int *width, int *height );
 
 #endif /* loadimage_h */

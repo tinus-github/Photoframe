@@ -50,7 +50,7 @@ typedef struct CUBE_STATE_T
 	void (*draw_func) (struct CUBE_STATE_T* );
 } CUBE_STATE_T;
 
-char *image;
+unsigned char *image;
 int tex;
 
 

@@ -381,7 +381,7 @@ static void setup_dct_scale(struct jpeg_decompress_struct *cinfo, float scalefac
 }
 
 
-char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
+unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 		  int *width, int *height )
 {
 	struct jpeg_decompress_struct cinfo;
@@ -494,9 +494,9 @@ char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 
 
 /* Crude, insecure */
-char* loadTGA ( char *fileName, int *width, int *height )
+unsigned char* loadTGA ( char *fileName, int *width, int *height )
 {
-	char *buffer = NULL;
+	unsigned char *buffer = NULL;
 	FILE *f;
 	unsigned char tgaheader[12];
 	unsigned char attributes[6];

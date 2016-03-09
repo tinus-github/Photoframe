@@ -92,7 +92,7 @@ GLuint CreateSimpleTexture2D(int width, int height )
 // Create a shader object, load the shader source, and
 // compile the shader.
 //
-GLuint LoadShader(GLenum type, GLbyte *shaderSrc)
+GLuint LoadShader(GLenum type, const GLchar *shaderSrc)
 {
 	GLuint shader;
 	GLint compiled;
@@ -123,7 +123,7 @@ GLuint LoadShader(GLenum type, GLbyte *shaderSrc)
 	return shader;
 }
 
-GLuint LoadProgram ( GLbyte *vertShaderSrc, GLbyte *fragShaderSrc )
+GLuint LoadProgram ( GLchar *vertShaderSrc, GLchar *fragShaderSrc )
 {
 	GLuint vertexShader;
 	GLuint fragmentShader;
@@ -191,7 +191,7 @@ int Init(CUBE_STATE_T *p_state)
 	
 	p_state->user_data = malloc(sizeof(UserData));
 	UserData *userData = p_state->user_data;
-	GLbyte vShaderStr[] =
+	GLchar vShaderStr[] =
 	"attribute vec4 a_position;   \n"
 	"attribute vec2 a_texCoord;   \n"
 	"varying vec2 v_texCoord;     \n"
@@ -201,7 +201,7 @@ int Init(CUBE_STATE_T *p_state)
 	"   v_texCoord = a_texCoord;  \n"
 	"}                            \n";
 	
-	GLbyte fShaderStr[] =
+	GLchar fShaderStr[] =
 	"precision mediump float;                            \n"
 	"varying vec2 v_texCoord;                            \n"
 	"uniform sampler2D s_texture;                        \n"

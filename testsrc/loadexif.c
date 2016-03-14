@@ -12,7 +12,7 @@
 void loadexif_setup_overlay(j_decompress_ptr cinfo)
 {
 	struct loadexif_client_data *data = calloc(sizeof (struct loadexif_client_data), 1);
-	loadimage_client_data *client_data = (loadimage_client_data *)cinfo->client_data;
+	loadimage_jpeg_client_data *client_data = (loadimage_jpeg_client_data *)cinfo->client_data;
 	
 	data->orgf.init_source = cinfo->src.init_source;
 	data->orgf.fill_input_buffer = cinfo->src.fill_input_buffer;

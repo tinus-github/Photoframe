@@ -9,6 +9,8 @@
 /* Begin PBXFileReference section */
 		0D2B2FED1C9073AA0063393E /* loadimage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = loadimage.c; sourceTree = "<group>"; };
 		0D2B2FEE1C9073AA0063393E /* loadimage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loadimage.h; sourceTree = "<group>"; };
+		0D2B2FEF1C90DE7F0063393E /* loadexif.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = loadexif.c; sourceTree = "<group>"; };
+		0D2B2FF01C90DE7F0063393E /* loadexif.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loadexif.h; sourceTree = "<group>"; };
 		0D69BD6F1C4EA0E300A10282 /* autos.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = autos.jpg; sourceTree = "<group>"; };
 		0D69BD701C4EA0E300A10282 /* jan.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = jan.tga; sourceTree = "<group>"; };
 		0D69BD711C4EA0E300A10282 /* plane.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = plane.jpg; sourceTree = "<group>"; };
@@ -58,6 +60,8 @@
 				0D69BD781C4EA17900A10282 /* rectangle.c */,
 				0D2B2FED1C9073AA0063393E /* loadimage.c */,
 				0D2B2FEE1C9073AA0063393E /* loadimage.h */,
+				0D2B2FEF1C90DE7F0063393E /* loadexif.c */,
+				0D2B2FF01C90DE7F0063393E /* loadexif.h */,
 			);
 			indentWidth = 8;
 			path = testsrc;

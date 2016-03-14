@@ -14,4 +14,12 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 
 unsigned char *loadTGA ( char *fileName, int *width, int *height );
 
+
+// internal
+
+typedef struct loadimage_jpeg_client_data {
+	void *image_data;
+	void *exif_data;
+} loadimage_jpeg_client_data;
+
 #endif /* loadimage_h */

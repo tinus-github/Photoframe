@@ -388,6 +388,8 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	
 	struct decode_error_manager jerr;
 	
+	struct loadimage_jpeg_client_data client_data;
+	
 	FILE *f;
 	
 	unsigned char *buffer = NULL;
@@ -421,6 +423,7 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	}
 	
 	jpeg_create_decompress(&cinfo);
+	cinfo.client_data = client_data;
 	
 	f = fopen(fileName, "rb");
 	if (f == NULL) return NULL;

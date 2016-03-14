@@ -26,6 +26,14 @@ loadimage.o: loadimage.c loadimage.h
 	 -c loadimage.c -o loadimage.o \
 	 -Wno-deprecated-declarations
 
+loadexif.o: loadexif.c loadexif.h loadimage.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	 -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	 -ftree-vectorize -pipe -Wno-psabi \
+	 -I/opt/vc/include/ \
+	 -c loadexif.c -o loadexif.o \
+	 -Wno-deprecated-declarations
+
 decodejpeg2rgb: decodejpeg2rgb.o
 	cc -o decodejpeg2rgb -Wl,--whole-archive decodejpeg2rgb.o -L/opt/vc/lib/ \
 	-lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \

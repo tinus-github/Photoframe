@@ -423,7 +423,7 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	}
 	
 	jpeg_create_decompress(&cinfo);
-	cinfo.client_data = client_data;
+	cinfo.client_data = &client_data;
 	
 	f = fopen(fileName, "rb");
 	if (f == NULL) return NULL;

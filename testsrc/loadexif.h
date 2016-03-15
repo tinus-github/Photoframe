@@ -19,6 +19,9 @@ void loadexif_setup_overlay(j_decompress_ptr cinfo);
 
 // Internal
 
+#define LOADEXIF_BUFFER_SIZE (128*1024)
+// 128k should be enough for anybody
+
 #include <stdlib.h>
 
 struct loadexif_org_functions {
@@ -30,7 +33,7 @@ struct loadexif_org_functions {
 };
 
 typedef struct loadexif_client_data {
-	unsigned char inputdata[128*1024]; // 128k should be enough for anybody
+	unsigned char inputdata[LOADEXIF_BUFFER_SIZE];
 	size_t inputsize;
 	struct loadexif_org_functions orgf;
 } loadexif_client_data;

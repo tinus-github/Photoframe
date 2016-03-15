@@ -103,14 +103,11 @@ boolean loadexif_parse(j_decompress_ptr cinfo)
 	if (result) {
 		ExifEntry *entry = exif_data_get_entry(result, EXIF_TAG_ORIENTATION);
 		ExifByteOrder byteOrder = exif_data_get_byte_order(result);
-		if (entry) {
-			if (entry->format == EXIF_FORMAT_SHORT) {
-				data->orientation = exif_get_short(entry->data, byteOrder);
-				if ((data->orientation < 1) || (data->orientation > 8)) {
-					data->orientation = 1;
-				}
+		if (entry && (entry->format == EXIF_FORMAT_SHORT)) {
+			data->orientation = exif_get_short(entry->data, byteOrder);
+			if ((data->orientation < 1) || (data->orientation > 8)) {
+				data->orientation = 1;
 			}
-			exif_entry_unref(entry);
 		}
 		exif_data_dump(result);
 		exif_data_unref(result);

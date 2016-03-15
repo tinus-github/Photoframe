@@ -1,7 +1,7 @@
-image: image.o loadimage.o
-	cc -o image -Wl,--whole-archive image.o loadimage.o -L/opt/vc/lib/ \
+image: image.o loadimage.o loadexif.o
+	cc -o image -Wl,--whole-archive image.o loadimage.o loadexif.o -L/opt/vc/lib/ \
 	-lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
-	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
+	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg -lexif \
 	-Wl,--no-whole-archive -rdynamic
 
 image.o: image.c

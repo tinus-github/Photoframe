@@ -86,7 +86,7 @@ boolean loadexif_parse(j_decompress_ptr cinfo)
 	loadimage_jpeg_client_data *client_data = (loadimage_jpeg_client_data *)cinfo->client_data;
 	struct loadexif_client_data *data = client_data->exif_data;
 	
-	ExifData result = exif_data_new_from_data(data->inputdata, data->inputsize);
+	ExifData *result = exif_data_new_from_data(data->inputdata, data->inputsize);
 	if (result) {
 		exif_data_dump(result);
 		return true;

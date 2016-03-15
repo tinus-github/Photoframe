@@ -67,6 +67,8 @@ static void term_source(j_decompress_ptr cinfo)
 	void (*org_term_source) (j_decompress_ptr cinfo) = data->orgf.term_source;
 	
 	free(data);
+	client_data->exif_data = NULL;
+	
 	org_term_source(cinfo);
 	return;
 }
@@ -88,6 +90,7 @@ void loadexif_setup_overlay(j_decompress_ptr cinfo)
 	
 	orgsrc->skip_input_data = skip_input_data;
 	orgsrc->fill_input_buffer = fill_input_buffer_and_record;
+	orgsrc->term_source = term_source;
 }
 
 boolean loadexif_parse(j_decompress_ptr cinfo)
@@ -102,7 +105,7 @@ boolean loadexif_parse(j_decompress_ptr cinfo)
 		ExifByteOrder byteOrder = exif_data_get_byte_order(result);
 		if (entry) {
 			if (entry->format == EXIF_FORMAT_SHORT) {
-				data->orientation = exif_get_short(exifEntry->data, byteOrder);
+				data->orientation = exif_get_short(entry->data, byteOrder);
 				if ((data->orientation < 1) || (data->orientation > 8)) {
 					data->orientation = 1;
 				}

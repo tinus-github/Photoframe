@@ -89,7 +89,7 @@ boolean loadexif_parse(j_decompress_ptr cinfo)
 	ExifData *result = exif_data_new_from_data(data->inputdata, data->inputsize);
 	if (result) {
 		exif_data_dump(result);
-		return true;
+		return TRUE;
 	}
-	return false;
+	return FALSE;
 }

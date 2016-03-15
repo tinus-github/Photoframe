@@ -7,6 +7,7 @@
 //
 
 #include "loadimage.h"
+#include "loadexif.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -429,7 +430,12 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	if (f == NULL) return NULL;
 	
 	jpeg_stdio_src(&cinfo, f);
+	
+	loadexif_setup_overlay(&cinfo);
+	
 	jpeg_read_header(&cinfo, TRUE);
+	
+	loadexif_parse(&cinfo);
 	
 	cinfo.out_color_space = JCS_RGB;
 	

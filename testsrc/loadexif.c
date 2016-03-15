@@ -60,7 +60,16 @@ static boolean fill_input_buffer_and_record(j_decompress_ptr cinfo)
 	return ret;
 }
 
-
+static void term_source(j_decompress_ptr cinfo)
+{
+	struct loadexif_client_data *data = calloc(sizeof (struct loadexif_client_data), 1);
+	loadimage_jpeg_client_data *client_data = (loadimage_jpeg_client_data *)cinfo->client_data;
+	void (*org_term_source) (j_decompress_ptr cinfo) = data->orgf.term_source;
+	
+	free(data);
+	org_term_source(cinfo);
+	return;
+}
 
 void loadexif_setup_overlay(j_decompress_ptr cinfo)
 {
@@ -87,8 +96,21 @@ boolean loadexif_parse(j_decompress_ptr cinfo)
 	struct loadexif_client_data *data = client_data->exif_data;
 	
 	ExifData *result = exif_data_new_from_data(data->inputdata, data->inputsize);
+	data->orientation = 1;
 	if (result) {
+		ExifEntry *entry = exif_data_get_entry(result, EXIF_TAG_ORIENTATION);
+		ExifByteOrder byteOrder = exif_data_get_byte_order(result);
+		if (entry) {
+			if (entry->format == EXIF_FORMAT_SHORT) {
+				data->orientation = exif_get_short(exifEntry->data, byteOrder);
+				if ((data->orientation < 1) || (data->orientation > 8)) {
+					data->orientation = 1;
+				}
+			}
+			exif_entry_unref(entry);
+		}
 		exif_data_dump(result);
+		exif_data_unref(result);
 		return TRUE;
 	}
 	return FALSE;

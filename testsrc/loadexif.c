@@ -10,6 +10,7 @@
 #include "loadimage.h"
 
 #include <jpeglib.h>
+#include <libexif/exif-data.h>
 
 #include <string.h>
 
@@ -80,3 +81,15 @@ void loadexif_setup_overlay(j_decompress_ptr cinfo)
 	orgsrc->fill_input_buffer = fill_input_buffer_and_record;
 }
 
+boolean loadexif_parse(j_decompress_ptr cinfo)
+{
+	loadimage_jpeg_client_data *client_data = (loadimage_jpeg_client_data *)cinfo->client_data;
+	struct loadexif_client_data *data = client_data->exif_data;
+	
+	ExifData result = exif_data_new_from_data(data->inputdata, data->inputsize);
+	if (result) {
+		exif_data_dump(result);
+		return true;
+	}
+	return false;
+}

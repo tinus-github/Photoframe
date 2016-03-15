@@ -15,7 +15,7 @@
 #include <jpeglib.h>
 
 void loadexif_setup_overlay(j_decompress_ptr cinfo);
-
+boolean loadexif_parse(j_decompress_ptr cinfo);
 
 // Internal
 

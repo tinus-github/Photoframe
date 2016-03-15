@@ -11,7 +11,7 @@
 
 #include <jpeglib.h>
 
-#incnlude <string.h>
+#include <string.h>
 
 /* Taken from jdatasrc.c; we need this behavior because we need
  * all bytes from the file */

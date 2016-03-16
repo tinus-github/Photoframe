@@ -381,6 +381,24 @@ static void setup_dct_scale(struct jpeg_decompress_struct *cinfo, float scalefac
 	return;
 }
 
+/* Returns true if this orientation flips width and height */
+static boolean orientation_flips(unsigned int orientation)
+{
+	switch (orientation) {
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+			return FALSE;
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+			return TRUE;
+		default:
+			return FALSE;
+	}
+}
 
 unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 		  int *width, int *height, unsigned int *orientation )
@@ -437,7 +455,12 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	
 	loadexif_parse(&cinfo);
 	*orientation = loadexif_get_orientation(&cinfo);
-	// TODO: flip width/height if appropriate
+	
+	if (orientation_flips(orientation)) {
+		int tmpheight = wantedheight;
+		wantedheight = wantedwidth;
+		wantedwidth = tmpheight;
+	}
 	
 	cinfo.out_color_space = JCS_RGB;
 	

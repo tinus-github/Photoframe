@@ -109,7 +109,6 @@ boolean loadexif_parse(j_decompress_ptr cinfo)
 				data->orientation = 1;
 			}
 		}
-		exif_data_dump(result);
 		exif_data_unref(result);
 		return TRUE;
 	}

@@ -417,6 +417,7 @@ int main(int argc, char *argv[])
 {
 	UserData user_data;
 	int width, height;
+	unsigned int orientation;
 	
 	struct timeval t1, t2;
 	struct timezone tz;
@@ -430,7 +431,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
-	image = loadJPEG(argv[1], 1920, 1080, &width, &height);
+	image = loadJPEG(argv[1], 1920, 1080, &width, &height, &orientation);
 	if (image == NULL) {
 		fprintf(stderr, "No such image\n");
 		exit(1);

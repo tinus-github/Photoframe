@@ -231,7 +231,21 @@ int Init(CUBE_STATE_T *p_state)
 
 void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
 {
-	GLfloat ret[8];
+	GLfloat coordSets[8][8] = {
+		{0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f},
+		{1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f},
+		{1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f},
+		{0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f},
+		{1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f},
+		{0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f},
+		{0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f},
+		{1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f} };
+
+	if ((rotation < 1) || (rotation > 8)) {
+		rotation = 1;
+	}
+	
+	/*
 	switch (rotation) {
 		default:
 		case 1: //normal
@@ -250,8 +264,8 @@ void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
 			ret = {0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f};
 		case 8: //rotated left
 			ret = {1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f}
-	}
-	memcpy (coords, ret, sizeof(GLfloat) * 8);
+	} */
+	memcpy (coords, coordSets[rotation - 1], sizeof(GLfloat) * 8);
 }
 
 ///

@@ -62,11 +62,10 @@ static boolean fill_input_buffer_and_record(j_decompress_ptr cinfo)
 
 static void term_source(j_decompress_ptr cinfo)
 {
-	struct loadexif_client_data *data = calloc(sizeof (struct loadexif_client_data), 1);
 	loadimage_jpeg_client_data *client_data = (loadimage_jpeg_client_data *)cinfo->client_data;
 	void (*org_term_source) (j_decompress_ptr cinfo) = data->orgf.term_source;
 	
-	free(data);
+	free(client_data->exif_data);
 	client_data->exif_data = NULL;
 	
 	org_term_source(cinfo);

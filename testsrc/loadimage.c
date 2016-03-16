@@ -456,7 +456,7 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	loadexif_parse(&cinfo);
 	*orientation = loadexif_get_orientation(&cinfo);
 	
-	if (orientation_flips(orientation)) {
+	if (orientation_flips(*orientation)) {
 		int tmpheight = wantedheight;
 		wantedheight = wantedwidth;
 		wantedwidth = tmpheight;

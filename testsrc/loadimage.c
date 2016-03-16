@@ -383,7 +383,7 @@ static void setup_dct_scale(struct jpeg_decompress_struct *cinfo, float scalefac
 
 
 unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
-		  int *width, int *height )
+		  int *width, int *height, int *orientation )
 {
 	struct jpeg_decompress_struct cinfo;
 	
@@ -436,6 +436,8 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	jpeg_read_header(&cinfo, TRUE);
 	
 	loadexif_parse(&cinfo);
+	*orientation = loadexif_get_orientation(&cinfo);
+	// TODO: flip width/height if appropriate
 	
 	cinfo.out_color_space = JCS_RGB;
 	

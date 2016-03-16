@@ -115,3 +115,11 @@ boolean loadexif_parse(j_decompress_ptr cinfo)
 	}
 	return FALSE;
 }
+
+unsigned int loadexif_get_orientation(j_decompress_ptr cinfo)
+{
+	loadimage_jpeg_client_data *client_data = (loadimage_jpeg_client_data *)cinfo->client_data;
+	struct loadexif_client_data *data = client_data->exif_data;
+	
+	return data->orientation;
+}

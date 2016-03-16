@@ -16,6 +16,7 @@
 
 void loadexif_setup_overlay(j_decompress_ptr cinfo);
 boolean loadexif_parse(j_decompress_ptr cinfo);
+unsigned int loadexif_get_orientation(j_decompress_ptr cinfo);
 
 // Internal
 

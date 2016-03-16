@@ -10,7 +10,7 @@
 #define loadimage_h
 
 unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
-		  int *width, int *height );
+		  int *width, int *height, int *orientation );
 
 unsigned char *loadTGA ( char *fileName, int *width, int *height );
 

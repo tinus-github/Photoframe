@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <math.h>
 #include <sys/time.h>
+#include <string.h>
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -42,6 +43,8 @@ typedef struct CUBE_STATE_T
 {
 	uint32_t width;
 	uint32_t height;
+	
+	unsigned int orientation;
 	
 	EGLDisplay display;
 	EGLSurface surface;
@@ -226,6 +229,31 @@ int Init(CUBE_STATE_T *p_state)
 	return GL_TRUE;
 }
 
+void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
+{
+	GLfloat ret[8];
+	switch (rotation) {
+		default:
+		case 1: //normal
+			ret = {0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f};
+		case 2: //flipped horizontally
+			ret = {1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f};
+		case 3: //upside down
+			ret = {1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f};
+		case 4: //flipped vertically
+			ret = {0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f};
+		case 5: //rotated left, then flipped vertically
+			ret = {1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f};
+		case 6: //rotated right
+			ret = {0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f};
+		case 7: //rotated right, then flipped vertically
+			ret = {0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f};
+		case 8: //rotated left
+			ret = {1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f}
+	}
+	memcpy (coords, ret, sizeof(GLfloat) * 8);
+}
+
 ///
 // Draw triangles using the shader pair created in Init()
 //
@@ -242,6 +270,17 @@ void Draw(CUBE_STATE_T *p_state)
 		1.0f,  1.0f, 0.0f,  // Position 3
 		1.0f,  0.0f         // TexCoord 3
 	};
+	
+	GLfloat texCoords[8];
+	TexCoordsForRotation(p_state->orientation, texCoords);
+	vVertices[3] = texCoords[0];
+	vVertices[4] = texCoords[1];
+	vVertices[8] = texCoords[2];
+	vVertices[9] = texCoords[3];
+	vVertices[13] = texCoords[4];
+	vVertices[14] = texCoords[5];
+	vVertices[18] = texCoords[6];
+	vVertices[19] = texCoords[7];
 	
 	GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
 	//GLushort indices[] = {1, 0, 3, 0, 2, 0, 1 };
@@ -278,7 +317,7 @@ void Draw(CUBE_STATE_T *p_state)
 
 CUBE_STATE_T state, *p_state = &state;
 
-void init_ogl(CUBE_STATE_T *state, int width, int height)
+void init_ogl(CUBE_STATE_T *state, int width, int height, unsigned int orientation)
 {
 	int32_t success = 0;
 	EGLBoolean result;
@@ -335,6 +374,7 @@ void init_ogl(CUBE_STATE_T *state, int width, int height)
 	
 	state->width = width;
 	state->height = height;
+	state->orientation = orientation;
 	
 	dst_rect.x = 0;
 	dst_rect.y = 0;
@@ -446,7 +486,7 @@ int main(int argc, char *argv[])
 	bcm_host_init();
 	esInitContext(p_state);
 	
-	init_ogl(p_state, width, height);
+	init_ogl(p_state, width, height, orientation);
 	
 	p_state->user_data = &user_data;
 	p_state->width = width;

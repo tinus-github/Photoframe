@@ -4,7 +4,7 @@ image: image.o loadimage.o loadexif.o
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg -lexif \
 	-Wl,--no-whole-archive -rdynamic
 
-image.o: image.c
+image.o: image.c loadimage.h loadexif.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
 	 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DTARGET_POSIX \
 	 -D_LINUX -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

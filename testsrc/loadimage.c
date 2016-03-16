@@ -383,7 +383,7 @@ static void setup_dct_scale(struct jpeg_decompress_struct *cinfo, float scalefac
 
 
 unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
-		  int *width, int *height, int *orientation )
+		  int *width, int *height, unsigned int *orientation )
 {
 	struct jpeg_decompress_struct cinfo;
 	

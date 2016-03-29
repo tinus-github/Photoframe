@@ -232,39 +232,19 @@ int Init(CUBE_STATE_T *p_state)
 void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
 {
 	GLfloat coordSets[8][8] = {
-		{0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f},
-		{1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f},
-		{1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f},
-		{0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f},
-		{1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f},
-		{0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f},
-		{0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f},
-		{1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f} };
+		{0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f}, //1: Normal
+		{1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f}, //2: Flipped horizontally
+		{1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f}, //3: Upside down
+		{0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f}, //4: Flipped vertically
+		{1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f}, //5: Rotated left, then flipped vertically
+		{0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f}, //6: Rotated right
+		{0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f}, //7: Rotated right, then flipped vertically
+		{1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f} }; //8: Rotated left
 
 	if ((rotation < 1) || (rotation > 8)) {
 		rotation = 1;
 	}
 	
-	/*
-	switch (rotation) {
-		default:
-		case 1: //normal
-			ret = {0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f};
-		case 2: //flipped horizontally
-			ret = {1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f};
-		case 3: //upside down
-			ret = {1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f};
-		case 4: //flipped vertically
-			ret = {0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f};
-		case 5: //rotated left, then flipped vertically
-			ret = {1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f};
-		case 6: //rotated right
-			ret = {0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f};
-		case 7: //rotated right, then flipped vertically
-			ret = {0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f};
-		case 8: //rotated left
-			ret = {1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f}
-	} */
 	memcpy (coords, coordSets[rotation - 1], sizeof(GLfloat) * 8);
 }
 

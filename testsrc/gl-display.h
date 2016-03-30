@@ -44,5 +44,6 @@ typedef struct CUBE_STATE_T
 	void (*draw_func) (struct CUBE_STATE_T* );
 } CUBE_STATE_T;
 
+void Draw(CUBE_STATE_T *p_state);
 
 #endif /* gl_display_h */

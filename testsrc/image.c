@@ -23,11 +23,6 @@
 #define TRUE 1
 #define FALSE 0
 
-unsigned char *image;
-int tex;
-
-CUBE_STATE_T state, *p_state = &state;
-
 int main(int argc, char *argv[])
 {
 	UserData user_data;
@@ -37,6 +32,9 @@ int main(int argc, char *argv[])
 	struct timeval t1, t2;
 	struct timezone tz;
 	float deltatime;
+	
+	unsigned char *image;
+	CUBE_STATE_T state, *p_state = &state;
 	
 	//image = esLoadTGA("jan.tga", &width, &height);
 	gettimeofday ( &t1 , &tz );

@@ -61,13 +61,13 @@ int main(int argc, char *argv[])
 	bcm_host_init();
 	esInitContext(p_state);
 	
-	init_ogl(p_state, width, height, orientation);
+	init_ogl(p_state, width, height)
 	
 	p_state->user_data = &user_data;
 	p_state->width = width;
 	p_state->height = height;
 	
-	if(!Init(p_state))
+	if(!Init(p_state, orientation))
 		return 0;
 	
 	esRegisterDrawFunc(p_state, Draw);

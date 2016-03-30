@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 	bcm_host_init();
 	esInitContext(p_state);
 	
-	init_ogl(p_state, width, height)
+	init_ogl(p_state, width, height);
 	
 	p_state->user_data = &user_data;
 	p_state->width = width;

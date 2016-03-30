@@ -23,6 +23,7 @@ gl-display.o: gl-display.c gl-display.h
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c gl-display.c -o gl-display.o \
 	-Wno-deprecated-declarations
 

@@ -11,6 +11,7 @@
 #include <bcm_host.h>
 
 #include <assert.h>
+#include <sys/time.h>
 
 // from esUtil.h
 #define TRUE 1

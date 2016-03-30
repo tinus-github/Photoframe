@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 	p_state->width = width;
 	p_state->height = height;
 	
-	if(!Init(p_state, orientation))
+	if(!Init(p_state, image, orientation))
 		return 0;
 	
 	esRegisterDrawFunc(p_state, Draw);

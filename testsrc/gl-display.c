@@ -144,7 +144,7 @@ GLuint LoadProgram ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
 ///
 // Initialize the shader and program object
 //
-int Init(CUBE_STATE_T *p_state, unsigned int orientation)
+int Init(CUBE_STATE_T *p_state, unsigned char* image, unsigned int orientation)
 {
 	
 	p_state->user_data = malloc(sizeof(UserData));
@@ -178,7 +178,7 @@ int Init(CUBE_STATE_T *p_state, unsigned int orientation)
 	// Get the sampler location
 	userData->samplerLoc = glGetUniformLocation ( userData->programObject, "s_texture" );
 	// Load the texture
-	userData->textureId = CreateSimpleTexture2D (p_state->width, p_state->height);
+	userData->textureId = CreateSimpleTexture2D (p_state->width, p_state->height, image);
 	
 	userData->orientation = orientation;
 	

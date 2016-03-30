@@ -10,6 +10,8 @@
 
 #include <bcm_host.h>
 
+#include <assert.h>
+
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0

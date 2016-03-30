@@ -8,9 +8,6 @@
 
 #include "gl-display.h"
 
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-
 #include <bcm_host.h>
 
 // from esUtil.h

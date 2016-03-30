@@ -142,7 +142,7 @@ GLuint LoadProgram ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
 ///
 // Initialize the shader and program object
 //
-int Init(CUBE_STATE_T *p_state, unsigned int orientation))
+int Init(CUBE_STATE_T *p_state, unsigned int orientation)
 {
 	
 	p_state->user_data = malloc(sizeof(UserData));

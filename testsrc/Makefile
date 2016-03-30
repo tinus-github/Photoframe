@@ -1,10 +1,10 @@
-image: image.o loadimage.o loadexif.o
-	cc -o image -Wl,--whole-archive image.o loadimage.o loadexif.o -L/opt/vc/lib/ \
+image: image.o loadimage.o loadexif.o gl-display.o
+	cc -o image -Wl,--whole-archive image.o loadimage.o loadexif.o gl-display.o -L/opt/vc/lib/ \
 	-lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg -lexif \
 	-Wl,--no-whole-archive -rdynamic
 
-image.o: image.c loadimage.h
+image.o: image.c loadimage.h gl-display.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
 	 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DTARGET_POSIX \
 	 -D_LINUX -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
@@ -17,6 +17,14 @@ image.o: image.c loadimage.h
 	 -I/opt/vc/src/hello_pi/libs/ilclient \
 	 -I/opt/vc/src/hello_pi/libs/vgfont -g -c image.c -o image.o \
 	 -Wno-deprecated-declarations
+
+gl-display.o: gl-display.c gl-display.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-I/opt/vc/include/ \
+	-c gl-display.c -o gl-display.o \
+	-Wno-deprecated-declarations
 
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

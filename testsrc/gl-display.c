@@ -145,11 +145,11 @@ GLuint LoadProgram ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
 ///
 // Initialize the shader and program object
 //
-int Init(CUBE_STATE_T *p_state, unsigned char* image, unsigned int orientation)
+int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsigned int orientation)
 {
 	
-	p_state->user_data = malloc(sizeof(UserData));
-	UserData *userData = p_state->user_data;
+	p_state->user_data = malloc(sizeof(ImageUserData));
+	ImageUserData *userData = p_state->user_data;
 	GLchar vShaderStr[] =
 	"attribute vec4 a_position;   \n"
 	"attribute vec2 a_texCoord;   \n"
@@ -181,6 +181,8 @@ int Init(CUBE_STATE_T *p_state, unsigned char* image, unsigned int orientation)
 	// Load the texture
 	userData->textureId = CreateSimpleTexture2D (p_state->width, p_state->height, image);
 	
+	userData->width = width;
+	userData->height = height;
 	userData->orientation = orientation;
 	
 	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
@@ -209,9 +211,9 @@ void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
 ///
 // Draw triangles using the shader pair created in Init()
 //
-void Draw(CUBE_STATE_T *p_state)
+void Draw(GL_STATE_T *p_state)
 {
-	UserData *userData = p_state->user_data;
+	ImageUserData *userData = p_state->user_data;
 	
 	GLfloat vVertices[] = { -1.0f,  1.0f, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0
@@ -267,7 +269,7 @@ void Draw(CUBE_STATE_T *p_state)
 	//glDrawElements ( GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_SHORT, indices );
 }
 
-void init_ogl(CUBE_STATE_T *state, int width, int height)
+void init_ogl(GL_STATE_T *state)
 {
 	int32_t success = 0;
 	EGLBoolean result;
@@ -357,7 +359,7 @@ void init_ogl(CUBE_STATE_T *state, int width, int height)
 	assert(EGL_FALSE != result);
 }
 
-void  esMainLoop (CUBE_STATE_T *esContext )
+void  esMainLoop (GL_STATE_T *esContext )
 {
 	struct timeval t1, t2;
 	struct timezone tz;
@@ -389,15 +391,15 @@ void  esMainLoop (CUBE_STATE_T *esContext )
 	}
 }
 
-void esInitContext ( CUBE_STATE_T *p_state )
+void esInitContext ( GL_STATE_T *p_state )
 {
 	if ( p_state != NULL )
 	{
-		memset( p_state, 0, sizeof( CUBE_STATE_T) );
+		memset( p_state, 0, sizeof( GL_STATE_T) );
 	}
 }
 
-void esRegisterDrawFunc(CUBE_STATE_T *p_state, void (*draw_func) (CUBE_STATE_T* ) )
+void esRegisterDrawFunc(GL_STATE_T *p_state, void (*draw_func) (GL_STATE_T* ) )
 {
 	p_state->draw_func = draw_func;
 }

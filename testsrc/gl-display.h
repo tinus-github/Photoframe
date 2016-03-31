@@ -15,6 +15,7 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
+// Data related to a displayed image
 typedef struct
 {
 	// Handle to a program object
@@ -29,11 +30,14 @@ typedef struct
 	
 	// Texture handle
 	GLuint textureId;
+	uint32_t width;
+	uint32_t height;
 	
 	unsigned int orientation;
-} UserData;
+} ImageUserData;
 
-typedef struct CUBE_STATE_T
+// General GL state data
+typedef struct GL_STATE_T
 {
 	uint32_t width;
 	uint32_t height;
@@ -45,8 +49,8 @@ typedef struct CUBE_STATE_T
 	EGL_DISPMANX_WINDOW_T nativewindow;
 	UserData *user_data;
 	void (*draw_func) (struct CUBE_STATE_T* );
-} CUBE_STATE_T;
+} GL_STATE_T;
 
-void Draw(CUBE_STATE_T *p_state);
+void Draw(GL_STATE_T *p_state);
 
 #endif /* gl_display_h */

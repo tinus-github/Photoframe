@@ -25,7 +25,6 @@
 
 int main(int argc, char *argv[])
 {
-	UserData user_data;
 	int width, height;
 	unsigned int orientation;
 	
@@ -34,7 +33,7 @@ int main(int argc, char *argv[])
 	float deltatime;
 	
 	unsigned char *image;
-	CUBE_STATE_T state, *p_state = &state;
+	GL_STATE_T state, *p_state = &state;
 	
 	//image = esLoadTGA("jan.tga", &width, &height);
 	gettimeofday ( &t1 , &tz );
@@ -59,13 +58,9 @@ int main(int argc, char *argv[])
 	bcm_host_init();
 	esInitContext(p_state);
 	
-	init_ogl(p_state, width, height);
+	init_ogl(p_state);
 	
-	p_state->user_data = &user_data;
-	p_state->width = width;
-	p_state->height = height;
-	
-	if(!Init(p_state, image, orientation))
+	if(!Init(p_state, image, width, height, orientation))
 		return 0;
 	
 	esRegisterDrawFunc(p_state, Draw);

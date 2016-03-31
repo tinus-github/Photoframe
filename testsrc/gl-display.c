@@ -179,7 +179,7 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	// Get the sampler location
 	userData->samplerLoc = glGetUniformLocation ( userData->programObject, "s_texture" );
 	// Load the texture
-	userData->textureId = CreateSimpleTexture2D (p_state->width, p_state->height, image);
+	userData->textureId = CreateSimpleTexture2D (width, height, image);
 	
 	userData->width = width;
 	userData->height = height;

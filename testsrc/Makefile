@@ -1,3 +1,5 @@
+.PHONY: clean
+
 image: image.o loadimage.o loadexif.o gl-display.o
 	cc -o image -Wl,--whole-archive image.o loadimage.o loadexif.o gl-display.o -L/opt/vc/lib/ \
 	-lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
@@ -64,3 +66,5 @@ decodejpeg2rgb.o: decodejpeg2rgb.c
 	 -I/opt/vc/src/hello_pi/libs/vgfont -g -c decodejpeg2rgb.c -o decodejpeg2rgb.o \
 	 -Wno-deprecated-declarations
 
+clean:
+	rm -f image image.o gl-display.o loadimage.o loadexif.o decodejpeg2rgb decodejpeg2rgb.o

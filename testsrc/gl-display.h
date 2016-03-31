@@ -47,7 +47,7 @@ typedef struct GL_STATE_T
 	EGLContext context;
 	
 	EGL_DISPMANX_WINDOW_T nativewindow;
-	UserData *user_data;
+	ImageUserData *user_data;
 	void (*draw_func) (struct GL_STATE_T* );
 } GL_STATE_T;
 

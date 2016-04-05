@@ -161,7 +161,7 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	"void main()                           \n"
 	"{                                     \n"
 	"   vec4 p = u_modelView * a_position; \n"
-	"   gl_Position = u_projection * p;    \n"
+	"   gl_Position = p * u_projection;    \n"
 	"   v_texCoord = a_texCoord;           \n"
 	"}                                     \n";
 	

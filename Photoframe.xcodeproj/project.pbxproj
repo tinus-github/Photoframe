@@ -13,6 +13,7 @@
 		0D2B2FF01C90DE7F0063393E /* loadexif.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loadexif.h; sourceTree = "<group>"; };
 		0D2B2FF11CAACF780063393E /* gl-display.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-display.c"; sourceTree = "<group>"; };
 		0D2B2FF21CAACF780063393E /* gl-display.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-display.h"; sourceTree = "<group>"; };
+		0D2B2FF51CB443900063393E /* linmath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = linmath.h; sourceTree = "<group>"; };
 		0D69BD6F1C4EA0E300A10282 /* autos.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = autos.jpg; sourceTree = "<group>"; };
 		0D69BD701C4EA0E300A10282 /* jan.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = jan.tga; sourceTree = "<group>"; };
 		0D69BD711C4EA0E300A10282 /* plane.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = plane.jpg; sourceTree = "<group>"; };
@@ -32,9 +33,26 @@
 			);
 			sourceTree = "<group>";
 		};
+		0D2B2FF31CB443510063393E /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				0D2B2FF41CB4436C0063393E /* linmath */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		0D2B2FF41CB4436C0063393E /* linmath */ = {
+			isa = PBXGroup;
+			children = (
+				0D2B2FF51CB443900063393E /* linmath.h */,
+			);
+			path = linmath;
+			sourceTree = "<group>";
+		};
 		0D69BD6D1C4E9F7E00A10282 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				0D2B2FF31CB443510063393E /* lib */,
 				0D69BD731C4EA16500A10282 /* testsrc */,
 				0D69BD6E1C4E9F9000A10282 /* testdata */,
 			);

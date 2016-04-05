@@ -214,14 +214,21 @@ void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
 void Draw(GL_STATE_T *p_state)
 {
 	ImageUserData *userData = p_state->user_data;
+	GLfloat hscale = 0.5f * p_state->width;
+	GLfloat vscale = 0.5f * p_state->height;
 	
-	GLfloat vVertices[] = { -1.0f,  1.0f, 0.0f,  // Position 0
+	GLfloat leftc = -1.0f;
+	GLfloat topc = -1.0f;
+	GLfloat rightc = (userData->width / hscale) - 1.0f;
+	GLfloat bottomc = (userData->height / vscale) - 1.0f;
+	
+	GLfloat vVertices[] = { leftc,  bottomc, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0
-		-1.0f, -1.0f, 0.0f,  // Position 1
+		leftc, topc, 0.0f,  // Position 1
 		0.0f,  1.0f,        // TexCoord 1
-		1.0f, -1.0f, 0.0f,  // Position 2
+		rightc, topc, 0.0f,  // Position 2
 		1.0f,  1.0f,        // TexCoord 2
-		1.0f,  1.0f, 0.0f,  // Position 3
+		rightc,  bottomc, 0.0f,  // Position 3
 		1.0f,  0.0f         // TexCoord 3
 	};
 	
@@ -324,7 +331,7 @@ void init_ogl(GL_STATE_T *state)
 	success = graphics_get_display_size(0 /* LCD */, &state->width, &state->height);
 	assert( success >= 0 );
 	
-	
+
 	dst_rect.x = 0;
 	dst_rect.y = 0;
 	dst_rect.width = state->width;

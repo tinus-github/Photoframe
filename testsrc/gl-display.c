@@ -227,6 +227,8 @@ void Draw(GL_STATE_T *p_state)
 	mat4x4 projection;
 	mat4x4 modelView;
 	mat4x4 projection_scaled;
+	mat4x4 translation;
+	mat4x4 projection_final;
 	
 	GLfloat hscale = 0.5f * p_state->width;
 	GLfloat vscale = 0.5f * p_state->height;
@@ -291,11 +293,11 @@ void Draw(GL_STATE_T *p_state)
 			   2.0/p_state->width,
 			   2.0/p_state->height,
 			   1.0);
-	mat4x4_translate_in_place(projection_scaled, -1.0, -1.0, 0);
-	
+	mat4x4_translate(translation, -1.0, -1.0, 0);
+	mat4x4_mul(projection_final, projection_scaled, translation);
 	mat4x4_identity(modelView);
 	
-	glUniformMatrix4fv ( userData->projectionLoc, 1, GL_FALSE, (GLfloat *)projection_scaled);
+	glUniformMatrix4fv ( userData->projectionLoc, 1, GL_FALSE, (GLfloat *)projection_final);
 	glUniformMatrix4fv ( userData->modelViewLoc,  1, GL_FALSE, (GLfloat *)modelView);
 	
 	glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );

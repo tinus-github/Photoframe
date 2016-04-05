@@ -161,7 +161,7 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	"void main()                           \n"
 	"{                                     \n"
 	"   vec4 p = u_modelView * a_position; \n"
-	"   gl_Position = p * u_projection;    \n"
+	"   gl_Position = u_projection * p;    \n"
 	"   v_texCoord = a_texCoord;           \n"
 	"}                                     \n";
 	
@@ -226,7 +226,7 @@ void Draw(GL_STATE_T *p_state)
 	
 	mat4x4 projection;
 	mat4x4 modelView;
-	mat4x4 projection_scaled;
+	mat4x4 projection_translated;
 	mat4x4 translation;
 	mat4x4 projection_final;
 	
@@ -289,12 +289,14 @@ void Draw(GL_STATE_T *p_state)
 	glUniform1i ( userData->samplerLoc, 0 );
 	
 	mat4x4_identity(projection);
-	mat4x4_scale_aniso(projection_scaled, projection,
+	mat4x4_translate(projection, -1.0, -1.0, 0);
+	mat4x4_mul(projection_translated, projection, translation);
+	mat4x4_scale_aniso(projection_final, projection_translated,
 			   2.0/p_state->width,
 			   2.0/p_state->height,
 			   1.0);
-	mat4x4_translate(translation, -1.0, -1.0, 0);
-	mat4x4_mul(projection_final, projection_scaled, translation);
+
+
 	mat4x4_identity(modelView);
 	
 	glUniformMatrix4fv ( userData->projectionLoc, 1, GL_FALSE, (GLfloat *)projection_final);

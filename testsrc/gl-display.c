@@ -218,17 +218,17 @@ void Draw(GL_STATE_T *p_state)
 	GLfloat vscale = 0.5f * p_state->height;
 	
 	GLfloat leftc = -1.0f;
-	GLfloat topc = -1.0f;
+	GLfloat topc = 1.0f;
 	GLfloat rightc = (userData->width / hscale) - 1.0f;
-	GLfloat bottomc = (userData->height / vscale) - 1.0f;
+	GLfloat bottomc = -((userData->height / vscale) - 1.0f);
 	
-	GLfloat vVertices[] = { leftc,  bottomc, 0.0f,  // Position 0
+	GLfloat vVertices[] = { leftc,  topc, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0
-		leftc, topc, 0.0f,  // Position 1
+		leftc, bottomc, 0.0f,  // Position 1
 		0.0f,  1.0f,        // TexCoord 1
-		rightc, topc, 0.0f,  // Position 2
+		rightc, bottomc, 0.0f,  // Position 2
 		1.0f,  1.0f,        // TexCoord 2
-		rightc,  bottomc, 0.0f,  // Position 3
+		rightc,  topc, 0.0f,  // Position 3
 		1.0f,  0.0f         // TexCoord 3
 	};
 	

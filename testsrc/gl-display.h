@@ -28,7 +28,7 @@ typedef struct
 	// Sampler location
 	GLint samplerLoc;
 	
-	// Texture handle
+	// Texture info
 	GLuint textureId;
 	uint32_t width;
 	uint32_t height;

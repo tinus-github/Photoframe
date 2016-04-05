@@ -230,9 +230,6 @@ void Draw(GL_STATE_T *p_state)
 	mat4x4 translation;
 	mat4x4 projection_final;
 	
-	GLfloat hscale = 0.5f * p_state->width;
-	GLfloat vscale = 0.5f * p_state->height;
-	
 	GLfloat leftc = 0.0f;
 	GLfloat topc = 0.0f;
 	GLfloat rightc = userData->width;

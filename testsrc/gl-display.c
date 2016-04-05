@@ -293,7 +293,7 @@ void Draw(GL_STATE_T *p_state)
 			   2.0/p_state->width,
 			   -2.0/p_state->height,
 			   1.0);
-	mat4x4_translate(translation, -0.5 * p_state->width, 0.5 * p_state->height, 0);
+	mat4x4_translate(translation, -0.5 * p_state->width, -0.5 * p_state->height, 0);
 	mat4x4_mul(projection_final, projection_scaled, translation);
 	mat4x4_identity(modelView);
 	

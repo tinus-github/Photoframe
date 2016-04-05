@@ -291,12 +291,12 @@ void Draw(GL_STATE_T *p_state)
 			   2.0/p_state->width,
 			   2.0/p_state->height,
 			   1.0);
-	mat4z4_translate_in_place(projection_scaled, -1.0, -1.0, 0);
+	mat4x4_translate_in_place(projection_scaled, -1.0, -1.0, 0);
 	
 	mat4x4_identity(modelView);
 	
-	glUniformMatrix4fv ( userData->projectionLoc, projection_scaled);
-	glUniformMatrix4fv ( userData->modelViewLoc, modelView);
+	glUniformMatrix4fv ( userData->projectionLoc, 1, GL_FALSE, (GLfloat *)projection_scaled);
+	glUniformMatrix4fv ( userData->modelViewLoc,  1, GL_FALSE, (GLfloat *)modelView);
 	
 	glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
 	//glDrawElements ( GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_SHORT, indices );

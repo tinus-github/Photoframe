@@ -25,6 +25,10 @@ typedef struct
 	GLint  positionLoc;
 	GLint  texCoordLoc;
 	
+	// Uniforms locations
+	GLint  projectionLoc;
+	GLint  modelViewLoc;
+	
 	// Sampler location
 	GLint samplerLoc;
 	

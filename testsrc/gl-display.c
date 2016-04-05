@@ -13,6 +13,8 @@
 #include <assert.h>
 #include <sys/time.h>
 
+#include "../lib/linmath/linmath.h"
+
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0
@@ -151,14 +153,17 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	p_state->user_data = malloc(sizeof(ImageUserData));
 	ImageUserData *userData = p_state->user_data;
 	GLchar vShaderStr[] =
-	"attribute vec4 a_position;   \n"
-	"attribute vec2 a_texCoord;   \n"
-	"varying vec2 v_texCoord;     \n"
-	"void main()                  \n"
-	"{                            \n"
-	"   gl_Position = a_position; \n"
-	"   v_texCoord = a_texCoord;  \n"
-	"}                            \n";
+	"attribute vec4 a_position;            \n"
+	"attribute vec2 a_texCoord;            \n"
+	"uniform mat4 u_projection;            \n"
+	"uniform mat4 u_modelView;             \n"
+	"varying vec2 v_texCoord;              \n"
+	"void main()                           \n"
+	"{                                     \n"
+	"   vec4 p = u_modelView * a_position; \n"
+	"   gl_Position = u_projection * p;    \n"
+	"   v_texCoord = a_texCoord;           \n"
+	"}                                     \n";
 	
 	GLchar fShaderStr[] =
 	"precision mediump float;                            \n"
@@ -175,6 +180,10 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	// Get the attribute locations
 	userData->positionLoc = glGetAttribLocation ( userData->programObject, "a_position" );
 	userData->texCoordLoc = glGetAttribLocation ( userData->programObject, "a_texCoord" );
+	
+	// Get the uniform locations
+	userData->projectionLoc = glGetUniformLocation ( userData->programObject, "u_projection" );
+	userData->modelViewLoc  = glGetUniformLocation ( userData->programObject, "u_modelView" );
 	
 	// Get the sampler location
 	userData->samplerLoc = glGetUniformLocation ( userData->programObject, "s_texture" );
@@ -214,13 +223,18 @@ void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
 void Draw(GL_STATE_T *p_state)
 {
 	ImageUserData *userData = p_state->user_data;
+	
+	mat4x4 projection;
+	mat4x4 modelView;
+	mat4x4 projection_scaled;
+	
 	GLfloat hscale = 0.5f * p_state->width;
 	GLfloat vscale = 0.5f * p_state->height;
 	
-	GLfloat leftc = -1.0f;
-	GLfloat topc = 1.0f;
-	GLfloat rightc = (userData->width / hscale) - 1.0f;
-	GLfloat bottomc = -((userData->height / vscale) - 1.0f);
+	GLfloat leftc = 0.0f;
+	GLfloat topc = 0.0f;
+	GLfloat rightc = userData->width;
+	GLfloat bottomc = userData->height;
 	
 	GLfloat vVertices[] = { leftc,  topc, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0
@@ -271,6 +285,18 @@ void Draw(GL_STATE_T *p_state)
 	
 	// Set the sampler texture unit to 0
 	glUniform1i ( userData->samplerLoc, 0 );
+	
+	mat4x4_identity(projection);
+	mat4x4_scale_aniso(projection_scaled, projection,
+			   2.0/p_state->width,
+			   2.0/p_state->height,
+			   1.0);
+	mat4z4_translate_in_place(projection_scaled, -1.0, -1.0, 0);
+	
+	mat4x4_identity(modelView);
+	
+	glUniformMatrix4fv ( userData->projectionLoc, projection_scaled);
+	glUniformMatrix4fv ( userData->modelViewLoc, modelView);
 	
 	glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
 	//glDrawElements ( GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_SHORT, indices );

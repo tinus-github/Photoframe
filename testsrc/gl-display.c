@@ -194,6 +194,16 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	userData->textureHeight = height;
 	userData->orientation = orientation;
 	
+	if (rotationFlipsWidthHeight(orientation)) {
+		userData->objectWidth = height;
+		userData->objectHeight = width;
+	} else {
+		userData->objectWidth = width;
+		userData->objectHeight = height;
+	}
+	userData->objectX = 0.0f;
+	userData->objectY = 0.0f;
+	
 	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
 	return GL_TRUE;
 }
@@ -217,6 +227,19 @@ void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
 	memcpy (coords, coordSets[rotation - 1], sizeof(GLfloat) * 8);
 }
 
+bool rotationFlipsWidthHeight(unsigned int rotation)
+{
+	switch (rotation) {
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+			return TRUE;
+		default:
+			return FALSE;
+	}
+}
+
 ///
 // Draw triangles using the shader pair created in Init()
 //
@@ -230,10 +253,10 @@ void Draw(GL_STATE_T *p_state)
 	mat4x4 translation;
 	mat4x4 projection_final;
 	
-	GLfloat leftc = 0.0f;
-	GLfloat topc = 0.0f;
-	GLfloat rightc = userData->textureWidth;
-	GLfloat bottomc = userData->textureHeight;
+	GLfloat leftc = userData->objectX;
+	GLfloat topc = userData->objectY;
+	GLfloat rightc = userData->objectWidth;
+	GLfloat bottomc = userData->objectHeight;
 	
 	GLfloat vVertices[] = { leftc,  topc, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0

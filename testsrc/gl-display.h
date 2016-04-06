@@ -38,6 +38,10 @@ typedef struct
 	uint32_t textureHeight;
 	
 	unsigned int orientation;
+	GLfloat objectX;
+	GLfloat objectY;
+	GLfloat objectWidth;
+	GLfloat objectHeight;
 } ImageUserData;
 
 // General GL state data

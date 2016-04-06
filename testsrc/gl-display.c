@@ -144,7 +144,7 @@ static GLuint LoadProgram ( const GLchar *vertShaderSrc, const GLchar *fragShade
 	return programObject;
 }
 
-static unsigned int rotationFlipsWidthHeight(unsigned int rotation);
+static unsigned int orientationFlipsWidthHeight(unsigned int rotation);
 
 ///
 // Initialize the shader and program object
@@ -196,7 +196,7 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	userData->textureHeight = height;
 	userData->orientation = orientation;
 	
-	if (rotationFlipsWidthHeight(orientation)) {
+	if (orientationFlipsWidthHeight(orientation)) {
 		userData->objectWidth = height;
 		userData->objectHeight = width;
 	} else {
@@ -229,7 +229,7 @@ static void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
 	memcpy (coords, coordSets[rotation - 1], sizeof(GLfloat) * 8);
 }
 
-static unsigned int rotationFlipsWidthHeight(unsigned int rotation)
+static unsigned int orientationFlipsWidthHeight(unsigned int rotation)
 {
 	switch (rotation) {
 		case 5:

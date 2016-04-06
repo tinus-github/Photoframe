@@ -22,7 +22,7 @@
 ///
 // Create a simple width x height texture image with four different colors
 //
-GLuint CreateSimpleTexture2D(int width, int height, unsigned char *image )
+static GLuint CreateSimpleTexture2D(int width, int height, unsigned char *image )
 {
 	// Texture object handle
 	GLuint textureId;
@@ -53,7 +53,7 @@ GLuint CreateSimpleTexture2D(int width, int height, unsigned char *image )
 // Create a shader object, load the shader source, and
 // compile the shader.
 //
-GLuint LoadShader(GLenum type, const GLchar *shaderSrc)
+static GLuint LoadShader(GLenum type, const GLchar *shaderSrc)
 {
 	GLuint shader;
 	GLint compiled;
@@ -84,7 +84,7 @@ GLuint LoadShader(GLenum type, const GLchar *shaderSrc)
 	return shader;
 }
 
-GLuint LoadProgram ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
+static GLuint LoadProgram ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
 {
 	GLuint vertexShader;
 	GLuint fragmentShader;
@@ -210,7 +210,7 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	return GL_TRUE;
 }
 
-void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
+static void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
 {
 	GLfloat coordSets[8][8] = {
 		{0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f}, //1: Normal

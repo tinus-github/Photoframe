@@ -227,7 +227,7 @@ void TexCoordsForRotation(unsigned int rotation, GLfloat *coords)
 	memcpy (coords, coordSets[rotation - 1], sizeof(GLfloat) * 8);
 }
 
-bool rotationFlipsWidthHeight(unsigned int rotation)
+unsigned int rotationFlipsWidthHeight(unsigned int rotation)
 {
 	switch (rotation) {
 		case 5:

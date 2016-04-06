@@ -34,8 +34,8 @@ typedef struct
 	
 	// Texture info
 	GLuint textureId;
-	uint32_t width;
-	uint32_t height;
+	uint32_t textureWidth;
+	uint32_t textureHeight;
 	
 	unsigned int orientation;
 } ImageUserData;

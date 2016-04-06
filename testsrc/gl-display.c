@@ -190,8 +190,8 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	// Load the texture
 	userData->textureId = CreateSimpleTexture2D (width, height, image);
 	
-	userData->width = width;
-	userData->height = height;
+	userData->textureWidth = width;
+	userData->textureHeight = height;
 	userData->orientation = orientation;
 	
 	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
@@ -232,8 +232,8 @@ void Draw(GL_STATE_T *p_state)
 	
 	GLfloat leftc = 0.0f;
 	GLfloat topc = 0.0f;
-	GLfloat rightc = userData->width;
-	GLfloat bottomc = userData->height;
+	GLfloat rightc = userData->textureWidth;
+	GLfloat bottomc = userData->textureHeight;
 	
 	GLfloat vVertices[] = { leftc,  topc, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0

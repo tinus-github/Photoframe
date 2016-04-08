@@ -259,18 +259,13 @@ void Draw(GL_STATE_T *p_state)
 	mat4x4 translation;
 	mat4x4 projection_final;
 	
-	GLfloat leftc = userData->objectX;
-	GLfloat topc = userData->objectY;
-	GLfloat rightc = leftc + userData->objectWidth;
-	GLfloat bottomc = topc + userData->objectHeight;
-	
-	GLfloat vVertices[] = { leftc,  topc, 0.0f,  // Position 0
+	GLfloat vVertices[] = { 0.0f, 0.0f, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0
-		leftc, bottomc, 0.0f,  // Position 1
+		0.0f,  1.0f, 0.0f,  // Position 1
 		0.0f,  1.0f,        // TexCoord 1
-		rightc, bottomc, 0.0f,  // Position 2
+		1.0f,  1.0f, 0.0f,  // Position 2
 		1.0f,  1.0f,        // TexCoord 2
-		rightc,  topc, 0.0f,  // Position 3
+		1.0f,  0.0f, 0.0f,  // Position 3
 		1.0f,  0.0f         // TexCoord 3
 	};
 	
@@ -321,7 +316,11 @@ void Draw(GL_STATE_T *p_state)
 			   1.0);
 	mat4x4_translate(translation, -1, 1, 0);
 	mat4x4_mul(projection_final, translation, projection_scaled);
-	mat4x4_identity(modelView);
+	
+	mat4x4_translate(translation, userData->objectX, userData->objectY, 0.0);
+	mat4x4_identity(projection);
+	mat4x4_scale_aniso(projection_scaled, userData->objectWidth, userData->objectHeight, 1.0);
+	mat4x4_mul(modelView, translation, projection_scaled);
 	
 	glUniformMatrix4fv ( displayData->projectionLoc, 1, GL_FALSE, (GLfloat *)projection_final);
 	glUniformMatrix4fv ( displayData->modelViewLoc,  1, GL_FALSE, (GLfloat *)modelView);

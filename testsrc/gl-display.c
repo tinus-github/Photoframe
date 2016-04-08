@@ -319,7 +319,10 @@ void Draw(GL_STATE_T *p_state)
 	
 	mat4x4_translate(translation, userData->objectX, userData->objectY, 0.0);
 	mat4x4_identity(projection);
-	mat4x4_scale_aniso(projection_scaled, userData->objectWidth, userData->objectHeight, 1.0);
+	mat4x4_scale_aniso(projection_scaled, projection,
+			   userData->objectWidth,
+			   userData->objectHeight,
+			   1.0);
 	mat4x4_mul(modelView, translation, projection_scaled);
 	
 	glUniformMatrix4fv ( displayData->projectionLoc, 1, GL_FALSE, (GLfloat *)projection_final);

@@ -15,7 +15,7 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-// Data related to a displayed image
+// Data related to displaying images
 typedef struct
 {
 	// Handle to a program object
@@ -31,7 +31,11 @@ typedef struct
 	
 	// Sampler location
 	GLint samplerLoc;
-	
+} GLImageDisplayData;
+
+// Data related to a displayed image
+typedef struct
+{
 	// Texture info
 	GLuint textureId;
 	uint32_t textureWidth;
@@ -56,6 +60,7 @@ typedef struct GL_STATE_T
 	
 	EGL_DISPMANX_WINDOW_T nativewindow;
 	ImageUserData *user_data;
+	GLImageDisplayData *imageDisplayData;
 	void (*draw_func) (struct GL_STATE_T* );
 } GL_STATE_T;
 

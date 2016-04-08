@@ -153,7 +153,10 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 {
 	
 	p_state->user_data = malloc(sizeof(ImageUserData));
+	p_state->imageDisplayData = malloc(sizeof(imageDisplayData));
 	ImageUserData *userData = p_state->user_data;
+	imageDisplayData *displayData = p_state->imageDisplayData;
+	
 	GLchar vShaderStr[] =
 	"attribute vec4 a_position;            \n"
 	"attribute vec2 a_texCoord;            \n"
@@ -177,18 +180,18 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object
-	userData->programObject = LoadProgram ( vShaderStr, fShaderStr );
+	displayData->programObject = LoadProgram ( vShaderStr, fShaderStr );
 	
 	// Get the attribute locations
-	userData->positionLoc = glGetAttribLocation ( userData->programObject, "a_position" );
-	userData->texCoordLoc = glGetAttribLocation ( userData->programObject, "a_texCoord" );
+	displayData->positionLoc = glGetAttribLocation ( displayData->programObject, "a_position" );
+	displayData->texCoordLoc = glGetAttribLocation ( displayData->programObject, "a_texCoord" );
 	
 	// Get the uniform locations
-	userData->projectionLoc = glGetUniformLocation ( userData->programObject, "u_projection" );
-	userData->modelViewLoc  = glGetUniformLocation ( userData->programObject, "u_modelView" );
+	displayData->projectionLoc = glGetUniformLocation ( displayData->programObject, "u_projection" );
+	displayData->modelViewLoc  = glGetUniformLocation ( displayData->programObject, "u_modelView" );
 	
 	// Get the sampler location
-	userData->samplerLoc = glGetUniformLocation ( userData->programObject, "s_texture" );
+	displayData->samplerLoc = glGetUniformLocation ( displayData->programObject, "s_texture" );
 	// Load the texture
 	userData->textureId = CreateSimpleTexture2D (width, height, image);
 	
@@ -248,6 +251,7 @@ static unsigned int orientationFlipsWidthHeight(unsigned int rotation)
 void Draw(GL_STATE_T *p_state)
 {
 	ImageUserData *userData = p_state->user_data;
+	imageDisplayData *displayData = p_state->imageDisplayData;
 	
 	mat4x4 projection;
 	mat4x4 modelView;
@@ -291,24 +295,24 @@ void Draw(GL_STATE_T *p_state)
 	glClear ( GL_COLOR_BUFFER_BIT );
 	
 	// Use the program object
-	glUseProgram ( userData->programObject );
+	glUseProgram ( displayData->programObject );
 	
 	// Load the vertex position
-	glVertexAttribPointer ( userData->positionLoc, 3, GL_FLOAT,
+	glVertexAttribPointer ( displayData->positionLoc, 3, GL_FLOAT,
 			       GL_FALSE, 5 * sizeof(GLfloat), vVertices );
 	// Load the texture coordinate
-	glVertexAttribPointer ( userData->texCoordLoc, 2, GL_FLOAT,
+	glVertexAttribPointer ( displayData->texCoordLoc, 2, GL_FLOAT,
 			       GL_FALSE, 5 * sizeof(GLfloat), &vVertices[3] );
 	
-	glEnableVertexAttribArray ( userData->positionLoc );
-	glEnableVertexAttribArray ( userData->texCoordLoc );
+	glEnableVertexAttribArray ( displayData->positionLoc );
+	glEnableVertexAttribArray ( displayData->texCoordLoc );
 	
 	// Bind the texture
 	glActiveTexture ( GL_TEXTURE0 );
-	glBindTexture ( GL_TEXTURE_2D, userData->textureId );
+	glBindTexture ( GL_TEXTURE_2D, displayData->textureId );
 	
 	// Set the sampler texture unit to 0
-	glUniform1i ( userData->samplerLoc, 0 );
+	glUniform1i ( displayData->samplerLoc, 0 );
 	
 	mat4x4_identity(projection);
 	mat4x4_scale_aniso(projection_scaled, projection,
@@ -319,8 +323,8 @@ void Draw(GL_STATE_T *p_state)
 	mat4x4_mul(projection_final, projection_scaled, translation);
 	mat4x4_identity(modelView);
 	
-	glUniformMatrix4fv ( userData->projectionLoc, 1, GL_FALSE, (GLfloat *)projection_final);
-	glUniformMatrix4fv ( userData->modelViewLoc,  1, GL_FALSE, (GLfloat *)modelView);
+	glUniformMatrix4fv ( displayData->projectionLoc, 1, GL_FALSE, (GLfloat *)projection_final);
+	glUniformMatrix4fv ( displayData->modelViewLoc,  1, GL_FALSE, (GLfloat *)modelView);
 	
 	glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
 	//glDrawElements ( GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_SHORT, indices );

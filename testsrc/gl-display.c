@@ -251,7 +251,7 @@ static unsigned int orientationFlipsWidthHeight(unsigned int rotation)
 void Draw(GL_STATE_T *p_state)
 {
 	ImageUserData *userData = p_state->user_data;
-GLImageDisplayData *displayData = p_state->imageDisplayData;
+	GLImageDisplayData *displayData = p_state->imageDisplayData;
 	
 	mat4x4 projection;
 	mat4x4 modelView;
@@ -319,8 +319,8 @@ GLImageDisplayData *displayData = p_state->imageDisplayData;
 			   2.0/p_state->width,
 			   -2.0/p_state->height,
 			   1.0);
-	mat4x4_translate(translation, -0.5 * p_state->width, -0.5 * p_state->height, 0);
-	mat4x4_mul(projection_final, projection_scaled, translation);
+	mat4x4_translate(translation, -1, 1, 0);
+	mat4x4_mul(projection_final, translation, projection_scaled);
 	mat4x4_identity(modelView);
 	
 	glUniformMatrix4fv ( displayData->projectionLoc, 1, GL_FALSE, (GLfloat *)projection_final);

@@ -257,8 +257,8 @@ void Draw(GL_STATE_T *p_state)
 	
 	GLfloat leftc = userData->objectX;
 	GLfloat topc = userData->objectY;
-	GLfloat rightc = userData->objectWidth;
-	GLfloat bottomc = userData->objectHeight;
+	GLfloat rightc = leftc + userData->objectWidth;
+	GLfloat bottomc = topc + userData->objectHeight;
 	
 	GLfloat vVertices[] = { leftc,  topc, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0

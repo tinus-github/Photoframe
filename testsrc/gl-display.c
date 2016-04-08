@@ -309,7 +309,7 @@ GLImageDisplayData *displayData = p_state->imageDisplayData;
 	
 	// Bind the texture
 	glActiveTexture ( GL_TEXTURE0 );
-	glBindTexture ( GL_TEXTURE_2D, displayData->textureId );
+	glBindTexture ( GL_TEXTURE_2D, userData->textureId );
 	
 	// Set the sampler texture unit to 0
 	glUniform1i ( displayData->samplerLoc, 0 );

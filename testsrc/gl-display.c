@@ -430,6 +430,8 @@ void  esMainLoop (GL_STATE_T *esContext )
 		deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
 		t1 = t2;
 		
+		esContext->user_data->objectX = t2.tv_usec / 10000;
+		
 		if (esContext->draw_func != NULL)
 			esContext->draw_func(esContext);
 		

@@ -9,6 +9,12 @@
 #include "gl-image.h"
 #include "gl-display.h"
 
+// from esUtil.h
+#define TRUE 1
+#define FALSE 0
+
+#include "../lib/linmath/linmath.h"
+
 ///
 // Create a simple width x height texture image with four different colors
 //

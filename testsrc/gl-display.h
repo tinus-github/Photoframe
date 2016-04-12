@@ -33,19 +33,23 @@ typedef struct
 	GLint samplerLoc;
 } GLImageDisplayData;
 
-// Data related to a displayed image
-typedef struct
-{
-	// Texture info
-	GLuint textureId;
-	uint32_t textureWidth;
-	uint32_t textureHeight;
-	
+typedef struct GLShapeInstanceData {
 	unsigned int orientation;
 	GLfloat objectX;
 	GLfloat objectY;
 	GLfloat objectWidth;
 	GLfloat objectHeight;
+} GLShapeInstanceData;
+
+// Data related to a displayed image
+typedef struct
+{
+	struct GLShapeInstanceData shape;
+	
+	// Texture info
+	GLuint textureId;
+	uint32_t textureWidth;
+	uint32_t textureHeight;
 } ImageInstanceData;
 
 // General GL state data

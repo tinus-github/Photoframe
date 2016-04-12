@@ -146,17 +146,9 @@ static GLuint LoadProgram ( const GLchar *vertShaderSrc, const GLchar *fragShade
 
 static unsigned int orientationFlipsWidthHeight(unsigned int rotation);
 
-///
-// Initialize the shader and program object
-//
-int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsigned int orientation)
-{
-	
-	p_state->user_data = malloc(sizeof(ImageInstanceData));
+static int Init_image_gl_state(GL_STATE_T *p_state) {
 	p_state->imageDisplayData = malloc(sizeof(GLImageDisplayData));
-	ImageInstanceData *userData = p_state->user_data;
 	GLImageDisplayData *displayData = p_state->imageDisplayData;
-	GLShapeInstanceData *shapeData = &p_state->user_data->shape;
 	
 	GLchar vShaderStr[] =
 	"attribute vec4 a_position;            \n"
@@ -193,6 +185,22 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	
 	// Get the sampler location
 	displayData->samplerLoc = glGetUniformLocation ( displayData->programObject, "s_texture" );
+	
+	return GL_TRUE;
+}
+
+///
+// Initialize the shader and program object
+//
+int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsigned int orientation)
+{
+	
+	p_state->user_data = malloc(sizeof(ImageInstanceData));
+	ImageInstanceData *userData = p_state->user_data;
+	GLShapeInstanceData *shapeData = &p_state->user_data->shape;
+
+	Init_image_gl_state(p_state);
+	
 	// Load the texture
 	userData->textureId = CreateSimpleTexture2D (width, height, image);
 	

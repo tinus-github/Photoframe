@@ -71,4 +71,7 @@ typedef struct GL_STATE_T
 void Draw(GL_STATE_T *p_state);
 void gl_display_init(GL_STATE_T *state);
 
+
+GLuint gl_display_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc );
+
 #endif /* gl_display_h */

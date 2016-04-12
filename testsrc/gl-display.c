@@ -53,7 +53,7 @@ static GLuint CreateSimpleTexture2D(int width, int height, unsigned char *image 
 // Create a shader object, load the shader source, and
 // compile the shader.
 //
-static GLuint LoadShader(GLenum type, const GLchar *shaderSrc)
+static GLuint gl_display_load_shader(GLenum type, const GLchar *shaderSrc)
 {
 	GLuint shader;
 	GLint compiled;
@@ -84,7 +84,7 @@ static GLuint LoadShader(GLenum type, const GLchar *shaderSrc)
 	return shader;
 }
 
-static GLuint LoadProgram ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
+static GLuint gl_display_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
 {
 	GLuint vertexShader;
 	GLuint fragmentShader;
@@ -92,11 +92,11 @@ static GLuint LoadProgram ( const GLchar *vertShaderSrc, const GLchar *fragShade
 	GLint linked;
 	
 	// Load the vertex/fragment shaders
-	vertexShader = LoadShader ( GL_VERTEX_SHADER, vertShaderSrc );
+	vertexShader = gl_display_load_shader ( GL_VERTEX_SHADER, vertShaderSrc );
 	if ( vertexShader == 0 )
 		return 0;
 	
-	fragmentShader = LoadShader ( GL_FRAGMENT_SHADER, fragShaderSrc );
+	fragmentShader = gl_display_load_shader ( GL_FRAGMENT_SHADER, fragShaderSrc );
 	if ( fragmentShader == 0 )
 	{
 		glDeleteShader( vertexShader );
@@ -173,7 +173,7 @@ static int Init_image_gl_state(GL_STATE_T *p_state) {
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object
-	displayData->programObject = LoadProgram ( vShaderStr, fShaderStr );
+	displayData->programObject = gl_display_load_program ( vShaderStr, fShaderStr );
 	
 	// Get the attribute locations
 	displayData->positionLoc = glGetAttribLocation ( displayData->programObject, "a_position" );

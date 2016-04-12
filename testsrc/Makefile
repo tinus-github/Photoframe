@@ -77,4 +77,4 @@ decodejpeg2rgb.o: decodejpeg2rgb.c
 	 -Wno-deprecated-declarations
 
 clean:
-	rm -f image image.o gl-display.o loadimage.o loadexif.o decodejpeg2rgb decodejpeg2rgb.o
+	rm -f image image.o gl-display.o loadimage.o loadexif.o decodejpeg2rgb decodejpeg2rgb.o gl-image.o

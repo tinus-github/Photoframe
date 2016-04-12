@@ -54,7 +54,7 @@ static GLuint gl_display_load_shader(GLenum type, const GLchar *shaderSrc)
 	return shader;
 }
 
-static GLuint gl_display_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
+GLuint gl_display_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
 {
 	GLuint vertexShader;
 	GLuint fragmentShader;

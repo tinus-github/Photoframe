@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 	if(!Init(p_state, image, width, height, orientation))
 		return 0;
 	
-	gl_display_register_draw_func(p_state, Draw);
+	gl_display_register_draw_func(p_state, gl_image_draw);
 	
 	eglSwapBuffers(p_state->display, p_state->surface);
 	esMainLoop(p_state);

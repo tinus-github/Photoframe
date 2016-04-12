@@ -156,7 +156,7 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 ///
 // Draw triangles using the shader pair created in Init()
 //
-void Draw(GL_STATE_T *p_state)
+void gl_image_draw(GL_STATE_T *p_state)
 {
 	ImageInstanceData *userData = p_state->user_data;
 	GLShapeInstanceData *shapeData = &p_state->user_data->shape;

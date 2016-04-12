@@ -119,6 +119,8 @@ void gl_display_init(GL_STATE_T *state)
 	int32_t success = 0;
 	EGLBoolean result;
 	EGLint num_config;
+
+	memset( p_state, 0, sizeof( GL_STATE_T) );
 	
 	bcm_host_init();
 	
@@ -233,14 +235,6 @@ void  esMainLoop (GL_STATE_T *esContext )
 			totaltime -= 2.0f;
 			frames = 0;
 		}
-	}
-}
-
-void esInitContext ( GL_STATE_T *p_state )
-{
-	if ( p_state != NULL )
-	{
-		memset( p_state, 0, sizeof( GL_STATE_T) );
 	}
 }
 

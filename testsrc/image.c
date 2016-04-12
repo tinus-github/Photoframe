@@ -56,7 +56,6 @@ int main(int argc, char *argv[])
 	
 	
 	bcm_host_init();
-	esInitContext(p_state);
 	
 	gl_display_init(p_state);
 	

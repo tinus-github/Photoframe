@@ -156,7 +156,7 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	p_state->imageDisplayData = malloc(sizeof(GLImageDisplayData));
 	ImageInstanceData *userData = p_state->user_data;
 	GLImageDisplayData *displayData = p_state->imageDisplayData;
-	GLShapeInstanceData *shapeData = p_state->user_data.shape;
+	GLShapeInstanceData *shapeData = &p_state->user_data->shape;
 	
 	GLchar vShaderStr[] =
 	"attribute vec4 a_position;            \n"
@@ -198,7 +198,7 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	
 	userData->textureWidth = width;
 	userData->textureHeight = height;
-	userData->orientation = orientation;
+	shapeData->orientation = orientation;
 	
 	if (orientationFlipsWidthHeight(orientation)) {
 		shapeData->objectWidth = height;
@@ -252,7 +252,7 @@ static unsigned int orientationFlipsWidthHeight(unsigned int rotation)
 void Draw(GL_STATE_T *p_state)
 {
 	ImageInstanceData *userData = p_state->user_data;
-	GLShapeInstanceData *shapeData = p_state->user_data.shape;
+	GLShapeInstanceData *shapeData = &p_state->user_data->shape;
 	GLImageDisplayData *displayData = p_state->imageDisplayData;
 	
 	mat4x4 projection;

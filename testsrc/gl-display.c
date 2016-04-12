@@ -156,6 +156,7 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	p_state->imageDisplayData = malloc(sizeof(GLImageDisplayData));
 	ImageInstanceData *userData = p_state->user_data;
 	GLImageDisplayData *displayData = p_state->imageDisplayData;
+	GLShapeInstanceData *shapeData = p_state->user_data.shape;
 	
 	GLchar vShaderStr[] =
 	"attribute vec4 a_position;            \n"
@@ -200,14 +201,14 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	userData->orientation = orientation;
 	
 	if (orientationFlipsWidthHeight(orientation)) {
-		userData->objectWidth = height;
-		userData->objectHeight = width;
+		shapeData->objectWidth = height;
+		shapeData->objectHeight = width;
 	} else {
-		userData->objectWidth = width;
-		userData->objectHeight = height;
+		shapeData->objectWidth = width;
+		shapeData->objectHeight = height;
 	}
-	userData->objectX = 0.0f;
-	userData->objectY = 0.0f;
+	shapeData->objectX = 0.0f;
+	shapeData->objectY = 0.0f;
 	
 	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
 	return GL_TRUE;
@@ -251,6 +252,7 @@ static unsigned int orientationFlipsWidthHeight(unsigned int rotation)
 void Draw(GL_STATE_T *p_state)
 {
 	ImageInstanceData *userData = p_state->user_data;
+	GLShapeInstanceData *shapeData = p_state->user_data.shape;
 	GLImageDisplayData *displayData = p_state->imageDisplayData;
 	
 	mat4x4 projection;
@@ -270,7 +272,7 @@ void Draw(GL_STATE_T *p_state)
 	};
 	
 	GLfloat texCoords[8];
-	TexCoordsForRotation(userData->orientation, texCoords);
+	TexCoordsForRotation(shapeData->orientation, texCoords);
 	vVertices[3] = texCoords[0];
 	vVertices[4] = texCoords[1];
 	vVertices[8] = texCoords[2];
@@ -317,11 +319,11 @@ void Draw(GL_STATE_T *p_state)
 	mat4x4_translate(translation, -1, 1, 0);
 	mat4x4_mul(projection_final, translation, projection_scaled);
 	
-	mat4x4_translate(translation, userData->objectX, userData->objectY, 0.0);
+	mat4x4_translate(translation, shapeData->objectX, shapeData->objectY, 0.0);
 	mat4x4_identity(projection);
 	mat4x4_scale_aniso(projection_scaled, projection,
-			   userData->objectWidth,
-			   userData->objectHeight,
+			   shapeData->objectWidth,
+			   shapeData->objectHeight,
 			   1.0);
 	mat4x4_mul(modelView, translation, projection_scaled);
 	
@@ -436,7 +438,7 @@ void  esMainLoop (GL_STATE_T *esContext )
 		deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
 		t1 = t2;
 		
-		esContext->user_data->objectX = t2.tv_usec / 10000;
+		esContext->user_data->shape.objectX = t2.tv_usec / 10000;
 		
 		if (esContext->draw_func != NULL)
 			esContext->draw_func(esContext);

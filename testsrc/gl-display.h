@@ -46,7 +46,7 @@ typedef struct
 	GLfloat objectY;
 	GLfloat objectWidth;
 	GLfloat objectHeight;
-} ImageUserData;
+} ImageInstanceData;
 
 // General GL state data
 typedef struct GL_STATE_T
@@ -59,7 +59,7 @@ typedef struct GL_STATE_T
 	EGLContext context;
 	
 	EGL_DISPMANX_WINDOW_T nativewindow;
-	ImageUserData *user_data;
+	ImageInstanceData *user_data;
 	GLImageDisplayData *imageDisplayData;
 	void (*draw_func) (struct GL_STATE_T* );
 } GL_STATE_T;

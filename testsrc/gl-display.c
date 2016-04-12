@@ -152,9 +152,9 @@ static unsigned int orientationFlipsWidthHeight(unsigned int rotation);
 int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsigned int orientation)
 {
 	
-	p_state->user_data = malloc(sizeof(ImageUserData));
+	p_state->user_data = malloc(sizeof(ImageInstanceData));
 	p_state->imageDisplayData = malloc(sizeof(GLImageDisplayData));
-	ImageUserData *userData = p_state->user_data;
+	ImageInstanceData *userData = p_state->user_data;
 	GLImageDisplayData *displayData = p_state->imageDisplayData;
 	
 	GLchar vShaderStr[] =
@@ -250,7 +250,7 @@ static unsigned int orientationFlipsWidthHeight(unsigned int rotation)
 //
 void Draw(GL_STATE_T *p_state)
 {
-	ImageUserData *userData = p_state->user_data;
+	ImageInstanceData *userData = p_state->user_data;
 	GLImageDisplayData *displayData = p_state->imageDisplayData;
 	
 	mat4x4 projection;

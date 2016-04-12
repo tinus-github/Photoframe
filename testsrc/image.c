@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	bcm_host_init();
 	esInitContext(p_state);
 	
-	init_ogl(p_state);
+	gl_display_init(p_state);
 	
 	if(!Init(p_state, image, width, height, orientation))
 		return 0;

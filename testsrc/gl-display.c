@@ -114,7 +114,7 @@ GLuint gl_display_load_program ( const GLchar *vertShaderSrc, const GLchar *frag
 	return programObject;
 }
 
-void init_ogl(GL_STATE_T *state)
+void gl_display_init(GL_STATE_T *state)
 {
 	int32_t success = 0;
 	EGLBoolean result;

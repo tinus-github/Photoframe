@@ -238,7 +238,7 @@ void  esMainLoop (GL_STATE_T *esContext )
 	}
 }
 
-void esRegisterDrawFunc(GL_STATE_T *p_state, void (*draw_func) (GL_STATE_T* ) )
+void gl_display_register_draw_func(GL_STATE_T *p_state, void (*gl_display_draw_func) (GL_STATE_T* ) )
 {
-	p_state->draw_func = draw_func;
+	p_state->draw_func = gl_display_draw_func;
 }

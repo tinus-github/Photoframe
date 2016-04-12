@@ -120,7 +120,7 @@ void gl_display_init(GL_STATE_T *state)
 	EGLBoolean result;
 	EGLint num_config;
 
-	memset( p_state, 0, sizeof( GL_STATE_T) );
+	memset( state, 0, sizeof( GL_STATE_T) );
 	
 	bcm_host_init();
 	

@@ -132,20 +132,21 @@ int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsig
 	
 	Init_image_gl_state(p_state);
 	
-	// Load the texture
-	userData->textureId = CreateSimpleTexture2D (width, height, image);
-	
-	userData->textureWidth = width;
-	userData->textureHeight = height;
+	shapeData->objectWidth = width;
+	shapeData->objectHeight = height;
 	shapeData->orientation = orientation;
 	
 	if (orientationFlipsWidthHeight(orientation)) {
-		shapeData->objectWidth = height;
-		shapeData->objectHeight = width;
+		userData->textureWidth = height;
+		userData->textureHeight = width;
 	} else {
-		shapeData->objectWidth = width;
-		shapeData->objectHeight = height;
+		userData->textureWidth = width;
+		userData->textureHeight = height;
 	}
+	
+	// Load the texture
+	userData->textureId = CreateSimpleTexture2D (userData->textureWidth, userData->textureHeight, image);
+	
 	shapeData->objectX = 0.0f;
 	shapeData->objectY = 0.0f;
 	

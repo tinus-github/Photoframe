@@ -523,6 +523,12 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	free(row_pointers);
 	fclose(f);
 	
+	if (orientation_flips(*orientation)) {
+		int tmp = *height;
+		*height = *width;
+		*width = tmp;
+	}
+	
 	return buffer;
 }
 

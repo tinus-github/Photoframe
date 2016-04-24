@@ -101,7 +101,7 @@
 		0D07D26C1C4E974B00E42556 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0730;
 			};
 			buildConfigurationList = 0D07D26F1C4E974B00E42556 /* Build configuration list for PBXProject "Photoframe" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -122,6 +122,8 @@
 		0D07D2701C4E974B00E42556 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};

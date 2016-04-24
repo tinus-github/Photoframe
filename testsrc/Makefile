@@ -45,7 +45,7 @@ gl-rect.o: gl-rect.c gl-rect.h gl-display.h
 	-ftree-vectorize -pipe -Wno-psabi \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-image.c -o gl-image.o \
+	-c gl-rect.c -o gl-rect.o \
 	-Wno-deprecated-declarations
 
 loadimage.o: loadimage.c loadimage.h

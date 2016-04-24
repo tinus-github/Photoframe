@@ -59,7 +59,7 @@ int gl_rect_init(GL_STATE_T *p_state, int width, int height, float red, float gr
 	
 	p_state->user_data = malloc(sizeof(RectInstanceData));
 	RectInstanceData *userData = p_state->user_data;
-	GLShapeInstanceData *shapeData = &p_state->user_data->shape;
+	GLShapeInstanceData *shapeData = &userData->shape;
 	
 	Init_rect_gl_state(p_state);
 	
@@ -79,7 +79,7 @@ int gl_rect_init(GL_STATE_T *p_state, int width, int height, float red, float gr
 void gl_rect_draw(GL_STATE_T *p_state)
 {
 	RectInstanceData *userData = p_state->user_data;
-	GLShapeInstanceData *shapeData = &p_state->user_data->shape;
+	GLShapeInstanceData *shapeData = &userData->shape;
 	GLRectDisplayData *displayData = p_state->rectDisplayData;
 	
 	mat4x4 projection;

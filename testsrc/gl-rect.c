@@ -71,6 +71,8 @@ int gl_rect_init(GL_STATE_T *p_state, int width, int height, float red, float gr
 	
 	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
 	return GL_TRUE;
+	
+	userData->red = red; userData->green = green; userData->blue = blue;
 }
 
 ///

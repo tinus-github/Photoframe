@@ -2,7 +2,7 @@
 
 image: image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o
 	cc -o image -Wl,--whole-archive image.o loadimage.o \
-	loadexif.o gl-display.o gl-image.o \
+	loadexif.o gl-display.o gl-image.o gl-rect.o \
 	-L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg -lexif \
 	-Wl,--no-whole-archive -rdynamic

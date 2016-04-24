@@ -128,7 +128,7 @@ int gl_image_init(GL_STATE_T *p_state, unsigned char* image, int width, int heig
 	
 	p_state->user_data = malloc(sizeof(ImageInstanceData));
 	ImageInstanceData *userData = p_state->user_data;
-	GLShapeInstanceData *shapeData = &p_state->user_data->shape;
+	GLShapeInstanceData *shapeData = user_data.shape;
 	
 	Init_image_gl_state(p_state);
 	
@@ -160,7 +160,7 @@ int gl_image_init(GL_STATE_T *p_state, unsigned char* image, int width, int heig
 void gl_image_draw(GL_STATE_T *p_state)
 {
 	ImageInstanceData *userData = p_state->user_data;
-	GLShapeInstanceData *shapeData = &p_state->user_data->shape;
+	GLShapeInstanceData *shapeData = user_data.shape;
 	GLImageDisplayData *displayData = p_state->imageDisplayData;
 	
 	mat4x4 projection;

@@ -48,7 +48,7 @@ typedef struct
 	
 	// Color location
 	GLint colorLoc;
-} GLImageDisplayData;
+} GLRectDisplayData;
 
 typedef struct GLShapeInstanceData {
 	unsigned int orientation;

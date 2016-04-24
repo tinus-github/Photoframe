@@ -98,6 +98,8 @@ typedef struct GL_STATE_T
 } GL_STATE_T;
 
 void gl_image_draw(GL_STATE_T *p_state);
+void gl_rect_draw(GL_STATE_T *p_state);
+
 void gl_display_init(GL_STATE_T *state);
 void gl_display_register_draw_func(GL_STATE_T *p_state, void (*gl_display_draw_func) (GL_STATE_T* ) );
 

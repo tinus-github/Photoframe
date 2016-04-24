@@ -58,11 +58,18 @@ int main(int argc, char *argv[])
 	bcm_host_init();
 	
 	gl_display_init(p_state);
-	
+
+#ifdef 0
 	if(!gl_image_init(p_state, image, width, height, orientation))
 		return 0;
 	
 	gl_display_register_draw_func(p_state, gl_image_draw);
+#endif
+	
+	if (!gl_rect_init(p_state, width, height, 1.0f, 0.0f, 0.0f))
+		return 0;
+	
+	gl_display_register_draw_func(p_state, gl_rect_draw);
 	
 	eglSwapBuffers(p_state->display, p_state->surface);
 	esMainLoop(p_state);

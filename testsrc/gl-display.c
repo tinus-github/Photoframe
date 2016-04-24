@@ -235,7 +235,9 @@ void  esMainLoop (GL_STATE_T *esContext )
 		deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
 		t1 = t2;
 		
-		esContext->user_data->shape.objectX = t2.tv_usec / 10000;
+		ImageInstanceData *data = esContext->user_data;
+		
+		data->shape.objectX = t2.tv_usec / 10000;
 
 		gl_display_draw(esContext);
 		

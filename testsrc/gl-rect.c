@@ -34,7 +34,7 @@ static int Init_rect_gl_state(GL_STATE_T *p_state) {
 	"uniform vec3 u_color;                               \n"
 	"void main()                                         \n"
 	"{                                                   \n"
-	"  gl_FragColor = vec4(u_color[0], u_color[1], u_color[2], 1.0f);\n"
+	"  gl_FragColor = vec4(u_color.r, u_color.g, u_color.b, 1.0f);\n"
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object

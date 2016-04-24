@@ -213,10 +213,10 @@ static void gl_display_draw (GL_STATE_T *p_state)
 	glClear ( GL_COLOR_BUFFER_BIT );
 	
 	
-	if (esContext->draw_func != NULL)
-		esContext->draw_func(esContext);
+	if (p_state->draw_func != NULL)
+		p_state->draw_func(p_state);
 	
-	eglSwapBuffers(esContext->display, esContext->surface);
+	eglSwapBuffers(p_state->display, p_state->surface);
 }
 
 void  esMainLoop (GL_STATE_T *esContext )

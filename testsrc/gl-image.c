@@ -123,7 +123,7 @@ static int Init_image_gl_state(GL_STATE_T *p_state) {
 ///
 // Initialize the shader and program object
 //
-int Init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsigned int orientation)
+int gl_image_init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsigned int orientation)
 {
 	
 	p_state->user_data = malloc(sizeof(ImageInstanceData));

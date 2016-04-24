@@ -204,6 +204,21 @@ void gl_display_init(GL_STATE_T *state)
 	assert(EGL_FALSE != result);
 }
 
+static void gl_display_draw (GL_STATE_T *p_state)
+{
+	// Set the viewport
+	glViewport ( 0, 0, p_state->width, p_state->height );
+	
+	// Clear the color buffer
+	glClear ( GL_COLOR_BUFFER_BIT );
+	
+	
+	if (esContext->draw_func != NULL)
+		esContext->draw_func(esContext);
+	
+	eglSwapBuffers(esContext->display, esContext->surface);
+}
+
 void  esMainLoop (GL_STATE_T *esContext )
 {
 	struct timeval t1, t2;
@@ -221,11 +236,8 @@ void  esMainLoop (GL_STATE_T *esContext )
 		t1 = t2;
 		
 		esContext->user_data->shape.objectX = t2.tv_usec / 10000;
-		
-		if (esContext->draw_func != NULL)
-			esContext->draw_func(esContext);
-		
-		eglSwapBuffers(esContext->display, esContext->surface);
+
+		gl_display_draw(esContext);
 		
 		totaltime += deltatime;
 		frames++;

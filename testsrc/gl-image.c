@@ -193,12 +193,6 @@ void gl_image_draw(GL_STATE_T *p_state)
 	GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
 	//GLushort indices[] = {1, 0, 3, 0, 2, 0, 1 };
 	
-	// Set the viewport
-	glViewport ( 0, 0, p_state->width, p_state->height );
-	
-	// Clear the color buffer
-	glClear ( GL_COLOR_BUFFER_BIT );
-	
 	// Use the program object
 	glUseProgram ( displayData->programObject );
 	

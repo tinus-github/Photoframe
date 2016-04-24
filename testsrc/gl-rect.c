@@ -65,7 +65,6 @@ int gl_rect_init(GL_STATE_T *p_state, int width, int height, float red, float gr
 	
 	shapeData->objectWidth = width;
 	shapeData->objectHeight = height;
-	shapeData->orientation = orientation;
 	
 	shapeData->objectX = 0.0f;
 	shapeData->objectY = 0.0f;
@@ -107,9 +106,6 @@ void gl_rect_draw(GL_STATE_T *p_state)
 	
 	glEnableVertexAttribArray ( displayData->positionLoc );
 
-	// Set the sampler texture unit to 0
-	glUniform1i ( displayData->samplerLoc, 0 );
-	
 	mat4x4_identity(projection);
 	mat4x4_scale_aniso(projection_scaled, projection,
 			   2.0/p_state->width,
@@ -129,7 +125,7 @@ void gl_rect_draw(GL_STATE_T *p_state)
 	glUniformMatrix4fv ( displayData->projectionLoc, 1, GL_FALSE, (GLfloat *)projection_final);
 	glUniformMatrix4fv ( displayData->modelViewLoc,  1, GL_FALSE, (GLfloat *)modelView);
 	
-	glUniform3f ( displayData->colorLoc, 1, GL_FALSE, userData->red, userData->green, userData->blue );
+	glUniform3f ( displayData->colorLoc, userData->red, userData->green, userData->blue );
 	
 	glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
 	//glDrawElements ( GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_SHORT, indices );

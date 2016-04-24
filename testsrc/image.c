@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 	
 	gl_display_init(p_state);
 
-#ifdef 0
+#if 0
 	if(!gl_image_init(p_state, image, width, height, orientation))
 		return 0;
 	

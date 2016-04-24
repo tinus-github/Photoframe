@@ -33,6 +33,23 @@ typedef struct
 	GLint samplerLoc;
 } GLImageDisplayData;
 
+// Data related to displaying rectangles
+typedef struct
+{
+	// Handle to a program object
+	GLuint programObject;
+	
+	// Attribute locations
+	GLint  positionLoc;
+	
+	// Uniforms locations
+	GLint  projectionLoc;
+	GLint  modelViewLoc;
+	
+	// Color location
+	GLint colorLoc;
+} GLImageDisplayData;
+
 typedef struct GLShapeInstanceData {
 	unsigned int orientation;
 	GLfloat objectX;
@@ -52,6 +69,17 @@ typedef struct
 	uint32_t textureHeight;
 } ImageInstanceData;
 
+// Data related to a displayed rectangle
+typedef struct
+{
+	struct GLShapeInstanceData shape;
+	
+	// Color
+	GLfloat red;
+ 	GLfloat green;
+ 	GLfloat blue;
+} RectInstanceData;
+
 // General GL state data
 typedef struct GL_STATE_T
 {
@@ -65,6 +93,7 @@ typedef struct GL_STATE_T
 	EGL_DISPMANX_WINDOW_T nativewindow;
 	ImageInstanceData *user_data;
 	GLImageDisplayData *imageDisplayData;
+	GLRectDisplayData *rectDisplayData;
 	void (*draw_func) (struct GL_STATE_T* );
 } GL_STATE_T;
 

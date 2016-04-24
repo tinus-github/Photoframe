@@ -1,6 +1,6 @@
 .PHONY: clean
 
-image: image.o loadimage.o loadexif.o gl-display.o gl-image.o
+image: image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o
 	cc -o image -Wl,--whole-archive image.o loadimage.o \
 	loadexif.o gl-display.o gl-image.o \
 	-L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
@@ -31,6 +31,15 @@ gl-display.o: gl-display.c gl-display.h
 	-Wno-deprecated-declarations
 
 gl-image.o: gl-image.c gl-image.h gl-display.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-c gl-image.c -o gl-image.o \
+	-Wno-deprecated-declarations
+
+gl-rect.o: gl-rect.c gl-rect.h gl-display.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \

@@ -35,7 +35,7 @@ static GLuint CreateSimpleTexture2D(int width, int height, unsigned char *image 
 	// Load the texture
 	
 	
-	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGB,
+	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
 		      width, height,
 		      0, GL_RGB, GL_UNSIGNED_BYTE, image );
 	

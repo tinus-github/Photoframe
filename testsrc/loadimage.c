@@ -59,6 +59,7 @@ static void *setup_upscale()
 	return ret;
 }
 
+/* updated for RGBA */
 static void smoothscale_h(unsigned char *inputptr, unsigned char *outputptr,
 			  unsigned int inputwidth, unsigned int outputwidth)
 {
@@ -81,6 +82,7 @@ static void smoothscale_h(unsigned char *inputptr, unsigned char *outputptr,
 					outputptr[0] = inputptr[0];
 					outputptr[1] = inputptr[1];
 					outputptr[2] = inputptr[2];
+					outputptr[3] = 255;
 				} else {
 					x_total[0] += x_contribution * inputptr[0];
 					x_total[1] += x_contribution * inputptr[1];
@@ -88,8 +90,9 @@ static void smoothscale_h(unsigned char *inputptr, unsigned char *outputptr,
 					outputptr[0] = x_total[0] / inputwidth;
 					outputptr[1] = x_total[1] / inputwidth;
 					outputptr[2] = x_total[2] / inputwidth;
+					outputptr[3] = 255;
 				}
-				outputptr += 3;
+				outputptr += 4;
 				
 				current_x_out++;
 				x_total[0] = x_total[1] = x_total[2] = 0;
@@ -109,7 +112,7 @@ static void smoothscale_h(unsigned char *inputptr, unsigned char *outputptr,
 		inputptr += 3;
 	}
 	if (current_x_out < outputwidth) {
-		bzero(outputptr, 3 * (outputwidth - current_x_out));
+		bzero(outputptr, 4 * (outputwidth - current_x_out));
 	}
 }
 
@@ -148,6 +151,7 @@ static void smoothscale_h_fast(unsigned char *inputptr, unsigned char *outputptr
 	}
 }
 
+/* Updated for RGBA, untested */
 static void upscaleLine(unsigned char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		 unsigned char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		 unsigned int current_line_inputbuf, struct upscalestruct *data)
@@ -160,7 +164,7 @@ static void upscaleLine(unsigned char *inputbuf, unsigned int inputwidth, unsign
 		data->total_x = outputwidth;
 		data->total_y = outputheight;
 		data->outputbuf = outputbuf;
-		data->y_contributions = calloc(3 * sizeof(unsigned int), outputwidth);
+		data->y_contributions = calloc(4 * sizeof(unsigned int), outputwidth);
 	}
 	
 	/* Possible optimization:
@@ -171,7 +175,7 @@ static void upscaleLine(unsigned char *inputbuf, unsigned int inputwidth, unsign
 	data->scalerest += outputheight;
 	
 	while (data->scalerest > inputheight) {
-		outputptr = outputbuf + 3 * outputwidth * data->current_y_out;
+		outputptr = outputbuf + 4 * outputwidth * data->current_y_out;
 		inputptr = inputbuf;
 		
 		smoothscale_h_fast(inputptr, outputptr, inputwidth, outputwidth);
@@ -181,7 +185,7 @@ static void upscaleLine(unsigned char *inputbuf, unsigned int inputwidth, unsign
 	}
 }
 
-/* Updated for RGBA */
+/* Updated for RGBA, untested */
 static void upscaleLineSmooth(unsigned char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		       unsigned char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		       unsigned int current_line_inputbuf, struct upscalestruct *data)
@@ -195,12 +199,14 @@ static void upscaleLineSmooth(unsigned char *inputbuf, unsigned int inputwidth, 
 	unsigned char *outputptr;
 	unsigned char *inputptr;
 	
+	unsigned int skip_alpha;
+	
 	if (data->scalefactor == 0.0f) {
 		data->scalefactor = (float)outputwidth / inputwidth;
 		data->total_x = outputwidth;
 		data->total_y = outputheight;
 		data->outputbuf = outputbuf;
-		data->y_contributions = calloc(3 * sizeof(unsigned int), outputwidth);
+		data->y_contributions = calloc(4 * sizeof(unsigned int), outputwidth);
 	}
 	
 	y_remaining_contribution = outputheight;
@@ -218,29 +224,39 @@ static void upscaleLineSmooth(unsigned char *inputbuf, unsigned int inputwidth, 
 			y_contribution = y_remaining_contribution;
 		}
 		
-		outputptr = outputbuf + 3 * outputwidth * data->current_y;
+		outputptr = outputbuf + 4 * outputwidth * data->current_y;
 		inputptr = inputbuf;
 		
 		smoothscale_h(inputptr, outputptr, inputwidth, outputwidth);
 		
 		if (y_contribution != y_remaining_contribution) {
 			if (y_contribution != inputheight) {
-				outputptr = outputbuf + 3 * outputwidth * data->current_y;
-				for (counter = (3 * outputwidth) - 1 ; counter >= 0; counter--) {
-					data->y_contributions[counter] += y_contribution * outputptr[counter];
-					outputptr[counter] = data->y_contributions[counter] / inputheight;
+				outputptr = outputbuf + 4 * outputwidth * data->current_y;
+				skip_alpha = 0;
+				for (counter = (4 * outputwidth) - 1 ; counter >= 0; counter--) {
+					if (skip_alpha) {
+						data->y_contributions[counter] += y_contribution * outputptr[counter];
+						outputptr[counter] = data->y_contributions[counter] / inputheight;
+					} else {
+						outputptr[counter] = 255;
+					}
+					skip_alpha++; skip_alpha &= 3;
 				}
 			}
-			bzero(data->y_contributions, outputwidth * 3 * sizeof(unsigned int));
+			bzero(data->y_contributions, outputwidth * 4 * sizeof(unsigned int));
 			
 			data->current_y++;
 			y_remaining_contribution -= y_contribution;
 			data->scalerest = 0;
 			continue;
 		} else {
-			outputptr = outputbuf + 3 * outputwidth * data->current_y;
-			for (counter = (3 * outputwidth) - 1 ; counter >= 0; counter--) {
-				data->y_contributions[counter] += y_contribution * outputptr[counter];
+			outputptr = outputbuf + 4 * outputwidth * data->current_y;
+			skip_alpha = 0;
+			for (counter = (4 * outputwidth) - 1 ; counter >= 0; counter--) {
+				if (skip_alpha) {
+					data->y_contributions[counter] += y_contribution * outputptr[counter];
+				}
+				skip_alpha++; skip_alpha &= 3;
 			}
 			data->scalerest += y_remaining_contribution;
 			break;
@@ -250,6 +266,7 @@ static void upscaleLineSmooth(unsigned char *inputbuf, unsigned int inputwidth, 
 	assert (data->current_y < outputheight);
 }
 
+/* Updated for RGBA */
 static void upscaleLineSmoothFast(unsigned char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 			   unsigned char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 			   unsigned int current_line_inputbuf, struct upscalestruct *data)
@@ -346,8 +363,8 @@ static void upscaleLineSmoothFast(unsigned char *inputbuf, unsigned int inputwid
 static void done_upscale(struct upscalestruct *data)
 {
 	if (data->current_y_out < data->total_y) {
-		bzero(data->outputbuf + 3 * data->total_x * data->current_y_out,
-		      3 * data->total_x * (data->total_y - data->current_y_out));
+		bzero(data->outputbuf + 4 * data->total_x * data->current_y_out,
+		      4 * data->total_x * (data->total_y - data->current_y_out));
 	}
 	free (data->y_contributions);
 	free (data->y_used_lines);

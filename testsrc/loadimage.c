@@ -492,7 +492,7 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	scanbuf = malloc(cinfo.output_width * 3 * scanbufheight);
 	row_pointers = malloc(scanbufheight * sizeof(JSAMPROW));
 	for (counter = 0; counter < scanbufheight; counter++) {
-		row_pointers[counter] = scanbuf + 3 * (lines_in_buf * cinfo.output_width);
+		row_pointers[counter] = scanbuf + 3 * (counter * cinfo.output_width);
 	}
 	
 	while (lines_in_buf < cinfo.output_height) {

@@ -37,7 +37,7 @@ static GLuint CreateSimpleTexture2D(int width, int height, unsigned char *image 
 	
 	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
 		      width, height,
-		      0, GL_RGB, GL_UNSIGNED_BYTE, image );
+		      0, GL_RGBA, GL_UNSIGNED_BYTE, image );
 	
 	// Set the filtering mode
 	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );

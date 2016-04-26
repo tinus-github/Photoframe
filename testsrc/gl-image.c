@@ -150,7 +150,6 @@ int gl_image_init(GL_STATE_T *p_state, unsigned char* image, int width, int heig
 	shapeData->objectX = 0.0f;
 	shapeData->objectY = 0.0f;
 	
-	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
 	return GL_TRUE;
 }
 

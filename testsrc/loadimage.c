@@ -114,7 +114,7 @@ static void smoothscale_h(unsigned char *inputptr, unsigned char *outputptr,
 }
 
 /* Smooth Bresenham speed scaling */
-
+/* Updated for RGBA */
 static void smoothscale_h_fast(unsigned char *inputptr, unsigned char *outputptr, unsigned int inputwidth, unsigned int outputwidth)
 {
 	unsigned int numpixels = outputwidth;
@@ -136,8 +136,9 @@ static void smoothscale_h_fast(unsigned char *inputptr, unsigned char *outputptr
 		outputptr[0] = pixel_values[0];
 		outputptr[1] = pixel_values[1];
 		outputptr[2] = pixel_values[2];
+		outputptr[3] = 255;
 		
-		outputptr += 3;
+		outputptr += 4;
 		
 		accumulated_error += inputwidth;
 		while (accumulated_error >= outputwidth) {
@@ -180,6 +181,7 @@ static void upscaleLine(unsigned char *inputbuf, unsigned int inputwidth, unsign
 	}
 }
 
+/* Updated for RGBA */
 static void upscaleLineSmooth(unsigned char *inputbuf, unsigned int inputwidth, unsigned int inputheight,
 		       unsigned char *outputbuf, unsigned int outputwidth, unsigned int outputheight,
 		       unsigned int current_line_inputbuf, struct upscalestruct *data)
@@ -266,7 +268,7 @@ static void upscaleLineSmoothFast(unsigned char *inputbuf, unsigned int inputwid
 		data->total_y = outputheight;
 		data->outputbuf = outputbuf;
 		data->current_y = 0;
-		data->y_contributions = calloc(3 * sizeof(unsigned int), outputwidth);
+		data->y_contributions = calloc(4 * sizeof(unsigned int), outputwidth);
 		data->y_used_lines = calloc(sizeof(unsigned int), outputheight);
 		
 		accumulated_error = 0;
@@ -284,13 +286,14 @@ static void upscaleLineSmoothFast(unsigned char *inputbuf, unsigned int inputwid
 			}
 			
 		}
-		data->last_line = calloc(sizeof(char) * 3, outputwidth);
-		data->combined_line = calloc(sizeof(char) * 3, outputwidth);
+		data->last_line = calloc(sizeof(char) * 4, outputwidth);
+		data->combined_line = calloc(sizeof(char) * 4, outputwidth);
 		data->current_y_out = 0;
 	}
 	
 	unsigned int wanted_line;
 	int want_combine;
+	unsigned int skip_alpha;
 	
 	while (data->current_y_out < outputheight) {
 		wanted_line = data->y_used_lines[data->current_y_out];
@@ -299,7 +302,7 @@ static void upscaleLineSmoothFast(unsigned char *inputbuf, unsigned int inputwid
 		
 		if (!want_combine) {
 			if (wanted_line == data->current_y) {
-				outputptr = outputbuf + 3 * outputwidth * data->current_y_out;
+				outputptr = outputbuf + 4 * outputwidth * data->current_y_out;
 				smoothscale_h_fast(inputbuf, outputptr, inputwidth, outputwidth);
 				data->current_y_out++;
 				continue;
@@ -313,10 +316,16 @@ static void upscaleLineSmoothFast(unsigned char *inputbuf, unsigned int inputwid
 				break;
 			} else if (wanted_line == (data->current_y - 1)) {
 				smoothscale_h_fast(inputbuf, data->combined_line, inputwidth, outputwidth);
-				outputptr = outputbuf + 3 * outputwidth * data->current_y_out;
-				for (counter = (3 * outputwidth) - 1 ; counter >= 0; counter--) {
-					outputptr[counter] = average_channel(data->last_line[counter],
-									     data->combined_line[counter]);
+				outputptr = outputbuf + 4 * outputwidth * data->current_y_out;
+				skip_alpha = 0;
+				for (counter = (4 * outputwidth) - 1 ; counter >= 0; counter--) {
+					if (!skip_alpha) {
+						outputptr[counter] = 255;
+					} else {
+						outputptr[counter] = average_channel(data->last_line[counter],
+										     data->combined_line[counter]);
+					}
+					skip_alpha ++; skip_alpha &= 3;
 				}
 				data->current_y_out++;
 				continue;
@@ -422,6 +431,9 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	JSAMPROW *row_pointers = NULL;
 	
 	unsigned int counter;
+	unsigned int inputoffset;
+	unsigned int outputoffset;
+	unsigned char *outputcurrentline;
 	
 	float scalefactor, scalefactortmp;
 	void *scaledata = NULL;
@@ -486,7 +498,7 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	*width = cinfo.output_width * scalefactor;
 	*height = cinfo.output_height * scalefactor;
 	
-	buffer = malloc(width[0] * height[0] * 3);
+	buffer = malloc(width[0] * height[0] * 4);
 	
 	scanbufheight = cinfo.rec_outbuf_height;
 	scanbuf = malloc(cinfo.output_width * 3 * scanbufheight);
@@ -505,9 +517,14 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 			upscaleLineSmoothFast(scanbufcurrentline, cinfo.output_width, cinfo.output_height,
 					      buffer, *width, *height, lines_in_buf, scaledata);
 		} else {
-			memcpy (buffer + 3 * (lines_in_buf * cinfo.output_width),
-				scanbufcurrentline,
-				3 * cinfo.output_width);
+			inputoffset = outputoffset = 0;
+			outputcurrentline = buffer + 4  * (lines_in_buf * cinfo.output_width;
+			for (counter = 0; counter < cinfo.output_width; counter++) {
+				outputcurrentline[outputoffset++] = scanbufcurrentline[inputoffset++];
+				outputcurrentline[outputoffset++] = scanbufcurrentline[inputoffset++];
+				outputcurrentline[outputoffset++] = scanbufcurrentline[inputoffset++];
+				outputcurrentline[outputoffset++] = 255;
+			}
 		}
 		
 		scanbufcurrentline += 3 * cinfo.output_width;
@@ -534,6 +551,7 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 
 
 /* Crude, insecure */
+/* Needs update for RGBA layout */
 unsigned char* loadTGA ( char *fileName, int *width, int *height )
 {
 	unsigned char *buffer = NULL;

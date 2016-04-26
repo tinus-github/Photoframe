@@ -518,7 +518,7 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 					      buffer, *width, *height, lines_in_buf, scaledata);
 		} else {
 			inputoffset = outputoffset = 0;
-			outputcurrentline = buffer + 4  * (lines_in_buf * cinfo.output_width;
+			outputcurrentline = buffer + 4  * (lines_in_buf * cinfo.output_width);
 			for (counter = 0; counter < cinfo.output_width; counter++) {
 				outputcurrentline[outputoffset++] = scanbufcurrentline[inputoffset++];
 				outputcurrentline[outputoffset++] = scanbufcurrentline[inputoffset++];

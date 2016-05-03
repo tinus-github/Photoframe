@@ -9,6 +9,8 @@
 #include "gl-object.h"
 
 #include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 
 static void gl_object_ref(gl_object *obj)
 {

@@ -1,8 +1,8 @@
 .PHONY: clean
 
-image: image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o
+image: image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o
 	cc -o image -Wl,--whole-archive image.o loadimage.o \
-	loadexif.o gl-display.o gl-image.o gl-rect.o \
+	loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o \
 	-L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg -lexif \
 	-Wl,--no-whole-archive -rdynamic
@@ -47,6 +47,13 @@ gl-rect.o: gl-rect.c gl-rect.h gl-display.h
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c gl-rect.c -o gl-rect.o \
 	-Wno-deprecated-declarations
+
+gl-object.h: gl-object.c gl-object.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations \
+	-c gl-object.c -o gl-object.o
 
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

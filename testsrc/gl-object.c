@@ -26,7 +26,7 @@ static void gl_object_unref(gl_object *obj)
 
 static void gl_object_free(gl_object *obj)
 {
-	obj->free_fp(obj);
+	obj->f->free_fp(obj);
 	free (obj);
 }
 
@@ -45,7 +45,7 @@ static struct gl_object_funcs gl_object_funcs_global =
 gl_object *gl_object_init(gl_object *obj)
 {
 	assert (obj->f);
-	obj.f = gl_object_funcs_global;
+	memcpy(obj->f, &gl_object_funcs_global, sizeof(gl_object_funcs));
 	
 	return obj;
 }

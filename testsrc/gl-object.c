@@ -46,8 +46,7 @@ static struct gl_object_funcs gl_object_funcs_global =
 
 gl_object *gl_object_init(gl_object *obj)
 {
-	assert (obj->f);
-	memcpy(obj->f, &gl_object_funcs_global, sizeof(gl_object_funcs));
+	obj->f = &gl_object_funcs_global;
 	
 	return obj;
 }
@@ -55,7 +54,6 @@ gl_object *gl_object_init(gl_object *obj)
 gl_object *gl_object_new()
 {
 	gl_object *ret = malloc(sizeof(gl_object));
-	ret->f = malloc(sizeof(gl_object_funcs));
 	
 	return gl_object_init(ret);
 }

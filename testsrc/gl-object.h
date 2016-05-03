@@ -23,7 +23,7 @@ typedef struct gl_object_funcs {
 
 typedef struct gl_object_data {
 	atomic_uint refcount;
-};
+} gl_object_data;
 
 struct gl_object {
 	gl_object_funcs *f;

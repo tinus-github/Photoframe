@@ -7,7 +7,7 @@ image: image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o gl-objec
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg -lexif \
 	-Wl,--no-whole-archive -rdynamic
 
-image.o: image.c loadimage.h gl-display.h
+image.o: image.c loadimage.h gl-display.h gl-texture.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
 	 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DTARGET_POSIX \
 	 -D_LINUX -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
@@ -39,7 +39,7 @@ gl-image.o: gl-image.c gl-image.h gl-display.h gl-texture.h
 	-c gl-image.c -o gl-image.o \
 	-Wno-deprecated-declarations
 
-gl-rect.o: gl-rect.c gl-rect.h gl-display.h
+gl-rect.o: gl-rect.c gl-rect.h gl-display.h gl-texture.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
@@ -102,4 +102,4 @@ decodejpeg2rgb.o: decodejpeg2rgb.c
 	 -Wno-deprecated-declarations
 
 clean:
-	rm -f image image.o gl-display.o loadimage.o loadexif.o decodejpeg2rgb decodejpeg2rgb.o gl-image.o
+	rm -f image image.o gl-display.o loadimage.o loadexif.o decodejpeg2rgb decodejpeg2rgb.o gl-image.o gl-rect.o gl-texture.o

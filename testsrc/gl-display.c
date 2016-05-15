@@ -15,6 +15,8 @@
 
 #include "../lib/linmath/linmath.h"
 
+#include "gl-texture.h"
+
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0
@@ -255,4 +257,10 @@ void  esMainLoop (GL_STATE_T *esContext )
 void gl_display_register_draw_func(GL_STATE_T *p_state, void (*gl_display_draw_func) (GL_STATE_T* ) )
 {
 	p_state->draw_func = gl_display_draw_func;
+}
+
+
+void gl_display_setup()
+{
+	gl_texture_setup();
 }

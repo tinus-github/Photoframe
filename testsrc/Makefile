@@ -21,7 +21,7 @@ image.o: image.c loadimage.h gl-display.h
 	 -I/opt/vc/src/hello_pi/libs/vgfont -g -c image.c -o image.o \
 	 -Wno-deprecated-declarations
 
-gl-display.o: gl-display.c gl-display.h
+gl-display.o: gl-display.c gl-display.h  gl-texture.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
@@ -47,6 +47,13 @@ gl-rect.o: gl-rect.c gl-rect.h gl-display.h
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c gl-rect.c -o gl-rect.o \
 	-Wno-deprecated-declarations
+
+gl-texture.h: gl-texture.c gl-texture.h gl-object.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations \
+	-c gl-texture.c -o gl-texture.o
 
 gl-object.h: gl-object.c gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

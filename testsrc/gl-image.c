@@ -8,6 +8,7 @@
 
 #include "gl-image.h"
 #include "gl-display.h"
+#include "gl-texture.h"
 
 // from esUtil.h
 #define TRUE 1
@@ -131,6 +132,7 @@ int gl_image_init(GL_STATE_T *p_state, unsigned char* image, int width, int heig
 	GLShapeInstanceData *shapeData = &userData->shape;
 	
 	Init_image_gl_state(p_state);
+	userData->textureObj = gl_texture_new();
 	
 	shapeData->objectWidth = width;
 	shapeData->objectHeight = height;
@@ -145,7 +147,11 @@ int gl_image_init(GL_STATE_T *p_state, unsigned char* image, int width, int heig
 	}
 	
 	// Load the texture
-	userData->textureId = CreateSimpleTexture2D (userData->textureWidth, userData->textureHeight, image);
+	userData->textureObj->f->load_image(userData->textureObj,
+					    image,
+					    userData->textureWidth
+					    userData->textureHeight);
+	userData->textureId = userData->textureObj->data.textureId;
 	
 	shapeData->objectX = 0.0f;
 	shapeData->objectY = 0.0f;

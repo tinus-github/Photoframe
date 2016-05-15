@@ -30,7 +30,7 @@ gl-display.o: gl-display.c gl-display.h  gl-texture.h
 	-c gl-display.c -o gl-display.o \
 	-Wno-deprecated-declarations
 
-gl-image.o: gl-image.c gl-image.h gl-display.h
+gl-image.o: gl-image.c gl-image.h gl-display.h gl-texture.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \

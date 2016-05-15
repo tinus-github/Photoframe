@@ -63,6 +63,7 @@ typedef struct
 {
 	struct GLShapeInstanceData shape;
 	
+	gl_texture *textureObj;
 	// Texture info
 	GLuint textureId;
 	uint32_t textureWidth;

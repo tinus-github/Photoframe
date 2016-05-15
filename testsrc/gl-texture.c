@@ -90,6 +90,7 @@ static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,
 	unsigned char *image_part = malloc(part_size);
 	unsigned char *input_row_start;
 	unsigned char *output_row_start;
+	unsigned int counter_y;
 	size_t row_data_length;
 	int tile_is_edge = 0;
 	if ((image_width - (tile_x * tile_width)) < tile_width) tile_is_edge = 1;
@@ -109,7 +110,7 @@ static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,
 	row_data_length = 4 * (x_end - x_start);
 	input_row_start = rgba_data + (4 * x_start);
 	output_row_start = image_part;
-	for (unsigned int counter_y = y_start; counter_y < y_end; counter_y++) {
+	for (counter_y = y_start; counter_y < y_end; counter_y++) {
 		memcpy(output_row_start, input_row_start, row_data_length);
 		input_row_start += image_width * 4;
 		output_row_start += tile_width * 4;

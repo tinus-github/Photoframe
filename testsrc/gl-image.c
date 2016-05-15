@@ -16,36 +16,6 @@
 
 #include "../lib/linmath/linmath.h"
 
-///
-// Create a simple width x height texture image with four different colors
-//
-static GLuint CreateSimpleTexture2D(int width, int height, unsigned char *image )
-{
-	// Texture object handle
-	GLuint textureId;
-	
-	// Use tightly packed data
-	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
-	
-	// Generate a texture object
-	glGenTextures ( 1, &textureId );
-	
-	// Bind the texture object
-	glBindTexture ( GL_TEXTURE_2D, textureId );
-	
-	// Load the texture
-	
-	
-	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
-		      width, height,
-		      0, GL_RGBA, GL_UNSIGNED_BYTE, image );
-	
-	// Set the filtering mode
-	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	return textureId;
-}
-
 static unsigned int orientationFlipsWidthHeight(unsigned int rotation)
 {
 	switch (rotation) {

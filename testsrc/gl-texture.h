@@ -24,7 +24,7 @@ typedef struct gl_texture_data {
 	gl_object_data p;
 	GLuint textureId;
 	int texture_loaded;
-};
+} gl_texture_data;
 
 struct gl_texture {
 	gl_texture_funcs *f;

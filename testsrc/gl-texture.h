@@ -21,6 +21,10 @@ typedef struct gl_texture gl_texture;
 typedef struct gl_texture_funcs {
 	gl_object_funcs p;
 	GLuint (*load_image) (gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
+	GLuint (*load_image_tile) (gl_texure *obj, unsigned char *rgba_data,
+				   unsigned int image_width, unsigned int image_height,
+				   unsigned int tile_width, unsigned int tile_height,
+				   unsigned int tile_x, unsigned int tile_y);
 	void (*gl_object_free) (gl_object *obj);
 } gl_texture_funcs;
 

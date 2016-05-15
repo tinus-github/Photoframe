@@ -7,12 +7,18 @@
 //
 
 #include "gl-texture.h"
+#include <string.h>
 
 static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
+static GLuint load_image_tile(gl_texure *obj, unsigned char *rgba_data,
+			      unsigned int image_width, unsigned int image_height,
+			      unsigned int tile_width, unsigned int tile_height,
+			      unsigned int tile_x, unsigned int tile_y);
 static void gl_texture_free();
 
 static struct gl_texture_funcs gl_texture_funcs_global = {
-	.load_image = &load_image
+	.load_image = &load_image,
+	.load_image_tile = &load_image_tile
 };
 
 void gl_texture_setup()
@@ -73,6 +79,46 @@ static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int
 	obj->data.height = height;
 	
 	return textureId;
+}
+
+static GLuint load_image_tile(gl_texure *obj, unsigned char *rgba_data,
+			      unsigned int image_width, unsigned int image_height,
+			      unsigned int tile_width, unsigned int tile_height,
+			      unsigned int tile_x, unsigned int tile_y)
+{
+	size_t part_size = 4 * sizeof(unsigned char) * tile_width * tile_height;
+	unsigned char *image_part = malloc(part_size);
+	unsigned char *input_row_start;
+	unsigned char *output_row_start;
+	size_t row_data_length;
+	int tile_is_edge = 0;
+	if ((image_width - (tile_x * tile_width)) < tile_width) tile_is_edge = 1;
+	if ((image_height - (tile_y * tile_height)) < tile_height) tile_is_edge = 1;
+	
+	if (tile_is_edge) {
+		memset(image_part, 0, part_size);
+	}
+	
+	unsigned int x_start = tile_x * tile_width;
+	unsigned int x_end = x_start + tile_width;
+	unsigned int y_start = tile_y * tile_height;
+	unsigned int y_end = y_start + tile_height;
+	if (x_end > image_width) x_end = image_width;
+	if (y_end > image_height) y_end = image_height;
+	
+	row_data_length = 4 * (x_end - x_start);
+	input_row_start = rgba_data + (4 * x_start);
+	output_row_start = image_part;
+	for (unsigned int counter_y = y_start; counter_y < y_end; counter_y++) {
+		memcpy(output_row_start, input_row_start, row_data_length);
+		input_row_start += image_width * 4;
+		output_row_start += tile_width * 4;
+	}
+	
+	GLuint ret = obj->f->load_image(obj, image_part, tile_width, tile_height);
+	free(image_part);
+	
+	return ret;
 }
 
 static void gl_texture_free_texture(gl_texture *obj)

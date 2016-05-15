@@ -21,6 +21,8 @@
 #define TRUE 1
 #define FALSE 0
 
+void gl_display_setup();
+
 ///
 // Create a shader object, load the shader source, and
 // compile the shader.

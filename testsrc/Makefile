@@ -1,6 +1,6 @@
 .PHONY: clean
 
-image: image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o
+image: image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o gl-texture.o
 	cc -o image -Wl,--whole-archive image.o loadimage.o \
 	loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o \
 	-L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \

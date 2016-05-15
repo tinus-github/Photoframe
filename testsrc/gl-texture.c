@@ -18,7 +18,7 @@ static struct gl_texture_funcs gl_texture_funcs_global = {
 void gl_texture_setup()
 {
 	gl_object *parent = gl_object_new();
-	memcpy(gl_texture_funcs_global.p, parent->f, sizeof(gl_object_funcs));
+	memcpy(&gl_texture_funcs_global.p, parent->f, sizeof(gl_object_funcs));
 	parent->f->free(parent);
 	
 	gl_texture_funcs_global.gl_object_free = gl_texture_funcs_global.p.free;
@@ -85,5 +85,5 @@ static void gl_texture_free(gl_object *obj_obj)
 	if (obj->data.texture_loaded) {
 		gl_texture_free_texture(obj);
 	}
-	obj->f->free(obj_obj);
+	obj_obj->f->free(obj_obj);
 }

@@ -28,6 +28,8 @@ typedef struct gl_texture_data {
 	gl_object_data p;
 	GLuint textureId;
 	int texture_loaded;
+	GLuint width;
+	GLuint height;
 } gl_texture_data;
 
 struct gl_texture {

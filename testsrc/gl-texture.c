@@ -69,6 +69,8 @@ static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int
 	
 	obj->data.textureId = textureId;
 	obj->data.texture_loaded = 1;
+	obj->data.width = width;
+	obj->data.height = height;
 	
 	return textureId;
 }

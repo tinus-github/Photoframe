@@ -34,4 +34,6 @@ struct gl_texture {
 gl_texture *gl_texture_init(gl_texture *obj);
 gl_texture *gl_texture_new();
 
+void gl_texture_setup();
+
 #endif /* gl_texture_h */

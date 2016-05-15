@@ -149,7 +149,7 @@ int gl_image_init(GL_STATE_T *p_state, unsigned char* image, int width, int heig
 	// Load the texture
 	userData->textureObj->f->load_image(userData->textureObj,
 					    image,
-					    userData->textureWidth
+					    userData->textureWidth,
 					    userData->textureHeight);
 	userData->textureId = userData->textureObj->data.textureId;
 	

@@ -10,6 +10,10 @@
 #define gl_texture_h
 
 #include <stdio.h>
+#include <GLES2/gl2.h>
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+
 #include "gl-object.h"
 
 typedef struct gl_texture gl_texture;

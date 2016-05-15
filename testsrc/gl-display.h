@@ -15,6 +15,8 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
+#include "gl_texture.h"
+
 // Data related to displaying images
 typedef struct
 {

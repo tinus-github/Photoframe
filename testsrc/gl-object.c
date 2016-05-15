@@ -47,6 +47,7 @@ static struct gl_object_funcs gl_object_funcs_global =
 gl_object *gl_object_init(gl_object *obj)
 {
 	obj->f = &gl_object_funcs_global;
+	obj->f->ref(obj);
 	
 	return obj;
 }

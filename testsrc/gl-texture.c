@@ -19,17 +19,17 @@ void gl_texture_setup()
 {
 	gl_object *parent = gl_object_new();
 	memcpy(gl_texture_funcs_global.p, parent->f, sizeof(gl_object_funcs));
-	parent->f->free();
+	parent->f->free(parent);
 	
-	gl_texture_funcs_global.gl_object_free = gl_texture_funcs_global.free;
-	gl_texture_funcs_global.free = &gl_texture_free;
+	gl_texture_funcs_global.gl_object_free = gl_texture_funcs_global.p.free;
+	gl_texture_funcs_global.p.free = &gl_texture_free;
 }
 
 gl_texture *gl_texture_init(gl_texture *obj)
 {
 	gl_object_init((gl_object *)obj);
 	
-	obj->f = &gl_object_funcs_global;
+	obj->f = &gl_texture_funcs_global;
 	
 	return obj;
 }
@@ -61,7 +61,7 @@ static GLuint load_image(gl_texture *obj, char *rgba_data, unsigned int width, u
 	
 	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
 		      width, height,
-		      0, GL_RGBA, GL_UNSIGNED_BYTE, image );
+		      0, GL_RGBA, GL_UNSIGNED_BYTE, rgba_data );
 	
 	// Set the filtering mode
 	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
@@ -85,5 +85,5 @@ static void gl_texture_free(gl_object *obj_obj)
 	if (obj->data.texture_loaded) {
 		gl_texture_free_texture(obj);
 	}
-	obj->f.gl_object_free(obj_obj);
+	obj->f->free(obj_obj);
 }

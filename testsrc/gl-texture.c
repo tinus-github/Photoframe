@@ -8,7 +8,7 @@
 
 #include "gl-texture.h"
 
-static GLuint load_image(gl_texture *obj, char *rgba_data, unsigned int width, unsigned int height);
+static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
 static void gl_texture_free();
 
 static struct gl_texture_funcs gl_texture_funcs_global = {
@@ -42,7 +42,7 @@ gl_texture *gl_texture_new()
 }
 
 
-static GLuint load_image(gl_texture *obj, char *rgba_data, unsigned int width, unsigned int height)
+static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height)
 {
 	// Texture object handle
 	GLuint textureId;

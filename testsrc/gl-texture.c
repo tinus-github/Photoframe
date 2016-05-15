@@ -10,7 +10,7 @@
 #include <string.h>
 
 static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
-static GLuint load_image_tile(gl_texure *obj, unsigned char *rgba_data,
+static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,
 			      unsigned int image_width, unsigned int image_height,
 			      unsigned int tile_width, unsigned int tile_height,
 			      unsigned int tile_x, unsigned int tile_y);
@@ -81,7 +81,7 @@ static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int
 	return textureId;
 }
 
-static GLuint load_image_tile(gl_texure *obj, unsigned char *rgba_data,
+static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,
 			      unsigned int image_width, unsigned int image_height,
 			      unsigned int tile_width, unsigned int tile_height,
 			      unsigned int tile_x, unsigned int tile_y)

@@ -125,6 +125,7 @@ void gl_display_init(GL_STATE_T *state)
 	memset( state, 0, sizeof( GL_STATE_T) );
 	
 	bcm_host_init();
+	gl_display_setup();
 	
 	DISPMANX_ELEMENT_HANDLE_T dispman_element;
 	DISPMANX_DISPLAY_HANDLE_T dispman_display;

@@ -25,7 +25,6 @@ typedef struct gl_texture_funcs {
 				   unsigned int image_width, unsigned int image_height,
 				   unsigned int tile_width, unsigned int tile_height,
 				   unsigned int tile_x, unsigned int tile_y);
-	void (*gl_object_free) (gl_object *obj);
 } gl_texture_funcs;
 
 typedef struct gl_texture_data {

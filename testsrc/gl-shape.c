@@ -8,11 +8,12 @@
 
 #include "gl-shape.h"
 #include <string.h>
+#include <assert.h>
 
 static void gl_shape_draw(gl_shape *obj);
 
 static struct gl_shape_funcs gl_shape_funcs_global = {
-	.draw = &draw
+	.draw = &gl_shape_draw
 };
 
 static void gl_shape_draw(gl_shape *obj)

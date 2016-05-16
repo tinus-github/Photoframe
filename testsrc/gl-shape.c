@@ -8,7 +8,7 @@
 
 #include "gl-shape.h"
 #include <string.h>
-#include <assert.h>
+#include <stdio.h>
 
 static void gl_shape_draw(gl_shape *obj);
 
@@ -18,7 +18,8 @@ static struct gl_shape_funcs gl_shape_funcs_global = {
 
 static void gl_shape_draw(gl_shape *obj)
 {
-	assert(0, "Abstract function");
+	printf("%s\n", "gl_shape_draw is an abstract function");
+	abort();
 }
 
 void gl_shape_setup()

@@ -16,6 +16,7 @@
 #include "../lib/linmath/linmath.h"
 
 #include "gl-texture.h"
+#include "gl-shape.h"
 
 // from esUtil.h
 #define TRUE 1
@@ -266,4 +267,5 @@ void gl_display_register_draw_func(GL_STATE_T *p_state, void (*gl_display_draw_f
 void gl_display_setup()
 {
 	gl_texture_setup();
+	gl_shape_setup();
 }

@@ -31,6 +31,8 @@
 		0D69BD781C4EA17900A10282 /* rectangle.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rectangle.c; sourceTree = "<group>"; };
 		0D8350051CE63F8200ADCDCC /* gl-texture.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-texture.c"; sourceTree = "<group>"; };
 		0D8350061CE63F8200ADCDCC /* gl-texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-texture.h"; sourceTree = "<group>"; };
+		0D8350071CEA1F8800ADCDCC /* gl-shape.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-shape.c"; sourceTree = "<group>"; };
+		0D8350081CEA1F8800ADCDCC /* gl-shape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-shape.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -100,6 +102,8 @@
 				0D6515351CD8E314007A3C9E /* gl-object.h */,
 				0D8350051CE63F8200ADCDCC /* gl-texture.c */,
 				0D8350061CE63F8200ADCDCC /* gl-texture.h */,
+				0D8350071CEA1F8800ADCDCC /* gl-shape.c */,
+				0D8350081CEA1F8800ADCDCC /* gl-shape.h */,
 			);
 			indentWidth = 8;
 			path = testsrc;

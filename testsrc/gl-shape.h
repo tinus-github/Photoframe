@@ -30,7 +30,7 @@ typedef struct gl_shape_data {
 	gl_object_data p;
 	// gl_container *container;
 	mat4x4 projection;
-}
+} gl_shape_data;
 
 void gl_shape_setup();
 

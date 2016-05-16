@@ -14,7 +14,7 @@ static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,
 			      unsigned int image_width, unsigned int image_height,
 			      unsigned int tile_width, unsigned int tile_height,
 			      unsigned int tile_x, unsigned int tile_y);
-static void gl_texture_free();
+static void gl_texture_free(gl_object *obj);
 
 static struct gl_texture_funcs gl_texture_funcs_global = {
 	.load_image = &load_image,

@@ -10,6 +10,11 @@
 #include <string.h>
 #include <stdio.h>
 
+#define TRUE 1
+#define FALSE 0
+
+#include "../lib/linmath/linmath.h"
+
 static void gl_shape_draw(gl_shape *obj);
 static void gl_shape_set_projection(gl_shape *obj, mat4x4 new_projection);
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj);

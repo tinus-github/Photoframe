@@ -15,9 +15,9 @@ static void gl_shape_set_projection(gl_shape *obj, mat4x4 new_projection);
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj);
 
 static struct gl_shape_funcs gl_shape_funcs_global = {
-	.draw = &gl_shape_draw;
-	.set_projection = &gl_shape_set_projection;
-	.set_computed_projection_dirty = &gl_shape_set_computed_projection_dirty;
+	.draw = &gl_shape_draw,
+	.set_projection = &gl_shape_set_projection,
+	.set_computed_projection_dirty = &gl_shape_set_computed_projection_dirty
 };
 
 static void gl_shape_draw(gl_shape *obj)

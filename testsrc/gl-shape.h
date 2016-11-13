@@ -36,6 +36,11 @@ typedef struct gl_shape_data {
 	unsigned int computed_projection_dirty;
 } gl_shape_data;
 
+struct gl_shape {
+	gl_shape_funcs *f;
+	gl_shape_data data;
+};
+
 void gl_shape_setup();
 
 #endif /* gl_shape_h */

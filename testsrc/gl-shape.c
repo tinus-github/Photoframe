@@ -28,7 +28,7 @@ static void gl_shape_draw(gl_shape *obj)
 
 static void gl_shape_set_projection(gl_shape *obj, mat4x4 new_projection)
 {
-	obj->data.projection = new_projection;
+	mat4x4_dup(obj->data.projection, new_projection);
 	obj->set_computed_projection_dirty(obj);
 }
 

@@ -18,7 +18,7 @@ typedef struct gl_tile gl_tile;
 
 typedef struct gl_tile_funcs {
 	gl_object_funcs p;
-	void (*set_texture) (gl_tile *obj, gl_texture texture);
+	void (*set_texture) (gl_tile *obj, gl_texture *texture);
 } gl_tile_funcs;
 
 typedef struct gl_tile_data {

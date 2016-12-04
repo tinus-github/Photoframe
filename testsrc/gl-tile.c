@@ -35,7 +35,7 @@ static void gl_tile_free(gl_object *tile_obj)
 {
 	gl_tile *tile = (gl_tile *)tile_obj;
 	
-	gl_tile->f->set_texture(NULL);
+	tile->f->set_texture(NULL);
 	
 	gl_object *parent_obj = (gl_object *)gl_tile_obj_parent;
 	parent_obj->f->free(tile_obj);

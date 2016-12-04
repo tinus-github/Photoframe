@@ -20,6 +20,8 @@
 		0D6515331CCD4824007A3C9E /* gl-rect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-rect.h"; sourceTree = "<group>"; };
 		0D6515341CD8E314007A3C9E /* gl-object.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-object.c"; sourceTree = "<group>"; };
 		0D6515351CD8E314007A3C9E /* gl-object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-object.h"; sourceTree = "<group>"; };
+		0D67E7F31DDB5C2400A2B16C /* gl-tile.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-tile.c"; sourceTree = "<group>"; };
+		0D67E7F41DDB5C2400A2B16C /* gl-tile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-tile.h"; sourceTree = "<group>"; };
 		0D69BD6F1C4EA0E300A10282 /* autos.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = autos.jpg; sourceTree = "<group>"; };
 		0D69BD701C4EA0E300A10282 /* jan.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = jan.tga; sourceTree = "<group>"; };
 		0D69BD711C4EA0E300A10282 /* plane.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = plane.jpg; sourceTree = "<group>"; };
@@ -104,6 +106,8 @@
 				0D8350061CE63F8200ADCDCC /* gl-texture.h */,
 				0D8350071CEA1F8800ADCDCC /* gl-shape.c */,
 				0D8350081CEA1F8800ADCDCC /* gl-shape.h */,
+				0D67E7F31DDB5C2400A2B16C /* gl-tile.c */,
+				0D67E7F41DDB5C2400A2B16C /* gl-tile.h */,
 			);
 			indentWidth = 8;
 			path = testsrc;

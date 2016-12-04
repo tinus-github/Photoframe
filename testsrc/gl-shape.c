@@ -49,3 +49,18 @@ void gl_shape_setup()
 	parent->f->free(parent);
 }
 
+gl_shape *gl_shape_init(gl_shape *obj)
+{
+	gl_object_init((gl_object *)obj);
+	
+	obj->f = &gl_shape_funcs_global;
+	
+	return obj;
+}
+
+gl_shape *gl_shape_new()
+{
+	gl_shape *ret = malloc(sizeof(gl_shape));
+	
+	return gl_shape_init(ret);
+}

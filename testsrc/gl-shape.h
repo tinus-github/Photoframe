@@ -42,5 +42,7 @@ struct gl_shape {
 };
 
 void gl_shape_setup();
+gl_shape *gl_shape_init(gl_shape *obj);
+gl_shape *gl_shape_new();
 
 #endif /* gl_shape_h */

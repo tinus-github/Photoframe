@@ -33,7 +33,8 @@ void gl_tile_setup()
 {
 	gl_shape *parent = gl_shape_new();
 	memcpy(&gl_tile_funcs_global.p, parent->f, sizeof(gl_object_funcs));
-	parent->f->free(parent);
+	gl_object *parent_obj = (gl_object *)parent;
+	parent_obj->f->free(parent);
 }
 
 gl_tile *gl_tile_init(gl_tile *obj)

@@ -19,12 +19,12 @@ typedef struct gl_tile gl_tile;
 typedef struct gl_tile_funcs {
 	gl_object_funcs p;
 	void (*set_texture) (gl_tile *obj, gl_texture texture);
-} gl_shape_funcs;
+} gl_tile_funcs;
 
 typedef struct gl_tile_data {
 	gl_shape_data p;
 	gl_texture texture;
-} gl_shape_data;
+} gl_tile_data;
 
 struct gl_tile {
 	gl_tile_funcs *f;

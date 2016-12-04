@@ -44,7 +44,10 @@ static void gl_tile_free(gl_object *tile_obj)
 void gl_tile_setup()
 {
 	gl_shape *parent = gl_shape_new();
-	memcpy(&gl_tile_funcs_global.p, parent->f, sizeof(gl_object_funcs));
+	memcpy(&gl_tile_funcs_global.p, parent->f, sizeof(gl_shape_funcs));
+	
+	gl_object_funcs *objf = (gl_object_funcs *)&gl_tile_funcs_global;
+	objf->free = &gl_tile_free;
 	
 	gl_tile_obj_parent = parent;
 }

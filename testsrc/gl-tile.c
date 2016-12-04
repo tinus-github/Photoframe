@@ -18,7 +18,7 @@ static struct gl_tile_funcs gl_tile_funcs_global = {
 // You may also send NULL to remove the texture
 static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture)
 {
-	gl_texture *org_texture = obj->data->texture;
+	gl_texture *org_texture = obj->data.texture;
 	
 	if (org_texture) {
 		gl_object *org_texture_obj = (gl_object *)org_texture;
@@ -26,13 +26,13 @@ static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture)
 		org_texture_obj->f->unref(org_texture_obj);
 	}
 	
-	obj->data->texture = texture;
+	obj->data.texture = texture;
 }
 
 void gl_tile_setup()
 {
 	gl_shape *parent = gl_shape_new();
-	memcpy(&gl_shape_funcs_global.p, parent->f, sizeof(gl_object_funcs));
+	memcpy(&gl_tile_funcs_global.p, parent->f, sizeof(gl_object_funcs));
 	parent->f->free(parent);
 }
 

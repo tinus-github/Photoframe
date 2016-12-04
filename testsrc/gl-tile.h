@@ -23,7 +23,7 @@ typedef struct gl_tile_funcs {
 
 typedef struct gl_tile_data {
 	gl_shape_data p;
-	gl_texture texture;
+	gl_texture *texture;
 } gl_tile_data;
 
 struct gl_tile {

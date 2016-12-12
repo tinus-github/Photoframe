@@ -22,6 +22,8 @@
 #define TRUE 1
 #define FALSE 0
 
+static GL_STATE_T *global_gl_state = 0;
+
 void gl_display_setup();
 
 ///
@@ -125,6 +127,8 @@ void gl_display_init(GL_STATE_T *state)
 	EGLBoolean result;
 	EGLint num_config;
 
+	set_global_gl_state(state);
+	
 	memset( state, 0, sizeof( GL_STATE_T) );
 	
 	bcm_host_init();
@@ -268,4 +272,17 @@ void gl_display_setup()
 {
 	gl_texture_setup();
 	gl_shape_setup();
+}
+
+
+// Global state hack for simplicity
+
+static void set_global_gl_state(GL_STATE_T *state)
+{
+	global_gl_state = state;
+}
+
+GL_STATE_T *get_global_gl_state()
+{
+	return global_gl_state;
 }

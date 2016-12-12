@@ -112,4 +112,8 @@ GLuint gl_display_load_program ( const GLchar *vertShaderSrc, const GLchar *frag
 int gl_image_init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsigned int orientation);
 int gl_rect_init(GL_STATE_T *p_state, int width, int height, float red, float green, float blue);
 
+// Global gl state hack
+
+GL_STATE_T *get_global_gl_state();
+
 #endif /* gl_display_h */

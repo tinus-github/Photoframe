@@ -33,6 +33,8 @@ typedef struct gl_texture_data {
 	int texture_loaded;
 	GLuint width;
 	GLuint height;
+	
+	GLuint rotation;
 } gl_texture_data;
 
 struct gl_texture {

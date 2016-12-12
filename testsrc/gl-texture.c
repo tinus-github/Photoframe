@@ -49,7 +49,7 @@ gl_texture *gl_texture_new()
 	return gl_texture_init(ret);
 }
 
-
+// TODO: Remember rotation
 static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height)
 {
 	// Texture object handle
@@ -79,6 +79,8 @@ static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int
 	obj->data.texture_loaded = 1;
 	obj->data.width = width;
 	obj->data.height = height;
+	
+	obj->data.rotation = 1; // TODO: always upright for now
 	
 	return textureId;
 }

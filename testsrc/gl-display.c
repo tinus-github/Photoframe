@@ -23,6 +23,7 @@
 #define FALSE 0
 
 static GL_STATE_T *global_gl_state = 0;
+static void set_global_gl_state(GL_STATE_T *state);
 
 void gl_display_setup();
 

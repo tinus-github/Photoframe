@@ -252,7 +252,7 @@ void  esMainLoop (GL_STATE_T *esContext )
 		
 		ImageInstanceData *data = esContext->user_data;
 		
-		data->shape.objectX = t2.tv_usec / 10000;
+//		data->shape.objectX = t2.tv_usec / 10000;
 
 		gl_display_draw(esContext);
 		

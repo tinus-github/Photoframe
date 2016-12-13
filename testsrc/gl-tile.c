@@ -10,7 +10,7 @@
 #include "gl-display.h"
 
 static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture);
-static void gl_tile_draw(gl_tile *self)
+static void gl_tile_draw(gl_tile *self);
 
 static struct gl_tile_funcs gl_tile_funcs_global = {
 	.set_texture = &gl_tile_set_texture,

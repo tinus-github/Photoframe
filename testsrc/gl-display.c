@@ -184,6 +184,8 @@ void gl_display_init(GL_STATE_T *state)
 	success = graphics_get_display_size(0 /* LCD */, &state->width, &state->height);
 	assert( success >= 0 );
 	
+	gl_stage *stage = gl_stage_get_global_stage();
+	stage->f->set_dimensions(stage, state->width, state->height);
 
 	dst_rect.x = 0;
 	dst_rect.y = 0;

@@ -63,7 +63,7 @@ static void gl_shape_compute_projection(gl_shape *obj)
 	mat4x4 translation;
 
 	if (!obj->data.computed_projection_dirty) {
-		return
+		return;
 	}
 
 	//TODO: Make this optional

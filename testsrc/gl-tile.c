@@ -166,8 +166,8 @@ static void gl_tile_draw(gl_shape *shape_self)
 //	GLShapeInstanceData *shapeData = &userData->shape;
 //	GLImageDisplayData *displayData = p_state->imageDisplayData;
 	
-	gl_texture *texture = self->data.texture;
 	gl_tile *self = (gl_tile *)shape_self;
+	gl_texture *texture = self->data.texture;
 	
 	GLfloat vVertices[] = { 0.0f, 0.0f, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0

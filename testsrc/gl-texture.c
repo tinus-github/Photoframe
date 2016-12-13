@@ -80,7 +80,7 @@ static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int
 	obj->data.width = width;
 	obj->data.height = height;
 	
-	obj->data.rotation = 1; // TODO: always upright for now
+	obj->data.orientation = 1; // TODO: always upright for now
 	
 	return textureId;
 }

@@ -34,7 +34,7 @@ typedef struct gl_texture_data {
 	GLuint width;
 	GLuint height;
 	
-	GLuint rotation;
+	GLuint orientation;
 } gl_texture_data;
 
 struct gl_texture {

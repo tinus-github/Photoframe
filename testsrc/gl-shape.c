@@ -44,7 +44,7 @@ static void gl_shape_clear_projection(gl_shape *obj)
 	mat4x4 projection;
 	
 	mat4x4_identity(projection);
-	obj->f->set_projection(projection);
+	obj->f->set_projection(obj, projection);
 }
 
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj)

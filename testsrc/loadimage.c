@@ -42,7 +42,7 @@ typedef struct upscalestruct {
 } upscalestruct;
 
 /* Scaling functions */
-static inline unsigned char average_channel(unsigned int value1, unsigned int value2)
+static inline unsigned char average_channel(unsigned char value1, unsigned char value2)
 {
 	return (unsigned char)((value1 + value2) >> 1);
 }

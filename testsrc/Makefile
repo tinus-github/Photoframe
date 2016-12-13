@@ -1,6 +1,6 @@
 .PHONY: clean
 
-OPTFLAGS = -O2
+OPTFLAGS = -O3
 
 OBJECTS = image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o
 

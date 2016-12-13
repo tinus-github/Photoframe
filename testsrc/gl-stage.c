@@ -6,6 +6,8 @@
 //
 //
 //  The stage contains basic information on the size of the screen and other information required for rendering
+#include <stdlib.h>
+#include <string.h>
 
 #include "gl-stage.h"
 

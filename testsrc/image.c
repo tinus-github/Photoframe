@@ -18,10 +18,20 @@
 
 #include "loadimage.h"
 #include "gl-display.h"
+#include "gl-texture.h"
+#include "gl-tile.h"
 
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0
+
+static gl_tile *image_tile;
+
+void gl_tile_draw(GL_STATE_T *p_state)
+{
+	gl_shape *image_tile_shape = (gl_shape *)image_tile;
+	image_tile_shape->f->draw(image_tile_shape);
+}
 
 int main(int argc, char *argv[])
 {
@@ -59,11 +69,21 @@ int main(int argc, char *argv[])
 	
 	gl_display_init(p_state);
 
-#if 1
+#if 0
 	if(!gl_image_init(p_state, image, width, height, orientation))
 		return 0;
 	
 	gl_display_register_draw_func(p_state, gl_image_draw);
+#endif
+
+#if 1
+	gl_texture *image_texture = gl_texture_new();
+	image_texture->f->load_image(image_texture, image, width, height);
+	
+	image_tile = gl_tile_new();
+	image_tile->f->set_texture(image_tile, image_texture);
+	
+	gl_display_register_draw_func(p_state, gl_tile_draw);
 #endif
 
 #if 0

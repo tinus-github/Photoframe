@@ -8,6 +8,7 @@
 
 #include "gl-shape.h"
 #include "gl-display.h"
+#include "gl-stage.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -56,7 +57,7 @@ static void gl_shape_set_computed_projection_dirty(gl_shape *obj)
 
 static void gl_shape_compute_projection(gl_shape *obj)
 {
-	GL_STATE_T *p_state = get_global_gl_state();
+	gl_stage *stage = gl_stage_get_global_stage();
 	
 	mat4x4 projection;
 	mat4x4 projection_scaled;
@@ -71,8 +72,8 @@ static void gl_shape_compute_projection(gl_shape *obj)
 	mat4x4_identity(projection);
 //### screen size; static
 	mat4x4_scale_aniso(projection_scaled, projection,
-			   2.0/p_state->width,
-			   -2.0/p_state->height,
+			   2.0/stage->data.width,
+			   -2.0/stage->data.height,
 			   1.0);
 	mat4x4_translate(translation, -1, 1, 0);
 	mat4x4_mul(projection, translation, projection_scaled);

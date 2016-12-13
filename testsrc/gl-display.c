@@ -17,6 +17,7 @@
 
 #include "gl-texture.h"
 #include "gl-shape.h"
+#include "gl-tile.h"
 
 // from esUtil.h
 #define TRUE 1
@@ -273,6 +274,8 @@ void gl_display_setup()
 {
 	gl_texture_setup();
 	gl_shape_setup();
+	gl_tile_setup();
+	
 }
 
 

@@ -7,6 +7,7 @@
 //
 
 #include "gl-shape.h"
+#include "gl-display.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -37,6 +38,15 @@ static void gl_shape_set_projection(gl_shape *obj, mat4x4 new_projection)
 	obj->f->set_computed_projection_dirty(obj);
 }
 
+// TODO: export this?
+static void gl_shape_clear_projection(gl_shape *obj)
+{
+	mat4x4 projection;
+	
+	mat4x4_identity(projection);
+	obj->f->set_projection(projection);
+}
+
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj)
 {
 	obj->data.computed_projection_dirty = TRUE;
@@ -54,6 +64,8 @@ gl_shape *gl_shape_init(gl_shape *obj)
 	gl_object_init((gl_object *)obj);
 	
 	obj->f = &gl_shape_funcs_global;
+	
+	gl_shape_clear_projection(obj);
 	
 	return obj;
 }

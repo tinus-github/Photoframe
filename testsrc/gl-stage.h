@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include "gl-object.h"
 
-ypedef float vec4[4];
+typedef float vec4[4];
 typedef vec4 mat4x4[4];
 
 typedef struct gl_stage gl_stage;

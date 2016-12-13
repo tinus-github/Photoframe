@@ -215,7 +215,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 	shape_self->f->compute_projection(shape_self);
 	
 	glUniformMatrix4fv ( gl_tile_programProjectionLoc, 1, GL_FALSE, (GLfloat *)shape_self->data.computed_projection);
-	glUniformMatrix4fv ( gl_tile_programModelViewLoc,  1, GL_FALSE, (GLfloat *)shape_self->computed_modelView);
+	glUniformMatrix4fv ( gl_tile_programModelViewLoc,  1, GL_FALSE, (GLfloat *)shape_self->data.computed_modelView);
 
 	
 	glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );

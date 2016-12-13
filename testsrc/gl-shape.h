@@ -25,6 +25,7 @@ typedef struct gl_shape_funcs {
 	gl_object_funcs p;
 	void (*set_projection) (gl_shape *obj, mat4x4 new_projection);
 	void (*set_computed_projection_dirty) (gl_shape *obj);
+	void (*compute_projection) (gl_shape *obj);
 	void (*draw) (gl_shape *obj);
 } gl_shape_funcs;
 
@@ -33,7 +34,14 @@ typedef struct gl_shape_data {
 	// gl_container *container;
 	mat4x4 projection;
 	mat4x4 computed_projection;
+	mat4x4 computed_modelView;
 	unsigned int computed_projection_dirty;
+
+// TODO make this optional
+	GLfloat objectX;
+	GLfloat objectY;
+	GLfloat objectWidth;
+	GLfloat objectHeight;
 } gl_shape_data;
 
 struct gl_shape {

@@ -52,6 +52,40 @@ static void gl_shape_set_computed_projection_dirty(gl_shape *obj)
 	obj->data.computed_projection_dirty = TRUE;
 }
 
+static void gl_shape_compute_projection(gl_shape *obj)
+{
+	GL_STATE_T *p_state = get_global_gl_state();
+	
+	mat4x4 projection;
+	mat4x4 modelView;
+	mat4x4 projection_scaled;
+	mat4x4 translation;
+
+	//TODO: Make this optional
+	
+	mat4x4_identity(projection);
+### screen size; static
+	mat4x4_scale_aniso(projection_scaled, projection,
+			   2.0/p_state->width,
+			   -2.0/p_state->height,
+			   1.0);
+	mat4x4_translate(translation, -1, 1, 0);
+	mat4x4_mul(projection, translation, projection_scaled);
+	mat4x4_mul(obj->data.computed_projection, obj->data.projection, projection);
+
+### dynamic
+	mat4x4_translate(translation, shapeData->objectX, shapeData->objectY, 0.0);
+	mat4x4_identity(projection);
+	
+	mat4x4_scale_aniso(projection_scaled, projection,
+			   shapeData->objectWidth,
+			   shapeData->objectHeight,
+			   1.0);
+	mat4x4_mul(obj->data.computed_modelView, translation, projection_scaled);
+	
+	obj->data.computed_projection_dirty = FALSE;
+}
+
 void gl_shape_setup()
 {
 	gl_object *parent = gl_object_new();

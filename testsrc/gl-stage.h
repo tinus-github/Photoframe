@@ -36,5 +36,6 @@ void gl_stage_setup();
 gl_stage *gl_stage_init(gl_stage *obj);
 gl_stage *gl_stage_new();
 
+gl_stage *gl_stage_get_global_stage();
 
 #endif /* gl_stage_h */

@@ -11,6 +11,9 @@
 
 #include "gl-stage.h"
 
+static gl_stage *global_stage = NULL;
+
+
 static void gl_stage_set_dimensions(gl_stage *obj, uint32_t width, uint32_t height);
 
 static struct gl_stage_funcs gl_stage_funcs_global = {
@@ -28,6 +31,8 @@ void gl_stage_setup()
 	gl_object *parent = gl_object_new();
 	memcpy(&gl_stage_funcs_global.p, parent->f, sizeof(gl_object_funcs));
 	parent->f->free(parent);
+	
+	global_stage = gl_stage_new();
 }
 
 gl_stage *gl_stage_init(gl_stage *obj)
@@ -44,4 +49,9 @@ gl_stage *gl_stage_new()
 	gl_stage *ret = malloc(sizeof(gl_stage));
 	
 	return gl_stage_init(ret);
+}
+
+gl_stage *gl_stage_get_global_stage()
+{
+	return global_stage;
 }

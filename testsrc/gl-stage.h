@@ -10,6 +10,7 @@
 #define gl_stage_h
 
 #include <stdio.h>
+#include "gl-object.h"
 
 typedef struct gl_stage gl_stage;
 

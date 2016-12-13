@@ -11,6 +11,8 @@
 
 #include "gl-stage.h"
 
+#include "../lib/linmath/linmath.h"
+
 static gl_stage *global_stage = NULL;
 
 
@@ -20,10 +22,27 @@ static struct gl_stage_funcs gl_stage_funcs_global = {
 	.set_dimensions = &gl_stage_set_dimensions
 };
 
+static void gl_stage_set_projection(gl_stage *obj)
+{
+	mat4x4 projection;
+	mat4x4 projection_scaled;
+	mat4x4 translation;
+	
+	mat4x4_identity(projection);
+	mat4x4_scale_aniso(projection_scaled, projection,
+			   2.0/obj->data.width,
+			   -2.0/obj->data.height,
+			   1.0);
+	mat4x4_translate(translation, -1, 1, 0);
+	mat4x4_mul(obj->data.projection, translation, projection_scaled);
+}
+
 static void gl_stage_set_dimensions(gl_stage *obj, uint32_t width, uint32_t height)
 {
 	obj->data.width = width;
 	obj->data.height = height;
+	
+	gl_stage_set_projection(obj);
 }
 
 void gl_stage_setup()

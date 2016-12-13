@@ -13,6 +13,9 @@
 #include <stdint.h>
 #include "gl-object.h"
 
+ypedef float vec4[4];
+typedef vec4 mat4x4[4];
+
 typedef struct gl_stage gl_stage;
 
 typedef struct gl_stage_funcs {
@@ -25,6 +28,8 @@ typedef struct gl_stage_data {
 	
 	uint32_t width;
 	uint32_t height;
+	
+	mat4x4 projection;
 } gl_stage_data;
 
 struct gl_stage {

@@ -26,6 +26,8 @@ static GLint
 		gl_tile_programModelViewLoc,
 		gl_tile_programSamplerLoc;
 
+static uint gl_tile_program_loaded = 0;
+
 static int gl_tile_load_program() {
 	GLchar vShaderStr[] =
 	"attribute vec4 a_position;            \n"
@@ -62,6 +64,9 @@ static int gl_tile_load_program() {
 	
 	// Get the sampler location
 	gl_tile_programSamplerLoc = glGetUniformLocation ( gl_tile_programObject, "s_texture" );
+	
+	
+	gl_tile_program_loaded = 1;
 	
 	return GL_TRUE;
 }
@@ -136,8 +141,6 @@ void gl_tile_setup()
 	shapef->draw = &gl_tile_draw;
 	
 	gl_tile_obj_parent = parent;
-	
-	gl_tile_load_program();
 }
 
 gl_tile *gl_tile_init(gl_tile *obj)
@@ -168,6 +171,10 @@ static void gl_tile_draw(gl_shape *shape_self)
 	
 	gl_tile *self = (gl_tile *)shape_self;
 	gl_texture *texture = self->data.texture;
+	
+	if (!gl_tile_program_loaded) {
+		gl_tile_load_program();
+	}
 	
 	GLfloat vVertices[] = { 0.0f, 0.0f, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0

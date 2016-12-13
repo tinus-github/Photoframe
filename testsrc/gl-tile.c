@@ -149,6 +149,7 @@ gl_tile *gl_tile_init(gl_tile *obj)
 	gl_shape_init((gl_shape *)obj);
 	
 	obj->f = &gl_tile_funcs_global;
+	obj->data.texture = NULL;
 	
 	return obj;
 }

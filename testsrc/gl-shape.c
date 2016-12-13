@@ -62,6 +62,10 @@ static void gl_shape_compute_projection(gl_shape *obj)
 	mat4x4 projection_scaled;
 	mat4x4 translation;
 
+	if (!obj->data.computed_projection_dirty) {
+		return
+	}
+
 	//TODO: Make this optional
 	
 	mat4x4_identity(projection);

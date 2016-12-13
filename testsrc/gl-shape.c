@@ -19,11 +19,13 @@
 static void gl_shape_draw(gl_shape *obj);
 static void gl_shape_set_projection(gl_shape *obj, mat4x4 new_projection);
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj);
+static void gl_shape_compute_projection(gl_shape *obj);
 
 static struct gl_shape_funcs gl_shape_funcs_global = {
 	.draw = &gl_shape_draw,
 	.set_projection = &gl_shape_set_projection,
-	.set_computed_projection_dirty = &gl_shape_set_computed_projection_dirty
+	.set_computed_projection_dirty = &gl_shape_set_computed_projection_dirty,
+	.compute_projection = &gl_shape_compute_projection
 };
 
 static void gl_shape_draw(gl_shape *obj)
@@ -57,7 +59,6 @@ static void gl_shape_compute_projection(gl_shape *obj)
 	GL_STATE_T *p_state = get_global_gl_state();
 	
 	mat4x4 projection;
-	mat4x4 modelView;
 	mat4x4 projection_scaled;
 	mat4x4 translation;
 

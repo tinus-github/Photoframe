@@ -64,7 +64,7 @@ static void gl_shape_compute_projection(gl_shape *obj)
 	//TODO: Make this optional
 	
 	mat4x4_identity(projection);
-### screen size; static
+//### screen size; static
 	mat4x4_scale_aniso(projection_scaled, projection,
 			   2.0/p_state->width,
 			   -2.0/p_state->height,
@@ -73,7 +73,7 @@ static void gl_shape_compute_projection(gl_shape *obj)
 	mat4x4_mul(projection, translation, projection_scaled);
 	mat4x4_mul(obj->data.computed_projection, obj->data.projection, projection);
 
-### dynamic
+//### dynamic
 	mat4x4_translate(translation, shapeData->objectX, shapeData->objectY, 0.0);
 	mat4x4_identity(projection);
 	

@@ -57,8 +57,6 @@ static void gl_shape_set_computed_projection_dirty(gl_shape *obj)
 
 static void gl_shape_compute_projection(gl_shape *obj)
 {
-	gl_stage *stage = gl_stage_get_global_stage();
-	
 	mat4x4 projection;
 	mat4x4 projection_scaled;
 	mat4x4 translation;
@@ -69,15 +67,6 @@ static void gl_shape_compute_projection(gl_shape *obj)
 
 	//TODO: Make this optional
 	
-	mat4x4_identity(projection);
-//### screen size; static
-	mat4x4_scale_aniso(projection_scaled, projection,
-			   2.0/stage->data.width,
-			   -2.0/stage->data.height,
-			   1.0);
-	mat4x4_translate(translation, -1, 1, 0);
-	mat4x4_mul(obj->data.computed_projection, translation, projection_scaled);
-
 //### dynamic
 	mat4x4_translate(translation, obj->data.objectX, obj->data.objectY, 0.0);
 	mat4x4_identity(projection);

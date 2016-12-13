@@ -8,6 +8,7 @@
 
 #include "gl-tile.h"
 #include "gl-display.h"
+#include "gl-stage.h"
 
 static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture);
 static void gl_tile_draw(gl_shape *self);
@@ -171,6 +172,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 	
 	gl_tile *self = (gl_tile *)shape_self;
 	gl_texture *texture = self->data.texture;
+	gl_stage *stage = gl_stage_get_global_stage();
 	
 	if (!gl_tile_program_loaded) {
 		gl_tile_load_program();
@@ -221,7 +223,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 	
 	shape_self->f->compute_projection(shape_self);
 	
-	glUniformMatrix4fv ( gl_tile_programProjectionLoc, 1, GL_FALSE, (GLfloat *)shape_self->data.computed_projection);
+	glUniformMatrix4fv ( gl_tile_programProjectionLoc, 1, GL_FALSE, stage->data.projection);
 	glUniformMatrix4fv ( gl_tile_programModelViewLoc,  1, GL_FALSE, (GLfloat *)shape_self->data.computed_modelView);
 
 	

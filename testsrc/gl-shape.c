@@ -77,7 +77,6 @@ static void gl_shape_compute_projection(gl_shape *obj)
 			   1.0);
 	mat4x4_translate(translation, -1, 1, 0);
 	mat4x4_mul(projection, translation, projection_scaled);
-	mat4x4_mul(obj->data.computed_projection, obj->data.projection, projection);
 
 //### dynamic
 	mat4x4_translate(translation, obj->data.objectX, obj->data.objectY, 0.0);
@@ -88,6 +87,7 @@ static void gl_shape_compute_projection(gl_shape *obj)
 			   obj->data.objectHeight,
 			   1.0);
 	mat4x4_mul(obj->data.computed_modelView, translation, projection_scaled);
+	mat4x4_mul(obj->data.computed_projection, obj->data.projection, projection);
 	
 	obj->data.computed_projection_dirty = FALSE;
 }

@@ -71,6 +71,7 @@ static int gl_tile_load_program() {
 static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture)
 {
 	gl_texture *org_texture = obj->data.texture;
+	gl_shape *shape_self = (gl_shape *)obj;
 	
 	if (org_texture) {
 		gl_object *org_texture_obj = (gl_object *)org_texture;
@@ -79,6 +80,14 @@ static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture)
 	}
 	
 	obj->data.texture = texture;
+	
+	if (texture) {
+		shape_self->data.objectWidth = texture->data.width;
+		shape_self->data.objectHeight = texture->data.height;
+	} else {
+		shape_self->data.objectWidth = 0;
+		shape_self->data.objectheight = 0;
+	}
 }
 
 static void gl_tile_free(gl_object *tile_obj)

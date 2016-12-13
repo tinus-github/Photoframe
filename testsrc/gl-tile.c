@@ -86,8 +86,10 @@ static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture)
 		shape_self->data.objectHeight = texture->data.height;
 	} else {
 		shape_self->data.objectWidth = 0;
-		shape_self->data.objectheight = 0;
+		shape_self->data.objectHeight = 0;
 	}
+	
+	shape_self->f->set_computed_projection_dirty(shape_self);
 }
 
 static void gl_tile_free(gl_object *tile_obj)

@@ -2,7 +2,8 @@
 
 OPTFLAGS = -O3
 
-OBJECTS = image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o
+OBJECTS = image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
+	  gl-container.o
 
 image: $(OBJECTS)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
@@ -91,6 +92,13 @@ gl-stage.o: gl-stage.c gl-stage.h gl-object.h
 	-ftree-vectorize -pipe -Wno-psabi \
 	-Wno-deprecated-declarations \
 	-c gl-stage.c -o gl-stage.o $(OPTFLAGS)
+
+gl-container.o: gl-container.c gl-shape.h gl-object.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations \
+	-c gl-container.c -o gl-container.o $(OPTFLAGS)
 
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

@@ -95,6 +95,9 @@ gl_shape *gl_shape_init(gl_shape *obj)
 	obj->f = &gl_shape_funcs_global;
 	
 	gl_shape_clear_projection(obj);
+	obj->data.siblingL = NULL;
+	obj->data.siblingR = NULL;
+	obj->data.container = NULL;
 	
 	return obj;
 }

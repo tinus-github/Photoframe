@@ -21,6 +21,8 @@ typedef vec4 mat4x4[4];
 
 typedef struct gl_shape gl_shape;
 
+typedef struct gl_container gl_container;
+
 typedef struct gl_shape_funcs {
 	gl_object_funcs p;
 	void (*set_projection) (gl_shape *obj, mat4x4 new_projection);
@@ -31,7 +33,7 @@ typedef struct gl_shape_funcs {
 
 typedef struct gl_shape_data {
 	gl_object_data p;
-	// gl_container *container;
+	gl_container *container;
 	mat4x4 projection; // ultimately this is going to come from the container
 	
 	mat4x4 computed_modelView;
@@ -42,6 +44,9 @@ typedef struct gl_shape_data {
 	GLfloat objectY;
 	GLfloat objectWidth;
 	GLfloat objectHeight;
+	
+	gl_shape *siblingL;
+	gl_shape *siblingR;
 } gl_shape_data;
 
 struct gl_shape {

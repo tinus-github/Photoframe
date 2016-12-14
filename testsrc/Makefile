@@ -97,6 +97,8 @@ gl-container.o: gl-container.c gl-shape.h gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
 	-Wno-deprecated-declarations \
 	-c gl-container.c -o gl-container.o $(OPTFLAGS)
 

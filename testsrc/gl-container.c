@@ -54,7 +54,7 @@ static void gl_container_append_child(gl_container *obj, gl_shape *child)
 		child->data.siblingR = child;
 	} else {
 		gl_shape *first_child = obj->data.first_child;
-		gl_shape *last_child = obj->data.siblingL;
+		gl_shape *last_child = first_child->data.siblingL;
 		child->data.siblingL = last_child;
 		last_child->data.siblingR = child;
 		child->data.siblingR = first_child;

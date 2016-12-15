@@ -31,6 +31,7 @@ gl_container *gl_container_init(gl_container *obj)
 	gl_shape_init((gl_shape *)obj);
 	
 	obj->f = &gl_container_funcs_global;
+	obj->data.first_child = NULL;
 	
 	return obj;
 }

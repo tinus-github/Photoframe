@@ -18,6 +18,7 @@ typedef struct gl_container gl_container;
 typedef struct gl_container_funcs {
 	gl_shape_funcs p;
 	void (*append_child) (gl_container *obj, gl_shape *child);
+	void (*remove_child) (gl_container *obj, gl_shape *child);
 } gl_container_funcs;
 
 typedef struct gl_container_data {

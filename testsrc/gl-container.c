@@ -6,12 +6,15 @@
 //
 //
 
+#include <assert.h>
 #include "gl-container.h"
 
 static void gl_container_append_child(gl_container *obj, gl_shape *child);
+static void gl_container_remove_child(gl_container *obj, gl_shape *child);
 
 static struct gl_container_funcs gl_container_funcs_global = {
-	.append_child = &gl_container_append_child
+	.append_child = &gl_container_append_child,
+	.remove_child = &gl_container_remove_child
 };
 
 void gl_container_setup()
@@ -43,7 +46,7 @@ static void gl_container_append_child(gl_container *obj, gl_shape *child)
 {
 	if (child->data.container) {
 		gl_container *parent = child->data.container;
-		//TODO: parent->f->remove_child(parent, child);
+		parent->f->remove_child(parent, child);
 	}
 	
 	child->data.container = obj;
@@ -62,4 +65,30 @@ static void gl_container_append_child(gl_container *obj, gl_shape *child)
 	}
 	
 	child->f->set_computed_projection_dirty(child);
+	
+	//TODO: Retain
+}
+
+static void gl_container_remove_child(gl_container *obj, gl_shape *child)
+{
+	assert(child->data.container == obj);
+	
+	if (child->data.siblingL == child) {
+		child->data.siblingL = NULL;
+		child->data.siblingR = NULL;
+		obj->data.first_child = NULL;
+	} else {
+		if (obj->data.first_child == child) {
+			obj->data.first_child = child->data.siblingR;
+		}
+		gl_shape *siblingR = child->data.siblingR;
+		gl_shape *siblingL = child->data.siblingL;
+		
+		siblingR->data.siblingL = child->data.siblingL;
+		siblingL->data.siblingR = child->data.siblingR;
+	}
+	
+	child->data.container = NULL;
+	
+	//TODO: Release
 }

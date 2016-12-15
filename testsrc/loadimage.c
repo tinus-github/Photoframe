@@ -136,7 +136,9 @@ static void smoothscale_h_fast(unsigned char *inputptr, unsigned char *outputptr
 //		pixel_values[2] = inputptr[2];
 		
 		if ((accumulated_error > mid) && (input_x < inputwidth)) {
-			uint32_t nextinput4val = (input4ptr[1] & 0xFEFEFEFE) >> 1;
+			unsigned char* nextinputptr = inputptr + 3;
+			input4ptr = (uint32_t *)nextinputptr;
+			uint32_t nextinput4val = (input4ptr[0] & 0xFEFEFEFE) >> 1;
 			pixel_values4ptr[0] = ((pixel_values4ptr[0] & 0xFEFEFEFE) >> 1) + nextinput4val;
 //			pixel_values[0] = average_channel(pixel_values[0], inputptr[3]);
 //			pixel_values[1] = average_channel(pixel_values[1], inputptr[4]);

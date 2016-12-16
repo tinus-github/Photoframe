@@ -8,6 +8,7 @@
 
 #include <assert.h>
 #include "gl-container.h"
+#include "../lib/linmath/linmath.h"
 
 static void gl_container_append_child(gl_container *obj, gl_shape *child);
 static void gl_container_remove_child(gl_container *obj, gl_shape *child);
@@ -32,6 +33,7 @@ gl_container *gl_container_init(gl_container *obj)
 	
 	obj->f = &gl_container_funcs_global;
 	obj->data.first_child = NULL;
+	mat4x4_identity(obj->data.projection);
 	
 	return obj;
 }

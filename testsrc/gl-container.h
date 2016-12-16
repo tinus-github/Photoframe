@@ -25,6 +25,7 @@ typedef struct gl_container_data {
 	gl_shape_data p;
 	
 	gl_shape *first_child;
+	mat4x4 projection;
 } gl_container_data;
 
 struct gl_container {

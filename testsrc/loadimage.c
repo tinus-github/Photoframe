@@ -131,24 +131,15 @@ static void smoothscale_h_fast(unsigned char *inputptr, unsigned char *outputptr
 	while (numpixels-- > 0) {
 		uint32_t *input4ptr = (uint32_t *)inputptr;
 		pixel_values4ptr[0] = input4ptr[0];
-//		pixel_values[0] = inputptr[0];
-//		pixel_values[1] = inputptr[1];
-//		pixel_values[2] = inputptr[2];
 		
 		if ((accumulated_error > mid) && (input_x < inputwidth)) {
 			unsigned char* nextinputptr = inputptr + 3;
 			input4ptr = (uint32_t *)nextinputptr;
 			uint32_t nextinput4val = (input4ptr[0] & 0xFEFEFEFE) >> 1;
 			pixel_values4ptr[0] = ((pixel_values4ptr[0] & 0xFEFEFEFE) >> 1) + nextinput4val;
-//			pixel_values[0] = average_channel(pixel_values[0], inputptr[3]);
-//			pixel_values[1] = average_channel(pixel_values[1], inputptr[4]);
-//			pixel_values[2] = average_channel(pixel_values[2], inputptr[5]);
 		}
 		uint32_t *output4ptr = (uint32_t *)outputptr;
 		output4ptr[0] = pixel_values4ptr[0] | 0xFF000000;
-//		outputptr[1] = pixel_values[1];
-//		outputptr[2] = pixel_values[2];
-//		outputptr[3] = 255;
 		
 		outputptr += 4;
 		
@@ -158,10 +149,6 @@ static void smoothscale_h_fast(unsigned char *inputptr, unsigned char *outputptr
 		inputptr += 3*steps;
 		input_x += steps;
 		
-//		while (accumulated_error >= outputwidth) {
-//			accumulated_error -= outputwidth;
-//			inputptr += 3; input_x++;
-//		}
 	}
 }
 
@@ -324,7 +311,6 @@ static void upscaleLineSmoothFast(unsigned char *inputbuf, unsigned int inputwid
 	
 	unsigned int wanted_line;
 	int want_combine;
-	unsigned int skip_alpha;
 	
 	while (data->current_y_out < outputheight) {
 		wanted_line = data->y_used_lines[data->current_y_out];
@@ -358,16 +344,7 @@ static void upscaleLineSmoothFast(unsigned char *inputbuf, unsigned int inputwid
 					uint32_t v2 = (combined_line4[counter] & 0xFEFEFEFE) >> 1;
 					outputptr4[counter] = (v1+v2) | 0xFF000000;
 				}
-//				skip_alpha = 0;
-//				for (counter = (4 * outputwidth) - 1 ; counter >= 0; counter--) {
-//					if (!skip_alpha) {
-//						outputptr[counter] = 255;
-//					} else {
-//						outputptr[counter] = average_channel(data->last_line[counter],
-//										     data->combined_line[counter]);
-//					}
-//					skip_alpha ++; skip_alpha &= 3;
-//				}
+
 				data->current_y_out++;
 				continue;
 			} else {

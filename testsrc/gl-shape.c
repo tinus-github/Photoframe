@@ -9,7 +9,6 @@
 #include "gl-shape.h"
 #include "gl-display.h"
 #include "gl-stage.h"
-#include "gl-container.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -19,11 +18,13 @@
 #include "../lib/linmath/linmath.h"
 
 static void gl_shape_draw(gl_shape *obj);
+static void gl_shape_set_projection(gl_shape *obj, mat4x4 new_projection);
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj);
 static void gl_shape_compute_projection(gl_shape *obj);
 
 static struct gl_shape_funcs gl_shape_funcs_global = {
 	.draw = &gl_shape_draw,
+	.set_projection = &gl_shape_set_projection,
 	.set_computed_projection_dirty = &gl_shape_set_computed_projection_dirty,
 	.compute_projection = &gl_shape_compute_projection
 };
@@ -34,20 +35,24 @@ static void gl_shape_draw(gl_shape *obj)
 	abort();
 }
 
+static void gl_shape_set_projection(gl_shape *obj, mat4x4 new_projection)
+{
+	mat4x4_dup(obj->data.projection, new_projection);
+	obj->f->set_computed_projection_dirty(obj);
+}
+
+// TODO: export this?
+static void gl_shape_clear_projection(gl_shape *obj)
+{
+	mat4x4 projection;
+	
+	mat4x4_identity(projection);
+	obj->f->set_projection(obj, projection);
+}
+
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj)
 {
 	obj->data.computed_projection_dirty = TRUE;
-}
-
-static void gl_shape_get_container_projection(gl_shape *obj, mat4x4 ret)
-{
-	if (!obj->data.container) {
-		mat4x4_identity(ret);
-		return;
-	}
-	
-	gl_container *container = obj->data.container;
-	mat4x4_dup(ret, container->data.projection);
 }
 
 static void gl_shape_compute_projection(gl_shape *obj)
@@ -55,7 +60,6 @@ static void gl_shape_compute_projection(gl_shape *obj)
 	mat4x4 projection;
 	mat4x4 projection_scaled;
 	mat4x4 translation;
-	mat4x4 container_projection;
 
 	if (!obj->data.computed_projection_dirty) {
 		return;
@@ -72,9 +76,7 @@ static void gl_shape_compute_projection(gl_shape *obj)
 			   obj->data.objectHeight,
 			   1.0);
 	mat4x4_mul(projection, translation, projection_scaled);
-	
-	gl_shape_get_container_projection(obj, container_projection);
-	mat4x4_mul(obj->data.computed_modelView, container_projection, projection);
+	mat4x4_mul(obj->data.computed_modelView, obj->data.projection, projection);
 	
 	obj->data.computed_projection_dirty = FALSE;
 }
@@ -92,7 +94,7 @@ gl_shape *gl_shape_init(gl_shape *obj)
 	
 	obj->f = &gl_shape_funcs_global;
 	
-	gl_shape_set_computed_projection_dirty(obj);
+	gl_shape_clear_projection(obj);
 	obj->data.siblingL = NULL;
 	obj->data.siblingR = NULL;
 	obj->data.container = NULL;

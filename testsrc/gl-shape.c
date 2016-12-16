@@ -19,7 +19,6 @@
 #include "../lib/linmath/linmath.h"
 
 static void gl_shape_draw(gl_shape *obj);
-static void gl_shape_set_projection(gl_shape *obj, mat4x4 new_projection);
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj);
 static void gl_shape_compute_projection(gl_shape *obj);
 
@@ -44,6 +43,7 @@ static void gl_shape_get_container_projection(gl_shape *obj, mat4x4 ret)
 {
 	if (!obj->data.container) {
 		mat4x4_identity(ret);
+		return;
 	}
 	
 	gl_container *container = obj->data.container;

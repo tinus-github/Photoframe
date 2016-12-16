@@ -145,10 +145,10 @@ static void smoothscale_h_fast(unsigned char *inputptr, unsigned char *outputptr
 //			pixel_values[2] = average_channel(pixel_values[2], inputptr[5]);
 		}
 		uint32_t *output4ptr = (uint32_t *)outputptr;
-		output4ptr[0] = pixel_values4ptr[0];
+		output4ptr[0] = pixel_values4ptr[0] | 0x000000FF;
 //		outputptr[1] = pixel_values[1];
 //		outputptr[2] = pixel_values[2];
-		outputptr[3] = 255;
+//		outputptr[3] = 255;
 		
 		outputptr += 4;
 		
@@ -348,16 +348,26 @@ static void upscaleLineSmoothFast(unsigned char *inputbuf, unsigned int inputwid
 			} else if (wanted_line == (data->current_y - 1)) {
 				smoothscale_h_fast(inputbuf, data->combined_line, inputwidth, outputwidth);
 				outputptr = outputbuf + 4 * outputwidth * data->current_y_out;
-				skip_alpha = 0;
-				for (counter = (4 * outputwidth) - 1 ; counter >= 0; counter--) {
-					if (!skip_alpha) {
-						outputptr[counter] = 255;
-					} else {
-						outputptr[counter] = average_channel(data->last_line[counter],
-										     data->combined_line[counter]);
-					}
-					skip_alpha ++; skip_alpha &= 3;
+				
+				uint32_t *last_line4 = (uint32_t *)data->last_line;
+				uint32_t *combined_line4 = (uint32_t *)data->combined_line;
+				uint32_t *outputptr4 = (uint32_t *)outputptr;
+				
+				for (counter = 0; counter < outputwidth; counter++) {
+					uint32_t v1 = (last_line4[counter] & 0xFEFEFE00) >> 1;
+					uint32_t v2 = (combined_line4[counter] & 0xFEFEFE00) >> 1;
+					outputptr4[counter] = (v1+v2) | 0x000000FF;
 				}
+//				skip_alpha = 0;
+//				for (counter = (4 * outputwidth) - 1 ; counter >= 0; counter--) {
+//					if (!skip_alpha) {
+//						outputptr[counter] = 255;
+//					} else {
+//						outputptr[counter] = average_channel(data->last_line[counter],
+//										     data->combined_line[counter]);
+//					}
+//					skip_alpha ++; skip_alpha &= 3;
+//				}
 				data->current_y_out++;
 				continue;
 			} else {

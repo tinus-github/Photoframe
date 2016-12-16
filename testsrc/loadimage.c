@@ -145,7 +145,7 @@ static void smoothscale_h_fast(unsigned char *inputptr, unsigned char *outputptr
 //			pixel_values[2] = average_channel(pixel_values[2], inputptr[5]);
 		}
 		uint32_t *output4ptr = (uint32_t *)outputptr;
-		output4ptr[0] = pixel_values4ptr[0] | 0x000000FF;
+		output4ptr[0] = pixel_values4ptr[0] | 0xFF000000;
 //		outputptr[1] = pixel_values[1];
 //		outputptr[2] = pixel_values[2];
 //		outputptr[3] = 255;
@@ -354,9 +354,9 @@ static void upscaleLineSmoothFast(unsigned char *inputbuf, unsigned int inputwid
 				uint32_t *outputptr4 = (uint32_t *)outputptr;
 				
 				for (counter = 0; counter < outputwidth; counter++) {
-					uint32_t v1 = (last_line4[counter] & 0xFEFEFE00) >> 1;
-					uint32_t v2 = (combined_line4[counter] & 0xFEFEFE00) >> 1;
-					outputptr4[counter] = (v1+v2) | 0x000000FF;
+					uint32_t v1 = (last_line4[counter] & 0xFEFEFEFE) >> 1;
+					uint32_t v2 = (combined_line4[counter] & 0xFEFEFEFE) >> 1;
+					outputptr4[counter] = (v1+v2) | 0xFF000000;
 				}
 //				skip_alpha = 0;
 //				for (counter = (4 * outputwidth) - 1 ; counter >= 0; counter--) {

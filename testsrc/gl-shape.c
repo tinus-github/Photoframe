@@ -9,6 +9,7 @@
 #include "gl-shape.h"
 #include "gl-display.h"
 #include "gl-stage.h"
+#include "gl-container.h"
 #include <string.h>
 #include <stdio.h>
 

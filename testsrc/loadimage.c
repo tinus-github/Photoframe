@@ -155,7 +155,7 @@ static void smoothscale_h_fast(unsigned char *inputptr, unsigned char *outputptr
 		accumulated_error += inputwidth;
 		unsigned int steps = accumulated_error / outputwidth;
 		accumulated_error -= steps * outputwidth;
-		inputptr += 3*steps;
+		inputptr += 3*steps;
 		input_x += steps;
 		
 //		while (accumulated_error >= outputwidth) {

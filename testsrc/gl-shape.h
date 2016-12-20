@@ -25,7 +25,6 @@ typedef struct gl_container gl_container;
 
 typedef struct gl_shape_funcs {
 	gl_object_funcs p;
-	void (*set_projection) (gl_shape *obj, mat4x4 new_projection);
 	void (*set_computed_projection_dirty) (gl_shape *obj);
 	void (*compute_projection) (gl_shape *obj);
 	void (*draw) (gl_shape *obj);

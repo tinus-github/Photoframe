@@ -57,9 +57,9 @@ gl_container *gl_container_new()
 static void gl_container_append_child(gl_container *obj, gl_shape *child)
 {
 	gl_object *obj_child = (gl_object *)child;
+	obj_child->f->ref(obj_child); // Prevent the child from being deallocated as it is being removed from the parent
 	
 	if (child->data.container) {
-		obj_child->f->ref(obj_child); // Prevent the child from being deallocated as it is being removed from the parent
 		gl_container *parent = child->data.container;
 		parent->f->remove_child(parent, child);
 	}
@@ -80,6 +80,7 @@ static void gl_container_append_child(gl_container *obj, gl_shape *child)
 	}
 	
 	child->f->set_computed_projection_dirty(child);
+	obj_child->f->unref(obj_child);
 }
 
 static void gl_container_remove_child(gl_container *obj, gl_shape *child)

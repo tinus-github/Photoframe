@@ -55,17 +55,31 @@ static void gl_shape_set_computed_projection_dirty(gl_shape *obj)
 	obj->data.computed_projection_dirty = TRUE;
 }
 
+static void gl_shape_get_container_projection(gl_shape *obj, mat4x4 ret)
+{
+	if (!obj->data.container) {
+		mat4x4_identity(ret);
+		return;
+	}
+	
+	gl_container *container = obj->data.container;
+	mat4x4_dup(ret, container->data.projection);
+}
+
 static void gl_shape_compute_projection(gl_shape *obj)
 {
 	mat4x4 projection;
 	mat4x4 projection_scaled;
 	mat4x4 translation;
+	mat4x4 container_projection;
 
 	if (!obj->data.computed_projection_dirty) {
 		return;
 	}
 
 	//TODO: Make this optional
+	
+	gl_shape_get_container_projection(obj, container_projection);
 	
 //### dynamic
 	mat4x4_translate(translation, obj->data.objectX, obj->data.objectY, 0.0);

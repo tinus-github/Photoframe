@@ -10,8 +10,12 @@
 #include "gl-container.h"
 #include "../lib/linmath/linmath.h"
 
+#define TRUE 1
+#define FALSE 0
+
 static void gl_container_append_child(gl_container *obj, gl_shape *child);
 static void gl_container_remove_child(gl_container *obj, gl_shape *child);
+static void gl_container_set_computed_projection_dirty(gl_shape *shape_obj)
 
 static struct gl_container_funcs gl_container_funcs_global = {
 	.append_child = &gl_container_append_child,
@@ -22,6 +26,9 @@ void gl_container_setup()
 {
 	gl_shape *parent = gl_shape_new();
 	memcpy(&gl_container_funcs_global.p, parent->f, sizeof(gl_shape_funcs));
+
+	gl_shape_funcs *shapef = (gl_shape_funcs *)&gl_container_funcs_global;
+	shapef->set_computed_projection_dirty = &gl_container_set_computed_projection_dirty;
 	
 	gl_object *parent_obj = (gl_object *)parent;
 	parent_obj->f->free(parent_obj);
@@ -96,4 +103,24 @@ static void gl_container_remove_child(gl_container *obj, gl_shape *child)
 	child->data.container = NULL;
 
 	obj_child->f->unref(obj_child);
+}
+
+static void gl_container_set_computed_projection_dirty(gl_shape *shape_obj)
+{
+	if (shape_obj->data.computed_projection_dirty) {
+		return;
+	}
+	
+	shape_obj->data.computed_projection_dirty = TRUE;
+	
+	gl_container *obj = (gl_container *)shape_obj;
+	
+	gl_shape *first_child = obj->data.first_child;
+	if (first_child) {
+		child = first_child;
+		do {
+			child->f->set_computed_projection_dirty(child);
+			child = child->data.siblingR;
+		} while (child != first_child);
+	}
 }

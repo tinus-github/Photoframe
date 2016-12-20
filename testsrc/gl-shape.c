@@ -19,7 +19,6 @@
 #include "../lib/linmath/linmath.h"
 
 static void gl_shape_draw(gl_shape *obj);
-static void gl_shape_set_projection(gl_shape *obj, mat4x4 new_projection);
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj);
 static void gl_shape_compute_projection(gl_shape *obj);
 
@@ -33,12 +32,6 @@ static void gl_shape_draw(gl_shape *obj)
 {
 	printf("%s\n", "gl_shape_draw is an abstract function");
 	abort();
-}
-
-static void gl_shape_set_projection(gl_shape *obj, mat4x4 new_projection)
-{
-	mat4x4_dup(obj->data.projection, new_projection);
-	obj->f->set_computed_projection_dirty(obj);
 }
 
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj)
@@ -99,7 +92,6 @@ gl_shape *gl_shape_init(gl_shape *obj)
 	
 	obj->f = &gl_shape_funcs_global;
 	
-//	gl_shape_clear_projection(obj);
 	obj->f->set_computed_projection_dirty(obj);
 
 	obj->data.siblingL = NULL;

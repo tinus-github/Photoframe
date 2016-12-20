@@ -97,6 +97,10 @@ gl_shape *gl_shape_init(gl_shape *obj)
 	obj->data.siblingL = NULL;
 	obj->data.siblingR = NULL;
 	obj->data.container = NULL;
+	obj->data.objectX = 0;
+	obj->data.objectY = 0;
+	obj->data.objectWidth = 0;
+	obj->data.objectHeight = 0;
 	
 	return obj;
 }

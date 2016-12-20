@@ -41,15 +41,6 @@ static void gl_shape_set_projection(gl_shape *obj, mat4x4 new_projection)
 	obj->f->set_computed_projection_dirty(obj);
 }
 
-// TODO: export this?
-static void gl_shape_clear_projection(gl_shape *obj)
-{
-	mat4x4 projection;
-	
-	mat4x4_identity(projection);
-	obj->f->set_projection(obj, projection);
-}
-
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj)
 {
 	obj->data.computed_projection_dirty = TRUE;

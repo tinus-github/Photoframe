@@ -82,13 +82,19 @@ int main(int argc, char *argv[])
 	gl_texture *image_texture = gl_texture_new();
 	image_texture->f->load_image(image_texture, image, width, height);
 	
+	main_container = gl_container_new();
+	
 	image_tile = gl_tile_new();
 	image_tile->f->set_texture(image_tile, image_texture);
+	main_container->f->append_child(main_container, (gl_shape *)image_tile);
+	
+	image_tile = gl_tile_new();
+	image_tile->f->set_texture(image_tile, image_texture);
+	main_container->f->append_child(main_container, (gl_shape *)image_tile);
+	gl_shape *image_tile_shape = (gl_shape *)image_tile;
+	image_tile_shape->data.objectX = 150;
 	
 	gl_display_register_draw_func(p_state, gl_tile_draw);
-	
-	main_container = gl_container_new();
-	main_container->f->append_child(main_container, (gl_shape *)image_tile);
 #endif
 
 #if 0

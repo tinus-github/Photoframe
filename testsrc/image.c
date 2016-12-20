@@ -22,6 +22,8 @@
 #include "gl-tile.h"
 #include "gl-container.h"
 
+#include "../lib/linmath/linmath.h"
+
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0
@@ -95,6 +97,12 @@ int main(int argc, char *argv[])
 	image_tile_shape->data.objectX = 150;
 	
 	gl_display_register_draw_func(p_state, gl_tile_draw);
+	
+	mat4x4 container_projection;
+	
+	mat4x4_transform(container_projection, 50.0, 0.0, 0.0);
+	mat4x4_dup(main_container->data.projection, container_projection);
+	
 #endif
 
 #if 0

@@ -107,7 +107,7 @@ gl_shape *gl_shape_init(gl_shape *obj)
 
 gl_shape *gl_shape_new()
 {
-	gl_shape *ret = calloc(sizeof(gl_shape));
+	gl_shape *ret = calloc(1, sizeof(gl_shape));
 	
 	return gl_shape_init(ret);
 }

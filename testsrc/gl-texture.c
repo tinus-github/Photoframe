@@ -44,7 +44,7 @@ gl_texture *gl_texture_init(gl_texture *obj)
 
 gl_texture *gl_texture_new()
 {
-	gl_texture *ret = calloc(sizeof(gl_texture));
+	gl_texture *ret = calloc(1, sizeof(gl_texture));
 	
 	return gl_texture_init(ret);
 }

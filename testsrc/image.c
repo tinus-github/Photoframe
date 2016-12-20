@@ -101,7 +101,9 @@ int main(int argc, char *argv[])
 	mat4x4 container_projection;
 	
 	mat4x4_translate(container_projection, 50.0, 0.0, 0.0);
-	mat4x4_dup(main_container->data.projection, container_projection);
+	mat4x4 scaled_projection;
+	mat4x4_scale_aniso(scaled_projection, container_projection, 2.0, 2.0, 1.0 );
+	mat4x4_dup(main_container->data.projection, scaled_projection);
 	
 #endif
 

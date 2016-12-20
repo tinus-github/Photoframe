@@ -50,7 +50,7 @@ static void gl_container_append_child(gl_container *obj, gl_shape *child)
 	gl_object *obj_child = (gl_object *)child;
 	
 	if (child->data.container) {
-		obj_child->f->ref(child); // Prevent the child from being deallocated as it is being removed from the parent
+		obj_child->f->ref(obj_child); // Prevent the child from being deallocated as it is being removed from the parent
 		gl_container *parent = child->data.container;
 		parent->f->remove_child(parent, child);
 	}
@@ -95,5 +95,5 @@ static void gl_container_remove_child(gl_container *obj, gl_shape *child)
 	
 	child->data.container = NULL;
 
-	obj_child->f->unref(child);
+	obj_child->f->unref(obj_child);
 }

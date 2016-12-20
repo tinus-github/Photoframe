@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 	
 	mat4x4 container_projection;
 	
-	mat4x4_transform(container_projection, 50.0, 0.0, 0.0);
+	mat4x4_translate(container_projection, 50.0, 0.0, 0.0);
 	mat4x4_dup(main_container->data.projection, container_projection);
 	
 #endif

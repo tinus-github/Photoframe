@@ -48,6 +48,7 @@ static void gl_shape_get_container_projection(gl_shape *obj, mat4x4 ret)
 	
 	gl_container *container = obj->data.container;
 	gl_shape *container_shape = (gl_shape *)container;
+	container_shape->f->compute_projection(container_shape);
 	mat4x4_dup(ret, container_shape->data.computed_modelView);
 }
 

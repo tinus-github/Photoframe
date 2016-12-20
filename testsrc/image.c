@@ -32,7 +32,7 @@ static gl_container *main_container;
 void gl_tile_draw(GL_STATE_T *p_state)
 {
 	gl_shape *main_container_shape = (gl_shape *)main_container;
-	main_container->f->draw(main_container);
+	main_container_shape->f->draw(main_container);
 }
 
 int main(int argc, char *argv[])

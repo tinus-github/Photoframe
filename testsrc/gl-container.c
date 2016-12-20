@@ -15,7 +15,7 @@
 
 static void gl_container_append_child(gl_container *obj, gl_shape *child);
 static void gl_container_remove_child(gl_container *obj, gl_shape *child);
-static void gl_container_set_computed_projection_dirty(gl_shape *shape_obj)
+static void gl_container_set_computed_projection_dirty(gl_shape *shape_obj);
 
 static struct gl_container_funcs gl_container_funcs_global = {
 	.append_child = &gl_container_append_child,

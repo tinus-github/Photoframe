@@ -29,10 +29,7 @@
 #define TRUE 1
 #define FALSE 0
 
-static gl_tile *image_tile;
-static gl_container *main_container;
-
-void gl_tile_draw(GL_STATE_T *p_state)
+void gl_stage_draw(GL_STATE_T *p_state)
 {
 	gl_stage *global_stage = gl_stage_get_global_stage();
 	gl_shape *main_container_shape = global_stage->f->get_shape(global_stage);
@@ -84,6 +81,9 @@ int main(int argc, char *argv[])
 
 #if 1
 	gl_texture *image_texture = gl_texture_new();
+	gl_tile *image_tile;
+	gl_container *main_container;
+	
 	image_texture->f->load_image(image_texture, image, width, height);
 	
 	main_container = gl_container_new();
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 	gl_shape *image_tile_shape = (gl_shape *)image_tile;
 	image_tile_shape->data.objectX = 150;
 	
-	gl_display_register_draw_func(p_state, gl_tile_draw);
+	gl_display_register_draw_func(p_state, gl_stage_draw);
 	
 	mat4x4 container_projection;
 	

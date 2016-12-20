@@ -27,11 +27,12 @@
 #define FALSE 0
 
 static gl_tile *image_tile;
+static gl_container *main_container;
 
 void gl_tile_draw(GL_STATE_T *p_state)
 {
-	gl_shape *image_tile_shape = (gl_shape *)image_tile;
-	image_tile_shape->f->draw(image_tile_shape);
+	gl_shape *main_container_shape = (gl_shape *)main_container;
+	main_container->f->draw(main_container);
 }
 
 int main(int argc, char *argv[])
@@ -86,8 +87,8 @@ int main(int argc, char *argv[])
 	
 	gl_display_register_draw_func(p_state, gl_tile_draw);
 	
-	gl_container *image_container = gl_container_new();
-	image_container->f->append_child(image_container, (gl_shape *)image_tile);
+	main_container = gl_container_new();
+	main_container->f->append_child(main_container, (gl_shape *)image_tile);
 #endif
 
 #if 0

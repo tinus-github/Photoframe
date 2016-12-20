@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 	gl_display_register_draw_func(p_state, gl_tile_draw);
 	
 	gl_container *image_container = gl_container_new();
-	image_container->f->append_child(image_container, image_tile);
+	image_container->f->append_child(image_container, (gl_shape *)image_tile);
 #endif
 
 #if 0

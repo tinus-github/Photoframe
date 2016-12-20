@@ -16,6 +16,7 @@
 static void gl_container_append_child(gl_container *obj, gl_shape *child);
 static void gl_container_remove_child(gl_container *obj, gl_shape *child);
 static void gl_container_set_computed_projection_dirty(gl_shape *shape_obj);
+static void gl_container_compute_projection(gl_shape *shape_obj);
 static void gl_container_draw(gl_shape *shape_obj);
 
 static struct gl_container_funcs gl_container_funcs_global = {
@@ -30,6 +31,7 @@ void gl_container_setup()
 
 	gl_shape_funcs *shapef = (gl_shape_funcs *)&gl_container_funcs_global;
 	shapef->set_computed_projection_dirty = &gl_container_set_computed_projection_dirty;
+	shapef->compute_projection = &gl_container_compute_projection;
 	shapef->draw = &gl_container_draw;
 	
 	gl_object *parent_obj = (gl_object *)parent;
@@ -106,6 +108,26 @@ static void gl_container_remove_child(gl_container *obj, gl_shape *child)
 	child->data.container = NULL;
 
 	obj_child->f->unref(obj_child);
+}
+
+static void gl_container_compute_projection(gl_shape *shape_obj)
+{
+	gl_container *obj = (gl_container *)shape_obj;
+	
+	if (!shape_obj->data.computed_projection_dirty) {
+		return;
+	}
+	shape_obj->data.computed_projection_dirty = FALSE;
+	
+	if (!shape_obj->data.container) {
+		mat4x4_dup (shape_obj->data.computed_modelView, obj->data.projection);
+		return;
+	}
+	
+	gl_shape *my_container_shape = (gl_shape *)shape_obj->data.container;
+	my_container_shape->f->compute_projection(my_container_shape);
+	
+	mat4x4_mul(shape_obj->data.computed_modelView, my_container_shape->data.computed_modelView, obj->data.projection);
 }
 
 static void gl_container_set_computed_projection_dirty(gl_shape *shape_obj)

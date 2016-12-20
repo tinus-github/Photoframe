@@ -23,6 +23,7 @@ typedef struct gl_stage_funcs {
 	gl_object_funcs p;
 	void (*set_dimensions) (gl_stage *obj, uint32_t width, uint32_t height);
 	void (*set_shape) (gl_stage *obj, gl_shape *shape);
+	gl_shape *(*get_shape) (gl_stage *obj);
 } gl_stage_funcs;
 
 typedef struct gl_stage_data {

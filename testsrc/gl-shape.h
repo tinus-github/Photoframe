@@ -33,7 +33,6 @@ typedef struct gl_shape_funcs {
 typedef struct gl_shape_data {
 	gl_object_data p;
 	gl_container *container;
-	mat4x4 projection; // ultimately this is going to come from the container
 	
 	mat4x4 computed_modelView;
 	unsigned int computed_projection_dirty;

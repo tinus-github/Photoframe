@@ -65,7 +65,7 @@ gl_stage *gl_stage_init(gl_stage *obj)
 
 gl_stage *gl_stage_new()
 {
-	gl_stage *ret = malloc(sizeof(gl_stage));
+	gl_stage *ret = calloc(sizeof(gl_stage));
 	
 	return gl_stage_init(ret);
 }

@@ -54,7 +54,7 @@ gl_object *gl_object_init(gl_object *obj)
 
 gl_object *gl_object_new()
 {
-	gl_object *ret = malloc(sizeof(gl_object));
+	gl_object *ret = calloc(sizeof(gl_object));
 	
 	return gl_object_init(ret);
 }

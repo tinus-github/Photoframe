@@ -40,7 +40,7 @@ gl_container *gl_container_init(gl_container *obj)
 
 gl_container *gl_container_new()
 {
-	gl_container *ret = malloc(sizeof(gl_container));
+	gl_container *ret = calloc(sizeof(gl_container));
 	
 	return gl_container_init(ret);
 }

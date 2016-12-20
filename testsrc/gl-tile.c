@@ -156,7 +156,7 @@ gl_tile *gl_tile_init(gl_tile *obj)
 
 gl_tile *gl_tile_new()
 {
-	gl_tile *ret = malloc(sizeof(gl_tile));
+	gl_tile *ret = calloc(sizeof(gl_tile));
 	
 	return gl_tile_init(ret);
 }

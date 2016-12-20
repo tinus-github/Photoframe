@@ -45,7 +45,7 @@ gl_container *gl_container_init(gl_container *obj)\
 \
 gl_container *gl_container_new()\
 \{\
-	gl_container *ret = malloc(\cf6 sizeof\cf3 (gl_container));\
+	gl_container *ret = calloc(\cf6 sizeof\cf3 (gl_container));\
 	\
 	\cf6 return\cf3  gl_container_init(ret);\
 \}\

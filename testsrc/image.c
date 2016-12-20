@@ -20,6 +20,7 @@
 #include "gl-display.h"
 #include "gl-texture.h"
 #include "gl-tile.h"
+#include "gl-container.h"
 
 // from esUtil.h
 #define TRUE 1
@@ -84,6 +85,9 @@ int main(int argc, char *argv[])
 	image_tile->f->set_texture(image_tile, image_texture);
 	
 	gl_display_register_draw_func(p_state, gl_tile_draw);
+	
+	gl_container *image_container = gl_container_new();
+	image_container->f->add_child(image_container, image_tile);
 #endif
 
 #if 0

@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 	mat4x4_dup(main_container->data.projection, scaled_projection);
 	
 	gl_stage *global_stage = gl_stage_get_global_stage();
-	global_stage->f->set_shape(global_stage, main_container);
+	global_stage->f->set_shape(global_stage, (gl_shape *)main_container);
 #endif
 
 #if 0

@@ -117,7 +117,7 @@ static void gl_container_set_computed_projection_dirty(gl_shape *shape_obj)
 	
 	gl_shape *first_child = obj->data.first_child;
 	if (first_child) {
-		child = first_child;
+		gl_shape *child = first_child;
 		do {
 			child->f->set_computed_projection_dirty(child);
 			child = child->data.siblingR;

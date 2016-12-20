@@ -17,9 +17,11 @@ static gl_stage *global_stage = NULL;
 
 
 static void gl_stage_set_dimensions(gl_stage *obj, uint32_t width, uint32_t height);
+static void gl_stage_set_shape(gl_stage *obj, gl_shape *shape);
 
 static struct gl_stage_funcs gl_stage_funcs_global = {
-	.set_dimensions = &gl_stage_set_dimensions
+	.set_dimensions = &gl_stage_set_dimensions,
+	.set_shape = &gl_stage_set_shape
 };
 
 static void gl_stage_set_projection(gl_stage *obj)
@@ -35,6 +37,18 @@ static void gl_stage_set_projection(gl_stage *obj)
 			   1.0);
 	mat4x4_translate(translation, -1, 1, 0);
 	mat4x4_mul(obj->data.projection, translation, projection_scaled);
+}
+
+static void gl_stage_set_shape(gl_stage *obj, gl_shape *shape)
+{
+	if (obj->data.shape) {
+		gl_object *org_obj = (gl_object *)obj->data.shape;
+		obj->data.shape = NULL;
+		org_obj->f->unref(org_obj);
+	}
+	
+	obj->data.shape = shape;
+	shape->f->set_computed_projection_dirty(shape);
 }
 
 static void gl_stage_set_dimensions(gl_stage *obj, uint32_t width, uint32_t height)

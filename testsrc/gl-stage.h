@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "gl-object.h"
+#include "gl-shape.h"
 
 typedef float vec4[4];
 typedef vec4 mat4x4[4];
@@ -21,6 +22,7 @@ typedef struct gl_stage gl_stage;
 typedef struct gl_stage_funcs {
 	gl_object_funcs p;
 	void (*set_dimensions) (gl_stage *obj, uint32_t width, uint32_t height);
+	void (*set_shape) (gl_stage *obj, gl_shape *shape);
 } gl_stage_funcs;
 
 typedef struct gl_stage_data {
@@ -30,6 +32,8 @@ typedef struct gl_stage_data {
 	uint32_t height;
 	
 	mat4x4 projection;
+	
+	gl_shape *shape;
 } gl_stage_data;
 
 struct gl_stage {

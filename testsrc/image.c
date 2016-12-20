@@ -21,6 +21,7 @@
 #include "gl-texture.h"
 #include "gl-tile.h"
 #include "gl-container.h"
+#include "gl-stage.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -33,7 +34,8 @@ static gl_container *main_container;
 
 void gl_tile_draw(GL_STATE_T *p_state)
 {
-	gl_shape *main_container_shape = (gl_shape *)main_container;
+	gl_stage *global_stage = gl_stage_get_global_stage();
+	gl_shape *main_container_shape = global_stage->f->get_shape(global_stage);
 	main_container_shape->f->draw(main_container_shape);
 }
 
@@ -105,6 +107,8 @@ int main(int argc, char *argv[])
 	mat4x4_scale_aniso(scaled_projection, container_projection, 2.0, 2.0, 1.0 );
 	mat4x4_dup(main_container->data.projection, scaled_projection);
 	
+	gl_stage *global_stage = gl_stage_get_global_stage();
+	global_stage->f->set_shape(global_stage, main_container);
 #endif
 
 #if 0

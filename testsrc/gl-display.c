@@ -19,6 +19,7 @@
 #include "gl-shape.h"
 #include "gl-tile.h"
 #include "gl-stage.h"
+#include "gl-container.h"
 
 // from esUtil.h
 #define TRUE 1
@@ -279,6 +280,7 @@ void gl_display_setup()
 	gl_shape_setup();
 	gl_tile_setup();
 	gl_stage_setup();
+	gl_container_setup();
 }
 
 

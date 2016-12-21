@@ -3,7 +3,7 @@
 OPTFLAGS = -O3
 
 OBJECTS = image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
-	  gl-container.o
+	  gl-container.o gl-container-2d.o
 
 image: $(OBJECTS)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
@@ -103,6 +103,15 @@ gl-container.o: gl-container.c gl-shape.h gl-object.h
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-Wno-deprecated-declarations \
 	-c gl-container.c -o gl-container.o $(OPTFLAGS)
+
+gl-container-2d.o: gl-container.h gl-shape.h gl-object.h gl-container-2d.h gl-container-2d.c
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-Wno-deprecated-declarations \
+	-c gl-container-2d.c -o gl-container-2d.o $(OPTFLAGS)
 
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

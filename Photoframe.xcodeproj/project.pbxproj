@@ -21,6 +21,8 @@
 		0D3ADC721E01EE8A009A40B1 /* gl-container.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-container.c"; sourceTree = "<group>"; };
 		0D3ADC731E01EE8A009A40B1 /* gl-container.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-container.h"; sourceTree = "<group>"; };
 		0D3ADC741E01F041009A40B1 /* gl-objects.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "gl-objects.rtf"; sourceTree = "<group>"; };
+		0D3ADC751E0B1C5D009A40B1 /* gl-container-2d.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-container-2d.c"; sourceTree = "<group>"; };
+		0D3ADC761E0B1C5D009A40B1 /* gl-container-2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-container-2d.h"; sourceTree = "<group>"; };
 		0D6515321CCD4824007A3C9E /* gl-rect.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-rect.c"; sourceTree = "<group>"; };
 		0D6515331CCD4824007A3C9E /* gl-rect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-rect.h"; sourceTree = "<group>"; };
 		0D6515341CD8E314007A3C9E /* gl-object.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-object.c"; sourceTree = "<group>"; };
@@ -118,6 +120,8 @@
 				0D3ADC721E01EE8A009A40B1 /* gl-container.c */,
 				0D3ADC731E01EE8A009A40B1 /* gl-container.h */,
 				0D3ADC741E01F041009A40B1 /* gl-objects.rtf */,
+				0D3ADC751E0B1C5D009A40B1 /* gl-container-2d.c */,
+				0D3ADC761E0B1C5D009A40B1 /* gl-container-2d.h */,
 			);
 			indentWidth = 8;
 			path = testsrc;

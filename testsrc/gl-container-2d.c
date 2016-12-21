@@ -18,8 +18,9 @@ static void (*parent_compute_projection) (gl_shape *obj);
 static void gl_container_2d_compute_projection(gl_shape *obj_shape)
 {
 	gl_container_2d *obj = (gl_container_2d *)obj_shape;
+	gl_container *obj_container = (gl_container *)obj_shape;
 	
-	if (!obj->data.computed_projection_dirty) {
+	if (!obj_shape->data.computed_projection_dirty) {
 		return;
 	}
 	
@@ -32,7 +33,7 @@ static void gl_container_2d_compute_projection(gl_shape *obj_shape)
 	mat4x4 translation;
 	mat4x4_translate(translation, obj_shape->data.objectX, obj_shape->data.objectY, 0.0);
 	
-	mat4x4_mul(obj_shape->data.projection, translation, scaled);
+	mat4x4_mul(obj_container->data.projection, translation, scaled);
 		
 	parent_compute_projection(obj_shape);
 }
@@ -45,7 +46,7 @@ void gl_container_2d_setup()
 	
 	memcpy(&gl_container_2d_funcs_global.p, parent->f, sizeof(gl_container_funcs));
 
-	gl_shape_funcs *shapef = (gl_shape_funcs *)&gl_container_2d_funcs_global
+	gl_shape_funcs *shapef = (gl_shape_funcs *)&gl_container_2d_funcs_global;
 	shapef->f->compute_projection = gl_container_2d_compute_projection;
 	
 	gl_object *parent_obj = (gl_object *)parent;

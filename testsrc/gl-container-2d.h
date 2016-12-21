@@ -24,7 +24,7 @@ typedef struct gl_container_2d_data {
 	
 	GLfloat scaleH;
 	GLfloat scaleV;
-} gl_container_data;
+} gl_container_2d_data;
 
 struct gl_container_2d {
 	gl_container_2d_funcs *f;

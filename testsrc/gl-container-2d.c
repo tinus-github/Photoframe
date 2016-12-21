@@ -47,7 +47,7 @@ void gl_container_2d_setup()
 	memcpy(&gl_container_2d_funcs_global.p, parent->f, sizeof(gl_container_funcs));
 
 	gl_shape_funcs *shapef = (gl_shape_funcs *)&gl_container_2d_funcs_global;
-	shapef->f->compute_projection = gl_container_2d_compute_projection;
+	shapef->compute_projection = gl_container_2d_compute_projection;
 	
 	gl_object *parent_obj = (gl_object *)parent;
 	parent_obj->f->free(parent_obj);

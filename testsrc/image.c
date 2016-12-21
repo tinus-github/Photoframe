@@ -82,13 +82,11 @@ int main(int argc, char *argv[])
 #if 1
 	gl_texture *image_texture = gl_texture_new();
 	gl_tile *image_tile;
-	gl_container_2d *main_container_2d;
+	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;
 	gl_shape *main_container_2d_shape = (gl_shape *)main_container_2d;
 	
 	image_texture->f->load_image(image_texture, image, width, height);
-	
-	main_container_2d = gl_container_2d_new();
 	
 	image_tile = gl_tile_new();
 	image_tile->f->set_texture(image_tile, image_texture);

@@ -8,6 +8,7 @@
 
 #include "gl-texture.h"
 #include <string.h>
+#include <assert.h>
 
 static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
 static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,

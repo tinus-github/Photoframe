@@ -14,11 +14,15 @@ static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,
 			      unsigned int image_width, unsigned int image_height,
 			      unsigned int tile_width, unsigned int tile_height,
 			      unsigned int tile_x, unsigned int tile_y);
+static GLuint load_image_horizontal_tile(gl_texture *obj, unsigned char *rgba_data,
+					 unsigned int image_width, unsigned int image_height,
+					 unsigned_int tile_height, unsigned int tile_y);
 static void gl_texture_free(gl_object *obj);
 
 static struct gl_texture_funcs gl_texture_funcs_global = {
 	.load_image = &load_image,
-	.load_image_tile = &load_image_tile
+	.load_image_tile = &load_image_tile,
+	.load_image_horizontal_tile = &load_image_horizontal_tile
 };
 
 void (*gl_object_free_org_global) (gl_object *obj);
@@ -124,6 +128,17 @@ static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,
 	free(image_part);
 	
 	return ret;
+}
+
+static GLuint load_image_horizontal_tile(gl_texture *obj, unsigned char *rgba_data,
+					 unsigned int image_width, unsigned int image_height,
+					 unsigned_int tile_height, unsigned int tile_y)
+{
+	assert (tile_y < image_height);
+	
+	unsigned char *tile_data = rgba_data + (4 * sizeof(unsigned char) * image_width * tile_y);
+	
+	return obj->f->load_image(obj, tile_data, image_width, tile_height);
 }
 
 static void gl_texture_free_texture(gl_texture *obj)

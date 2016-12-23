@@ -27,7 +27,7 @@ typedef struct gl_texture_funcs {
 				   unsigned int tile_x, unsigned int tile_y);
 	GLuint (*load_image_horizontal_tile) (gl_texture *obj, unsigned char *rgba_data,
 				   unsigned int image_width, unsigned int image_height,
-				   unsigned_int tile_height, unsigned int tile_y);
+				   unsigned int tile_height, unsigned int tile_y);
 } gl_texture_funcs;
 
 typedef struct gl_texture_data {

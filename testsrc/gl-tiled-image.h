@@ -37,8 +37,8 @@ struct gl_tiled_image {
 };
 
 void gl_tiled_image_setup();
-gl_container *gl_tiled_image_init(gl_tiled_image *obj);
-gl_container *gl_tiled_image_new();
+gl_tiled_image *gl_tiled_image_init(gl_tiled_image *obj);
+gl_tiled_image *gl_tiled_image_new();
 
 
 #endif /* gl_tiled_image_h */

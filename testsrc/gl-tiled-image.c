@@ -24,13 +24,12 @@ void gl_tiled_image_setup()
 	gl_container_2d *parent = gl_container_2d_new();
 	memcpy(&gl_tiled_image_funcs_global.p, parent->f, sizeof(gl_container_2d_funcs));
 	
-	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) gl_tiled_image_funcs_global;
+	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_tiled_image_funcs_global;
 	gl_object_free_org_global = obj_funcs_global.free;
 	obj_funcs_global.free = &gl_tiled_image_free;
 	
 	gl_object *parent_obj = (gl_object *)parent;
 	parent_obj->f->free(parent_obj);
-
 }
 
 static void gl_tiled_image_free(gl_object *obj_obj)

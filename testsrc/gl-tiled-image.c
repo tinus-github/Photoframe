@@ -8,14 +8,14 @@
 
 #include "gl-tiled-image.h"
 
-static struct gl_tiled_image_funcs gl_tiled_image_funcs_global = {
-	.load_image = &gl_tiled_image_load_image
-};
-
 static void gl_tiled_image_free(gl_object *obj_obj);
 static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_data,
 				       unsigned int width, unsigned int height,
 				       unsigned int orientation, unsigned int tile_height);
+
+static struct gl_tiled_image_funcs gl_tiled_image_funcs_global = {
+	.load_image = &gl_tiled_image_load_image
+};
 
 static void (*gl_object_free_org_global) (gl_object *obj);
 

@@ -113,14 +113,14 @@ gl-container-2d.o: gl-container.h gl-shape.h gl-object.h gl-container-2d.h gl-co
 	-Wno-deprecated-declarations \
 	-c gl-container-2d.c -o gl-container-2d.o $(OPTFLAGS)
 
-gl-tiled_image.o: gl-tiled_image.c gl-tiled_image.h gl-container_2d.h gl-container.h gl-shape.h gl-object.h
+gl-tiled-image.o: gl-tiled-image.c gl-tiled-image.h gl-container-2d.h gl-container.h gl-shape.h gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-Wno-deprecated-declarations \
-	-c gl-tiled_image.c -o gl-tiled_image.o $(OPTFLAGS)
+	-c gl-tiled-image.c -o gl-tiled-image.o $(OPTFLAGS)
 
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

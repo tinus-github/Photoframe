@@ -80,6 +80,10 @@ static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_
 		
 		current_y += tile_height;
 	}
+	
+	if (!obj->data.keep_image_data) {
+		free(rgba_data);
+	}
 }
 
 gl_tiled_image *gl_tiled_image_init(gl_tiled_image *obj)

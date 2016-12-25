@@ -21,6 +21,7 @@
 #include "gl-stage.h"
 #include "gl-container.h"
 #include "gl-container-2d.h"
+#include "gl-tiled-iamge.h"
 
 // from esUtil.h
 #define TRUE 1
@@ -283,6 +284,7 @@ void gl_display_setup()
 	gl_stage_setup();
 	gl_container_setup();
 	gl_container_2d_setup();
+	gl_tiled_image_setup();
 }
 
 

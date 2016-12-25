@@ -21,7 +21,7 @@
 #include "gl-stage.h"
 #include "gl-container.h"
 #include "gl-container-2d.h"
-#include "gl-tiled-iamge.h"
+#include "gl-tiled-image.h"
 
 // from esUtil.h
 #define TRUE 1

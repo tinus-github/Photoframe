@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		0D071D6E1E10157400145717 /* gl-tiled-image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-tiled-image.c"; sourceTree = "<group>"; };
+		0D071D6F1E10157400145717 /* gl-tiled-image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-tiled-image.h"; sourceTree = "<group>"; };
 		0D2B2FED1C9073AA0063393E /* loadimage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = loadimage.c; sourceTree = "<group>"; };
 		0D2B2FEE1C9073AA0063393E /* loadimage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loadimage.h; sourceTree = "<group>"; };
 		0D2B2FEF1C90DE7F0063393E /* loadexif.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = loadexif.c; sourceTree = "<group>"; };
@@ -122,6 +124,8 @@
 				0D3ADC741E01F041009A40B1 /* gl-objects.rtf */,
 				0D3ADC751E0B1C5D009A40B1 /* gl-container-2d.c */,
 				0D3ADC761E0B1C5D009A40B1 /* gl-container-2d.h */,
+				0D071D6E1E10157400145717 /* gl-tiled-image.c */,
+				0D071D6F1E10157400145717 /* gl-tiled-image.h */,
 			);
 			indentWidth = 8;
 			path = testsrc;

@@ -26,7 +26,7 @@ static struct gl_texture_funcs gl_texture_funcs_global = {
 	.load_image_horizontal_tile = &load_image_horizontal_tile
 };
 
-void (*gl_object_free_org_global) (gl_object *obj);
+static void (*gl_object_free_org_global) (gl_object *obj);
 
 void gl_texture_setup()
 {

@@ -22,6 +22,7 @@
 #include "gl-tile.h"
 #include "gl-container-2d.h"
 #include "gl-stage.h"
+#include "gl-tiled-image.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -80,23 +81,20 @@ int main(int argc, char *argv[])
 #endif
 
 #if 1
-	gl_texture *image_texture = gl_texture_new();
-	gl_tile *image_tile;
+	gl_tiled_image *tiled_image = gl_tiled_image_new();
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;
 	gl_shape *main_container_2d_shape = (gl_shape *)main_container_2d;
 	
-	image_texture->f->load_image(image_texture, image, width, height);
+	tiled_image->f->load_image(image_texture, image, width, height, 0, 128);
 	
-	image_tile = gl_tile_new();
-	image_tile->f->set_texture(image_tile, image_texture);
-	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)image_tile);
+	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)tiled_image);
 	
-	image_tile = gl_tile_new();
-	image_tile->f->set_texture(image_tile, image_texture);
-	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)image_tile);
-	gl_shape *image_tile_shape = (gl_shape *)image_tile;
-	image_tile_shape->data.objectX = 150;
+//	image_tile = gl_tile_new();
+//	image_tile->f->set_texture(image_tile, image_texture);
+//	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)image_tile);
+//	gl_shape *image_tile_shape = (gl_shape *)image_tile;
+//	image_tile_shape->data.objectX = 150;
 	
 	gl_display_register_draw_func(p_state, gl_stage_draw);
 	

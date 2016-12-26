@@ -57,6 +57,7 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 	mat4x4 rotated;
 	int dimensions_flipped = FALSE;
 	
+	gl_container *orientation_container = obj->data.orientation_container;
 	gl_shape *orientation_container_shape = (gl_shape *)orientation_container;
 	orientation_container_shape->f->set_computed_projection_dirty(orientation_container_shape);
 	
@@ -92,8 +93,6 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 			rotation_amount = 0.5 * M_PI; break;
 	}
 	mat4x4_rotate_Z (rotated, flipped, rotation_amount);
-	
-	gl_container *orientation_container = obj->data.orientation_container;
 	
 	if (!dimensions_flipped) {
 		mat4x4_translate(orientation_container->data.projection,

@@ -57,6 +57,9 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 	mat4x4 rotated;
 	int dimensions_flipped = FALSE;
 	
+	gl_shape *orientation_container_shape = (gl_shape *)orientation_container;
+	orientation_container_shape->f->set_computed_projection_dirty(orientation_container_shape);
+	
 	mat4x4_translate(centered, -0.5 * shape_obj->data.objectWidth, -0.5 * shape_obj->data.objectHeight, 0.0);
 	switch (obj->data.orientation) {
 		case 2:
@@ -99,10 +102,6 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 		mat4x4_translate(orientation_container->data.projection,
 				 0.5 * shape_obj->data.objectHeight, 0.5 * shape_obj->data.objectWidth, 0.0);
 	}
-	
-	gl_shape *orientation_container_shape = (gl_shape *)orientation_container;
-	
-	orientation_container_shape->f->set_computed_projection_dirty(orientation_container_shape);
 }
 
 static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_data,

@@ -93,7 +93,12 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 			dimensions_flipped = TRUE;
 			rotation_amount = 0.5 * M_PI; break;
 	}
-	mat4x4_rotate_Z (rotated, flipped, rotation_amount);
+	mat4x4 identity;
+	mat4x4 rotation;
+	mat4x4_identity(identity);
+	
+	mat4x4_rotate_Z (rotation, identity, rotation_amount);
+	mat4x4_mul(rotated, rotation, flipped);
 	
 	if (!dimensions_flipped) {
 		mat4x4_translate(uncenter, 0.5 * shape_obj->data.objectWidth, 0.5 * shape_obj->data.objectHeight, 0.0);

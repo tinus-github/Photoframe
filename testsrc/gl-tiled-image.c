@@ -64,7 +64,7 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 		case 5:
 		case 7:
 			mat4x4_scale_aniso(flipped, centered, -1.0, 1.0, 1.0);
-			break
+			break;
 		default:
 			mat4x4_dup(flipped, centered);
 			
@@ -114,7 +114,6 @@ static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_
 	unsigned int current_y = 0;
 	
 	gl_shape *shape_obj = (gl_shape *)obj;
-	gl_container *container_obj = (gl_container *)obj;
 	gl_container *orientation_container = obj->data.orientation_container;
 	gl_shape *shape_tile;
 	

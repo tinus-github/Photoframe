@@ -12,6 +12,9 @@
 #include "gl-tile.h"
 #include "../lib/linmath/linmath.h"
 
+#define TRUE 1
+#define FALSE 0
+
 static void gl_tiled_image_free(gl_object *obj_obj);
 static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_data,
 				       unsigned int width, unsigned int height,
@@ -52,11 +55,10 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 	mat4x4 centered;
 	mat4x4 flipped;
 	mat4x4 rotated;
-	mat4x4 orientation_projection;
 	int dimensions_flipped = FALSE;
 	
 	mat4x4_translate(centered, -0.5 * shape_obj->data.objectWidth, -0.5 * shape_obj->data.objectHeight, 0.0);
-	switch (orientation) {
+	switch (obj->data.orientation) {
 		case 2:
 		case 4:
 		case 5:
@@ -70,7 +72,7 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 	
 	GLfloat rotation_amount;
 	
-	switch (orientation) {
+	switch (obj->data.orientation) {
 		case 1:
 		case 2:
 			rotation_amount = 0.0; break;
@@ -113,7 +115,7 @@ static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_
 	
 	gl_shape *shape_obj = (gl_shape *)obj;
 	gl_container *container_obj = (gl_container *)obj;
-	gl_container *orientation_container = container_obj->data.orientation_container;
+	gl_container *orientation_container = obj->data.orientation_container;
 	gl_shape *shape_tile;
 	
 	shape_obj->data.objectWidth = width;
@@ -159,7 +161,7 @@ gl_tiled_image *gl_tiled_image_init(gl_tiled_image *obj)
 	obj->data.orientation_container = gl_container_new();
 	gl_container *container_obj = (gl_container *)obj;
 
-	container_obj->f->append_child(container_obj, obj->data.orientation_container);
+	container_obj->f->append_child(container_obj, (gl_shape *)obj->data.orientation_container);
 	return obj;
 }
 

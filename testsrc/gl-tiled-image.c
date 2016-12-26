@@ -10,6 +10,7 @@
 
 #include "gl-texture.h"
 #include "gl-tile.h"
+#include "../lib/linmath/linmath.h"
 
 static void gl_tiled_image_free(gl_object *obj_obj);
 static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_data,

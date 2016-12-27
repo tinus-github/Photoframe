@@ -29,12 +29,13 @@ typedef enum {
 typedef struct gl_renderloop_funcs {
 	gl_object_funcs p;
 	void (*append_child) (gl_renderloop *obj, gl_renderloop_phase phase, gl_renderloop_member *child);
+	void (*remove_child) (gl_renderloop *obj, gl_renderloop_member *child);
 } gl_renderloop_funcs;
 
 typedef struct gl_renderloop_data {
 	gl_object_data p;
 	
-	gl_renderloop_member *phase_first_child[GL_RENDERLOOP_PHASES];
+	gl_renderloop_member *phaseFirstChild[GL_RENDERLOOP_PHASES];
 } gl_renderloop_data;
 
 struct gl_renderloop {

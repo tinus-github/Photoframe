@@ -7,12 +7,16 @@
 //
 
 #include "gl-renderloop.h"
+#include "gl-renderloop-member.h"
 #include <string.h>
+#include <assert.h>
 
 static void gl_renderloop_append_child(gl_renderloop *obj, gl_renderloop_phase phase, gl_renderloop_member *child);
+static void gl_renderloop_remove_child(gl_renderloop *obj, gl_renderloop_member *child);
 
 static struct gl_renderloop_funcs gl_renderloop_funcs_global = {
-	.append_child = &gl_renderloop_append_child
+	.append_child = &gl_renderloop_append_child,
+	.remove_child = &gl_renderloop_remove_child
 };
 
 void gl_renderloop_setup()
@@ -38,7 +42,56 @@ gl_renderloop *gl_renderloop_new()
 	return gl_renderloop_init(ret);
 }
 
+static void gl_renderloop_remove_child(gl_renderloop *obj, gl_renderloop_member *child)
+{
+	assert (child->data.owner == obj);
+	gl_object *obj_child = (gl_object *)child;
+	gl_renderloop_phase phase = child->data.renderloopPhase;
+	
+	if (child->data.siblingL == child) {
+		child->data.siblingL = NULL;
+		child->data.siblingR = NULL;
+		obj->data.phaseFirstChild[phase] = NULL;
+	} else {
+		if (obj->data.phaseFirstChild[phase] == child) {
+			obj->data.phaseFirstChild[phase] = child->data.siblingR;
+		}
+		
+		gl_renderloop_member *siblingR = child->data.siblingR;
+		gl_renderloop_member *siblingL = child->data.siblingL;
+		
+		siblingR->data.siblingL = child->data.siblingL;
+		siblingL->data.siblingR = child->data.siblingR;
+	}
+	
+	child->data.owner = NULL;
+	obj_child->f->unref(obj_child);
+}
+
 static void gl_renderloop_append_child(gl_renderloop *obj, gl_renderloop_phase phase, gl_renderloop_member *child)
 {
-	return;
+	gl_object *obj_child = (gl_object *)child;
+	obj_child->f->ref(obj_child); // Prevent the child from being deallocated as it is being removed from the parent
+
+	if (child->data.owner) {
+		gl_renderloop *owner = child->data.owner;
+		owner->f->remove_child(owner, child);
+	}
+	
+	child->data.owner = obj;
+	child->data.renderloopPhase = phase;
+	
+	if (!obj->data.phaseFirstChild[phase]) {
+		obj->data.phaseFirstChild[phase] = child;
+		child->data.siblingL = child;
+		child->data.siblingR = child;
+	} else {
+		gl_renderloop_member *first_child = obj->data.phaseFirstChild[phase];
+		gl_renderloop_member *last_child = first_child->data.siblingL;
+		child->data.siblingL = last_child;
+		last_child->data.siblingR = child;
+		child->data.siblingR = first_child;
+		first_child->data.siblingL = child;
+	}
+	obj_child->f->unref(obj_child);
 }

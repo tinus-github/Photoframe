@@ -12,7 +12,7 @@
 static void gl_renderloop_member_run_action(gl_renderloop_member *obj);
 
 static struct gl_renderloop_member_funcs gl_renderloop_member_funcs_global = {
-	.run_action = &gl_renderloop_member_run_action;
+	.run_action = &gl_renderloop_member_run_action
 };
 
 void gl_renderloop_member_setup()

@@ -38,7 +38,7 @@ gl_renderloop_member *gl_renderloop_member_new()
 	return gl_renderloop_member_init(ret);
 }
 
-static void gl_renderloop_member_run_action(gl_memberloop_member *obj)
+static void gl_renderloop_member_run_action(gl_renderloop_member *obj)
 {
 	obj->data.action(obj->data.target, obj, obj->data.action_data);
 }

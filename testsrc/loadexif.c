@@ -93,12 +93,33 @@ void loadexif_setup_overlay(j_decompress_ptr cinfo)
 	orgsrc->term_source = term_source;
 }
 
+#ifdef EXIF_DEBUG
+static void exiflogfunc(ExifLog *logger, ExifLogCode code, const char* domain,
+			const char *format, va_list args, void *data)
+{
+	const char *title = exif_log_code_get_title(code);
+	const char *message = exif_log_code_get_message(code);
+	printf("%s - %s:", title, message);
+	
+	vprintf(format, args);
+	printf("\n");
+}
+#endif /* EXIF_DEBUG */
+
 boolean loadexif_parse(j_decompress_ptr cinfo)
 {
 	loadimage_jpeg_client_data *client_data = (loadimage_jpeg_client_data *)cinfo->client_data;
 	struct loadexif_client_data *data = client_data->exif_data;
-	
-	ExifData *result = exif_data_new_from_data(data->inputdata, data->inputsize);
+	ExifData *result = exif_data_new();
+
+#ifdef EXIF_DEBUG
+	ExifLog *logger = exif_log_new();
+	exif_log_set_func(logger, &exiflogfunc, NULL);
+
+	exif_data_log(result, logger);
+	exif_data_load_data(result, data->inputdata, data->inputsize);
+#endif /* EXIF_DEBUG */
+
 	data->orientation = 1;
 	if (result) {
 		ExifEntry *entry = exif_data_get_entry(result, EXIF_TAG_ORIENTATION);

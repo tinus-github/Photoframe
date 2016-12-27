@@ -45,6 +45,10 @@
 #define JPEG_MARKER_APP0 0xe0
 #undef JPEG_MARKER_APP1
 #define JPEG_MARKER_APP1 0xe1
+#undef JPEG_MARKER_APP2
+#define JPEG_MARKER_APP2 0xe2
+#undef JPEG_MARKER_APP13
+#define JPEG_MARKER_APP13 0xed
 
 static const unsigned char ExifHeader[] = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
 
@@ -821,7 +825,10 @@ exif_data_load_data (ExifData *data, const unsigned char *d_orig,
 			}
 
 			/* JPEG_MARKER_APP0 */
-			if (ds >= 3 && d[0] == JPEG_MARKER_APP0) {
+			/* APP2 and APP13 can also be ignored */
+			if (ds >= 3 && ((d[0] == JPEG_MARKER_APP0) ||
+					(d[0] == JPEG_MARKER_APP2) ||
+					(d[0] == JPEG_MARKER_APP13))) {
 				d++;
 				ds--;
 				l = (d[0] << 8) | d[1];

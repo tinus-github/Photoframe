@@ -3,7 +3,7 @@
 OPTFLAGS = -O3
 
 OBJECTS = image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
-	  gl-container.o gl-container-2d.o gl-tiled-image.o gl-renderloop.o
+	  gl-container.o gl-container-2d.o gl-tiled-image.o gl-renderloop.o gl-renderloop-member.o
 LIBEXIF_A = ../lib/libexif/libexif/.libs/libexif.a
 LIBEXIF_INCLUDEDIR = -I../lib/libexif
 
@@ -130,6 +130,13 @@ gl-renderloop.o: gl-renderloop.c gl-renderloop.h gl-object.h
 	-ftree-vectorize -pipe -Wno-psabi \
 	-Wno-deprecated-declarations \
 	-c gl-renderloop.c -o gl-renderloop.o $(OPTFLAGS)
+
+gl-renderloop-member.o: gl-renderloop-member.c gl-renderloop.h gl-renderloop-member.h gl-object.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations \
+	-c gl-renderloop-member.c -o gl-renderloop-member.o $(OPTFLAGS)
 
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

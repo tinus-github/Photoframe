@@ -130,7 +130,7 @@ static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_
 	gl_shape *shape_tile;
 	
 	obj->data.unrotatedImageWidth = width;
-	shape_obj->data.unrotatedImageHeight = height;
+	obj->data.unrotatedImageHeight = height;
 	
 	obj->data.orientation = orientation;
 	

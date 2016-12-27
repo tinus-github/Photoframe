@@ -67,7 +67,7 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 	
 	mat4x4_identity(identity);
 	
-	mat4x4_translate(centered, -0.5 * shape_obj->data.objectWidth, -0.5 * shape_obj->data.objectHeight, 0.0);
+	mat4x4_translate(centered, -0.5 * obj->data.unrotatedImageWidth, -0.5 * obj->data.unrotatedImageHeight, 0.0);
 	
 	switch (obj->data.orientation) {
 		case 2:
@@ -107,10 +107,13 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 	mat4x4_mul(rotated, rotation, flipped);
 	
 	if (!dimensions_flipped) {
-		mat4x4_translate(uncenter, 0.5 * shape_obj->data.objectWidth, 0.5 * shape_obj->data.objectHeight, 0.0);
+		shape_obj->data.objectWidth = obj->data.unrotatedImageWidth;
+		shape_obj->data.objectHeight = obj->data.unrotatedImageHeight;
 	} else {
-		mat4x4_translate(uncenter, 0.5 * shape_obj->data.objectHeight, 0.5 * shape_obj->data.objectWidth, 0.0);
+		shape_obj->data.objectWidth = obj->data.unrotatedImageHeight;
+		shape_obj->data.objectHeight = obj->data.unrotatedImageWidth;
 	}
+	mat4x4_translate(uncenter, 0.5 * shape_obj->data.objectWidth, 0.5 * shape_obj->data.objectHeight, 0.0);
 	mat4x4_mul(orientation_container->data.projection, uncenter, rotated);
 }
 
@@ -126,8 +129,8 @@ static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_
 	gl_container *orientation_container = obj->data.orientation_container;
 	gl_shape *shape_tile;
 	
-	shape_obj->data.objectWidth = width;
-	shape_obj->data.objectHeight = height;
+	obj->data.unrotatedImageWidth = width;
+	shape_obj->data.unrotatedImageHeight = height;
 	
 	obj->data.orientation = orientation;
 	

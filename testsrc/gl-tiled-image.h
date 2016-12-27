@@ -31,6 +31,9 @@ typedef struct gl_tiled_image_data {
 	unsigned char *rgba_data;
 	unsigned int orientation;
 	
+	unsigned int unrotatedImageWidth;
+	unsigned int unrotatedImageHeight;
+	
 	gl_container *orientation_container;
 } gl_tiled_image_data;
 

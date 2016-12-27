@@ -117,8 +117,9 @@ boolean loadexif_parse(j_decompress_ptr cinfo)
 	exif_log_set_func(logger, &exiflogfunc, NULL);
 
 	exif_data_log(result, logger);
-	exif_data_load_data(result, data->inputdata, data->inputsize);
 #endif /* EXIF_DEBUG */
+	
+	exif_data_load_data(result, data->inputdata, data->inputsize);
 
 	data->orientation = 1;
 	if (result) {

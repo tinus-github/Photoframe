@@ -17,11 +17,18 @@ typedef struct gl_renderloop_member gl_renderloop_member;
 
 typedef struct gl_renderloop gl_renderloop;
 
-#define GL_RENDERLOOP_PHASES 5
+#define GL_RENDERLOOP_PHASES 4
+typedef enum {
+	gl_renderloop_phase_animate,
+	gl_renderloop_phase_load,
+	gl_renderloop_phase_draw,
+	gl_renderloop_phase_show
+} gl_renderloop_phase;
+
 
 typedef struct gl_renderloop_funcs {
 	gl_object_funcs p;
-	void (*append_child) (gl_renderloop *obj, unsigned int phase, gl_renderloop_member *child);
+	void (*append_child) (gl_renderloop *obj, gl_renderloop_phase phase, gl_renderloop_member *child);
 } gl_renderloop_funcs;
 
 typedef struct gl_renderloop_data {

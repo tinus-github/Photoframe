@@ -9,7 +9,7 @@
 #include "gl-renderloop.h"
 #include <string.h>
 
-static void gl_renderloop_append_child(gl_renderloop *obj, unsigned int phase, gl_renderloop_member *child);
+static void gl_renderloop_append_child(gl_renderloop *obj, gl_renderloop_phase phase, gl_renderloop_member *child);
 
 static struct gl_renderloop_funcs gl_renderloop_funcs_global = {
 	.append_child = &gl_renderloop_append_child
@@ -38,7 +38,7 @@ gl_renderloop *gl_renderloop_new()
 	return gl_renderloop_init(ret);
 }
 
-static void gl_renderloop_append_child(gl_renderloop *obj, unsigned int phase, gl_renderloop_member *child)
+static void gl_renderloop_append_child(gl_renderloop *obj, gl_renderloop_phase phase, gl_renderloop_member *child)
 {
 	return;
 }

@@ -95,3 +95,48 @@ static void gl_renderloop_append_child(gl_renderloop *obj, gl_renderloop_phase p
 	}
 	obj_child->f->unref(obj_child);
 }
+
+static void gl_renderloop_run_phase(gl_renderloop *obj, gl_renderloop_phase phase)
+{
+	unsigned int done = 0;
+	unsigned int is_final = 0;
+	
+	unsigned int restarted = 0;
+	gl_object *current_child_object;
+	gl_object *next_child_object;
+	
+	if (!obj->data.phaseFirstChild[phase]) {
+		return;
+	}
+	
+	gl_renderloop_member *current_child = obj->data.phaseFirstChild[phase];
+	
+	while (!done) {
+		assert (current_child->data.owner = obj);
+		gl_renderloop_member *next_child = current_child->siblingR;
+		
+		current_child_object = (gl_object *)current_child;
+		current_child_object->f->ref(current_child_object);
+		
+		if (next_child == obj->data.phaseFirstChild[phase]) {
+			is_final = 1;
+		}
+		
+		current_child->f->run_action(current_child);
+		if (current_child->data.owner == obj) {
+			assert (next_child == current_child->siblingR);
+		} else {
+			if (next_child == current_child) {
+				done = 1;
+			}
+		}
+		
+		current_child_obj->f->unref(current_child_obj);
+
+		if (is_final || (!obj->data.phaseFirstChild[phase])) {
+			done = 1;
+		} else {
+			current_child = next_child;
+		}
+	}
+}

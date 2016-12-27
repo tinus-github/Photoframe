@@ -27,7 +27,8 @@ typedef struct gl_renderloop_member_data {
 	gl_renderloop_member *siblingR;
 	gl_renderloop_phase renderloopPhase;
 	gl_renderloop *owner;
-	
+
+	/* Note that removing this member during the action should work, but not removing other members */
 	void (*action) (void *target, gl_renderloop_member *renderloop_member, void *action_data);
 	void *target;
 	void *action_data;

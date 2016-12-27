@@ -4,12 +4,13 @@ OPTFLAGS = -O3
 
 OBJECTS = image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
 	  gl-container.o gl-container-2d.o gl-tiled-image.o
+LIBEXIF_A = ../lib/libexif/.lib/libexif.a
 
-image: $(OBJECTS)
+image: $(OBJECTS) $(LIBEXIF_A)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
 	-L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
-	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg -lexif \
-	-Wl,--no-whole-archive -rdynamic $(OPTFLAGS)
+	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
+	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS)
 
 image.o: image.c loadimage.h gl-display.h gl-texture.h gl-shape.h gl-container.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \

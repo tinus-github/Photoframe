@@ -10,7 +10,7 @@
 #include "loadimage.h"
 
 #include <jpeglib.h>
-#include <libexif/exif-data.h>
+#include "../lib/libexif/libexif/exif-data.h"
 
 #include <string.h>
 

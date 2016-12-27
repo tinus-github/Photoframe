@@ -39,7 +39,7 @@ struct gl_renderloop_member {
 };
 
 void gl_renderloop_member_setup();
-gl_container *gl_renderloop_member_init(gl_renderloop_member *obj);
-gl_container *gl_renderloop_member_new();
+gl_renderloop_member *gl_renderloop_member_init(gl_renderloop_member *obj);
+gl_renderloop_member *gl_renderloop_member_new();
 
 #endif /* gl_renderloop_member_h */

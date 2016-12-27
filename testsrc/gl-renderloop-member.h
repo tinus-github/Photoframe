@@ -18,7 +18,7 @@ typedef struct gl_renderloop_member gl_renderloop_member;
 typedef struct gl_renderloop_member_funcs {
 	gl_object_funcs p;
 	void (*run_action) (gl_renderloop_member *obj);
-} gl_container_funcs;
+} gl_renderloop_member_funcs;
 
 typedef struct gl_renderloop_member_data {
 	gl_object_data p;

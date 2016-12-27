@@ -22,7 +22,7 @@ void gl_renderloop_setup()
 	parent->f->free(parent);
 }
 
-gl_container *gl_renderloop_init(gl_renderloop *obj)
+gl_renderloop *gl_renderloop_init(gl_renderloop *obj)
 {
 	gl_object_init((gl_object *)obj);
 	

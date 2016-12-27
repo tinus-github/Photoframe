@@ -125,7 +125,6 @@ static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_
 	gl_tile *tile;
 	unsigned int current_y = 0;
 	
-	gl_shape *shape_obj = (gl_shape *)obj;
 	gl_container *orientation_container = obj->data.orientation_container;
 	gl_shape *shape_tile;
 	

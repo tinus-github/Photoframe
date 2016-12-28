@@ -147,7 +147,8 @@ static void gl_renderloop_run_phase(gl_renderloop *obj, gl_renderloop_phase phas
 
 static void gl_renderloop_run(gl_renderloop *obj)
 {
-	for (gl_renderloop_phase current_phase = 0; current_phase < GL_RENDERLOOP_PHASES; current_phase++) {
+	gl_renderloop_phase current_phase;
+	for (current_phase = 0; current_phase < GL_RENDERLOOP_PHASES; current_phase++) {
 		gl_renderloop_run_phase(obj, current_phase);
 	}
 }

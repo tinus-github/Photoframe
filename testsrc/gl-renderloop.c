@@ -129,7 +129,7 @@ static void gl_renderloop_run_phase(gl_renderloop *obj, gl_renderloop_phase phas
 			}
 		}
 		
-		current_child_obj->f->unref(current_child_obj);
+		current_child_object->f->unref(current_child_object);
 
 		if (is_final || (!obj->data.phaseFirstChild[phase])) {
 			done = 1;

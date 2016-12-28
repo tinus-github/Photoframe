@@ -19,7 +19,7 @@ typedef struct gl_renderloop gl_renderloop;
 
 #define GL_RENDERLOOP_PHASES 4
 typedef enum {
-	gl_renderloop_phase_animate,
+	gl_renderloop_phase_animate = 0,
 	gl_renderloop_phase_load,
 	gl_renderloop_phase_draw,
 	gl_renderloop_phase_show

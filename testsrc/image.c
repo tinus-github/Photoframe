@@ -32,9 +32,8 @@
 
 void gl_stage_draw(GL_STATE_T *p_state)
 {
-	gl_stage *global_stage = gl_stage_get_global_stage();
-	gl_shape *main_container_shape = global_stage->f->get_shape(global_stage);
-	main_container_shape->f->draw(main_container_shape);
+	gl_renderloop global_loop = gl_renderloop_get_global_renderloop();
+	global_loop->f->run(global_loop);
 }
 
 int main(int argc, char *argv[])

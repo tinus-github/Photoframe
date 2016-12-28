@@ -15,6 +15,7 @@ static struct gl_renderloop_member_funcs gl_renderloop_member_funcs_global = {
 	.run_action = &gl_renderloop_member_run_action
 };
 
+// doesn't matter if this is called multiple times
 void gl_renderloop_member_setup()
 {
 	gl_object *parent = gl_object_new();

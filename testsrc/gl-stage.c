@@ -10,6 +10,7 @@
 #include <string.h>
 
 #include "gl-stage.h"
+#include "gl-renderloop-member.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -66,6 +67,13 @@ static void gl_stage_set_dimensions(gl_stage *obj, uint32_t width, uint32_t heig
 	gl_stage_set_projection(obj);
 }
 
+static void gl_stage_draw(void *global_stage_void, gl_renderloop_member *obj, void *extra_data)
+{
+	gl_stage *global_stage = (gl_stage *)global_stage_void;
+	gl_shape *main_container_shape = global_stage->f->get_shape(global_stage);
+	main_container_shape->f->draw(main_container_shape);
+}
+
 void gl_stage_setup()
 {
 	gl_object *parent = gl_object_new();
@@ -73,6 +81,17 @@ void gl_stage_setup()
 	parent->f->free(parent);
 	
 	global_stage = gl_stage_new();
+	
+	gl_renderloop_setup();
+	gl_renderloop_member_setup();
+	
+	gl_renderloop_member renderloop_member = gl_renderloop_member_new();
+	renderloop_member->data.action = &gl_stage_draw;
+	renderloop_member->data.target = global_stage;
+	renderloop_member->data.action_data = NULL;
+	
+	gl_renderloop global_loop = gl_renderloop_get_global_renderloop();
+	global_loop->f->append_child(global_loop, gl_renderloop_phase_show, renderloop_member);
 }
 
 gl_stage *gl_stage_init(gl_stage *obj)

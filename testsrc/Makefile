@@ -27,7 +27,7 @@ image.o: image.c loadimage.h gl-display.h gl-texture.h gl-shape.h gl-container.h
 	 -I/opt/vc/src/hello_pi/libs/vgfont -g -c image.c -o image.o \
 	 -Wno-deprecated-declarations $(OPTFLAGS)
 
-gl-display.o: gl-display.c gl-display.h gl-texture.h gl-shape.h
+gl-display.o: gl-display.c gl-display.h gl-texture.h gl-shape.h gl-renderloop-member.h gl-renderloop.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \

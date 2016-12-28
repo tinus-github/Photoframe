@@ -13,17 +13,23 @@
 
 static void gl_renderloop_append_child(gl_renderloop *obj, gl_renderloop_phase phase, gl_renderloop_member *child);
 static void gl_renderloop_remove_child(gl_renderloop *obj, gl_renderloop_member *child);
+static void gl_renderloop_run(gl_renderloop *obj);
 
 static struct gl_renderloop_funcs gl_renderloop_funcs_global = {
 	.append_child = &gl_renderloop_append_child,
-	.remove_child = &gl_renderloop_remove_child
+	.remove_child = &gl_renderloop_remove_child,
+	.run = &gl_renderloop_run
 };
+
+gl_renderloop *global_renderloop = NULL;
 
 void gl_renderloop_setup()
 {
 	gl_object *parent = gl_object_new();
 	memcpy(&gl_renderloop_funcs_global.p, parent->f, sizeof(gl_object_funcs));
 	parent->f->free(parent);
+	
+	global_renderloop = gl_renderloop_new();
 }
 
 gl_renderloop *gl_renderloop_init(gl_renderloop *obj)
@@ -137,4 +143,16 @@ static void gl_renderloop_run_phase(gl_renderloop *obj, gl_renderloop_phase phas
 			current_child = next_child;
 		}
 	}
+}
+
+static void gl_renderloop_run(gl_renderloop *obj)
+{
+	for (current_phase = 0; current_phase < GL_RENDERLOOP_PHASES; current_phase++) {
+		gl_renderloop_run_hase(obj, current_phase);
+	}
+}
+
+gl_renderloop *gl_renderloop_get_global_renderloop()
+{
+	return global_renderloop;
 }

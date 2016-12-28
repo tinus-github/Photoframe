@@ -30,6 +30,7 @@ typedef struct gl_renderloop_funcs {
 	gl_object_funcs p;
 	void (*append_child) (gl_renderloop *obj, gl_renderloop_phase phase, gl_renderloop_member *child);
 	void (*remove_child) (gl_renderloop *obj, gl_renderloop_member *child);
+	void (*run) (gl_renderloop *obj);
 } gl_renderloop_funcs;
 
 typedef struct gl_renderloop_data {

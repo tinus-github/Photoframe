@@ -22,6 +22,8 @@
 #include "gl-container.h"
 #include "gl-container-2d.h"
 #include "gl-tiled-image.h"
+#include "gl-renderloop-member.h"
+#include "gl-renderloop.h"
 
 // from esUtil.h
 #define TRUE 1
@@ -285,6 +287,8 @@ void gl_display_setup()
 	gl_container_setup();
 	gl_container_2d_setup();
 	gl_tiled_image_setup();
+	gl_renderloop_member_setup();
+	gl_renderloop_setup();
 }
 
 

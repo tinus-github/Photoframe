@@ -23,6 +23,7 @@
 #include "gl-container-2d.h"
 #include "gl-stage.h"
 #include "gl-tiled-image.h"
+#include "gl-renderloop.h"
 
 #include "../lib/linmath/linmath.h"
 

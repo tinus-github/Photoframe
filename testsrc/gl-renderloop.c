@@ -25,6 +25,9 @@ gl_renderloop *global_renderloop = NULL;
 
 void gl_renderloop_setup()
 {
+	if (global_renderloop) {
+		return;
+	}
 	gl_object *parent = gl_object_new();
 	memcpy(&gl_renderloop_funcs_global.p, parent->f, sizeof(gl_object_funcs));
 	parent->f->free(parent);

@@ -33,7 +33,7 @@
 
 void gl_stage_draw(GL_STATE_T *p_state)
 {
-	gl_renderloop global_loop = gl_renderloop_get_global_renderloop();
+	gl_renderloop *global_loop = gl_renderloop_get_global_renderloop();
 	global_loop->f->run(global_loop);
 }
 

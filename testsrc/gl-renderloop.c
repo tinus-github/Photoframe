@@ -101,9 +101,7 @@ static void gl_renderloop_run_phase(gl_renderloop *obj, gl_renderloop_phase phas
 	unsigned int done = 0;
 	unsigned int is_final = 0;
 	
-	unsigned int restarted = 0;
 	gl_object *current_child_object;
-	gl_object *next_child_object;
 	
 	if (!obj->data.phaseFirstChild[phase]) {
 		return;
@@ -113,7 +111,7 @@ static void gl_renderloop_run_phase(gl_renderloop *obj, gl_renderloop_phase phas
 	
 	while (!done) {
 		assert (current_child->data.owner = obj);
-		gl_renderloop_member *next_child = current_child->siblingR;
+		gl_renderloop_member *next_child = current_child->data.siblingR;
 		
 		current_child_object = (gl_object *)current_child;
 		current_child_object->f->ref(current_child_object);
@@ -124,7 +122,7 @@ static void gl_renderloop_run_phase(gl_renderloop *obj, gl_renderloop_phase phas
 		
 		current_child->f->run_action(current_child);
 		if (current_child->data.owner == obj) {
-			assert (next_child == current_child->siblingR);
+			assert (next_child == current_child->data.siblingR);
 		} else {
 			if (next_child == current_child) {
 				done = 1;

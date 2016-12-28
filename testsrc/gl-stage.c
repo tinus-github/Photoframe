@@ -85,12 +85,12 @@ void gl_stage_setup()
 	gl_renderloop_setup();
 	gl_renderloop_member_setup();
 	
-	gl_renderloop_member renderloop_member = gl_renderloop_member_new();
+	gl_renderloop_member *renderloop_member = gl_renderloop_member_new();
 	renderloop_member->data.action = &gl_stage_draw;
 	renderloop_member->data.target = global_stage;
 	renderloop_member->data.action_data = NULL;
 	
-	gl_renderloop global_loop = gl_renderloop_get_global_renderloop();
+	gl_renderloop *global_loop = gl_renderloop_get_global_renderloop();
 	global_loop->f->append_child(global_loop, gl_renderloop_phase_show, renderloop_member);
 }
 

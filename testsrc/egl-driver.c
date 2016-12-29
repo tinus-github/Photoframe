@@ -164,7 +164,7 @@ static void egl_driver_register_renderloop(egl_driver_data *data)
 // Create a shader object, load the shader source, and
 // compile the shader.
 //
-static eGLuint gl_driver_load_shader(GLenum type, const GLchar *shaderSrc)
+static GLuint egl_driver_load_shader(GLenum type, const GLchar *shaderSrc)
 {
 	GLuint shader;
 	GLint compiled;

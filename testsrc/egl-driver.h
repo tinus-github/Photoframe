@@ -18,6 +18,8 @@ typedef struct egl_driver_data {
 	EGLDisplay display;
 	EGLSurface surface;
 	EGLContext context;
+	
+	EGL_DISPMANX_WINDOW_T nativewindow;
 } egl_driver_data;
 
 void egl_driver_setup();

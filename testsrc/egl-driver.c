@@ -111,8 +111,6 @@ static void egl_driver_init_display(egl_driver_data *data)
 	gl_stage *stage = gl_stage_get_global_stage();
 	stage->f->set_dimensions(stage, width, height);
 	
-	EGL_DISPMANX_WINDOW_T nativewindow;
-	
 	dst_rect.x = 0;
 	dst_rect.y = 0;
 	dst_rect.width = width;
@@ -132,12 +130,12 @@ static void egl_driver_init_display(egl_driver_data *data)
 				&src_rect, DISPMANX_PROTECTION_NONE,
 				0 /*alpha*/, 0/*clamp*/, 0/*transform*/);
 	
-	nativewindow.element = dispman_element;
-	nativewindow.width = width;
-	nativewindow.height = height;
+	data->nativewindow.element = dispman_element;
+	data->nativewindow.width = width;
+	data->nativewindow.height = height;
 	vc_dispmanx_update_submit_sync( dispman_update );
 	
-	data->surface = eglCreateWindowSurface( data->display, config, &nativewindow, NULL );
+	data->surface = eglCreateWindowSurface( data->display, config, &data->nativewindow, NULL );
 	assert(data->surface != EGL_NO_SURFACE);
 	
 	// connect the context to the surface

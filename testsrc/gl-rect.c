@@ -6,6 +6,8 @@
 //
 //
 
+// Doesn't work anymore
+
 #include "gl-rect.h"
 #include "egl-driver.h"
 

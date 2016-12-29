@@ -6,6 +6,8 @@
 //
 //
 
+// old, doesn't work anymore
+
 #include "gl-image.h"
 #include "gl-display.h"
 #include "gl-texture.h"

@@ -7,7 +7,7 @@
 //
 
 #include "gl-rect.h"
-#include "gl-display.h"
+#include "egl-driver.h"
 
 // from esUtil.h
 #define TRUE 1
@@ -38,7 +38,7 @@ static int Init_rect_gl_state(GL_STATE_T *p_state) {
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object
-	displayData->programObject = gl_display_load_program ( vShaderStr, fShaderStr );
+	displayData->programObject = egl_driver_load_program ( vShaderStr, fShaderStr );
 	
 	// Get the attribute locations
 	displayData->positionLoc = glGetAttribLocation ( displayData->programObject, "a_position" );

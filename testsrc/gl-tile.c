@@ -7,7 +7,7 @@
 //
 
 #include "gl-tile.h"
-#include "gl-display.h"
+#include "egl-driver.h"
 #include "gl-stage.h"
 
 static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture);
@@ -53,7 +53,7 @@ static int gl_tile_load_program() {
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object
-	gl_tile_programObject = gl_display_load_program ( vShaderStr, fShaderStr );
+	gl_tile_programObject = egl_driver_load_program ( vShaderStr, fShaderStr );
 	
 	// Get the attribute locations
 	gl_tile_programPositionLoc = glGetAttribLocation ( gl_tile_programObject, "a_position" );

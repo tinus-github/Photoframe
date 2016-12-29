@@ -14,6 +14,7 @@
 static void gl_renderloop_append_child(gl_renderloop *obj, gl_renderloop_phase phase, gl_renderloop_member *child);
 static void gl_renderloop_remove_child(gl_renderloop *obj, gl_renderloop_member *child);
 static void gl_renderloop_run(gl_renderloop *obj);
+static void gl_renderloop_free(gl_object * obj_obj);
 
 static struct gl_renderloop_funcs gl_renderloop_funcs_global = {
 	.append_child = &gl_renderloop_append_child,
@@ -59,7 +60,7 @@ gl_renderloop *gl_renderloop_init(gl_renderloop *obj)
 	return obj;
 }
 
-void gl_renderloop_free(gl_object * obj_obj)
+static void gl_renderloop_free(gl_object * obj_obj)
 {
 	gl_renderloop *obj = (gl_renderloop *)obj_obj;
 	
@@ -84,6 +85,7 @@ gl_renderloop *gl_renderloop_new()
 static void gl_renderloop_remove_child(gl_renderloop *obj, gl_renderloop_member *child)
 {
 	assert (child->data.owner == obj);
+	gl_object *obj_child = (gl_object *)child;
 
 	gl_renderloop_member *siblingR = child->data.siblingR;
 	gl_renderloop_member *siblingL = child->data.siblingL;
@@ -112,7 +114,7 @@ static void gl_renderloop_append_child(gl_renderloop *obj, gl_renderloop_phase p
 	gl_renderloop_member *last_child = head->data.siblingL;
 	child->data.siblingL = last_child;
 	last_child->data.siblingR = child;
-	child->data.siblingR = first_child;
+	child->data.siblingR = head;
 	head->data.siblingL = child;
 
 	obj_child->f->unref(obj_child);
@@ -120,14 +122,6 @@ static void gl_renderloop_append_child(gl_renderloop *obj, gl_renderloop_phase p
 
 static void gl_renderloop_run_phase(gl_renderloop *obj, gl_renderloop_phase phase)
 {
-	unsigned int done = 0;
-	
-	gl_object *current_child_object;
-	
-	if (!obj->data.phaseFirstChild[phase]) {
-		return;
-	}
-	
 	gl_renderloop_member *head = obj->data.phaseHead[phase];
 	gl_renderloop_member *current_child = head->data.siblingR;
 	gl_renderloop_member *next_child = current_child->data.siblingR;

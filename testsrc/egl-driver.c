@@ -17,6 +17,10 @@
 #include "gl-renderloop-member.h"
 #include "gl-renderloop.h"
 
+#include <bcm_host.h>
+
+#include <assert.h>
+
 static void egl_display_clear(egl_display_data *data)
 {
 	gl_stage *stage = gl_stage_get_global_stage();
@@ -32,7 +36,7 @@ static void egl_display_clearf(void *target, gl_renderloop_member *renderloop_me
 {
 	egl_display_data *data = (egl_display_data *)action_data;
 	
-	egl_display_draw(data);
+	egl_display_clear(data);
 }
 
 static void egl_display_swap(egl_display_data *data)
@@ -149,13 +153,13 @@ static void egl_display_register_renderloop(egl_display_data *data)
 	renderloop_member->data.action = &egl_display_clearf;
 	renderloop_member->data.action_data = data;
 	
-	renderloop->f->append_child(renderloop, renderloop_member, gl_renderloop_phase_clear);
+	renderloop->f->append_child(renderloop, gl_renderloop_phase_clear, renderloop_member);
 	
 	renderloop_member = gl_renderloop_member_new();
 	renderloop_member->data.action = &egl_display_swapf;
 	renderloop_member->data.action_data = data;
 	
-	renderloop->f->append_child(renderloop, renderloop_member, gl_renderloop_phase_swap);
+	renderloop->f->append_child(renderloop, gl_renderloop_phase_show, renderloop_member);
 }
 
 egl_display_data *egl_display_init()
@@ -163,6 +167,8 @@ egl_display_data *egl_display_init()
 	egl_display_data *data = calloc(1, sizeof(egl_display_data));
 
 	egl_display_init_display(data);
+	
+	egl_display_register_renderloop(data);
 	
 	return data;
 }

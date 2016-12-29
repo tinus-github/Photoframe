@@ -87,6 +87,7 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 	switch (obj->data.orientation) {
 		case 1:
 		case 2:
+		default:
 			rotation_amount = 0.0; break;
 		case 3:
 		case 4:

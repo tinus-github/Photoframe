@@ -17,8 +17,6 @@
 #include "gl-renderloop-member.h"
 #include "gl-renderloop.h"
 
-#include <sys/time.h>
-
 static void egl_display_clear(egl_display_data *data)
 {
 	gl_stage *stage = gl_stage_get_global_stage();

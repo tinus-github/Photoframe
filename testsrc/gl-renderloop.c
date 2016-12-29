@@ -10,6 +10,7 @@
 #include "gl-renderloop-member.h"
 #include <string.h>
 #include <assert.h>
+#include <sys/time.h>
 
 static void gl_renderloop_append_child(gl_renderloop *obj, gl_renderloop_phase phase, gl_renderloop_member *child);
 static void gl_renderloop_remove_child(gl_renderloop *obj, gl_renderloop_member *child);

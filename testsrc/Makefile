@@ -36,15 +36,6 @@ egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-rende
 	-c egl-driver.c -o egl-driver.o \
 	-Wno-deprecated-declarations $(OPTFLAGS)
 
-gl-image.o: gl-image.c gl-image.h gl-texture.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-image.c -o gl-image.o \
-	-Wno-deprecated-declarations $(OPTFLAGS)
-
 gl-rect.o: gl-rect.c gl-rect.h gl-texture.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \

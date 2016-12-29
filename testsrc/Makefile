@@ -2,7 +2,7 @@
 
 OPTFLAGS = -O3
 
-OBJECTS = image.o loadimage.o loadexif.o gl-display.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
+OBJECTS = image.o loadimage.o loadexif.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
 	  gl-container.o gl-container-2d.o gl-tiled-image.o gl-renderloop.o gl-renderloop-member.o egl-driver.o
 LIBEXIF_A = ../lib/libexif/libexif/.libs/libexif.a
 LIBEXIF_INCLUDEDIR = -I../lib/libexif

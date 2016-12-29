@@ -36,7 +36,7 @@ gl-display.o: gl-display.c gl-display.h gl-texture.h gl-shape.h gl-renderloop-me
 	-c gl-display.c -o gl-display.o \
 	-Wno-deprecated-declarations $(OPTFLAGS)
 
-egl-driver.o: egl-driver.o gl-display.h gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h egl-driver.h
+egl-driver.o: egl-driver.c gl-display.h gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h egl-driver.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \

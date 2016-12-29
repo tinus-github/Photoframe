@@ -3,7 +3,7 @@
 OPTFLAGS = -O3
 
 OBJECTS = image.o loadimage.o loadexif.o gl-display.o gl-image.o gl-rect.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
-	  gl-container.o gl-container-2d.o gl-tiled-image.o gl-renderloop.o gl-renderloop-member.o
+	  gl-container.o gl-container-2d.o gl-tiled-image.o gl-renderloop.o gl-renderloop-member.o egl_driver.o
 LIBEXIF_A = ../lib/libexif/libexif/.libs/libexif.a
 LIBEXIF_INCLUDEDIR = -I../lib/libexif
 
@@ -34,6 +34,15 @@ gl-display.o: gl-display.c gl-display.h gl-texture.h gl-shape.h gl-renderloop-me
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c gl-display.c -o gl-display.o \
+	-Wno-deprecated-declarations $(OPTFLAGS)
+
+egl_driver.o: egl_driver.o gl-display.h gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-c egl_driver.c -o egl_driver.o \
 	-Wno-deprecated-declarations $(OPTFLAGS)
 
 gl-image.o: gl-image.c gl-image.h gl-display.h gl-texture.h

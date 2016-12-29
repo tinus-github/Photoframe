@@ -48,6 +48,7 @@ struct gl_renderloop {
 void gl_renderloop_setup();
 gl_renderloop *gl_renderloop_init(gl_renderloop *obj);
 gl_renderloop *gl_renderloop_new();
+void gl_renderloop_loop();
 
 gl_renderloop *gl_renderloop_get_global_renderloop();
 

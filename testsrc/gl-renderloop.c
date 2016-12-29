@@ -148,3 +148,32 @@ gl_renderloop *gl_renderloop_get_global_renderloop()
 {
 	return global_renderloop;
 }
+
+void gl_renderloop_loop()
+{
+	struct timeval t1, t2;
+	struct timezone tz;
+	float deltatime;
+	float totaltime = 0.0f;
+	unsigned int frames = 0;
+	
+	gettimeofday ( &t1 , &tz );
+	
+	while(1)
+	{
+		gettimeofday(&t2, &tz);
+		deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
+		t1 = t2;
+		
+		gl_renderloop_run(global_renderloop);
+		
+		totaltime += deltatime;
+		frames++;
+		if (totaltime >  2.0f)
+		{
+			printf("%4d frames rendered in %1.4f seconds -> FPS=%3.4f\n", frames, totaltime, frames/totaltime);
+			totaltime -= 2.0f;
+			frames = 0;
+		}
+	}
+}

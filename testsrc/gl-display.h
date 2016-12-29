@@ -103,17 +103,9 @@ typedef struct GL_STATE_T
 void gl_image_draw(GL_STATE_T *p_state);
 void gl_rect_draw(GL_STATE_T *p_state);
 
-void gl_display_init(GL_STATE_T *state);
-void gl_display_register_draw_func(GL_STATE_T *p_state, void (*gl_display_draw_func) (GL_STATE_T* ) );
-
-
 GLuint gl_display_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc );
 
 int gl_image_init(GL_STATE_T *p_state, unsigned char* image, int width, int height, unsigned int orientation);
 int gl_rect_init(GL_STATE_T *p_state, int width, int height, float red, float green, float blue);
-
-// Global gl state hack
-
-GL_STATE_T *get_global_gl_state();
 
 #endif /* gl_display_h */

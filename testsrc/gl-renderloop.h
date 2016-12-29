@@ -36,7 +36,7 @@ typedef struct gl_renderloop_funcs {
 typedef struct gl_renderloop_data {
 	gl_object_data p;
 	
-	gl_renderloop_member *phaseFirstChild[GL_RENDERLOOP_PHASES];
+	gl_renderloop_member *phaseHead[GL_RENDERLOOP_PHASES];
 } gl_renderloop_data;
 
 struct gl_renderloop {

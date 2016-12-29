@@ -14,13 +14,13 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-typedef struct egl_display_data {
+typedef struct egl_driver_data {
 	EGLDisplay display;
 	EGLSurface surface;
 	EGLContext context;
-} egl_display_data;
+} egl_driver_data;
 
-void egl_display_setup();
-egl_display_data *egl_display_init();
+void egl_driver_setup();
+egl_driver_data *egl_driver_init();
 
 #endif /* egl_driver_h */

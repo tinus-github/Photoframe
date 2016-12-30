@@ -119,7 +119,6 @@ static GLfloat gl_value_animation_calculate_value_normalized(gl_value_animation 
 static void gl_value_animation_done(gl_value_animation *obj)
 {
 	struct timezone tz;
-	struct timeval now_time;
 
 	if (obj->data.repeats) {
 		obj->data.timeElapsed = 0.0;

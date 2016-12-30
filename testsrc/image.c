@@ -93,7 +93,8 @@ int main(int argc, char *argv[])
 	anim->data.action = &animation;
 	anim->data.startValue = 0;
 	anim->data.endValue = 200;
-	anim->data.duration = 20;
+	anim->data.duration = 2;
+	anim->data.repeats = TRUE;
 	
 	anim->f->start(anim);
 	

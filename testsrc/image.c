@@ -36,6 +36,7 @@ void animation(void *target, void *extra_data, GLfloat value)
 {
 	gl_shape *container_shape = (gl_shape *)target;
 	container_shape->data.objectX = value;
+	container_shape->f->set_computed_projection_dirty(container_shape);
 }
 
 int main(int argc, char *argv[])

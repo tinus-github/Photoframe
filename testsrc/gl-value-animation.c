@@ -118,7 +118,15 @@ static GLfloat gl_value_animation_calculate_value_normalized(gl_value_animation 
 
 static void gl_value_animation_done(gl_value_animation *obj)
 {
-	obj->f->pause(obj);
+	struct timezone tz;
+	struct timeval now_time;
+
+	if (obj->data.repeats) {
+		obj->data.timeElapsed = 0.0;
+		gettimeofday(&obj->data.startTime, &tz);
+	} else {
+		obj->f->pause(obj);
+	}
 	
 	if (obj->data.final_action) {
 		obj->data.final_action(obj->data.target, obj->data.extraData);

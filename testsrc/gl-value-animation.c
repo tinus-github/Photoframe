@@ -90,7 +90,7 @@ static void gl_value_animation_tick(void *target, gl_renderloop_member *renderlo
 	obj->data.timeElapsed = (GLfloat)(now_time.tv_sec - obj->data.startTime.tv_sec +
 					(now_time.tv_usec - obj->data.startTime.tv_usec) * 1e-6);
 	
-	GLfloat normalized_time_elapsed = obj->data.duration / obj->data.timeElapsed;
+	GLfloat normalized_time_elapsed = obj->data.timeElapsed / obj->data.duration;
 	if (normalized_time_elapsed < 0.0) normalized_time_elapsed = 0.0;
 	if (normalized_time_elapsed > 1.0) normalized_time_elapsed = 1.0;
 	

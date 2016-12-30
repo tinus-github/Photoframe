@@ -25,6 +25,7 @@
 #include "gl-renderloop.h"
 #include "egl-driver.h"
 #include "gl-value-animation.h"
+#include "gl-value-animation-easing.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -88,13 +89,15 @@ int main(int argc, char *argv[])
 	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
 	
-	gl_value_animation *anim = gl_value_animation_new();
+	gl_value_animation *anim_easing = gl_value_animation_easing_new();
+	gl_value_animation *anim = (gl_value_animation *)anim_easing;
 	anim->data.target = main_container_2d;
 	anim->data.action = &animation;
 	anim->data.startValue = 0;
 	anim->data.endValue = 200;
 	anim->data.duration = 2;
 	anim->data.repeats = TRUE;
+	anim_easing->data.easingType = gl_value_animation_ease_QuinticEaseInOut;
 	
 	anim->f->start(anim);
 	

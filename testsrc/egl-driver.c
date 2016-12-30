@@ -17,6 +17,7 @@
 #include "gl-renderloop-member.h"
 #include "gl-renderloop.h"
 #include "gl-value-animation.h"
+#include "gl-value-animation-easing.h"
 
 #include <bcm_host.h>
 
@@ -279,4 +280,5 @@ void egl_driver_setup()
 	gl_renderloop_member_setup();
 	gl_renderloop_setup();
 	gl_value_animation_setup();
+	gl_value_animation_easing_setup();
 }

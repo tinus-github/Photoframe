@@ -35,7 +35,7 @@
 void animation(void *target, void *extra_data, GLfloat value)
 {
 	gl_shape *container_shape = (gl_shape *)target;
-	target->data.objectX = value;
+	container_shape->data.objectX = value;
 }
 
 int main(int argc, char *argv[])

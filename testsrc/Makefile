@@ -133,7 +133,8 @@ gl-renderloop-member.o: gl-renderloop-member.c gl-renderloop.h gl-renderloop-mem
 gl-value-animation.o: gl-value-animation.c gl-value-animation.h gl-renderloop.h gl-renderloop-member.h gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \	-ftree-vectorize -pipe -Wno-psabi \
 	-Wno-deprecated-declarations \
 	-c gl-value-animation.c -o gl-value-animation.o $(OPTFLAGS)
 

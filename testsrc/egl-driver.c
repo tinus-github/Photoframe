@@ -278,5 +278,5 @@ void egl_driver_setup()
 	gl_tiled_image_setup();
 	gl_renderloop_member_setup();
 	gl_renderloop_setup();
-	gl_value_animation_setup()
+	gl_value_animation_setup();
 }

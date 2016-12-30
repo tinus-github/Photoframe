@@ -18,11 +18,12 @@ static struct gl_value_animation_easing_funcs gl_value_animation_easing_funcs_gl
 void gl_value_animation_easing_setup()
 {
 	gl_value_animation *parent = gl_value_animation_new();
+	gl_object *parent_obj = (gl_object *)parent;
 	memcpy(&gl_value_animation_easing_funcs_global.p, parent->f, sizeof(gl_value_animation_funcs));
-	parent->f->free(parent);
+	parent_obj->f->free(parent_obj);
 	
-	gl_value_animation_funcs *parent_f = (gl_value_animation_funcs *)gl_value_animation_easing_funcs_global;
-	parent_f.calculate_value_normalized = &gl_value_animation_easing_calculate_value_normalized;
+	gl_value_animation_funcs *parent_f = (gl_value_animation_funcs *)&gl_value_animation_easing_funcs_global;
+	parent_f->calculate_value_normalized = &gl_value_animation_easing_calculate_value_normalized;
 }
 
 GLfloat calculate_linear(GLfloat n)
@@ -47,7 +48,7 @@ static GLfloat gl_value_animation_easing_calculate_value_normalized(gl_value_ani
 {
 	gl_value_animation_easing *obj_easing = (gl_value_animation_easing *)obj;
 	
-	switch (obj->data.easingType) {
+	switch (obj_easing->data.easingType) {
 		default:
 		case gl_value_animation_ease_linear:
 			return calculate_linear(normalized_time_elapsed);

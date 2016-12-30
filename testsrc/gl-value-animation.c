@@ -43,7 +43,7 @@ static void gl_value_animation_start(gl_value_animation *obj)
 	float time_elapsed_integral_f;
 	struct timeval time_elapsed_tv;
 	
-	time_elapsed_tv.tv_sec = modf(obj->data.timeElapsed, &time_elapsed_integral);
+	time_elapsed_tv.tv_sec = modf(obj->data.timeElapsed, &time_elapsed_integral_f);
 	time_elapsed_tv.tv_usec = time_elapsed_integral_f * 1e6;
 	
 	timersub(&now_time, &time_elapsed_tv, &obj->data.startTime);
@@ -64,8 +64,8 @@ static void gl_value_animation_pause(gl_value_animation *obj)
 	assert (obj->data.isRunning);
 	
 	gettimeofday(&now_time, &tz);
-	obj->data.timeElapsed = (GLfloat)(now_time.tv_sec - obj->data.startTime->tv_sec +
-					  (now_time.tv_usec - obj->data.startTime->tv_usec) * 1e-6);
+	obj->data.timeElapsed = (GLfloat)(now_time.tv_sec - obj->data.startTime.tv_sec +
+					  (now_time.tv_usec - obj->data.startTime.tv_usec) * 1e-6);
 
 	gl_renderloop_member *renderloop_member = obj->data.renderloopMember;
 	assert(renderloop_member);
@@ -76,7 +76,7 @@ static void gl_value_animation_pause(gl_value_animation *obj)
 	
 	gl_object *renderloop_member_obj = (gl_object *)renderloop_member;
 	renderloop_member_obj->f->unref(renderloop_member_obj);
-	obj->data.renderloop_member = NULL;
+	obj->data.renderloopMember = NULL;
 }
 
 static void gl_value_animation_tick(void *target, gl_renderloop_member *renderloop_member, void *action_data)
@@ -94,9 +94,9 @@ static void gl_value_animation_tick(void *target, gl_renderloop_member *renderlo
 	if (normalized_time_elapsed < 0.0) normalized_time_elapsed = 0.0;
 	if (normalized_time_elapsed > 1.0) normalized_time_elapsed = 1.0;
 	
-	GLfloat value = obj->f->calculate_value(obj, normalized_time_elapsed, startValue, endValue);
+	GLfloat value = obj->f->calculate_value(obj, normalized_time_elapsed, obj->data.startValue, obj->data.endValue);
 	
-	obj->f->action(obj->data.target, obj->data.extraData, value);
+	obj->data.action(obj->data.target, obj->data.extraData, value);
 	
 	if (obj->data.timeElapsed > obj->data.duration) {
 		obj->f->done(obj);

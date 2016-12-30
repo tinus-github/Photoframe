@@ -43,7 +43,7 @@ static void gl_value_animation_start(gl_value_animation *obj)
 	float time_elapsed_integral_f;
 	struct timeval time_elapsed_tv;
 	
-	time_elapsed_tv.tv_sec = modf(obj->data.timeElapsed, &time_elapsed_integral_f);
+	time_elapsed_tv.tv_sec = modff(obj->data.timeElapsed, &time_elapsed_integral_f);
 	time_elapsed_tv.tv_usec = time_elapsed_integral_f * 1e6;
 	
 	timersub(&now_time, &time_elapsed_tv, &obj->data.startTime);
@@ -87,8 +87,8 @@ static void gl_value_animation_tick(void *target, gl_renderloop_member *renderlo
 	struct timeval now_time;
 	
 	gettimeofday(&now_time, &tz);
-	obj->data.timeElapsed = (GLfloat)(now_time.tv_sec - obj->data.startTime->tv_sec +
-					(now_time.tv_usec - obj->data.startTime->tv_usec) * 1e-6);
+	obj->data.timeElapsed = (GLfloat)(now_time.tv_sec - obj->data.startTime.tv_sec +
+					(now_time.tv_usec - obj->data.startTime.tv_usec) * 1e-6);
 	
 	GLfloat normalized_time_elapsed = obj->data.duration / obj->data.timeElapsed;
 	if (normalized_time_elapsed < 0.0) normalized_time_elapsed = 0.0;

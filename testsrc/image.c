@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
 	
-	gl_value_animation *anim_easing = gl_value_animation_easing_new();
+	gl_value_animation_easing *anim_easing = gl_value_animation_easing_new();
 	gl_value_animation *anim = (gl_value_animation *)anim_easing;
 	anim->data.target = main_container_2d;
 	anim->data.action = &animation;

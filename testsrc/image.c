@@ -24,12 +24,19 @@
 #include "gl-tiled-image.h"
 #include "gl-renderloop.h"
 #include "egl-driver.h"
+#include "gl-value-animation.h"
 
 #include "../lib/linmath/linmath.h"
 
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0
+
+void animation(void *target, void *extra_data, GLfloat value)
+{
+	gl_shape *container_shape = (gl_shape *)target;
+	target->data.objectX = value;
+}
 
 int main(int argc, char *argv[])
 {
@@ -79,6 +86,15 @@ int main(int argc, char *argv[])
 	
 	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
+	
+	gl_value_animation *anim = gl_value_animation_new();
+	anim->data.target = main_container_2d;
+	anim->data.action = &animation;
+	anim->data.startValue = 0;
+	anim->data.endValue = 200;
+	anim->data.duration = 20;
+	
+	anim->f->start(anim);
 	
 	gl_renderloop_loop();
 	

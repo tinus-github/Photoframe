@@ -255,6 +255,8 @@
 		0DEED07A1E15746600C00550 /* egl-driver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "egl-driver.h"; sourceTree = "<group>"; };
 		0DEED07B1E15E10900C00550 /* gl-value-animation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-value-animation.c"; sourceTree = "<group>"; };
 		0DEED07C1E15E10900C00550 /* gl-value-animation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-value-animation.h"; sourceTree = "<group>"; };
+		0DEED07D1E15F89B00C00550 /* gl-value-animation-easing.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-value-animation-easing.c"; sourceTree = "<group>"; };
+		0DEED07E1E15F89B00C00550 /* gl-value-animation-easing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-value-animation-easing.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -676,6 +678,8 @@
 				0DEED07A1E15746600C00550 /* egl-driver.h */,
 				0DEED07B1E15E10900C00550 /* gl-value-animation.c */,
 				0DEED07C1E15E10900C00550 /* gl-value-animation.h */,
+				0DEED07D1E15F89B00C00550 /* gl-value-animation-easing.c */,
+				0DEED07E1E15F89B00C00550 /* gl-value-animation-easing.h */,
 			);
 			indentWidth = 8;
 			path = testsrc;

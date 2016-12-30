@@ -3,7 +3,8 @@
 OPTFLAGS = -O3
 
 OBJECTS = image.o loadimage.o loadexif.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
-	  gl-container.o gl-container-2d.o gl-tiled-image.o gl-renderloop.o gl-renderloop-member.o egl-driver.o
+	  gl-container.o gl-container-2d.o gl-tiled-image.o gl-renderloop.o gl-renderloop-member.o egl-driver.o \
+	  gl-value-animation.o
 LIBEXIF_A = ../lib/libexif/libexif/.libs/libexif.a
 LIBEXIF_INCLUDEDIR = -I../lib/libexif
 
@@ -27,7 +28,7 @@ image.o: image.c loadimage.h gl-texture.h gl-shape.h gl-container.h
 	 -I/opt/vc/src/hello_pi/libs/vgfont -g -c image.c -o image.o \
 	 -Wno-deprecated-declarations $(OPTFLAGS)
 
-egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h egl-driver.h
+egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h egl-driver.h gl-value-animation.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
@@ -128,6 +129,13 @@ gl-renderloop-member.o: gl-renderloop-member.c gl-renderloop.h gl-renderloop-mem
 	-ftree-vectorize -pipe -Wno-psabi \
 	-Wno-deprecated-declarations \
 	-c gl-renderloop-member.c -o gl-renderloop-member.o $(OPTFLAGS)
+
+gl-value-animation.o: gl-value-animation.c gl-value-animation.h gl-renderloop.h gl-renderloop-member.h gl-object.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations \
+	-c gl-value-animation.c -o gl-value-animation.o $(OPTFLAGS)
 
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

@@ -11,10 +11,10 @@
 
 #include <stdio.h>
 
-#include "gl-object.h
+#include "gl-object.h"
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
-#include <EGL/eglext.h>"
+#include <EGL/eglext.h>
 #include <sys/time.h>
 
 typedef struct gl_value_animation gl_value_animation;

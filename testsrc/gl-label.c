@@ -7,6 +7,8 @@
 //
 
 #include "gl-label.h"
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #define FONT_FILE "/home/pi/lib/share/font/DejaVuSerif.ttf"
 #define LABEL_HEIGHT 64

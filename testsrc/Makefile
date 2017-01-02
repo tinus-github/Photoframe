@@ -7,12 +7,15 @@ OBJECTS = image.o loadimage.o loadexif.o gl-object.o gl-texture.o gl-shape.o gl-
 	  gl-value-animation.o gl-value-animation-easing.o
 LIBEXIF_A = ../lib/libexif/libexif/.libs/libexif.a
 LIBEXIF_INCLUDEDIR = -I../lib/libexif
+LIBFREETYPE_CFLAGS = `pkg-config freetype2 --cflags`
+LIBFREETYPE_LIBS = `pkg-config freetype2 --libs`
 
 image: $(OBJECTS) $(LIBEXIF_A)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
 	-L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
-	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS)
+	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS) \
+	$(LIBFREETYPE_LIBS)
 
 image.o: image.c loadimage.h gl-texture.h gl-shape.h gl-container.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
@@ -147,6 +150,15 @@ gl-value-animation-easing.o: gl-value-animation-easing.c gl-value-animation-easi
 	-ftree-vectorize -pipe -Wno-psabi \
 	-Wno-deprecated-declarations \
 	-c gl-value-animation-easing.c -o gl-value-animation-easing.o $(OPTFLAGS)
+
+gl-label.o: gl-label.c gl-label.h gl-object.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) \
+	-c gl-label.c -o gl-label.o $(OPTFLAGS)
 
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

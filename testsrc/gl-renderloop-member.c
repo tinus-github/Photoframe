@@ -8,6 +8,7 @@
 
 #include "gl-renderloop-member.h"
 #include <string.h>
+#include <stdlib.h>
 
 static void gl_renderloop_member_run_action(gl_renderloop_member *obj);
 

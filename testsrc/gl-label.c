@@ -12,6 +12,8 @@
 #include <assert.h>
 #include <string.h>
 
+#include "gl-texture.h"
+
 #define FONT_FILE "/home/pi/lib/share/font/DejaVuSerif.ttf"
 #define LABEL_HEIGHT 64
 
@@ -158,7 +160,12 @@ static void gl_label_render(gl_label *obj)
 	
 	gl_label_blit(bitmap, dst_rect, glyph->bitmap.buffer, src_rect, 0, 0);
 	
+	gl_texture *texture = gl_texture_new();
+	texture->f->load_texture_monochrome(texture, bitmap, obj->data.windowWidth, obj->data.windowHeight);
 	
+	obj->data.tile = gl_tile_new();
+	gl_tile *tile  = obj->data.tile;
+	tile->f->set_texture(tile, texture);
 }
 
 static void gl_label_setup_freetype()

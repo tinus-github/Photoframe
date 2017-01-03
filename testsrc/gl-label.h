@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include "gl-shape.h"
+#include "gl-tile.h"
 
 typedef struct gl_label gl_label;
 
@@ -30,6 +31,8 @@ typedef struct gl_label_data {
 	uint32_t windowHeight;
 	
 	uint32_t usedWidth;
+	
+	gl_tile *tile;
 } gl_label_data;
 
 struct gl_label {

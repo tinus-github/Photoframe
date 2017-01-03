@@ -33,6 +33,21 @@ static gl_tile_program_data gl_mono_program;
 
 static uint gl_tile_program_loaded = 0;
 
+static int gl_tile_load_program_attribute_locations(gl_tile_program_data *data)
+{
+	GLuint program = data->program;
+	// Get the attribute locations
+	data->positionLoc = glGetAttribLocation ( program, "a_position" );
+	data->texCoordLoc = glGetAttribLocation ( program, "a_texCoord" );
+	
+	// Get the uniform locations
+	data->projectionLoc = glGetUniformLocation ( program, "u_projection" );
+	data->modelViewLoc  = glGetUniformLocation ( program, "u_modelView" );
+	
+	// Get the sampler location
+	data->samplerLoc = glGetUniformLocation ( program, "s_texture" );
+}
+
 static int gl_tile_load_program() {
 	GLchar vShaderStr[] =
 	"attribute vec4 a_position;            \n"
@@ -71,32 +86,14 @@ static int gl_tile_load_program() {
 	// Load the shaders and get a linked program object
 	gl_rgba_program.program = egl_driver_load_program ( vShaderStr, fShaderStr );
 	
-	// Get the attribute locations
-	gl_rgba_program.positionLoc = glGetAttribLocation ( gl_rgba_program.program, "a_position" );
-	gl_rgba_program.texCoordLoc = glGetAttribLocation ( gl_rgba_program.program, "a_texCoord" );
-	
-	// Get the uniform locations
-	gl_rgba_program.projectionLoc = glGetUniformLocation ( gl_rgba_program.program, "u_projection" );
-	gl_rgba_program.modelViewLoc  = glGetUniformLocation ( gl_rgba_program.program, "u_modelView" );
-	
-	// Get the sampler location
-	gl_rgba_program.samplerLoc = glGetUniformLocation ( gl_rgba_program.program, "s_texture" );
+	gl_tile_load_program_attribute_locations(&gl_rgba_program)
 	
 	// Monochrome
 	// Load the shaders and get a linked program object
 	gl_mono_program.program = egl_driver_load_program ( vShaderStr, fShaderBWStr );
 	
-	// Get the attribute locations
-	gl_mono_program.positionLoc = glGetAttribLocation ( gl_mono_program.program, "a_position" );
-	gl_mono_program.texCoordLoc = glGetAttribLocation ( gl_mono_program.program, "a_texCoord" );
-	
-	// Get the uniform locations
-	gl_mono_program.projectionLoc = glGetUniformLocation ( gl_mono_program.program, "u_projection" );
-	gl_mono_program.modelViewLoc  = glGetUniformLocation ( gl_mono_program.program, "u_modelView" );
-	
-	// Get the sampler location
-	gl_mono_program.samplerLoc = glGetUniformLocation ( gl_mono_program.program, "s_texture" );
-	
+	gl_tile_load_program_attribute_locations(&gl_mono_program)
+
 	gl_tile_program_loaded = 1;
 	
 	return GL_TRUE;

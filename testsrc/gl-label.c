@@ -163,6 +163,8 @@ static void gl_label_render(gl_label *obj)
 	gl_texture *texture = gl_texture_new();
 	texture->f->load_image_monochrome(texture, bitmap, obj->data.windowWidth, obj->data.windowHeight);
 	
+	texture->data.dataType = gl_texture_data_type_alpha;
+	
 	obj->data.tile = gl_tile_new();
 	gl_tile *tile  = obj->data.tile;
 	tile->f->set_texture(tile, texture);

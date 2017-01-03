@@ -11,6 +11,7 @@
 #include <assert.h>
 
 static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
+static GLuint load_image_monochrome(gl_texture *obj, unsigned char *monochrome_data, unsigned int width, unsigned int height);
 static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,
 			      unsigned int image_width, unsigned int image_height,
 			      unsigned int tile_width, unsigned int tile_height,
@@ -22,6 +23,7 @@ static void gl_texture_free(gl_object *obj);
 
 static struct gl_texture_funcs gl_texture_funcs_global = {
 	.load_image = &load_image,
+	.load_image_monochrome = &load_image_monochrome,
 	.load_image_tile = &load_image_tile,
 	.load_image_horizontal_tile = &load_image_horizontal_tile
 };
@@ -54,7 +56,7 @@ gl_texture *gl_texture_new()
 	return gl_texture_init(ret);
 }
 
-static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height)
+static GLuint load_image_gen(gl_texture *obj, unsigned char *image_data, unsigned int width, unsigned int height)
 {
 	// Texture object handle
 	GLuint textureId;
@@ -69,11 +71,15 @@ static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int
 	glBindTexture ( GL_TEXTURE_2D, textureId );
 	
 	// Load the texture
-	
-	
-	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
-		      width, height,
-		      0, GL_RGBA, GL_UNSIGNED_BYTE, rgba_data );
+	if (obj->data.isMonochrome) {
+		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RED,
+			      width, height,
+			      0, GL_RED, GL_UNSIGNED_BYTE, image_data );
+	} else {
+		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
+			      width, height,
+			      0, GL_RGBA, GL_UNSIGNED_BYTE, image_data );
+	}
 	
 	// Set the filtering mode
 	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
@@ -85,6 +91,18 @@ static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int
 	obj->data.height = height;
 	
 	return textureId;
+}
+
+static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height)
+{
+	obj->data.isMonochrome = 0;
+	return load_image_gen(obj, rgba_data, width, height);
+}
+
+static GLuint load_image_monochrome(gl_texture *obj, unsigned char *monochrome_data, unsigned int width, unsigned int height)
+{
+	obj->data.isMonochrome = 1;
+	return load_image_gen(obj, monochrome_data, width, height);
 }
 
 static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,

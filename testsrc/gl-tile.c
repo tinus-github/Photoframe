@@ -204,6 +204,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 			break;
 		case gl_texture_data_type_alpha:
 			program = &gl_alpha_program;
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			break;
 	}
 	

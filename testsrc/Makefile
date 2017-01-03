@@ -31,7 +31,7 @@ image.o: image.c loadimage.h gl-texture.h gl-shape.h gl-container.h
 	 -I/opt/vc/src/hello_pi/libs/vgfont -g -c image.c -o image.o \
 	 -Wno-deprecated-declarations $(OPTFLAGS)
 
-egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h egl-driver.h gl-value-animation.h
+egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h egl-driver.h gl-value-animation.h gl-label.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \

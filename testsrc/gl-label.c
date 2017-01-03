@@ -130,10 +130,10 @@ static void gl_label_render(gl_label *obj)
 {
 	FT_Error errorret;
 	
-	unsigned int glyph_index = FT_Get_Char_Index(global_render_data.face, 65);
-	assert (!(errorret = FT_Load_Glyph(global_render_data.face, glyph_index, FT_LOAD_DEFAULT)));
+	unsigned int glyph_index = FT_Get_Char_Index(global_rendering_data.face, 65);
+	assert (!(errorret = FT_Load_Glyph(global_rendering_data.face, glyph_index, FT_LOAD_DEFAULT)));
 	
-	FT_Glyph_Slot glyph = global_render_data.face->glyph;
+	FT_GlyphSlot glyph = global_rendering_data.face->glyph;
 	if (glyph->format != FT_GLYPH_FORMAT_BITMAP) {
 		assert (!(errorret = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL)));
 	}

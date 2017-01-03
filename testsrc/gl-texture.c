@@ -95,13 +95,13 @@ static GLuint load_image_gen(gl_texture *obj, unsigned char *image_data, unsigne
 
 static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height)
 {
-	obj->data.isMonochrome = 0;
+	obj->data.dataType = gl_texture_data_type_rgba;
 	return load_image_gen(obj, rgba_data, width, height);
 }
 
 static GLuint load_image_monochrome(gl_texture *obj, unsigned char *monochrome_data, unsigned int width, unsigned int height)
 {
-	obj->data.isMonochrome = 1;
+	obj->data.dataType = gl_texture_data_type_monochrome;
 	return load_image_gen(obj, monochrome_data, width, height);
 }
 

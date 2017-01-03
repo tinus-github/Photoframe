@@ -18,6 +18,12 @@
 
 typedef struct gl_texture gl_texture;
 
+typedef enum {
+	gl_texture_data_type_rgba = 0,
+	gl_texture_data_type_monochrome,
+	gl_texture_data_type_alpha
+} gl_texture_data_type;
+
 typedef struct gl_texture_funcs {
 	gl_object_funcs p;
 	GLuint (*load_image) (gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
@@ -38,7 +44,7 @@ typedef struct gl_texture_data {
 	GLuint width;
 	GLuint height;
 	
-	unsigned int isMonochrome;
+	gl_texture_data_type dataType;
 } gl_texture_data;
 
 struct gl_texture {

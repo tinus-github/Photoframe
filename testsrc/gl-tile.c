@@ -30,6 +30,7 @@ typedef struct gl_tile_program_data {
 
 static gl_tile_program_data gl_rgba_program;
 static gl_tile_program_data gl_mono_program;
+static gl_tile_program_data gl_alpha_program;
 
 static uint gl_tile_program_loaded = 0;
 
@@ -71,7 +72,6 @@ static int gl_tile_load_program() {
 	"  gl_FragColor = texture2D( s_texture, v_texCoord );\n"
 	"}                                                   \n";
 	
-	
 	GLchar fShaderBWStr[] =
 	"precision mediump float;                            \n"
 	"varying vec2 v_texCoord;                            \n"
@@ -83,16 +83,28 @@ static int gl_tile_load_program() {
 	"  gl_FragColor = vec4(luminance, luminance, luminance, 1);\n"
 	"}                                                   \n";
 	
+	GLchar fShaderAlphaStr[] =
+	"precision mediump float;                            \n"
+	"varying vec2 v_texCoord;                            \n"
+	"uniform sampler2D s_texture;                        \n"
+	"void main()                                         \n"
+	"{                                                   \n"
+	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
+	"  float luminance = texelColor.a;                   \n"
+	"  gl_FragColor = vec4(1, 1, 1, luminance);\n"
+	"}                                                   \n";
+	
 	// Load the shaders and get a linked program object
 	gl_rgba_program.program = egl_driver_load_program ( vShaderStr, fShaderStr );
-	
 	gl_tile_load_program_attribute_locations(&gl_rgba_program);
 	
 	// Monochrome
-	// Load the shaders and get a linked program object
 	gl_mono_program.program = egl_driver_load_program ( vShaderStr, fShaderBWStr );
-	
 	gl_tile_load_program_attribute_locations(&gl_mono_program);
+
+	// Alpha
+	gl_alpha_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaStr );
+	gl_tile_load_program_attribute_locations(&gl_alpha_program);
 
 	gl_tile_program_loaded = 1;
 	
@@ -114,7 +126,6 @@ static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture)
 	}
 	
 	obj->data.texture = texture;
-	obj->data.isMonochrome = texture->data.isMonochrome;
 	
 	if (texture) {
 		shape_self->data.objectWidth = texture->data.width;
@@ -184,10 +195,16 @@ static void gl_tile_draw(gl_shape *shape_self)
 	
 	gl_tile_program_data *program;
 	
-	if (texture->data.isMonochrome) {
-		program = &gl_mono_program;
-	} else {
-		program = &gl_rgba_program;
+	switch (texture->data.dataType) {
+		case gl_texture_data_type_rgba:
+			program = &gl_rgba_program;
+			break;
+		case gl_texture_data_type_monochrome:
+			program = &gl_mono_program;
+			break
+		case gl_texture_data_type_alpha:
+			program = &gl_alpha_program;
+			break;
 	}
 	
 	GLfloat vVertices[] = { 0.0f, 0.0f, 0.0f,  // Position 0

@@ -20,12 +20,18 @@ static struct gl_tile_funcs gl_tile_funcs_global = {
 static gl_shape *gl_tile_obj_parent;
 
 static GLuint gl_tile_programObject;
-static GLint
-		gl_tile_programPositionLoc,
-		gl_tile_programTexCoordLoc,
-		gl_tile_programProjectionLoc,
-		gl_tile_programModelViewLoc,
-		gl_tile_programSamplerLoc;
+
+typedef struct gl_tile_program_data {
+	GLuint program;
+	GLint positionLoc;
+	GLint texCoordLoc;
+	GLint ProjectionLoc;
+	GLint ModelViewLoc;
+	GLint SamplerLoc;
+} gl_tile_program_data;
+
+static gl_tile_program_data gl_rgba_program;
+static gl_tile_program_data gl_mono_program;
 
 static uint gl_tile_program_loaded = 0;
 
@@ -52,20 +58,46 @@ static int gl_tile_load_program() {
 	"  gl_FragColor = texture2D( s_texture, v_texCoord );\n"
 	"}                                                   \n";
 	
+	
+	GLchar fShaderBWStr[] =
+	"precision mediump float;                            \n"
+	"varying vec2 v_texCoord;                            \n"
+	"uniform sampler2D s_texture;                        \n"
+	"void main()                                         \n"
+	"{                                                   \n"
+	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
+	"  float luminance = texelColor.r;                   \n"
+	"  gl_FragColor = vec4(luminance, luminance, luminance, 1);\n"
+	"}                                                   \n";
+	
 	// Load the shaders and get a linked program object
-	gl_tile_programObject = egl_driver_load_program ( vShaderStr, fShaderStr );
+	gl_rgba_program.program = egl_driver_load_program ( vShaderStr, fShaderStr );
 	
 	// Get the attribute locations
-	gl_tile_programPositionLoc = glGetAttribLocation ( gl_tile_programObject, "a_position" );
-	gl_tile_programTexCoordLoc = glGetAttribLocation ( gl_tile_programObject, "a_texCoord" );
+	gl_rgba_program.positionLoc = glGetAttribLocation ( gl_rgba_program.program, "a_position" );
+	gl_rgba_program.texCoordLoc = glGetAttribLocation ( gl_rgba_program.program, "a_texCoord" );
 	
 	// Get the uniform locations
-	gl_tile_programProjectionLoc = glGetUniformLocation ( gl_tile_programObject, "u_projection" );
-	gl_tile_programModelViewLoc  = glGetUniformLocation ( gl_tile_programObject, "u_modelView" );
+	gl_rgba_program.projectionLoc = glGetUniformLocation ( gl_rgba_program.program, "u_projection" );
+	gl_rgba_program.modelViewLoc  = glGetUniformLocation ( gl_rgba_program.program, "u_modelView" );
 	
 	// Get the sampler location
-	gl_tile_programSamplerLoc = glGetUniformLocation ( gl_tile_programObject, "s_texture" );
+	gl_rgba_program.samplerLoc = glGetUniformLocation ( gl_rgba_program.program, "s_texture" );
 	
+	// Monochrome
+	// Load the shaders and get a linked program object
+	gl_mono_program.program = egl_driver_load_program ( vShaderStr, fShaderBWStr );
+	
+	// Get the attribute locations
+	gl_mono_program.positionLoc = glGetAttribLocation ( gl_mono_program.program, "a_position" );
+	gl_mono_program.texCoordLoc = glGetAttribLocation ( gl_mono_program.program, "a_texCoord" );
+	
+	// Get the uniform locations
+	gl_mono_program.projectionLoc = glGetUniformLocation ( gl_mono_program.program, "u_projection" );
+	gl_mono_program.modelViewLoc  = glGetUniformLocation ( gl_mono_program.program, "u_modelView" );
+	
+	// Get the sampler location
+	gl_mono_program.samplerLoc = glGetUniformLocation ( gl_mono_program.program, "s_texture" );
 	
 	gl_tile_program_loaded = 1;
 	
@@ -87,6 +119,7 @@ static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture)
 	}
 	
 	obj->data.texture = texture;
+	obj->data.isMonochrome = texture->data.isMonochrome;
 	
 	if (texture) {
 		shape_self->data.objectWidth = texture->data.width;
@@ -154,6 +187,14 @@ static void gl_tile_draw(gl_shape *shape_self)
 		gl_tile_load_program();
 	}
 	
+	gl_tile_program_data *program;
+	
+	if (texture->data.isMonochrome) {
+		program = &gl_mono_program;
+	} else {
+		program = &gl_rgba_program;
+	}
+	
 	GLfloat vVertices[] = { 0.0f, 0.0f, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0
 		0.0f,  1.0f, 0.0f,  // Position 1
@@ -166,30 +207,30 @@ static void gl_tile_draw(gl_shape *shape_self)
 	
 	GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
 	
-	// Use the program object
-	glUseProgram ( gl_tile_programObject );
-	
-	// Load the vertex position
-	glVertexAttribPointer ( gl_tile_programPositionLoc, 3, GL_FLOAT,
-			       GL_FALSE, 5 * sizeof(GLfloat), vVertices );
-	// Load the texture coordinate
-	glVertexAttribPointer ( gl_tile_programTexCoordLoc, 2, GL_FLOAT,
-			       GL_FALSE, 5 * sizeof(GLfloat), &vVertices[3] );
-	
-	glEnableVertexAttribArray ( gl_tile_programPositionLoc );
-	glEnableVertexAttribArray ( gl_tile_programTexCoordLoc );
-	
 	// Bind the texture
 	glActiveTexture ( GL_TEXTURE0 );
 	glBindTexture ( GL_TEXTURE_2D, texture->data.textureId );
 	
+	// Use the program object
+	glUseProgram ( program->program );
+	
+	// Load the vertex position
+	glVertexAttribPointer ( program->positionLoc, 3, GL_FLOAT,
+			       GL_FALSE, 5 * sizeof(GLfloat), vVertices );
+	// Load the texture coordinate
+	glVertexAttribPointer ( program->texCoordLoc, 2, GL_FLOAT,
+			       GL_FALSE, 5 * sizeof(GLfloat), &vVertices[3] );
+	
+	glEnableVertexAttribArray ( program->positionLoc );
+	glEnableVertexAttribArray ( program->texCoordLoc );
+	
 	// Set the sampler texture unit to 0
-	glUniform1i ( gl_tile_programSamplerLoc, 0 );
+	glUniform1i ( program->samplerLoc, 0 );
 	
 	shape_self->f->compute_projection(shape_self);
 	
-	glUniformMatrix4fv ( gl_tile_programProjectionLoc, 1, GL_FALSE, (GLfloat *)stage->data.projection);
-	glUniformMatrix4fv ( gl_tile_programModelViewLoc,  1, GL_FALSE, (GLfloat *)shape_self->data.computed_modelView);
+	glUniformMatrix4fv ( program->projectionLoc, 1, GL_FALSE, (GLfloat *)stage->data.projection);
+	glUniformMatrix4fv ( program->modelViewLoc,  1, GL_FALSE, (GLfloat *)shape_self->data.computed_modelView);
 
 	
 	glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );

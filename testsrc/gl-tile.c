@@ -201,7 +201,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 			break;
 		case gl_texture_data_type_monochrome:
 			program = &gl_mono_program;
-			break
+			break;
 		case gl_texture_data_type_alpha:
 			program = &gl_alpha_program;
 			break;

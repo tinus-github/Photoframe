@@ -64,7 +64,7 @@ static int gl_tile_load_program() {
 	"void main()                                         \n"
 	"{                                                   \n"
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
-	"  float luminance = texelColor.r;                   \n"
+	"  float luminance = texelColor.a;                   \n"
 	"  gl_FragColor = vec4(luminance, luminance, luminance, 1);\n"
 	"}                                                   \n";
 	

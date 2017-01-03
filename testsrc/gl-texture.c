@@ -72,9 +72,9 @@ static GLuint load_image_gen(gl_texture *obj, unsigned char *image_data, unsigne
 	
 	// Load the texture
 	if (obj->data.isMonochrome) {
-		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RED,
+		glTexImage2D ( GL_TEXTURE_2D, 0, GL_ALPHA,
 			      width, height,
-			      0, GL_RED, GL_UNSIGNED_BYTE, image_data );
+			      0, GL_ALPHA, GL_UNSIGNED_BYTE, image_data );
 	} else {
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
 			      width, height,

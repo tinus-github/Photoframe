@@ -140,7 +140,7 @@ static void gl_label_render(gl_label *obj)
 		assert (!(errorret = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL)));
 	}
 	
-	unsigned char *bitmap = calloc(1, obj->data.windowWidth * obj->data.windowHeight);
+	unsigned char *bitmap = calloc(1, obj->data.windowWidth * obj->data.windowHeight);
 	
 	gl_label_rect dst_rect_stack;
 	gl_label_rect *dst_rect = &dst_rect_stack;
@@ -154,7 +154,7 @@ static void gl_label_render(gl_label *obj)
 	src_rect_stack.x = glyph->bitmap_left;
 	src_rect_stack.y = glyph->bitmap_top;
 	src_rect_stack.width = glyph->bitmap.width;
-	src_rect_stack.height = glyph->bitmap.height;
+	src_rect_stack.height = glyph->bitmap.rows;
 	
 	gl_label_blit(bitmap, dst_rect, glyph->bitmap.buffer, src_rect, 0, 0);
 	

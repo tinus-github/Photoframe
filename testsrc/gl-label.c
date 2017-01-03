@@ -15,7 +15,8 @@
 #define FONT_FILE "/home/pi/lib/share/font/DejaVuSerif.ttf"
 #define LABEL_HEIGHT 64
 
-void gl_label_free(gl_object *obj);
+static void gl_label_free(gl_object *obj);
+static void gl_label_render(gl_label *obj);
 
 static struct gl_label_funcs gl_label_funcs_global = {
 	.render = &gl_label_render
@@ -123,6 +124,39 @@ static void gl_label_blit(char *dest, gl_label_rect *dest_rect, char *src, gl_la
 			}
 		}
 	}
+}
+
+static void gl_label_render(gl_label *obj)
+{
+	FT_Error errorret;
+	
+	unsigned int glyph_index = FT_Get_Char_Index(global_render_data.face, 65);
+	assert (!(errorret = FT_Load_Glyph(global_render_data.face, glyph_index, FT_LOAD_DEFAULT)));
+	
+	FT_Glyph_Slot glyph = global_render_data.face->glyph;
+	if (glyph->format != FT_GLYPH_FORMAT_BITMAP) {
+		assert (!(errorret = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL)));
+	}
+	
+	unsigned char *bitmap = calloc(1, obj->windowWidth * obj->windowHeight);
+	
+	gl_label_rect dst_rect_stack;
+	gl_label_rect *dst_rect = &dst_rect_stack;
+	dst_rect_stack.x = obj->windowX;
+	dst_rect_stack.y = obj->windowY;
+	dst_rect_stack.width = obj->windowWidth;
+	dst_rect_stack.height = obj->windowHeight;
+	
+	gl_label_rect src_rect_stack;
+	gl_label_rect *src_rect = &src_rect_stack;
+	src_rect_stack.x = glyph->bitmap_left;
+	src_rect_stack.y = glyph->bitmap_top;
+	src_rect_stack.width = glyph->bitmap.width;
+	src_rect_stack.height = glyph->bitmap.height;
+	
+	gl_label_blit(bitmap, dst_rect, glyph->bitmap.buffer, 0, 0);
+	
+	
 }
 
 static void gl_label_setup_freetype()

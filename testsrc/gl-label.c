@@ -77,17 +77,22 @@ static gl_label_rect *gl_label_copy_rect(gl_label_rect *rect)
 {
 	gl_label_rect *ret = malloc(sizeof(gl_label_rect));
 	memcpy (ret, rect, sizeof(gl_label_rect));
+	
+	return ret;
 }
 
 static void gl_label_blit(char *dest, gl_label_rect *dest_rect, char *src, gl_label_rect *src_rect, int offset_x, int offset_y)
 {
-	gl_label_rect *dst_clipped_rect = gl_label_copy_rect(src_rect);
+	gl_label_rect dst_clipped_rect_stack;
+	
+	gl_label_rect *dst_clipped_rect = &dst_clipped_rect_stack;
+	memcpy(dst_clipped_rect, src_rect, sizeof(gl_label_rect));
+	
 	dst_clipped_rect->x += offset_x;
 	dst_clipped_rect->y += offset_y;
 	
 	unsigned int work_to_do = gl_label_clip_rect(dst_clipped_rect, dest_rect);
 	if (!work_to_do) {
-		free(dst_clipped_rect);
 		return;
 	}
 	
@@ -99,8 +104,6 @@ static void gl_label_blit(char *dest, gl_label_rect *dest_rect, char *src, gl_la
 	
 	int counter_x;
 	int counter_y;
-	int this_x;
-	int this_y;
 	int this_dst_x;
 	int this_dst_y;
 	int this_src_x;
@@ -109,11 +112,9 @@ static void gl_label_blit(char *dest, gl_label_rect *dest_rect, char *src, gl_la
 	int this_src_index;
 	
 	for (counter_y = dst_clipped_rect->y; counter_y < y2; counter_y++) {
-		this_y = counter_y - src_offset_y;
 		this_dst_y = counter_y - dest_rect->y;
 		this_src_y = (counter_y - src_offset_y) - src_rect->y;
 		for (counter_x = dst_clipped_rect->x; counter_x < x2; counter_x++) {
-			this_x = counter_x - src_offset_x;
 			this_dst_x = counter_x - dest_rect->x;
 			this_src_x = (counter_x - src_offset_x) - src_rect->x;
 			this_dst_index = this_dst_x + (dest_rect->width * this_dst_y);
@@ -131,7 +132,6 @@ static void gl_label_blit(char *dest, gl_label_rect *dest_rect, char *src, gl_la
 		}
 	}
 }
-
 
 static void gl_label_setup_freetype()
 {

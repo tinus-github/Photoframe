@@ -9,13 +9,15 @@ LIBEXIF_A = ../lib/libexif/libexif/.libs/libexif.a
 LIBEXIF_INCLUDEDIR = -I../lib/libexif
 LIBFREETYPE_CFLAGS = `pkg-config freetype2 --cflags`
 LIBFREETYPE_LIBS = `pkg-config freetype2 --libs`
+LIBHARFBUZZ_CFLAGS = `pkg-config harfbuzz --cflags`
+LIBHARFBUZZ_LIBS = `pkg-config harfbuzz --libs`
 
 image: $(OBJECTS) $(LIBEXIF_A)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
 	-L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
 	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS) \
-	$(LIBFREETYPE_LIBS)
+	$(LIBFREETYPE_LIBS) $(LIBHARFBUZZ_LIBS)
 
 image.o: image.c loadimage.h gl-texture.h gl-shape.h gl-container.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
@@ -157,7 +159,7 @@ gl-label.o: gl-label.c gl-label.h gl-object.h gl-texture.h gl-tile.h
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) \
+	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
 	-c gl-label.c -o gl-label.o $(OPTFLAGS)
 
 loadimage.o: loadimage.c loadimage.h

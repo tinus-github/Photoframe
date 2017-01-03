@@ -86,13 +86,13 @@ static int gl_tile_load_program() {
 	// Load the shaders and get a linked program object
 	gl_rgba_program.program = egl_driver_load_program ( vShaderStr, fShaderStr );
 	
-	gl_tile_load_program_attribute_locations(&gl_rgba_program)
+	gl_tile_load_program_attribute_locations(&gl_rgba_program);
 	
 	// Monochrome
 	// Load the shaders and get a linked program object
 	gl_mono_program.program = egl_driver_load_program ( vShaderStr, fShaderBWStr );
 	
-	gl_tile_load_program_attribute_locations(&gl_mono_program)
+	gl_tile_load_program_attribute_locations(&gl_mono_program);
 
 	gl_tile_program_loaded = 1;
 	

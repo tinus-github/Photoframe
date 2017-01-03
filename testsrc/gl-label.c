@@ -73,14 +73,6 @@ static unsigned int gl_label_clip_rect(gl_label_rect *rect, gl_label_rect *mask)
 	return ret;
 }
 
-static gl_label_rect *gl_label_copy_rect(gl_label_rect *rect)
-{
-	gl_label_rect *ret = malloc(sizeof(gl_label_rect));
-	memcpy (ret, rect, sizeof(gl_label_rect));
-	
-	return ret;
-}
-
 static void gl_label_blit(char *dest, gl_label_rect *dest_rect, char *src, gl_label_rect *src_rect, int offset_x, int offset_y)
 {
 	gl_label_rect dst_clipped_rect_stack;

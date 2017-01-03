@@ -73,27 +73,6 @@ static int gl_tile_load_program() {
 }
 
 
-static void gl_tile_copyTexCoordsForRotation(unsigned int rotation, GLfloat *target)
-{
-	GLfloat coordSets[8][8] = {
-		{0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f}, //1: Normal
-		{1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f}, //2: Flipped horizontally
-		{1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f}, //3: Upside down
-		{0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f}, //4: Flipped vertically
-		{1.0f, 1.0f,  0.0f, 1.0f,  0.0f, 0.0f,  1.0f, 0.0f}, //5: Rotated left, then flipped vertically
-		{0.0f, 1.0f,  1.0f, 1.0f,  1.0f, 0.0f,  0.0f, 0.0f}, //6: Rotated right
-		{0.0f, 0.0f,  1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f}, //7: Rotated right, then flipped vertically
-		{1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f} }; //8: Rotated left
-	
-	if ((rotation < 1) || (rotation > 8)) {
-		rotation = 1;
-	}
-	
-	memcpy (target, coordSets[rotation - 1], sizeof(GLfloat) * 8);
-}
-
-
-
 // Takes over the reference that was held by the caller
 // You may also send NULL to remove the texture
 static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture)
@@ -167,10 +146,6 @@ gl_tile *gl_tile_new()
 //
 static void gl_tile_draw(gl_shape *shape_self)
 {
-//	ImageInstanceData *userData = p_state->user_data;
-//	GLShapeInstanceData *shapeData = &userData->shape;
-//	GLImageDisplayData *displayData = p_state->imageDisplayData;
-	
 	gl_tile *self = (gl_tile *)shape_self;
 	gl_texture *texture = self->data.texture;
 	gl_stage *stage = gl_stage_get_global_stage();
@@ -188,17 +163,6 @@ static void gl_tile_draw(gl_shape *shape_self)
 		1.0f,  0.0f, 0.0f,  // Position 3
 		1.0f,  0.0f         // TexCoord 3
 	};
-	
-	GLfloat texCoords[8];
-	gl_tile_copyTexCoordsForRotation(texture->data.orientation, texCoords);
-	vVertices[3] = texCoords[0];
-	vVertices[4] = texCoords[1];
-	vVertices[8] = texCoords[2];
-	vVertices[9] = texCoords[3];
-	vVertices[13] = texCoords[4];
-	vVertices[14] = texCoords[5];
-	vVertices[18] = texCoords[6];
-	vVertices[19] = texCoords[7];
 	
 	GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
 	
@@ -229,5 +193,4 @@ static void gl_tile_draw(gl_shape *shape_self)
 
 	
 	glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
-	//glDrawElements ( GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_SHORT, indices );
 }

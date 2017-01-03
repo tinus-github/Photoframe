@@ -19,15 +19,13 @@ static struct gl_tile_funcs gl_tile_funcs_global = {
 
 static gl_shape *gl_tile_obj_parent;
 
-static GLuint gl_tile_programObject;
-
 typedef struct gl_tile_program_data {
 	GLuint program;
 	GLint positionLoc;
 	GLint texCoordLoc;
-	GLint ProjectionLoc;
-	GLint ModelViewLoc;
-	GLint SamplerLoc;
+	GLint projectionLoc;
+	GLint modelViewLoc;
+	GLint samplerLoc;
 } gl_tile_program_data;
 
 static gl_tile_program_data gl_rgba_program;

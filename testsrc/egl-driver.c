@@ -144,6 +144,8 @@ static void egl_driver_init_display(egl_driver_data *data)
 	// connect the context to the surface
 	result = eglMakeCurrent(data->display, data->surface, data->surface, data->context);
 	assert(EGL_FALSE != result);
+	
+	glEnable(GL_BLEND);
 }
 
 static void egl_driver_register_renderloop(egl_driver_data *data)

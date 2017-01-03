@@ -33,7 +33,7 @@ static gl_tile_program_data gl_mono_program;
 
 static uint gl_tile_program_loaded = 0;
 
-static int gl_tile_load_program_attribute_locations(gl_tile_program_data *data)
+static void gl_tile_load_program_attribute_locations(gl_tile_program_data *data)
 {
 	GLuint program = data->program;
 	// Get the attribute locations

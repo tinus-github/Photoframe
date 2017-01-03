@@ -74,7 +74,9 @@ static unsigned int gl_label_clip_rect(gl_label_rect *rect, gl_label_rect *mask)
 	return ret;
 }
 
-static void gl_label_blit(char *dest, gl_label_rect *dest_rect, char *src, gl_label_rect *src_rect, int offset_x, int offset_y)
+static void gl_label_blit(unsigned char *dest, gl_label_rect *dest_rect,
+			  unsigned char *src, gl_label_rect *src_rect,
+			  int offset_x, int offset_y)
 {
 	gl_label_rect dst_clipped_rect_stack;
 	
@@ -138,14 +140,14 @@ static void gl_label_render(gl_label *obj)
 		assert (!(errorret = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL)));
 	}
 	
-	unsigned char *bitmap = calloc(1, obj->windowWidth * obj->windowHeight);
+	unsigned char *bitmap = calloc(1, obj->data.windowWidth * obj->data.windowHeight);
 	
 	gl_label_rect dst_rect_stack;
 	gl_label_rect *dst_rect = &dst_rect_stack;
-	dst_rect_stack.x = obj->windowX;
-	dst_rect_stack.y = obj->windowY;
-	dst_rect_stack.width = obj->windowWidth;
-	dst_rect_stack.height = obj->windowHeight;
+	dst_rect_stack.x = obj->data.windowX;
+	dst_rect_stack.y = obj->data.windowY;
+	dst_rect_stack.width = obj->data.windowWidth;
+	dst_rect_stack.height = obj->data.windowHeight;
 	
 	gl_label_rect src_rect_stack;
 	gl_label_rect *src_rect = &src_rect_stack;
@@ -154,7 +156,7 @@ static void gl_label_render(gl_label *obj)
 	src_rect_stack.width = glyph->bitmap.width;
 	src_rect_stack.height = glyph->bitmap.height;
 	
-	gl_label_blit(bitmap, dst_rect, glyph->bitmap.buffer, 0, 0);
+	gl_label_blit(bitmap, dst_rect, glyph->bitmap.buffer, src_rect, 0, 0);
 	
 	
 }

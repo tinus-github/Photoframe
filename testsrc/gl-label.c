@@ -96,10 +96,10 @@ static void gl_label_blit(unsigned char *dest, gl_label_rect *dest_rect,
 	int blit_end_y = src_rect->height;
 	
 	if (total_offset_x < 0) {
-		blit_start_x = -offset_x;
+		blit_start_x = -total_offset_x;
 	}
 	if (total_offset_y < 0) {
-		blit_start_y = -offset_y;
+		blit_start_y = -total_offset_y;
 	}
 	
 	if ((blit_end_x + total_offset_x) > dest_rect->width) {
@@ -132,9 +132,6 @@ static void gl_label_render_character(gl_label *obj, uint32_t glyph_index, int32
 		assert (!(errorret = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL)));
 	}
 	
-	int ft_x = glyph->bitmap_left;
-	int ft_y = glyph->bitmap_top;
-	
 	gl_label_rect dst_rect_stack;
 	gl_label_rect *dst_rect = &dst_rect_stack;
 	dst_rect_stack.x = obj->data.windowX;
@@ -144,12 +141,12 @@ static void gl_label_render_character(gl_label *obj, uint32_t glyph_index, int32
 	
 	gl_label_rect src_rect_stack;
 	gl_label_rect *src_rect = &src_rect_stack;
-	src_rect_stack.x = glyph->bitmap_left;
-	src_rect_stack.y = glyph->bitmap_top;
+	src_rect_stack.x = -glyph->bitmap_left;
+	src_rect_stack.y = -glyph->bitmap_top;
 	src_rect_stack.width = glyph->bitmap.width;
 	src_rect_stack.height = glyph->bitmap.rows;
 	
-	gl_label_blit(bitmap, dst_rect, glyph->bitmap.buffer, src_rect, x + ft_x, y + ft_y);
+	gl_label_blit(bitmap, dst_rect, glyph->bitmap.buffer, src_rect, x, y);
 }
 
 static void gl_label_render(gl_label *obj)

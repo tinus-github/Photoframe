@@ -11,7 +11,7 @@
 #include FT_FREETYPE_H
 #include <assert.h>
 #include <string.h>
-#include <hb.h>
+#include <hb-ft.h>
 
 #include "gl-texture.h"
 

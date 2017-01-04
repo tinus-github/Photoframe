@@ -17,6 +17,7 @@
 
 #define FONT_FILE "/home/pi/lib/share/font/DejaVuSerif.ttf"
 #define LABEL_HEIGHT 64
+#define LABEL_BASELINE 40
 
 static void gl_label_free(gl_object *obj);
 static void gl_label_render(gl_label *obj);
@@ -158,7 +159,7 @@ static void gl_label_render(gl_label *obj)
 	uint32_t counter;
 	for (counter = 0; counter < obj->data.numGlyphs; counter++) {
 		gl_label_glyph_data *glyphdata = &obj->data.glyphData[counter];
-		gl_label_render_character(obj, glyphdata->codepoint, glyphdata->x / 64, glyphdata->y / 64, bitmap);
+		gl_label_render_character(obj, glyphdata->codepoint, glyphdata->x / 64, LABEL_BASELINE + (glyphdata->y / 64), bitmap);
 	}
 	
 	gl_texture *texture = gl_texture_new();

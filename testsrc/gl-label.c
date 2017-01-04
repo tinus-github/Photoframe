@@ -20,7 +20,7 @@
 
 static void gl_label_free(gl_object *obj);
 static void gl_label_render(gl_label *obj);
-static void gl_label_layout(gl_label *obj)
+static void gl_label_layout(gl_label *obj);
 
 static struct gl_label_funcs gl_label_funcs_global = {
 	.render = &gl_label_render

@@ -95,18 +95,18 @@ static void gl_label_blit(unsigned char *dest, gl_label_rect *dest_rect,
 	int blit_start_y = 0;
 	int blit_end_y = src_rect->height;
 	
-	if (offset_x < 0) {
+	if (total_offset_x < 0) {
 		blit_start_x = -offset_x;
 	}
-	if (offset_y < 0) {
+	if (total_offset_y < 0) {
 		blit_start_y = -offset_y;
 	}
 	
-	if ((blit_end_x + offset_x) > dest_rect->width) {
-		blit_end_x = dest_rect->width - offset_x;
+	if ((blit_end_x + total_offset_x) > dest_rect->width) {
+		blit_end_x = dest_rect->width - total_offset_x;
 	}
-	if ((blit_end_y + offset_y) > dest_rect->height) {
-		blit_end_y = dest_rect->height - offset_y;
+	if ((blit_end_y + total_offset_y) > dest_rect->height) {
+		blit_end_y = dest_rect->height - total_offset_y;
 	}
 	
 	if ((blit_end_x <= blit_start_x) ||

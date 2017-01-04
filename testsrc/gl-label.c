@@ -17,7 +17,7 @@
 
 #define FONT_FILE "/home/pi/lib/share/font/DejaVuSerif.ttf"
 #define LABEL_HEIGHT 64
-#define LABEL_BASELINE 40
+#define LABEL_BASELINE LABEL_HEIGHT
 
 static void gl_label_free(gl_object *obj);
 static void gl_label_render(gl_label *obj);

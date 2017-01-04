@@ -224,8 +224,19 @@ static void gl_label_setup_freetype()
 	assert (!(errorret = FT_New_Face(global_rendering_data.library, FONT_FILE, 0, &global_rendering_data.face)));
 
 	assert (!(errorret = FT_Set_Char_Size(global_rendering_data.face, 0, LABEL_HEIGHT*64, 72,72)));
+	
+	int counter;
+	for(counter = 0; counter < global_rendering_data.face->num_charmaps; counter++) {
+		if (((global_rendering_data.face->charmaps[counter]->platform_id == 0)
+		     && (global_rendering_data.face->charmaps[counter]->encoding_id == 3))
+		    ||
+		    ((global_rendering_data.face->charmaps[counter]->platform_id == 3)
+		     && (global_rendering_data.face->charmaps[counter]->encoding_id == 1))) {
+			    FT_Set_Charmap(global_rendering_data.face, global_rendering_data.face->charmaps[counter]);
+		    }
+	}
 }
-			       
+
 static void gl_label_setup_harfbuzz()
 {
 	global_rendering_data.hb_language = hb_language_from_string("en", strlen("en"));

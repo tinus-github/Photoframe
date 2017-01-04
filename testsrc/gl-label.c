@@ -194,7 +194,7 @@ static void gl_label_layout(gl_label *obj)
 	
 	for(counter = 0; counter < obj->data.numGlyphs; counter++) {
 		obj->data.glyphData[counter].x = cursorX + glyph_pos[counter].x_offset;
-		obj->data.glyphData[counter].y = cursorY + glyph_pos[counter].y_offset;
+		obj->data.glyphData[counter].y = cursorY - glyph_pos[counter].y_offset;
 		cursorX += glyph_pos[counter].x_advance;
 		cursorY += glyph_pos[counter].y_advance;
 		

@@ -229,7 +229,7 @@ static void gl_label_setup_freetype()
 static void gl_label_setup_harfbuzz()
 {
 	global_rendering_data.hb_language = hb_language_from_string("en", strlen("en"));
-	global_rendering_data.hb_font = hb_ft_font_create(global_rendering_data.face);
+	global_rendering_data.hb_font = hb_ft_font_create(global_rendering_data.face, NULL);
 }
 
 void gl_label_setup()

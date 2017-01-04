@@ -80,15 +80,24 @@ int main(int argc, char *argv[])
 	gl_shape *main_container_2d_shape = (gl_shape *)main_container_2d;
 	
 	tiled_image->f->load_image(tiled_image, image, width, height, orientation, 128);
-	
 	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)tiled_image);
+	
+	gl_label *label = gl_label_new();
+	label->data.windowWidth = 256;
+	label->data.windowHeight = 160;
+	label->data.text = "Hello!";
+	label->f->render(label);
+	gl_tile *tile = label->data.tile;
+	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)label->data.tile);
+
 	main_container_2d_shape->data.objectX = 50.0;
-	main_container_2d->data.scaleH = 2.0;
-	main_container_2d->data.scaleV = 2.0;
+	main_container_2d->data.scaleH = 1.0;
+	main_container_2d->data.scaleV = 1.0;
 	
 	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
-	
+
+#if 0
 	gl_value_animation_easing *anim_easing = gl_value_animation_easing_new();
 	gl_value_animation *anim = (gl_value_animation *)anim_easing;
 	anim->data.target = main_container_2d;
@@ -100,6 +109,7 @@ int main(int argc, char *argv[])
 	anim_easing->data.easingType = gl_value_animation_ease_QuinticEaseInOut;
 	
 	anim->f->start(anim);
+#endif
 	
 	gl_renderloop_loop();
 	

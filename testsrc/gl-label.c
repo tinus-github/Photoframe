@@ -142,7 +142,7 @@ static void gl_label_render_character(gl_label *obj, uint32_t glyph_index, int32
 	
 	gl_label_rect src_rect_stack;
 	gl_label_rect *src_rect = &src_rect_stack;
-	src_rect_stack.x = -glyph->bitmap_left;
+	src_rect_stack.x = glyph->bitmap_left;
 	src_rect_stack.y = -glyph->bitmap_top;
 	src_rect_stack.width = glyph->bitmap.width;
 	src_rect_stack.height = glyph->bitmap.rows;

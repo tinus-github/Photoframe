@@ -92,13 +92,13 @@ static void gl_label_blit(unsigned char *dest, gl_label_rect *dest_rect,
 	dst_clipped_rect->x += offset_x;
 	dst_clipped_rect->y += offset_y;
 	
-	int src_offset_x = -src_rect->x;
-	int src_offset_y = -src_rect->y;
-	
 	unsigned int work_to_do = gl_label_clip_rect(dst_clipped_rect, dest_rect);
 	if (!work_to_do) {
 		return;
 	}
+	
+	int src_offset_x = (dst_clipped_rect->x - offset_x) - src_rect->x;
+	int src_offset_y = (dst_clipped_rect->y - offset_y) - src_rect->y;
 	
 	int x2 = dst_clipped_rect->x + dst_clipped_rect->width;
 	int y2 = dst_clipped_rect->y + dst_clipped_rect->height;

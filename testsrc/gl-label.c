@@ -45,81 +45,21 @@ struct rendering_data global_rendering_data;
 
 static void (*gl_object_free_org_global) (gl_object *obj);
 
-/* returns 0 if the rect is empty */
-static unsigned int gl_label_clip_rect(gl_label_rect *rect, gl_label_rect *mask)
+static void gl_label_blit_preclipped(unsigned char* dest, unsigned int dest_stride,
+				     unsigned char* src,  unsigned int src_stride,
+				     unsigned int src_start_x, unsigned int src_end_x,
+				     unsigned int src_start_y, unsigned int src_end_y,
+				     int offset_x, int offset_y)
 {
-	unsigned int difference;
-	int ret = 1;
-	if ((rect->x >= (mask->x + mask->width)) ||
-	    (rect->y >= (mask->y + mask->height)) ||
-	    ((rect->x + rect->width) <= mask->x) ||
-	    ((rect->y + rect->height) <= mask->y)) {
-		ret = 0;
-	}
+	unsigned int counter_y;
+	unsigned int counter_x;
 	
-	if (rect->x < mask->x) {
-		difference = mask->x - rect->x;
-		rect->x += difference;
-		rect->width -= difference;
-	}
-	if (rect->y < mask->y) {
-		difference = mask->y - rect->y;
-		rect->y += difference;
-		rect->width -= difference;
-	}
-	
-	if ((rect->x + rect->width) > (mask->x + mask->width)) {
-		difference = rect->x + rect->width - (mask->x + mask->width);
-		rect->width -= difference;
-	}
-	if ((rect->y + rect->height) > (mask->y + mask->height)) {
-		difference = rect->y + rect->height - (mask->y + mask->height);
-		rect->height -= difference;
-	}
-	
-	return ret;
-}
-
-static void gl_label_blit(unsigned char *dest, gl_label_rect *dest_rect,
-			  unsigned char *src, gl_label_rect *src_rect,
-			  int offset_x, int offset_y)
-{
-	gl_label_rect dst_clipped_rect_stack;
-	
-	gl_label_rect *dst_clipped_rect = &dst_clipped_rect_stack;
-	memcpy(dst_clipped_rect, src_rect, sizeof(gl_label_rect));
-	
-	dst_clipped_rect->x += offset_x;
-	dst_clipped_rect->y += offset_y;
-	
-	unsigned int work_to_do = gl_label_clip_rect(dst_clipped_rect, dest_rect);
-	if (!work_to_do) {
-		return;
-	}
-	
-	int src_offset_x = (dst_clipped_rect->x - offset_x) - src_rect->x;
-	int src_offset_y = (dst_clipped_rect->y - offset_y) - src_rect->y;
-	
-	int x2 = dst_clipped_rect->x + dst_clipped_rect->width;
-	int y2 = dst_clipped_rect->y + dst_clipped_rect->height;
-	
-	int counter_x;
-	int counter_y;
-	int this_dst_x;
-	int this_dst_y;
-	int this_src_x;
-	int this_src_y;
-	int this_dst_index;
-	int this_src_index;
-	
-	for (counter_y = dst_clipped_rect->y; counter_y < y2; counter_y++) {
-		this_dst_y = counter_y - dest_rect->y;
-		this_src_y = (counter_y - src_offset_y) - src_rect->y;
-		for (counter_x = dst_clipped_rect->x; counter_x < x2; counter_x++) {
-			this_dst_x = counter_x - dest_rect->x;
-			this_src_x = (counter_x - src_offset_x) - src_rect->x;
-			this_dst_index = this_dst_x + (dest_rect->width * this_dst_y);
-			this_src_index = this_src_x + (src_rect->width * this_src_y);
+	for (counter_y = src_start_y; counter_y < src_end_y; counter_y++) {
+		this_dst_y = offset_y + counter_y;
+		for (counter_x = src_start_x; counter_x < src_end_x; counter_x++) {
+			this_dst_x = offset_x + counter_x;
+			this_dst_index = this_dst_x + (dest_stride * this_dst_y);
+			this_src_index = counter_x + (src_stride * counter_y);
 			switch (src[this_src_index]) {
 				case 0:
 					break;
@@ -128,10 +68,53 @@ static void gl_label_blit(unsigned char *dest, gl_label_rect *dest_rect,
 					break;
 				default:
 					dest[this_dst_index] = src[this_src_index] +
-								(((255 - src[this_src_index]) * dest[this_dst_index]) / 255);
+					(((255 - src[this_src_index]) * dest[this_dst_index]) / 255);
 			}
 		}
 	}
+}
+
+static void gl_label_blit(unsigned char *dest, gl_label_rect *dest_rect,
+			  unsigned char *src, gl_label_rect *src_rect,
+			  int offset_x, int offset_y)
+{
+	int total_offset_x = offset_x;
+	int total_offset_y = offset_y;
+	
+	total_offset_x += src_rect->x;
+	total_offset_y += src_rect->y;
+	total_offset_x -= dst_rect->x;
+	total_offset_y -= dst_rect->y;
+	
+	int blit_start_x = 0;
+	int blit_end_x = src_rect->width;
+	int blit_start_y = 0;
+	int blit_end_y = src_rect->height;
+	
+	if (offset_x < 0) {
+		blit_start_x = -offset_x;
+	}
+	if (offset_y < 0) {
+		blit_start_y = -offset_y;
+	}
+	
+	if ((blit_end_x + offset_x) > dst_rect->width) {
+		blit_end_x = dst_rect->width - offset_x;
+	}
+	if ((blit_end_y + offset_y) > dst_rect->height) {
+		blit_end_y = dst_rect->height - offset_y;
+	}
+	
+	if ((blit_end_x <= blit_start_x) ||
+	    (blit_end_y <= blit_start_y)) {
+		return;
+	}
+	
+	gl_label_blit_preclipped(dest, dest_rect->width,
+				 src, src_rect->width,
+				 blit_start_x, blit_end_x,
+				 blit_start_y, blit_end_y,
+				 total_offset_x, total_offset_y);
 }
 
 static void gl_label_render_character(gl_label *obj, uint32_t glyph_index, int32_t x, int32_t y, unsigned char* bitmap)

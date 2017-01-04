@@ -172,8 +172,8 @@ static void gl_label_render(gl_label *obj)
 	
 	uint32_t counter;
 	for (counter = 0; counter < obj->data.numGlyphs; counter++) {
-		gl_label_glyph_data *glyphdata = obj->data.glyphData[counter];
-		gl_label_render_character(obj, glyphdata->codepoint, glyphdata->x, glyphdata->y, bitmap)
+		gl_label_glyph_data *glyphdata = &obj->data.glyphData[counter];
+		gl_label_render_character(obj, glyphdata->codepoint, glyphdata->x, glyphdata->y, bitmap);
 	}
 	
 	gl_texture *texture = gl_texture_new();
@@ -189,9 +189,9 @@ static void gl_label_render(gl_label *obj)
 static void gl_label_layout(gl_label *obj)
 {
 	hb_buffer_t *buf = hb_buffer_create();
-	hb_buffer_add_utf8(buf, text, strlen(obj->data.text), 0, strlen(obj->data.text));
+	hb_buffer_add_utf8(buf, obj->data.text, strlen(obj->data.text), 0, strlen(obj->data.text));
 	hb_buffer_set_direction(buf, HB_DIRECTION_LTR);
-	hb_buffer_set_language(global_rendering_data.hb_language);
+	hb_buffer_set_language(buf, global_rendering_data.hb_language);
 	
 	hb_shape(global_rendering_data.hb_font,
 		 buf,
@@ -202,9 +202,9 @@ static void gl_label_layout(gl_label *obj)
 	hb_glyph_position_t *glyph_pos = hb_buffer_get_glyph_positions(buf, &obj->data.numGlyphs);
 	
 	uint32_t counter;
-	int32_t cursurX = 0;
+	int32_t cursorX = 0;
 	int32_t cursorY = 0;
-	obj->data.glyphData = calloc(obj->data.numGlyphs, sizeof(gl_label_glyph_data));)
+	obj->data.glyphData = calloc(obj->data.numGlyphs, sizeof(gl_label_glyph_data));
 	
 	for(counter = 0; counter < obj->data.numGlyphs; counter++) {
 		obj->data.glyphData[counter].x = cursorX + glyph_pos[counter].x_offset;

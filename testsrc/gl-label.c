@@ -53,6 +53,10 @@ static void gl_label_blit_preclipped(unsigned char* dest, unsigned int dest_stri
 {
 	unsigned int counter_y;
 	unsigned int counter_x;
+	int this_dst_x;
+	int this_dst_y;
+	unsigned int this_src_index;
+	unsigned int this_dst_index;
 	
 	for (counter_y = src_start_y; counter_y < src_end_y; counter_y++) {
 		this_dst_y = offset_y + counter_y;
@@ -83,8 +87,8 @@ static void gl_label_blit(unsigned char *dest, gl_label_rect *dest_rect,
 	
 	total_offset_x += src_rect->x;
 	total_offset_y += src_rect->y;
-	total_offset_x -= dst_rect->x;
-	total_offset_y -= dst_rect->y;
+	total_offset_x -= dest_rect->x;
+	total_offset_y -= dest_rect->y;
 	
 	int blit_start_x = 0;
 	int blit_end_x = src_rect->width;
@@ -98,11 +102,11 @@ static void gl_label_blit(unsigned char *dest, gl_label_rect *dest_rect,
 		blit_start_y = -offset_y;
 	}
 	
-	if ((blit_end_x + offset_x) > dst_rect->width) {
-		blit_end_x = dst_rect->width - offset_x;
+	if ((blit_end_x + offset_x) > dest_rect->width) {
+		blit_end_x = dest_rect->width - offset_x;
 	}
-	if ((blit_end_y + offset_y) > dst_rect->height) {
-		blit_end_y = dst_rect->height - offset_y;
+	if ((blit_end_y + offset_y) > dest_rect->height) {
+		blit_end_y = dest_rect->height - offset_y;
 	}
 	
 	if ((blit_end_x <= blit_start_x) ||

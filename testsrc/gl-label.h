@@ -21,6 +21,12 @@ typedef struct gl_label_funcs {
 	void (*render) (gl_label *obj);
 } gl_label_funcs;
 
+typedef struct gl_label_glyph_data {
+	uint32_t codepoint;
+	int32_t x;
+	int32_t y;
+} gl_label_glyph_data;
+
 typedef struct gl_label_data {
 	gl_shape_data p;
 	
@@ -33,6 +39,9 @@ typedef struct gl_label_data {
 	uint32_t usedWidth;
 	
 	gl_tile *tile;
+	
+	uint32_t numGlyphs;
+	gl_label_glyph_data *glyphData;
 } gl_label_data;
 
 struct gl_label {

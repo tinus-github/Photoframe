@@ -11,6 +11,7 @@
 #include FT_FREETYPE_H
 #include <assert.h>
 #include <string.h>
+#include <hb.h>
 
 #include "gl-texture.h"
 
@@ -19,6 +20,7 @@
 
 static void gl_label_free(gl_object *obj);
 static void gl_label_render(gl_label *obj);
+static void gl_label_layout(gl_label *obj)
 
 static struct gl_label_funcs gl_label_funcs_global = {
 	.render = &gl_label_render
@@ -28,6 +30,8 @@ struct rendering_data {
 	FT_Library library;
 	FT_Face face;
 	
+	hb_language_t hb_language;
+	hb_font_t *hb_font;
 };
 
 typedef struct gl_label_rect {
@@ -130,11 +134,11 @@ static void gl_label_blit(unsigned char *dest, gl_label_rect *dest_rect,
 	}
 }
 
-static void gl_label_render(gl_label *obj)
+static void gl_label_render_character(gl_label *obj, uint32_t codepoint, int32_t x, int32_t y, unsigned char* bitmap)
 {
 	FT_Error errorret;
 	
-	unsigned int glyph_index = FT_Get_Char_Index(global_rendering_data.face, 65);
+	unsigned int glyph_index = FT_Get_Char_Index(global_rendering_data.face, codepoint);
 	assert (!(errorret = FT_Load_Glyph(global_rendering_data.face, glyph_index, FT_LOAD_DEFAULT)));
 	
 	FT_GlyphSlot glyph = global_rendering_data.face->glyph;
@@ -142,7 +146,6 @@ static void gl_label_render(gl_label *obj)
 		assert (!(errorret = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL)));
 	}
 	
-	unsigned char *bitmap = calloc(1, obj->data.windowWidth * obj->data.windowHeight);
 	
 	gl_label_rect dst_rect_stack;
 	gl_label_rect *dst_rect = &dst_rect_stack;
@@ -158,7 +161,20 @@ static void gl_label_render(gl_label *obj)
 	src_rect_stack.width = glyph->bitmap.width;
 	src_rect_stack.height = glyph->bitmap.rows;
 	
-	gl_label_blit(bitmap, dst_rect, glyph->bitmap.buffer, src_rect, 0, 0);
+	gl_label_blit(bitmap, dst_rect, glyph->bitmap.buffer, src_rect, x, y);
+}
+
+static void gl_label_render(gl_label *obj)
+{
+	gl_label_layout(obj);
+
+	unsigned char *bitmap = calloc(1, obj->data.windowWidth * obj->data.windowHeight);
+	
+	uint32_t counter;
+	for (counter = 0; counter < obj->data.numGlyphs; counter++) {
+		gl_label_glyph_data *glyphdata = obj->data.glyphData[counter];
+		gl_label_render_character(obj, glyphdata->codepoint, glyphdata->x, glyphdata->y, bitmap)
+	}
 	
 	gl_texture *texture = gl_texture_new();
 	texture->f->load_image_monochrome(texture, bitmap, obj->data.windowWidth, obj->data.windowHeight);
@@ -170,6 +186,36 @@ static void gl_label_render(gl_label *obj)
 	tile->f->set_texture(tile, texture);
 }
 
+static void gl_label_layout(gl_label *obj)
+{
+	hb_buffer_t *buf = hb_buffer_create();
+	hb_buffer_add_utf8(buf, text, strlen(obj->data.text), 0, strlen(obj->data.text));
+	hb_buffer_set_direction(buf, HB_DIRECTION_LTR);
+	hb_buffer_set_language(global_rendering_data.hb_language);
+	
+	hb_shape(global_rendering_data.hb_font,
+		 buf,
+		 NULL,
+		 0);
+	
+	hb_glyph_info_t *glyph_info = hb_buffer_get_glyph_infos(buf, &obj->data.numGlyphs);
+	hb_glyph_position_t *glyph_pos = hb_buffer_get_glyph_positions(buf, &obj->data.numGlyphs);
+	
+	uint32_t counter;
+	int32_t cursurX = 0;
+	int32_t cursorY = 0;
+	obj->data.glyphData = calloc(obj->data.numGlyphs, sizeof(gl_label_glyph_data));)
+	
+	for(counter = 0; counter < obj->data.numGlyphs; counter++) {
+		obj->data.glyphData[counter].x = cursorX + glyph_pos[counter].x_offset;
+		obj->data.glyphData[counter].y = cursorY + glyph_pos[counter].y_offset;
+		cursorX += glyph_pos[counter].x_advance;
+		cursorY += glyph_pos[counter].y_advance;
+		
+		obj->data.glyphData[counter].codepoint = glyph_info[counter].codepoint;
+	}
+}
+
 static void gl_label_setup_freetype()
 {
 	FT_Error errorret;
@@ -178,6 +224,12 @@ static void gl_label_setup_freetype()
 	assert (!(errorret = FT_New_Face(global_rendering_data.library, FONT_FILE, 0, &global_rendering_data.face)));
 
 	assert (!(errorret = FT_Set_Char_Size(global_rendering_data.face, 0, LABEL_HEIGHT*64, 72,72)));
+}
+			       
+static void gl_label_setup_harfbuzz()
+{
+	global_rendering_data.hb_language = hb_language_from_string("en", strlen("en"));
+	global_rendering_data.hb_font = hb_ft_font_create(global_rendering_data.face);
 }
 
 void gl_label_setup()
@@ -193,6 +245,7 @@ void gl_label_setup()
 	parent_obj->f->free(parent_obj);
 	
 	gl_label_setup_freetype();
+	gl_label_setup_harfbuzz();
 }
 
 gl_label *gl_label_init(gl_label *obj)

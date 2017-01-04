@@ -134,11 +134,10 @@ static void gl_label_blit(unsigned char *dest, gl_label_rect *dest_rect,
 	}
 }
 
-static void gl_label_render_character(gl_label *obj, uint32_t codepoint, int32_t x, int32_t y, unsigned char* bitmap)
+static void gl_label_render_character(gl_label *obj, uint32_t glyph_index, int32_t x, int32_t y, unsigned char* bitmap)
 {
 	FT_Error errorret;
 	
-	unsigned int glyph_index = FT_Get_Char_Index(global_rendering_data.face, codepoint);
 	assert (!(errorret = FT_Load_Glyph(global_rendering_data.face, glyph_index, FT_LOAD_DEFAULT)));
 	
 	FT_GlyphSlot glyph = global_rendering_data.face->glyph;

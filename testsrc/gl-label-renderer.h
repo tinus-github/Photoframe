@@ -34,7 +34,7 @@ typedef struct gl_label_renderer_data {
 	char *text; //UTF8
 	uint32_t numGlyphs;
 	gl_label_renderer_glyph_data *glyphData;
-};
+} gl_label_renderer_data;
 
 struct gl_label_renderer {
 	gl_label_renderer_funcs *f;

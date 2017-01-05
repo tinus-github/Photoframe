@@ -216,6 +216,8 @@ static void gl_label_renderer_layout(gl_label_renderer *obj)
 	int32_t cursorY = 0;
 	obj->data.glyphData = calloc(obj->data.numGlyphs, sizeof(gl_label_renderer_glyph_data));
 	
+	obj->data.totalWidth = 0;
+	
 	for(counter = 0; counter < obj->data.numGlyphs; counter++) {
 		obj->data.glyphData[counter].x = cursorX + glyph_pos[counter].x_offset;
 		obj->data.glyphData[counter].y = cursorY - glyph_pos[counter].y_offset;
@@ -223,6 +225,10 @@ static void gl_label_renderer_layout(gl_label_renderer *obj)
 		cursorY += glyph_pos[counter].y_advance;
 		
 		obj->data.glyphData[counter].codepoint = glyph_info[counter].codepoint;
+		
+		if (cursorX > obj->data.totalWidth) {
+			obj->data.totalWidth = cursorX;
+		}
 	}
 	
 	hb_buffer_destroy(buf);

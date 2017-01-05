@@ -27,9 +27,11 @@ static void gl_label_render(gl_label *obj)
 	
 	renderer->f->layout(renderer);
 	// TODO: check final width
+	obj->data.textWidth = renderer->data.totalWidth;
+	
 	obj->data.tile = renderer->f->render(renderer,
 					     0, 0,
-					     obj->data.width,
+					     obj->data.textWidth,
 					     obj->data.height);
 	
 }

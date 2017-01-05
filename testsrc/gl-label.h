@@ -29,7 +29,7 @@ typedef struct gl_label_data {
 	uint32_t width;
 	uint32_t height;
 	
-	uint32_t maxWidth;
+	uint32_t textWidth;
 	
 	gl_label_renderer *renderer;
 	gl_tile *tile;

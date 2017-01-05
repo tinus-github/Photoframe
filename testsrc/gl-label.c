@@ -156,13 +156,22 @@ static void gl_label_render(gl_label *obj)
 
 	unsigned char *bitmap = calloc(1, obj->data.windowWidth * obj->data.windowHeight);
 	
+	FT_Face *face = &global_rendering_data.face;
+	
 	uint32_t counter;
+	uint32_t x_ppem = face->size.metrics.x_ppem;
+	uint32_t maxwidth = ((face->bbox.xMax - face->bbox.xMin) * x_ppem) / face->units_per_EM;
+	
+	int32_t minx = (obj->data.windowX - maxwidth) * 64;
+	int32_t maxx = (obj->data.windowX + obj->data.windowWidth + maxwidth) * 64;
 	for (counter = 0; counter < obj->data.numGlyphs; counter++) {
-		gl_label_glyph_data *glyphdata = &obj->data.glyphData[counter];
-		gl_label_render_character(obj, glyphdata->codepoint,
-					  (glyphdata->x / 64),
-					  LABEL_BASELINE + (glyphdata->y / 64),
-					  bitmap);
+		if ((glyphdata->x >= minx ) && (glyphdata->x <= maxx)) {
+			gl_label_glyph_data *glyphdata = &obj->data.glyphData[counter];
+			gl_label_render_character(obj, glyphdata->codepoint,
+						  (glyphdata->x / 64),
+						  LABEL_BASELINE + (glyphdata->y / 64),
+						  bitmap);
+		}
 	}
 	
 	gl_texture *texture = gl_texture_new();

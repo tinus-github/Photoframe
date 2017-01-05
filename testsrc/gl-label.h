@@ -11,19 +11,19 @@
 
 #include <stdio.h>
 
-#include "gl-shape.h"
+#include "gl-container-2d.h"
 #include "gl-tile.h"
 #include "gl-label-renderer.h"
 
 typedef struct gl_label gl_label;
 
 typedef struct gl_label_funcs {
-	gl_shape_funcs p;
+	gl_container_2d_funcs p;
 	void (*render) (gl_label *obj);
 } gl_label_funcs;
 
 typedef struct gl_label_data {
-	gl_shape_data p;
+	gl_container_2d_data p;
 	
 	char *text;
 	uint32_t width;

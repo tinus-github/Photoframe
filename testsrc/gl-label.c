@@ -36,9 +36,9 @@ static void gl_label_render(gl_label *obj)
 
 void gl_label_setup()
 {
-	gl_shape *parent = gl_shape_new();
+	gl_container_2d *parent = gl_container_2d_new();
 	gl_object *parent_obj = (gl_object *)parent;
-	memcpy(&gl_label_funcs_global.p, parent->f, sizeof(gl_shape_funcs));
+	memcpy(&gl_label_funcs_global.p, parent->f, sizeof(gl_container_2d_funcs));
 	
 	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_label_funcs_global;
 	gl_object_free_org_global = obj_funcs_global->free;
@@ -51,7 +51,7 @@ void gl_label_setup()
 
 gl_label *gl_label_init(gl_label *obj)
 {
-	gl_shape_init((gl_shape *)obj);
+	gl_container_2d_init((gl_container_2d *)obj);
 	
 	obj->f = &gl_label_funcs_global;
 	

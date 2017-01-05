@@ -24,11 +24,14 @@
 static gl_tile *gl_label_renderer_render(gl_label_renderer *obj,
 					 int32_t windowX, int32_t windowY, int32_t windowWidth, int32_t windowHeight);
 static void gl_label_renderer_layout(gl_label_renderer *obj);
+static void gl_label_renderer_free(gl_object *obj_obj);
 
 static struct gl_label_renderer_funcs gl_label_renderer_funcs_global = {
 	.layout = &gl_label_renderer_layout,
 	.render = &gl_label_renderer_render
 };
+
+static void (*gl_object_free_org_global) (gl_object *obj);
 
 struct rendering_data {
 	FT_Library library;
@@ -211,7 +214,7 @@ static void gl_label_renderer_layout(gl_label_renderer *obj)
 	uint32_t counter;
 	int32_t cursorX = 0;
 	int32_t cursorY = 0;
-	obj->data.glyphData = calloc(obj->data.numGlyphs, sizeof(gl_label_glyph_data));
+	obj->data.glyphData = calloc(obj->data.numGlyphs, sizeof(gl_label_renderer_glyph_data));
 	
 	for(counter = 0; counter < obj->data.numGlyphs; counter++) {
 		obj->data.glyphData[counter].x = cursorX + glyph_pos[counter].x_offset;
@@ -265,4 +268,13 @@ void gl_label_renderer_setup()
 	
 	gl_label_renderer_setup_freetype();
 	gl_label_renderer_setup_harfbuzz();
+}
+
+static void gl_label_renderer_free(gl_object *obj_obj)
+{
+	gl_label_renderer *obj = (gl_label_renderer *)obj_obj;
+	free(obj->data.text);
+	free(obj->data.glyphData);
+	
+	gl_object_free_org_global(obj_obj);
 }

@@ -13,6 +13,7 @@
 
 #include "gl-shape.h"
 #include "gl-tile.h"
+#include "gl-label-renderer.h"
 
 typedef struct gl_label gl_label;
 
@@ -21,27 +22,17 @@ typedef struct gl_label_funcs {
 	void (*render) (gl_label *obj);
 } gl_label_funcs;
 
-typedef struct gl_label_glyph_data {
-	uint32_t codepoint;
-	int32_t x;
-	int32_t y;
-} gl_label_glyph_data;
-
 typedef struct gl_label_data {
 	gl_shape_data p;
 	
 	char *text;
-	uint32_t windowX;
-	uint32_t windowY;
-	uint32_t windowWidth;
-	uint32_t windowHeight;
+	uint32_t width;
+	uint32_t height;
 	
-	uint32_t usedWidth;
+	uint32_t maxWidth;
 	
+	gl_label_renderer *renderer;
 	gl_tile *tile;
-	
-	uint32_t numGlyphs;
-	gl_label_glyph_data *glyphData;
 } gl_label_data;
 
 struct gl_label {

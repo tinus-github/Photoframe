@@ -17,6 +17,7 @@ static void gl_value_animation_start(gl_value_animation *obj);
 static void gl_value_animation_pause(gl_value_animation *obj);
 static void gl_value_animation_done(gl_value_animation *obj);
 static void gl_value_animation_tick(void *target, gl_renderloop_member *renderloop_member, void *action_data);
+static void gl_value_animation_set_speed(gl_value_animation *obj, GLfloat speed);
 static GLfloat gl_value_animation_calculate_value(gl_value_animation *obj,
 						  GLfloat normalized_time_elapsed, GLfloat startValue, GLfloat endValue);
 static GLfloat gl_value_animation_calculate_value_normalized(gl_value_animation *obj, GLfloat normalized_time_elapsed);
@@ -27,6 +28,7 @@ static struct gl_value_animation_funcs gl_value_animation_funcs_global = {
 	.done = &gl_value_animation_done,
 	.calculate_value = &gl_value_animation_calculate_value,
 	.calculate_value_normalized = &gl_value_animation_calculate_value_normalized,
+	.set_speed = &gl_value_animation_set_speed,
 };
 
 static void gl_value_animation_start(gl_value_animation *obj)
@@ -103,6 +105,19 @@ static void gl_value_animation_tick(void *target, gl_renderloop_member *renderlo
 	}
 }
 
+/* Calculates the duration to match this speed (for a linear animation) and set it */
+static void gl_value_animation_set_speed(gl_value_animation *obj, GLfloat speed)
+{
+	GLfloat distance = obj->data.endValue - obj->data.startValue;
+	if (distance < 0.0) {
+		distance = -distance;
+	} else if (distance == 0.0) {
+		obj->data.duration = 1.0; return;
+	}
+	
+	obj->data.duration = distance / speed;
+}
+
 static GLfloat gl_value_animation_calculate_value(gl_value_animation *obj, GLfloat normalized_time_elapsed, GLfloat startValue, GLfloat endValue)
 {
 	GLfloat normalized_current_value = obj->f->calculate_value_normalized(obj, normalized_time_elapsed);
@@ -114,7 +129,6 @@ static GLfloat gl_value_animation_calculate_value_normalized(gl_value_animation 
 {
 	return normalized_time_elapsed;
 }
-
 
 static void gl_value_animation_done(gl_value_animation *obj)
 {

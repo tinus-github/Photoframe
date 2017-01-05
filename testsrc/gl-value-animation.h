@@ -29,6 +29,7 @@ typedef struct gl_value_animation_funcs {
 	GLfloat (*calculate_value) (gl_value_animation *obj,
 				    GLfloat normalized_time_elapsed, GLfloat startValue, GLfloat endValue);
 	GLfloat (*calculate_value_normalized) (gl_value_animation *obj, GLfloat normalized_time_elapsed);
+	void (*gl_value_animation_set_speed) (gl_value_animation *obj, GLfloat speed);
 	void (*done) (gl_value_animation *obj);
 } gl_value_animation_funcs;
 

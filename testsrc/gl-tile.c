@@ -196,6 +196,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 	gl_tile_program_data *program;
 	
 	switch (texture->data.dataType) {
+		default:
 		case gl_texture_data_type_rgba:
 			program = &gl_rgba_program;
 			break;

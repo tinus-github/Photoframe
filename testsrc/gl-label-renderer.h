@@ -26,7 +26,7 @@ typedef struct gl_label_renderer_funcs {
 	gl_object_funcs p;
 	void (*layout) (gl_label_renderer *obj);
 	gl_tile* (*render) (gl_label_renderer *obj, int32_t windowX, int32_t windowY, int32_t windowWidth, int32_t windowHeight);
-} gl_label_funcs;
+} gl_label_renderer_funcs;
 
 typedef struct gl_label_renderer_data {
 	gl_object_data p;

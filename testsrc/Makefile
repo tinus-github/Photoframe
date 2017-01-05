@@ -162,7 +162,7 @@ gl-label.o: gl-label.c gl-label.h gl-object.h gl-texture.h gl-tile.h
 	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
 	-c gl-label.c -o gl-label.o $(OPTFLAGS)
 
-gl-label.o: gl-label-renderer.c gl-label-renderer.h gl-object.h gl-texture.h gl-tile.h
+gl-label-renderer.o: gl-label-renderer.c gl-label-renderer.h gl-object.h gl-texture.h gl-tile.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \

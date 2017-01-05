@@ -159,7 +159,10 @@ static void gl_label_render(gl_label *obj)
 	uint32_t counter;
 	for (counter = 0; counter < obj->data.numGlyphs; counter++) {
 		gl_label_glyph_data *glyphdata = &obj->data.glyphData[counter];
-		gl_label_render_character(obj, glyphdata->codepoint, glyphdata->x / 64, LABEL_BASELINE + (glyphdata->y / 64), bitmap);
+		gl_label_render_character(obj, glyphdata->codepoint,
+					  (glyphdata->x / 64) - obj->data.windowX,
+					  LABEL_BASELINE + (glyphdata->y / 64) -  obj->data.windowY,
+					  bitmap);
 	}
 	
 	gl_texture *texture = gl_texture_new();

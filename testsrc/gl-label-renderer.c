@@ -23,6 +23,7 @@
 
 static gl_tile *gl_label_renderer_render(gl_label_renderer *obj,
 					 int32_t windowX, int32_t windowY, int32_t windowWidth, int32_t windowHeight);
+static void gl_label_renderer_layout(gl_label_renderer *obj);
 
 static struct gl_label_renderer_funcs gl_label_renderer_funcs_global = {
 	.layout = &gl_label_renderer_layout,
@@ -143,10 +144,10 @@ static void gl_label_renderer_render_character(gl_label_renderer *obj,
 	src_rect_stack.width = glyph->bitmap.width;
 	src_rect_stack.height = glyph->bitmap.rows;
 	
-	gl_label_blit(bitmap, bitmap_rect, glyph->bitmap.buffer, src_rect, x, y);
+	gl_label_renderer_blit(bitmap, bitmap_rect, glyph->bitmap.buffer, src_rect, x, y);
 }
 
-static gt_tile *gl_label_renderer_render(gl_label_renderer *obj,
+static gl_tile *gl_label_renderer_render(gl_label_renderer *obj,
 					 int32_t windowX, int32_t windowY, int32_t windowWidth, int32_t windowHeight)
 {
 	//gl_label_renderer_layout(obj);
@@ -154,10 +155,10 @@ static gt_tile *gl_label_renderer_render(gl_label_renderer *obj,
 	unsigned char *bitmap = calloc(1, windowWidth * windowHeight);
 	gl_label_renderer_rect bitmap_rect_stack;
 	gl_label_renderer_rect *bitmap_rect = &bitmap_rect_stack;
-	bitmap_rect->windowX = windowX;
-	bitmap_rect->windowY = windowY;
-	bitmap_rect->windowWidth = windowWidth;
-	bitmap_rect->windowHeight = windowHeight;
+	bitmap_rect->x = windowX;
+	bitmap_rect->y = windowY;
+	bitmap_rect->width = windowWidth;
+	bitmap_rect->height = windowHeight;
 	
 	FT_Face face = global_rendering_data.face;
 	
@@ -168,7 +169,7 @@ static gt_tile *gl_label_renderer_render(gl_label_renderer *obj,
 	int32_t minx = (windowX - maxwidth) * 64;
 	int32_t maxx = (windowX + windowWidth + maxwidth) * 64;
 	for (counter = 0; counter < obj->data.numGlyphs; counter++) {
-		gl_label_glyph_data *glyphdata = &obj->data.glyphData[counter];
+		gl_label_renderer_glyph_data *glyphdata = &obj->data.glyphData[counter];
 		if (glyphdata->x > maxx) {
 			break;
 		}
@@ -181,12 +182,11 @@ static gt_tile *gl_label_renderer_render(gl_label_renderer *obj,
 	}
 	
 	gl_texture *texture = gl_texture_new();
-	texture->f->load_image_monochrome(texture, bitmap, obj->data.windowWidth, obj->data.windowHeight);
+	texture->f->load_image_monochrome(texture, bitmap, windowWidth, windowHeight);
 	
 	texture->data.dataType = gl_texture_data_type_alpha;
 	
-	obj->data.tile = gl_tile_new();
-	gl_tile *tile  = obj->data.tile;
+	gl_tile *tile = gl_tile_new();
 	tile->f->set_texture(tile, texture);
 	
 	return tile;

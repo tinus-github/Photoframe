@@ -153,7 +153,7 @@ gl-value-animation-easing.o: gl-value-animation-easing.c gl-value-animation-easi
 	-Wno-deprecated-declarations \
 	-c gl-value-animation-easing.c -o gl-value-animation-easing.o $(OPTFLAGS)
 
-gl-label.o: gl-label.c gl-label.h gl-object.h gl-texture.h gl-tile.h
+gl-label.o: gl-label.c gl-label.h gl-container-2d.h gl-container.h gl-shape.h gl-object.h gl-texture.h gl-tile.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \

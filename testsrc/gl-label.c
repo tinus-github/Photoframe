@@ -166,7 +166,10 @@ static void gl_label_render(gl_label *obj)
 	int32_t maxx = (obj->data.windowX + obj->data.windowWidth + maxwidth) * 64;
 	for (counter = 0; counter < obj->data.numGlyphs; counter++) {
 		gl_label_glyph_data *glyphdata = &obj->data.glyphData[counter];
-		if ((glyphdata->x >= minx ) && (glyphdata->x <= maxx)) {
+		if (glyphdata->x > maxx) {
+			break;
+		}
+		if (glyphdata->x >= minx ) {
 			gl_label_render_character(obj, glyphdata->codepoint,
 						  (glyphdata->x / 64),
 						  LABEL_BASELINE + (glyphdata->y / 64),

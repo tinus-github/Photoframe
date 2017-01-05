@@ -231,6 +231,8 @@ static void gl_label_renderer_layout(gl_label_renderer *obj)
 		}
 	}
 	
+	obj->data.totalWidth = obj->data.totalWidth / 64;
+	
 	hb_buffer_destroy(buf);
 }
 

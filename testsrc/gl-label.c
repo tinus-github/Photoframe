@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <string.h>
 
+#define SEGMENT_WIDTH 512
 
 static void gl_label_free(gl_object *obj);
 static void gl_label_render(gl_label *obj);
@@ -29,11 +30,22 @@ static void gl_label_render(gl_label *obj)
 	// TODO: check final width
 	obj->data.textWidth = renderer->data.totalWidth;
 	
-	obj->data.tile = renderer->f->render(renderer,
-					     0, 0,
-					     obj->data.textWidth,
-					     obj->data.height);
+	uint32_t cursor = 0;
+	gl_tile *tile;
+	gl_shape *tile_shape;
+	gl_container *obj_container = (gl_container *)obj;
 	
+	while (cursor < obj->data.textWidth) {
+		tile = renderer->f->render(renderer,
+					   cursor, 0,
+					   SEGMENT_WIDTH,
+					   obj->data.height);
+		tile_shape = (gl_shape *)tile;
+		tile_shape->data.objectX = cursor;
+		
+		obj_container->f->append_child(obj_container, tile_shape);
+		cursor += SEGMENT_WIDTH;
+	}
 }
 
 void gl_label_setup()

@@ -156,7 +156,7 @@ static void gl_label_render(gl_label *obj)
 
 	unsigned char *bitmap = calloc(1, obj->data.windowWidth * obj->data.windowHeight);
 	
-	FT_Face *face = &global_rendering_data.face;
+	FT_Face face = global_rendering_data.face;
 	
 	uint32_t counter;
 	uint32_t x_ppem = face->size.metrics.x_ppem;

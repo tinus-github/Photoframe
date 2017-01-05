@@ -270,7 +270,7 @@ void gl_label_renderer_setup()
 	gl_label_renderer_setup_harfbuzz();
 }
 
-gl_label_renderer *gl_label_init(gl_label_renderer *obj)
+gl_label_renderer *gl_label_renderer_init(gl_label_renderer *obj)
 {
 	gl_object_init((gl_object *)obj);
 	

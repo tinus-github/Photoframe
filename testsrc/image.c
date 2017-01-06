@@ -37,8 +37,12 @@
 void animation(void *target, void *extra_data, GLfloat value)
 {
 	gl_shape *container_shape = (gl_shape *)target;
+	gl_label_scroller_segment *label_seg = (gl_label_scroller_segment *)target;
 	container_shape->data.objectX = value;
 	container_shape->f->set_computed_projection_dirty(container_shape);
+	
+	label_seg->data.exposedSectionLeft = -value;
+	label_seg->f->render(label_seg);
 }
 
 int main(int argc, char *argv[])
@@ -83,7 +87,7 @@ int main(int argc, char *argv[])
 	tiled_image->f->load_image(tiled_image, image, width, height, orientation, 128);
 	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)tiled_image);
 	
-	gl_label *label = gl_label_new();
+	gl_label_scroller_segment *label = gl_label_scroller_segment_new();
 	label->data.windowWidth = 256;
 	label->data.windowHeight = 160;
 	label->data.text = "Hello!";

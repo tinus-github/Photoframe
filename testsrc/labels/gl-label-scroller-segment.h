@@ -13,7 +13,7 @@
 
 #include "gl-container-2d.h"
 #include "gl-tile.h"
-#include "gl-label-renderer.h"
+#include "labels/gl-label-renderer.h"
 
 typedef struct gl_label_scroller_segment gl_label_scroller_segment;
 typedef struct gl_label_scroller_segment_child_data gl_label_scroller_segment_child_data;

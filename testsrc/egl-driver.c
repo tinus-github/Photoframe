@@ -18,8 +18,8 @@
 #include "gl-renderloop.h"
 #include "gl-value-animation.h"
 #include "gl-value-animation-easing.h"
-#include "gl-label.h"
-#include "gl-label-scroller-segment.h"
+#include "labels/gl-label.h"
+#include "labels/gl-label-scroller-segment.h"
 
 #include <bcm_host.h>
 

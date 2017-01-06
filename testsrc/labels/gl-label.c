@@ -6,7 +6,7 @@
 //
 //
 
-#include "gl-label.h"
+#include "labels/gl-label.h"
 #include <assert.h>
 #include <string.h>
 

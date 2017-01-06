@@ -6,7 +6,7 @@
 //
 //
 
-#include "gl-label-renderer.h"
+#include "labels/gl-label-renderer.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

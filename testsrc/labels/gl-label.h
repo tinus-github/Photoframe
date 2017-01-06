@@ -13,7 +13,7 @@
 
 #include "gl-container-2d.h"
 #include "gl-tile.h"
-#include "gl-label-renderer.h"
+#include "labels/gl-label-renderer.h"
 
 typedef struct gl_label gl_label;
 

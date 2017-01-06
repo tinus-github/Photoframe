@@ -262,7 +262,7 @@
 		0DFBB1C51E1E90CE00E50758 /* gl-label-renderer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-label-renderer.c"; sourceTree = "<group>"; };
 		0DFBB1C61E1E90CE00E50758 /* gl-label-renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-label-renderer.h"; sourceTree = "<group>"; };
 		0DFBB1C71E1FDFDB00E50758 /* gl-label-scroller-segment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-label-scroller-segment.c"; sourceTree = "<group>"; };
-		0DFBB1C81E1FDFDB00E50758 /* gl-label-scroller-segment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-label-scroller-segment.h"; sourceTree = "<group>"; };
+		0DFBB1CA1E204CAE00E50758 /* gl-label-scroller-segment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-label-scroller-segment.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -651,6 +651,7 @@
 		0D69BD731C4EA16500A10282 /* testsrc */ = {
 			isa = PBXGroup;
 			children = (
+				0DFBB1C91E204BF200E50758 /* labels */,
 				0D69BD751C4EA17900A10282 /* image.c */,
 				0D69BD771C4EA17900A10282 /* Makefile */,
 				0D2B2FED1C9073AA0063393E /* loadimage.c */,
@@ -686,18 +687,25 @@
 				0DEED07C1E15E10900C00550 /* gl-value-animation.h */,
 				0DEED07D1E15F89B00C00550 /* gl-value-animation-easing.c */,
 				0DEED07E1E15F89B00C00550 /* gl-value-animation-easing.h */,
-				0DEED07F1E19C39800C00550 /* gl-label.c */,
-				0DEED0801E19C39800C00550 /* gl-label.h */,
-				0DFBB1C71E1FDFDB00E50758 /* gl-label-scroller-segment.c */,
-				0DFBB1C81E1FDFDB00E50758 /* gl-label-scroller-segment.h */,
-				0DFBB1C51E1E90CE00E50758 /* gl-label-renderer.c */,
-				0DFBB1C61E1E90CE00E50758 /* gl-label-renderer.h */,
 			);
 			indentWidth = 8;
 			path = testsrc;
 			sourceTree = "<group>";
 			tabWidth = 8;
 			usesTabs = 1;
+		};
+		0DFBB1C91E204BF200E50758 /* labels */ = {
+			isa = PBXGroup;
+			children = (
+				0DEED07F1E19C39800C00550 /* gl-label.c */,
+				0DEED0801E19C39800C00550 /* gl-label.h */,
+				0DFBB1C71E1FDFDB00E50758 /* gl-label-scroller-segment.c */,
+				0DFBB1CA1E204CAE00E50758 /* gl-label-scroller-segment.h */,
+				0DFBB1C51E1E90CE00E50758 /* gl-label-renderer.c */,
+				0DFBB1C61E1E90CE00E50758 /* gl-label-renderer.h */,
+			);
+			path = labels;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 

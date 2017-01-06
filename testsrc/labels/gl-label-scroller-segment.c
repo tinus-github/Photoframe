@@ -6,7 +6,7 @@
 //
 //
 
-#include "gl-label-scroller-segment.h"
+#include "labels/gl-label-scroller-segment.h"
 #define SEGMENT_WIDTH 512
 
 static void gl_label_scroller_segment_free(gl_object *obj);

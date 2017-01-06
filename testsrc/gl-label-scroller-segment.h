@@ -48,13 +48,13 @@ typedef struct gl_label_scroller_segment_data {
 	gl_label_scroller_segment_child_data childDataHead;
 } gl_label_scroller_segment_data;
 
-struct gl_label {
+struct gl_label_scroller_segment {
 	gl_label_scroller_segment_funcs *f;
 	gl_label_scroller_segment_data data;
 };
 
 void gl_label_scroller_segment_setup();
-gl_scroller_segment_label *gl_label_scroller_segment_init(gl_label_scroller_segment *obj);
-gl_scroller_segment_label *gl_label_scroller_segment_new();
+gl_label_scroller_segment *gl_label_scroller_segment_init(gl_label_scroller_segment *obj);
+gl_label_scroller_segment *gl_label_scroller_segment_new();
 
 #endif /* gl_label_scroller_segment_h */

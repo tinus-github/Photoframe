@@ -26,7 +26,7 @@
 #include "egl-driver.h"
 #include "gl-value-animation.h"
 #include "gl-value-animation-easing.h"
-#include "gl-label.h"
+#include "labels/gl-label.h"
 
 #include "../lib/linmath/linmath.h"
 

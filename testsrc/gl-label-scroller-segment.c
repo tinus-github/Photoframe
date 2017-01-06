@@ -106,7 +106,7 @@ static gl_label_scroller_segment_child_data *gl_label_scroller_segment_append_ch
 	return childData;
 }
 
-static void *gl_label_scroller_segment_remove_child(
+static void gl_label_scroller_segment_remove_child(
 						    gl_label_scroller_segment *obj,
 						    gl_label_scroller_segment_child_data *childData) {
 	gl_label_scroller_segment_child_data *siblingL;

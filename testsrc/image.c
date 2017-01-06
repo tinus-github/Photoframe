@@ -88,17 +88,9 @@ int main(int argc, char *argv[])
 	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)tiled_image);
 	
 	gl_label_scroller_segment *label = gl_label_scroller_segment_new();
-	label->data.windowWidth = 256;
-	label->data.windowHeight = 160;
-	label->data.text = "Hello!";
-	label->f->render(label);
-	gl_tile *tile = label->data.tile;
-	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)label->data.tile);
-	
-	gl_label_scroller_segment *label = gl_label_scroller_segment_new();
 	label->data.width = 1024;
 	label->data.height = 160;
-	label->data.text = read_message();
+	label->data.text = "AVAVAVABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	label->f->layout(label);
 	label->data.exposedSectionWidth = 1920;
 	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)label);

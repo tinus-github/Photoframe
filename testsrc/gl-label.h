@@ -32,7 +32,6 @@ typedef struct gl_label_data {
 	uint32_t textWidth;
 	
 	gl_label_renderer *renderer;
-	gl_tile *tile;
 } gl_label_data;
 
 struct gl_label {

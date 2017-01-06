@@ -45,6 +45,8 @@ static gl_tile *gl_label_scroller_segment_render_tile(gl_label_scroller_segment 
 
 static void gl_label_scroller_segment_render(gl_label_scroller_segment *obj)
 {
+	gl_label_renderer *renderer = obj->data.renderer;
+
 	int32_t tile_index = obj->data.exposedSectionLeft / SEGMENT_WIDTH;
 	int32_t final_tile_index = (obj->data.exposedSectionLeft + obj->data.exposedSectionWidth) / SEGMENT_WIDTH;
 	

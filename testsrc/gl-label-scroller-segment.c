@@ -60,7 +60,10 @@ static void gl_label_scroller_segment_render(gl_label_scroller_segment *obj)
 	gl_label_scroller_segment_child_data *nextChildData = currentChildData->siblingR;
 	int found;
 	
-	for (counter = tile_index; counter < final_tile_index; counter++) {
+	for (counter = tile_index; counter <= final_tile_index; counter++) {
+		if ((counter * SEGMENT_WIDTH) > renderer->data.totalWidth) {
+			break;
+		}
 		found = 0;
 		
 		while (currentChildData != obj->data.childDataHead) {

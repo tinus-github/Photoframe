@@ -179,7 +179,7 @@ gl_label_scroller_segment *gl_label_scroller_segment_dup(gl_label_scroller_segme
 	gl_object *renderer_obj = (gl_object *)ret->data.renderer;
 	renderer_obj->f->unref(renderer_obj);
 	ret->data.renderer = obj->data.renderer;
-	*renderer_obj = (gl_object *)ret->data.renderer;
+	renderer_obj = (gl_object *)ret->data.renderer;
 	renderer_obj->f->ref(renderer_obj);
 	
 	return ret;

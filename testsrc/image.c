@@ -26,7 +26,7 @@
 #include "egl-driver.h"
 #include "gl-value-animation.h"
 #include "gl-value-animation-easing.h"
-#include "labels/gl-label.h"
+#include "labels/gl-label-scroller-segment.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -90,27 +90,33 @@ int main(int argc, char *argv[])
 	label->f->render(label);
 	gl_tile *tile = label->data.tile;
 	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)label->data.tile);
+	
+	gl_label_scroller_segment *label = gl_label_scroller_segment_new();
+	label->data.width = 1024;
+	label->data.height = 160;
+	label->data.text = read_message();
+	label->f->layout(label);
+	label->data.exposedSectionWidth = 1920;
+	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)label);
 
-	main_container_2d_shape->data.objectX = 50.0;
+	main_container_2d_shape->data.objectX = 0.0;
 	main_container_2d->data.scaleH = 1.0;
 	main_container_2d->data.scaleV = 1.0;
 	
 	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
-
-#if 0
+ 
 	gl_value_animation_easing *anim_easing = gl_value_animation_easing_new();
 	gl_value_animation *anim = (gl_value_animation *)anim_easing;
-	anim->data.target = main_container_2d;
+	anim->data.target = label;
 	anim->data.action = &animation;
-	anim->data.startValue = 0;
-	anim->data.endValue = 200;
-	anim->data.duration = 2;
+	anim->data.startValue = 1920.0;
+	anim->data.endValue = 0.0 - label->data.textWidth;
+	anim->f->set_speed(anim, 180);
 	anim->data.repeats = TRUE;
-	anim_easing->data.easingType = gl_value_animation_ease_QuinticEaseInOut;
+	anim_easing->data.easingType = gl_value_animation_ease_linear;
 	
 	anim->f->start(anim);
-#endif
 	
 	gl_renderloop_loop();
 	

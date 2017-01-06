@@ -16,7 +16,7 @@ static void gl_label_scroller_segment_layout(gl_label_scroller_segment *obj);
 static gl_label_scroller_segment_child_data *gl_label_scroller_segment_append_child(
 										    gl_label_scroller_segment *obj, gl_tile *tile,
 										    uint32_t tile_index);
-static void *gl_label_scroller_segment_remove_child(
+static void gl_label_scroller_segment_remove_child(
 						    gl_label_scroller_segment *obj,
 						    gl_label_scroller_segment_child_data *childData);
 

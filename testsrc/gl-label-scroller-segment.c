@@ -16,9 +16,9 @@ static void gl_label_scroller_segment_layout(gl_label_scroller_segment *obj);
 static gl_label_scroller_segment_child_data *gl_label_scroller_segment_append_child(
 										    gl_label_scroller_segment *obj, gl_tile *tile,
 										    uint32_t tile_index);
-static gl_label_scroller_segment_child_data *gl_label_scroller_segment_remove_child(
-										    gl_label_scroller_segment *obj,
-										    gl_label_scroller_segment_child_data *childData);
+static void *gl_label_scroller_segment_remove_child(
+						    gl_label_scroller_segment *obj,
+						    gl_label_scroller_segment_child_data *childData);
 
 static struct gl_label_scroller_segment_funcs gl_label_scroller_segment_funcs_global = {
 	.render = &gl_label_scroller_segment_render,
@@ -47,12 +47,10 @@ static void gl_label_scroller_segment_render(gl_label_scroller_segment *obj)
 {
 	uint32_t tile_index = obj->data.exposedSectionLeft / SEGMENT_WIDTH;
 	uint32_t final_tile_index = (obj->data.exposedSectionLeft + obj->data.exposedSectionWidth) / SEGMENT_WIDTH;
-	gl_label_renderer *renderer = obj->data.renderer;
 	
 	uint32_t counter;
 	
 	gl_tile *tile;
-	gl_container *obj_container = (gl_container *)obj;
 	gl_label_scroller_segment_child_data *currentChildData = obj->data.childDataHead;
 	currentChildData = currentChildData->siblingR;
 	gl_label_scroller_segment_child_data *nextChildData = currentChildData->siblingR;
@@ -62,15 +60,15 @@ static void gl_label_scroller_segment_render(gl_label_scroller_segment *obj)
 		found = 0;
 		
 		while (currentChildData != obj->data.childDataHead) {
-			if (currentChildData.tileIndex == counter) {
-				currentChildData = nextTileData;
-				nextTileData = currentChildData->siblingR;
+			if (currentChildData->tileIndex == counter) {
+				currentChildData = nextChildData;
+				nextChildData = currentChildData->siblingR;
 				found = 1;
 				break;
 			}
 			gl_label_scroller_segment_remove_child(obj, currentChildData);
-			currentChildData = nextTileData;
-			nextTileData = currentChildData->siblingR;
+			currentChildData = nextChildData;
+			nextChildData = currentChildData->siblingR;
 		}
 		if (!found) {
 			tile = gl_label_scroller_segment_render_tile(obj, counter);
@@ -104,18 +102,20 @@ static gl_label_scroller_segment_child_data *gl_label_scroller_segment_append_ch
 	
 	gl_container *obj_container = (gl_container *)obj;
 	obj_container->f->append_child(obj_container, (gl_shape *)tile);
+	
+	return childData;
 }
 
-static gl_label_scroller_segment_child_data *gl_label_scroller_segment_remove_child(
-										    gl_label_scroller_segment *obj,
-										    gl_label_scroller_segment_child_data *childData) {
+static void *gl_label_scroller_segment_remove_child(
+						    gl_label_scroller_segment *obj,
+						    gl_label_scroller_segment_child_data *childData) {
 	gl_label_scroller_segment_child_data *siblingL;
 	gl_label_scroller_segment_child_data *siblingR;
 	
 	siblingL = childData->siblingL;
 	siblingR = childData->siblingR;
-	siblingL.siblingR = childData->siblingR;
-	siblingR.siblingL = childData->siblingL;
+	siblingL->siblingR = childData->siblingR;
+	siblingR->siblingL = childData->siblingL;
 	
 	gl_shape *tile_shape = (gl_shape *)childData->tile;
 	gl_container *container = tile_shape->data.container;
@@ -154,7 +154,7 @@ gl_label_scroller_segment *gl_label_scroller_segment_new()
 {
 	gl_label_scroller_segment *ret = calloc(1, sizeof(gl_label_scroller_segment));
 	
-	ret->data.renderer = gl_label_scroller_segment_renderer_new();
+	ret->data.renderer = gl_label_renderer_new();
 	
 	return gl_label_scroller_segment_init(ret);
 }

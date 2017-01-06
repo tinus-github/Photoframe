@@ -4,7 +4,7 @@ OPTFLAGS = -O3
 
 OBJECTS = image.o loadimage.o loadexif.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
 	  gl-container.o gl-container-2d.o gl-tiled-image.o gl-renderloop.o gl-renderloop-member.o egl-driver.o \
-	  gl-value-animation.o gl-value-animation-easing.o gl-label.o gl-label-renderer.o
+	  gl-value-animation.o gl-value-animation-easing.o gl-label.o gl-label-renderer.o gl-label-scroller-segment.o
 LIBEXIF_A = ../lib/libexif/libexif/.libs/libexif.a
 LIBEXIF_INCLUDEDIR = -I../lib/libexif
 LIBFREETYPE_CFLAGS = `pkg-config freetype2 --cflags`
@@ -144,7 +144,8 @@ gl-value-animation.o: gl-value-animation.c gl-value-animation.h gl-renderloop.h 
 	-Wno-deprecated-declarations \
 	-c gl-value-animation.c -o gl-value-animation.o $(OPTFLAGS)
 
-gl-value-animation-easing.o: gl-value-animation-easing.c gl-value-animation-easing.h gl-value-animation.h gl-renderloop.h gl-renderloop-member.h gl-object.h
+gl-value-animation-easing.o: gl-value-animation-easing.c gl-value-animation-easing.h gl-value-animation.h \
+		 gl-renderloop.h gl-renderloop-member.h gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
@@ -161,6 +162,16 @@ gl-label.o: gl-label.c gl-label.h gl-container-2d.h gl-container.h gl-shape.h gl
 	-ftree-vectorize -pipe -Wno-psabi \
 	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
 	-c gl-label.c -o gl-label.o $(OPTFLAGS)
+
+gl-label-scroller-segment.o: gl-label-scroller-segment.c gl-label-scroller-segment.h \
+                 gl-label.h gl-container-2d.h gl-container.h gl-shape.h gl-object.h gl-texture.h gl-tile.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
+	-c gl-label-scroller-segment.c -o gl-label-scroller-segment.o $(OPTFLAGS)
 
 gl-label-renderer.o: gl-label-renderer.c gl-label-renderer.h gl-object.h gl-texture.h gl-tile.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

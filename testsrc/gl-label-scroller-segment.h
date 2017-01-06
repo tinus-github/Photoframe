@@ -45,7 +45,7 @@ typedef struct gl_label_scroller_segment_data {
 	
 	gl_label_renderer *renderer;
 	
-	gl_label_scroller_segment_child_data childDataHead;
+	gl_label_scroller_segment_child_data *childDataHead;
 } gl_label_scroller_segment_data;
 
 struct gl_label_scroller_segment {

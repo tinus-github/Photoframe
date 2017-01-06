@@ -38,7 +38,7 @@ static gl_tile *gl_label_scroller_segment_render_tile(gl_label_scroller_segment 
 				   SEGMENT_WIDTH,
 				   obj->data.height);
 	tile_shape = (gl_shape *)tile;
-	tile_shape->data.objectX = tile_index;
+	tile_shape->data.objectX = tile_index * SEGMENT_WIDTH;
 	
 	return tile;
 }

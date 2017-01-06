@@ -12,6 +12,8 @@
 
 #define SEGMENT_WIDTH 512
 
+// TODO: This should probably enforce a maximum length as the whole rendered string is in memory
+
 static void gl_label_free(gl_object *obj);
 static void gl_label_render(gl_label *obj);
 
@@ -27,7 +29,7 @@ static void gl_label_render(gl_label *obj)
 	renderer->data.text = obj->data.text;
 	
 	renderer->f->layout(renderer);
-	// TODO: check final width
+	
 	obj->data.textWidth = renderer->data.totalWidth;
 	
 	uint32_t cursor = 0;

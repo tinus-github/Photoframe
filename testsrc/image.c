@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 	gl_label_scroller_segment *label = gl_label_scroller_segment_new();
 	label->data.width = 1024;
 	label->data.height = 160;
-	label->data.text = "AVAVAVABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	label->data.text = "AVAVAVABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	label->f->layout(label);
 	label->data.exposedSectionWidth = 1920;
 	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)label);

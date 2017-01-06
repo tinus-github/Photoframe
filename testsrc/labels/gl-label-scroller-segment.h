@@ -29,6 +29,7 @@ typedef struct gl_label_scroller_segment_funcs {
 	gl_container_2d_funcs p;
 	void (*render) (gl_label_scroller_segment *obj);
 	void (*layout) (gl_label_scroller_segment *obj);
+	gl_label_scroller_segment *(*dup) (gl_label_scroller_segment *obj);
 } gl_label_scroller_segment_funcs;
 
 typedef struct gl_label_scroller_segment_data {

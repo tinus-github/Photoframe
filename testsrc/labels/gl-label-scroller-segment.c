@@ -12,6 +12,7 @@
 static void gl_label_scroller_segment_free(gl_object *obj);
 static void gl_label_scroller_segment_render(gl_label_scroller_segment *obj);
 static void gl_label_scroller_segment_layout(gl_label_scroller_segment *obj);
+gl_label_scroller_segment *gl_label_scroller_segment_dup(gl_label_scroller_segment *obj);
 
 static gl_label_scroller_segment_child_data *gl_label_scroller_segment_append_child(
 										    gl_label_scroller_segment *obj, gl_tile *tile,
@@ -22,7 +23,8 @@ static void gl_label_scroller_segment_remove_child(
 
 static struct gl_label_scroller_segment_funcs gl_label_scroller_segment_funcs_global = {
 	.render = &gl_label_scroller_segment_render,
-	.layout = &gl_label_scroller_segment_layout
+	.layout = &gl_label_scroller_segment_layout,
+	.dup = &gl_label_scroller_segment_dup
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
@@ -159,6 +161,28 @@ gl_label_scroller_segment *gl_label_scroller_segment_init(gl_label_scroller_segm
 	obj->data.childDataHead = data_head;
 	
 	return obj;
+}
+
+gl_label_scroller_segment *gl_label_scroller_segment_dup(gl_label_scroller_segment *obj)
+{
+	gl_label_scroller_segment *ret = gl_label_scroller_segment_new();
+	
+	if (obj->data.text) {
+		ret->data.text = strdup(obj->data.text);
+	}
+	ret->data.width = obj->data.width;
+	ret->data.height = obj->data.height;
+	ret->data.textWidth = obj->data.textWidth;
+	ret->data.exposedSectionLeft = obj->data.exposedSectionLeft;
+	ret->data.exposedSectionWidth = obj->data.exposedSectionWidth;
+	
+	gl_object *renderer_obj = (gl_object *)ret->data.renderer;
+	renderer_obj->f->unref(renderer_obj);
+	ret->data.renderer = obj->data.renderer;
+	*renderer_obj = (gl_object *)ret->data.renderer;
+	renderer_obj->f->ref(renderer_obj);
+	
+	return ret;
 }
 
 gl_label_scroller_segment *gl_label_scroller_segment_new()

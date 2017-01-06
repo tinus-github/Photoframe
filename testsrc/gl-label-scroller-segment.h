@@ -16,6 +16,7 @@
 #include "gl-label-renderer.h"
 
 typedef struct gl_label_scroller_segment gl_label_scroller_segment;
+typedef struct gl_label_scroller_segment_child_data gl_label_scroller_segment_child_data;
 
 typedef struct gl_label_scroller_segment_child_data {
 	gl_label_scroller_segment_child_data *siblingL;

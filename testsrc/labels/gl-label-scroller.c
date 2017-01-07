@@ -60,6 +60,8 @@ static void gl_label_scroller_setup_scroller(gl_label_scroller *obj)
 
 static void gl_label_scroller_start(gl_label_scroller *obj)
 {
+	gl_label_scroller_setup_scroller(obj);
+	
 	gl_shape *obj_shape = (gl_shape *)obj;
 	gl_value_animation *animation = gl_value_animation_new();
 	animation->data.target = obj;

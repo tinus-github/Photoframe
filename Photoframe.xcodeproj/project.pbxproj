@@ -263,6 +263,8 @@
 		0DFBB1C61E1E90CE00E50758 /* gl-label-renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-label-renderer.h"; sourceTree = "<group>"; };
 		0DFBB1C71E1FDFDB00E50758 /* gl-label-scroller-segment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-label-scroller-segment.c"; sourceTree = "<group>"; };
 		0DFBB1CA1E204CAE00E50758 /* gl-label-scroller-segment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-label-scroller-segment.h"; sourceTree = "<group>"; };
+		0DFBB1CB1E20590C00E50758 /* gl-label-scroller.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-label-scroller.c"; sourceTree = "<group>"; };
+		0DFBB1CC1E20590C00E50758 /* gl-label-scroller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-label-scroller.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -703,6 +705,8 @@
 				0DFBB1CA1E204CAE00E50758 /* gl-label-scroller-segment.h */,
 				0DFBB1C51E1E90CE00E50758 /* gl-label-renderer.c */,
 				0DFBB1C61E1E90CE00E50758 /* gl-label-renderer.h */,
+				0DFBB1CB1E20590C00E50758 /* gl-label-scroller.c */,
+				0DFBB1CC1E20590C00E50758 /* gl-label-scroller.h */,
 			);
 			path = labels;
 			sourceTree = "<group>";

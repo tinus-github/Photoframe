@@ -21,6 +21,7 @@ typedef struct gl_label_scroller gl_label_scroller;
 typedef struct gl_label_scroller_funcs {
 	gl_container_2d_funcs p;
 	void (*start) (gl_label_scroller *obj);
+	void (*pause) (gl_label_scroller *obj);
 } gl_label_scroller_funcs;
 
 typedef struct gl_label_scroller_data {
@@ -36,6 +37,9 @@ typedef struct gl_label_scroller_data {
 	GLfloat scrollAmount;
 	
 	gl_value_animation *animation;
+	
+	int setupDone;
+	int isRunning;
 } gl_label_scroller_data;
 
 struct gl_label_scroller {

@@ -14,9 +14,11 @@
 static void (*gl_object_free_org_global) (gl_object *obj);
 static void gl_label_scroller_free(gl_object *obj);
 static void gl_label_scroller_start(gl_label_scroller *obj);
+static void gl_label_scroller_pause(gl_label_scroller *obj);
 
 static struct gl_label_scroller_funcs gl_label_scroller_funcs_global = {
 	.start = &gl_label_scroller_start,
+	.pause = &gl_label_scroller_pause,
 };
 
 static void gl_label_scroller_scroll(gl_label_scroller *obj, GLfloat scrollTo)
@@ -60,19 +62,40 @@ static void gl_label_scroller_setup_scroller(gl_label_scroller *obj)
 
 static void gl_label_scroller_start(gl_label_scroller *obj)
 {
-	gl_label_scroller_setup_scroller(obj);
+	gl_value_animation * animation;
 	
-	gl_shape *obj_shape = (gl_shape *)obj;
-	gl_value_animation *animation = gl_value_animation_new();
-	animation->data.target = obj;
-	animation->data.action = &gl_label_scroller_animate;
-	animation->data.startValue = obj_shape->data.objectWidth;
-	gl_label_scroller_segment *segment = obj->data.segment;
-	animation->data.endValue = 0.0 - segment->data.textWidth;
-	animation->f->set_speed(animation, 180);
-	animation->data.repeats = TRUE;
+	if (!obj->data.setupDone) {
+		gl_label_scroller_setup_scroller(obj);
+		
+		gl_shape *obj_shape = (gl_shape *)obj;
+		obj->data.animation = gl_value_animation_new();
+		animation = obj->data.animation;
+		animation->data.target = obj;
+		animation->data.action = &gl_label_scroller_animate;
+		animation->data.startValue = obj_shape->data.objectWidth;
+		gl_label_scroller_segment *segment = obj->data.segment;
+		animation->data.endValue = 0.0 - segment->data.textWidth;
+		animation->f->set_speed(animation, 180);
+		animation->data.repeats = TRUE;
+		
+		obj->data.setupDone = TRUE;
+	}
+	if (!obj->data.isRunning) {
+		animation = obj->data.animation;
+		animation->f->start(animation);
+		obj->data.isRunning = TRUE;
+	}
+}
+
+static void gl_label_scroller_pause(gl_label_scroller *obj)
+{
+	if (!obj->data.isRunning) {
+		return;
+	}
 	
-	animation->f->start(animation);
+	gl_value_animation *animation = obj->data.animation;
+	animation->f->pause(animation);
+	obj->data.isRunning = FALSE;
 }
 
 void gl_label_scroller_setup()
@@ -117,7 +140,9 @@ static void gl_label_scroller_free(gl_object *obj_obj)
 	
 	if (obj->data.animation) {
 		gl_value_animation *animation = obj->data.animation;
-		animation->f->pause(animation);
+		if (obj->data.isRunning) {
+			animation->f->pause(animation);
+		}
 		gl_object *animation_obj = (gl_object *)animation;
 		animation_obj->f->unref(animation_obj);
 	}

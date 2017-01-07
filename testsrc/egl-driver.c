@@ -20,6 +20,7 @@
 #include "gl-value-animation-easing.h"
 #include "labels/gl-label.h"
 #include "labels/gl-label-scroller-segment.h"
+#include "labels/gl-label-scroller.h"
 
 #include <bcm_host.h>
 
@@ -287,4 +288,5 @@ void egl_driver_setup()
 	gl_value_animation_easing_setup();
 	gl_label_setup();
 	gl_label_scroller_segment_setup();
+	gl_label_scroller_setup();
 }

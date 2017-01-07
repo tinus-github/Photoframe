@@ -6,10 +6,14 @@
 //
 //
 
+#define TRUE 1
+#define FALSE 0
+
 #include "labels/gl-label-scroller.h"
 
 static void (*gl_object_free_org_global) (gl_object *obj);
 static void gl_label_scroller_free(gl_object *obj);
+static void gl_label_scroller_start(gl_label_scroller *obj);
 
 static struct gl_label_scroller_funcs gl_label_scroller_funcs_global = {
 	.start = &gl_label_scroller_start,
@@ -20,7 +24,7 @@ static void gl_label_scroller_scroll(gl_label_scroller *obj, GLfloat scrollTo)
 	gl_shape *segment_shape = (gl_shape *)obj->data.segment;
 	gl_label_scroller_segment *segment = obj->data.segment;
 	obj->data.scrollAmount = scrollTo;
-	segment_shape->data.objectX = obj->data.scrollAmount
+	segment_shape->data.objectX = obj->data.scrollAmount;
 	segment_shape->f->set_computed_projection_dirty(segment_shape);
 	
 	segment->data.exposedSectionLeft = -obj->data.scrollAmount;
@@ -50,7 +54,7 @@ static void gl_label_scroller_setup_scroller(gl_label_scroller *obj)
 	
 	gl_shape *segment_shape = (gl_shape *)segment;
 	
-	segment_shape->data.objectX = obj->data.objectWidth;
+	segment_shape->data.objectX = obj_shape->data.objectWidth;
 	obj->data.scrollAmount = obj_shape->data.objectWidth;
 }
 
@@ -77,7 +81,7 @@ void gl_label_scroller_setup()
 	memcpy(&gl_label_scroller_funcs_global.p, parent->f, sizeof(gl_container_2d_funcs));
 	parent_obj->f->free(parent_obj);
 	
-	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_label_funcs_global;
+	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_label_scroller_funcs_global;
 	gl_object_free_org_global = obj_funcs_global->free;
 	obj_funcs_global->free = &gl_label_scroller_free;
 }

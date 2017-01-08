@@ -16,6 +16,7 @@
 static void gl_container_append_child(gl_container *obj, gl_shape *child);
 static void gl_container_remove_child(gl_container *obj, gl_shape *child);
 static void gl_container_set_computed_projection_dirty(gl_shape *shape_obj);
+static void gl_container_set_computed_alpha_dirty(gl_shape *shape_obj);
 static void gl_container_compute_projection(gl_shape *shape_obj);
 static void gl_container_draw(gl_shape *shape_obj);
 
@@ -31,6 +32,7 @@ void gl_container_setup()
 
 	gl_shape_funcs *shapef = (gl_shape_funcs *)&gl_container_funcs_global;
 	shapef->set_computed_projection_dirty = &gl_container_set_computed_projection_dirty;
+	shapef->set_computed_alpha_dirty = &gl_container_set_computed_alpha_dirty;
 	shapef->compute_projection = &gl_container_compute_projection;
 	shapef->draw = &gl_container_draw;
 	
@@ -145,6 +147,26 @@ static void gl_container_set_computed_projection_dirty(gl_shape *shape_obj)
 		gl_shape *child = first_child;
 		do {
 			child->f->set_computed_projection_dirty(child);
+			child = child->data.siblingR;
+		} while (child != first_child);
+	}
+}
+
+static void gl_container_set_computed_alpha_dirty(gl_shape *shape_obj)
+{
+	if (shape_obj->data.computed_alpha_dirty) {
+		return;
+	}
+	
+	shape_obj->data.computed_alpha_dirty = TRUE;
+	
+	gl_container *obj = (gl_container *)shape_obj;
+	
+	gl_shape *first_child = obj->data.first_child;
+	if (first_child) {
+		gl_shape *child = first_child;
+		do {
+			child->f->set_computed_alpha_dirty(child);
 			child = child->data.siblingR;
 		} while (child != first_child);
 	}

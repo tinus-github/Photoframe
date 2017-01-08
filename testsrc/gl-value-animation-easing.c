@@ -46,7 +46,8 @@ GLfloat calculate_quinticEaseInOut(GLfloat n)
 
 GLfloat calculate_sine(GLfloat n)
 {
-	return (sinf(n/(2.0 * M_PI)) + 1.0) / 2.0;
+	GLfloat ret = (sinf(n/(2.0 * M_PI)) + 1.0) / 2.0;
+	return ret;
 }
 
 static GLfloat gl_value_animation_easing_calculate_value_normalized(gl_value_animation *obj, GLfloat normalized_time_elapsed)

@@ -89,7 +89,7 @@ static void gl_shape_compute_projection(gl_shape *obj)
 	
 	obj->data.computed_projection_dirty = FALSE;
 	
-	c_alpha = gl_shape_get_container_alpha(obj);
+	GLfloat c_alpha = gl_shape_get_container_alpha(obj);
 	obj->data.calculatedAlpha = c_alpha * obj->data.alpha;
 }
 

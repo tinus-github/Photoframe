@@ -46,7 +46,7 @@ GLfloat calculate_quinticEaseInOut(GLfloat n)
 
 GLfloat calculate_sine(GLfloat n)
 {
-	GLfloat ret = (sinf(n/(2.0 * M_PI)) + 1.0) / 2.0;
+	GLfloat ret = (sinf(n*(2.0 * M_PI)) + 1.0) / 2.0;
 	return ret;
 }
 

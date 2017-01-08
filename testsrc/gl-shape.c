@@ -19,12 +19,13 @@
 
 static void gl_shape_draw(gl_shape *obj);
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj);
+static void gl_shape_set_computed_alpha_dirty(gl_shape *obj);
 static void gl_shape_compute_projection(gl_shape *obj);
 
 static struct gl_shape_funcs gl_shape_funcs_global = {
 	.draw = &gl_shape_draw,
 	.set_computed_projection_dirty = &gl_shape_set_computed_projection_dirty,
-	.set_alpha_projection_dirty = &gl_shape_set_computed_alpha_dirty,
+	.set_computed_alpha_dirty = &gl_shape_set_computed_alpha_dirty,
 	.compute_projection = &gl_shape_compute_projection,
 	.compute_alpha = &gl_shape_alpha_projection
 };
@@ -65,6 +66,7 @@ static GLfloat gl_shape_get_container_alpha(gl_shape *obj)
 	}
 	gl_container *container = obj->data.container;
 	gl_shape *container_shape = (gl_shape *)container;
+	container_shape->f->compute_alpha(container_shape);
 	return container_shape->data.alpha;
 }
 
@@ -96,6 +98,7 @@ static void gl_shape_compute_projection(gl_shape *obj)
 	
 	obj->data.computed_projection_dirty = FALSE;
 }
+
 static void gl_shape_compute_alpha(gl_shape *obj)
 {
 	GLfloat c_alpha = gl_shape_get_container_alpha(obj);

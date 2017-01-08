@@ -102,6 +102,10 @@ static void gl_shape_compute_projection(gl_shape *obj)
 
 static void gl_shape_compute_alpha(gl_shape *obj)
 {
+	if (!obj->data.computed_alpha_dirty) {
+		return;
+	}
+	
 	GLfloat c_alpha = gl_shape_get_container_alpha(obj);
 	obj->data.computedAlpha = c_alpha * obj->data.alpha;
 	obj->data.computed_alpha_dirty = FALSE;

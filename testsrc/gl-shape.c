@@ -68,7 +68,7 @@ static GLfloat gl_shape_get_container_alpha(gl_shape *obj)
 	gl_container *container = obj->data.container;
 	gl_shape *container_shape = (gl_shape *)container;
 	container_shape->f->compute_alpha(container_shape);
-	return container_shape->data.alpha;
+	return container_shape->data.computedAlpha;
 }
 
 static void gl_shape_compute_projection(gl_shape *obj)

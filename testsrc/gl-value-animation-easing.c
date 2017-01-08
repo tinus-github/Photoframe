@@ -44,6 +44,11 @@ GLfloat calculate_quinticEaseInOut(GLfloat n)
 	}
 }
 
+GLfloat calculate_sine(GLfloat n)
+{
+	return sinf(n/(2 * M_PI));
+}
+
 static GLfloat gl_value_animation_easing_calculate_value_normalized(gl_value_animation *obj, GLfloat normalized_time_elapsed)
 {
 	gl_value_animation_easing *obj_easing = (gl_value_animation_easing *)obj;
@@ -54,6 +59,8 @@ static GLfloat gl_value_animation_easing_calculate_value_normalized(gl_value_ani
 			return calculate_linear(normalized_time_elapsed);
 		case gl_value_animation_ease_QuinticEaseInOut:
 			return calculate_quinticEaseInOut(normalized_time_elapsed);
+		case gl_value_animation_ease_Sine:
+			return calculate_sine(normalized_time_elapsed);
 	}
 }
 

@@ -51,6 +51,16 @@ static void gl_shape_get_container_projection(gl_shape *obj, mat4x4 ret)
 	mat4x4_dup(ret, container_shape->data.computed_modelView);
 }
 
+static GLfloat gl_shape_get_container_alpha(gl_shape *obj)
+{
+	if (!obj->data.container) {
+		return 1.0;
+	}
+	gl_container *container = obj->data.container;
+	gl_shape *container_shape = (gl_shape *)container;
+	return container_shape->data.alpha;
+}
+
 static void gl_shape_compute_projection(gl_shape *obj)
 {
 	mat4x4 projection;
@@ -78,6 +88,9 @@ static void gl_shape_compute_projection(gl_shape *obj)
 	mat4x4_mul(obj->data.computed_modelView, container_projection, projection);
 	
 	obj->data.computed_projection_dirty = FALSE;
+	
+	c_alpha = gl_shape_get_container_alpha(obj);
+	obj->data.calculatedAlpha = c_alpha * obj->data.alpha;
 }
 
 void gl_shape_setup()
@@ -102,6 +115,8 @@ gl_shape *gl_shape_init(gl_shape *obj)
 	obj->data.objectY = 0;
 	obj->data.objectWidth = 0;
 	obj->data.objectHeight = 0;
+	
+	obj->data.alpha = 1.0;
 	
 	return obj;
 }

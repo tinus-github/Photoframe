@@ -21,6 +21,7 @@ static void gl_shape_draw(gl_shape *obj);
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj);
 static void gl_shape_set_computed_alpha_dirty(gl_shape *obj);
 static void gl_shape_compute_projection(gl_shape *obj);
+static void gl_shape_compute_alpha(gl_shape *obj);
 
 static struct gl_shape_funcs gl_shape_funcs_global = {
 	.draw = &gl_shape_draw,

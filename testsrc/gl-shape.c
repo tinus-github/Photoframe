@@ -27,7 +27,7 @@ static struct gl_shape_funcs gl_shape_funcs_global = {
 	.set_computed_projection_dirty = &gl_shape_set_computed_projection_dirty,
 	.set_computed_alpha_dirty = &gl_shape_set_computed_alpha_dirty,
 	.compute_projection = &gl_shape_compute_projection,
-	.compute_alpha = &gl_shape_alpha_projection
+	.compute_alpha = &gl_shape_compute_alpha
 };
 
 static void gl_shape_draw(gl_shape *obj)

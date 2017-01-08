@@ -24,7 +24,9 @@ static void gl_shape_compute_projection(gl_shape *obj);
 static struct gl_shape_funcs gl_shape_funcs_global = {
 	.draw = &gl_shape_draw,
 	.set_computed_projection_dirty = &gl_shape_set_computed_projection_dirty,
-	.compute_projection = &gl_shape_compute_projection
+	.set_alpha_projection_dirty = &gl_shape_set_computed_alpha_dirty,
+	.compute_projection = &gl_shape_compute_projection,
+	.compute_alpha = &gl_shape_alpha_projection
 };
 
 static void gl_shape_draw(gl_shape *obj)
@@ -36,6 +38,11 @@ static void gl_shape_draw(gl_shape *obj)
 static void gl_shape_set_computed_projection_dirty(gl_shape *obj)
 {
 	obj->data.computed_projection_dirty = TRUE;
+}
+
+static void gl_shape_set_computed_alpha_dirty(gl_shape *obj)
+{
+	obj->data.computed_alpha_dirty = TRUE;
 }
 
 static void gl_shape_get_container_projection(gl_shape *obj, mat4x4 ret)
@@ -88,9 +95,12 @@ static void gl_shape_compute_projection(gl_shape *obj)
 	mat4x4_mul(obj->data.computed_modelView, container_projection, projection);
 	
 	obj->data.computed_projection_dirty = FALSE;
-	
+}
+static void gl_shape_compute_alpha(gl_shape *obj)
+{
 	GLfloat c_alpha = gl_shape_get_container_alpha(obj);
 	obj->data.calculatedAlpha = c_alpha * obj->data.alpha;
+	obj->data.computed_alpha_dirty = FALSE;
 }
 
 void gl_shape_setup()
@@ -116,6 +126,7 @@ gl_shape *gl_shape_init(gl_shape *obj)
 	obj->data.objectWidth = 0;
 	obj->data.objectHeight = 0;
 	
+	obj->f->set_computed_alpha_dirty(obj);
 	obj->data.alpha = 1.0;
 	
 	return obj;

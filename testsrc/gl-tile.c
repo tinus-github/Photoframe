@@ -25,6 +25,7 @@ typedef struct gl_tile_program_data {
 	GLint texCoordLoc;
 	GLint projectionLoc;
 	GLint modelViewLoc;
+	GLint alphaLoc;
 	GLint samplerLoc;
 } gl_tile_program_data;
 
@@ -44,6 +45,7 @@ static void gl_tile_load_program_attribute_locations(gl_tile_program_data *data)
 	// Get the uniform locations
 	data->projectionLoc = glGetUniformLocation ( program, "u_projection" );
 	data->modelViewLoc  = glGetUniformLocation ( program, "u_modelView" );
+	data->alphaLoc = glGetUniformLocation ( program, "u_alpha" );
 	
 	// Get the sampler location
 	data->samplerLoc = glGetUniformLocation ( program, "s_texture" );
@@ -67,30 +69,34 @@ static int gl_tile_load_program() {
 	"precision mediump float;                            \n"
 	"varying vec2 v_texCoord;                            \n"
 	"uniform sampler2D s_texture;                        \n"
+	"uniform float u_alpha;                              \n"
 	"void main()                                         \n"
 	"{                                                   \n"
 	"  gl_FragColor = texture2D( s_texture, v_texCoord );\n"
+	"  gl_FragColor.a = gl_FragColor.a * u_alpha;        \n"
 	"}                                                   \n";
 	
 	GLchar fShaderBWStr[] =
 	"precision mediump float;                            \n"
 	"varying vec2 v_texCoord;                            \n"
 	"uniform sampler2D s_texture;                        \n"
+	"uniform float u_alpha;                              \n"
 	"void main()                                         \n"
 	"{                                                   \n"
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
 	"  float luminance = texelColor.a;                   \n"
-	"  gl_FragColor = vec4(luminance, luminance, luminance, 1);\n"
+	"  gl_FragColor = vec4(luminance, luminance, luminance, u_alpha);\n"
 	"}                                                   \n";
 	
 	GLchar fShaderAlphaStr[] =
 	"precision mediump float;                            \n"
 	"varying vec2 v_texCoord;                            \n"
 	"uniform sampler2D s_texture;                        \n"
+	"uniform float u_alpha;                              \n"
 	"void main()                                         \n"
 	"{                                                   \n"
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
-	"  float luminance = texelColor.a;                   \n"
+	"  float luminance = texelColor.a * u_alpha;         \n"
 	"  gl_FragColor = vec4(1, 1, 1, luminance);\n"
 	"}                                                   \n";
 	
@@ -243,9 +249,12 @@ static void gl_tile_draw(gl_shape *shape_self)
 	
 	shape_self->f->compute_projection(shape_self);
 	
-	glUniformMatrix4fv ( program->projectionLoc, 1, GL_FALSE, (GLfloat *)stage->data.projection);
-	glUniformMatrix4fv ( program->modelViewLoc,  1, GL_FALSE, (GLfloat *)shape_self->data.computed_modelView);
+	glUniformMatrix4fv(program->projectionLoc, 1, GL_FALSE, (GLfloat *)stage->data.projection);
+	glUniformMatrix4fv(program->modelViewLoc,  1, GL_FALSE, (GLfloat *)shape_self->data.computed_modelView);
 
+	shape_self->f->compute_alpha(shape_self);
 	
-	glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
+	glUniformFloat1f(program->alphaLoc, shape_self->data.computedAlpha);
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 }

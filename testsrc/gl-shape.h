@@ -28,6 +28,8 @@ typedef struct gl_shape_funcs {
 	void (*set_computed_projection_dirty) (gl_shape *obj);
 	void (*compute_projection) (gl_shape *obj);
 	void (*draw) (gl_shape *obj);
+	void (*set_computed_alpha_dirty) (gl_shape *obj);
+	void (*compute_alpha) (gl_shape *obj);
 } gl_shape_funcs;
 
 typedef struct gl_shape_data {
@@ -45,6 +47,7 @@ typedef struct gl_shape_data {
 	
 	GLfloat alpha;
 	GLfloat calculatedAlpha;
+	unsigned int computed_alpha_dirty;
 	
 	gl_shape *siblingL;
 	gl_shape *siblingR;

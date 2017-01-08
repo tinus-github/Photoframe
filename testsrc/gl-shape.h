@@ -46,7 +46,7 @@ typedef struct gl_shape_data {
 	GLfloat objectHeight;
 	
 	GLfloat alpha;
-	GLfloat calculatedAlpha;
+	GLfloat computedAlpha;
 	unsigned int computed_alpha_dirty;
 	
 	gl_shape *siblingL;

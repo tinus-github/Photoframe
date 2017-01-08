@@ -254,7 +254,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 
 	shape_self->f->compute_alpha(shape_self);
 	
-	glUniformFloat1f(program->alphaLoc, shape_self->data.computedAlpha);
+	glUniform1f(program->alphaLoc, shape_self->data.computedAlpha);
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 }

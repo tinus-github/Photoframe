@@ -46,8 +46,8 @@ gl_bitmap *gl_bitmap_new()
 
 static void gl_bitmap_free(gl_object *obj_obj)
 {
-	gl_bitmap *obj = (gl_bitmap *)obj_obj;
-	
+	gl_bitmap *obj = (gl_bitmap *)obj_obj;
+
 	free(obj->data.bitmap);
 	gl_object_free_org_global(obj_obj);
 }

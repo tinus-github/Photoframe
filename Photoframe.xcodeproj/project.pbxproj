@@ -235,8 +235,6 @@
 		0D3ADC741E01F041009A40B1 /* gl-objects.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "gl-objects.rtf"; sourceTree = "<group>"; };
 		0D3ADC751E0B1C5D009A40B1 /* gl-container-2d.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-container-2d.c"; sourceTree = "<group>"; };
 		0D3ADC761E0B1C5D009A40B1 /* gl-container-2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-container-2d.h"; sourceTree = "<group>"; };
-		0D6515321CCD4824007A3C9E /* gl-rect.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-rect.c"; sourceTree = "<group>"; };
-		0D6515331CCD4824007A3C9E /* gl-rect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-rect.h"; sourceTree = "<group>"; };
 		0D6515341CD8E314007A3C9E /* gl-object.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-object.c"; sourceTree = "<group>"; };
 		0D6515351CD8E314007A3C9E /* gl-object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-object.h"; sourceTree = "<group>"; };
 		0D67E7F31DDB5C2400A2B16C /* gl-tile.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-tile.c"; sourceTree = "<group>"; };
@@ -660,8 +658,6 @@
 				0D2B2FEE1C9073AA0063393E /* loadimage.h */,
 				0D2B2FEF1C90DE7F0063393E /* loadexif.c */,
 				0D2B2FF01C90DE7F0063393E /* loadexif.h */,
-				0D6515321CCD4824007A3C9E /* gl-rect.c */,
-				0D6515331CCD4824007A3C9E /* gl-rect.h */,
 				0D6515341CD8E314007A3C9E /* gl-object.c */,
 				0D6515351CD8E314007A3C9E /* gl-object.h */,
 				0D8350051CE63F8200ADCDCC /* gl-texture.c */,

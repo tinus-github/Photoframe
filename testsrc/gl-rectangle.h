@@ -20,6 +20,7 @@ typedef struct gl_rectangle gl_rectangle;
 
 typedef struct gl_rectangle_funcs {
 	gl_shape_funcs p;
+	void (*set_color) (gl_rectangle *obj, GLfloat r, GLfloat g, GLfloat b, GLfloat alpha);
 } gl_rectangle_funcs;
 
 typedef struct gl_rectangle_data {

@@ -11,9 +11,10 @@
 #include "gl-stage.h"
 
 static void gl_rectangle_draw(gl_shape *self);
+static void gl_rectangle_set_color(gl_rectangle *obj, GLfloat r, GLfloat g, GLfloat b, GLfloat alpha);
 
 static struct gl_rectangle_funcs gl_rectangle_funcs_global = {
-	
+	.set_color = &gl_rectangle_set_color
 };
 
 typedef struct gl_rectangle_program_data {
@@ -93,6 +94,13 @@ gl_rectangle *gl_rectangle_new()
 	return gl_rectangle_init(ret);
 }
 
+static void gl_rectangle_set_color(gl_rectangle *obj, GLfloat r, GLfloat g, GLfloat b, GLfloat alpha)
+{
+	obj->data.color[0] = r;
+	obj->data.color[1] = g;
+	obj->data.color[2] = b;
+	obj->data.color[3] = alpha;
+}
 
 ///
 // Draw triangles using the shader pair created in Init()

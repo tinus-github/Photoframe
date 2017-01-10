@@ -133,7 +133,7 @@ static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 {
 	assert (tile_y < image_height);
 	
-	unsigned char *tile_data = rgba_data + (4 * sizeof(unsigned char) * image_width * tile_y);
+	unsigned char *tile_data = (bitmap->data.bitmap) + (4 * sizeof(unsigned char) * image_width * tile_y);
 	
 	obj->f->load_image_r(obj, bitmap, tile_data, image_width, tile_height);
 }

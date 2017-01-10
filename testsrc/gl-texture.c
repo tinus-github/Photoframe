@@ -56,7 +56,7 @@ gl_texture *gl_texture_new()
 	return gl_texture_init(ret);
 }
 
-static void load_image_gen(gl_texture *obj, unsigned char *image_data, unsigned int width, unsigned int height)
+static void load_image_gen(gl_texture *obj, unsigned char *image_data)
 {
 	// Texture object handle
 	GLuint textureId;
@@ -73,11 +73,11 @@ static void load_image_gen(gl_texture *obj, unsigned char *image_data, unsigned 
 	// Load the texture
 	if (obj->data.dataType != gl_texture_data_type_rgba) {
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_ALPHA,
-			      width, height,
+			      obj->data.width, obj->data.height,
 			      0, GL_ALPHA, GL_UNSIGNED_BYTE, image_data );
 	} else {
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
-			      width, height,
+			      obj->data.width, obj->data.height,
 			      0, GL_RGBA, GL_UNSIGNED_BYTE, image_data );
 	}
 	
@@ -91,20 +91,22 @@ static void load_image_gen(gl_texture *obj, unsigned char *image_data, unsigned 
 	
 	obj->data.textureId = textureId;
 	obj->data.texture_loaded = 1;
-	obj->data.width = width;
-	obj->data.height = height;
 }
 
 static void load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height)
 {
 	obj->data.dataType = gl_texture_data_type_rgba;
-	load_image_gen(obj, rgba_data, width, height);
+	obj->data.width = width;
+	obj->data.height = height;
+	load_image_gen(obj, rgba_data);
 }
 
 static void load_image_monochrome(gl_texture *obj, unsigned char *monochrome_data, unsigned int width, unsigned int height)
 {
 	obj->data.dataType = gl_texture_data_type_monochrome;
-	load_image_gen(obj, monochrome_data, width, height);
+	obj->data.width = width;
+	obj->data.height = height;
+	load_image_gen(obj, monochrome_data);
 }
 
 static void load_image_tile(gl_texture *obj, unsigned char *rgba_data,

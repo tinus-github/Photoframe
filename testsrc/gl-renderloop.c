@@ -154,7 +154,7 @@ static void gl_renderloop_run_phase(gl_renderloop *obj, gl_renderloop_phase phas
 			next_child = current_child->data.siblingR;
 			while (current_child != head) {
 				assert (current_child->data.owner = obj);
-				if (current_child->data.load_priority == priority_order[priority_counter]) {
+				if (current_child->data.loadPriority == priority_order[priority_counter]) {
 					current_child->f->run_action(current_child);
 					if (current_child->data.owner == obj) {
 						obj->f->remove_child(obj, current_child);

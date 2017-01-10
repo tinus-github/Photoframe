@@ -38,7 +38,7 @@ typedef struct gl_renderloop_member_data {
 	void *target;
 	void *action_data;
 	
-	gl_renderloop_member_priority load_priority; // Only used for the load phase
+	gl_renderloop_member_priority loadPriority; // Only used for the load phase
 } gl_renderloop_member_data;
 
 struct gl_renderloop_member {

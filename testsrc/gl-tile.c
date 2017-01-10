@@ -199,7 +199,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 		gl_tile_load_program();
 	}
 	
-	if (!texture) {
+	if (!texture || (texture->data.loadState != gl_texture_loadstate_done)) {
 		return;
 	}
 	

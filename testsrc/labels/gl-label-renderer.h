@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 
-#include "gl-object.h"
+#include "infrastructure/gl_object.h"
 #include "gl-tile.h"
 
 typedef struct gl_label_renderer gl_label_renderer;

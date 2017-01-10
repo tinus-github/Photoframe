@@ -2,7 +2,7 @@
 
 OPTFLAGS = -O3 -I$(CURDIR)
 
-OBJECTS = image.o loadimage.o loadexif.o gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
+OBJECTS = image.o loadimage.o loadexif.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
 	  gl-container.o gl-container-2d.o gl-tiled-image.o gl-renderloop.o gl-renderloop-member.o egl-driver.o \
 	  gl-value-animation.o gl-value-animation-easing.o \
           labels/gl-label.o labels/gl-label-renderer.o labels/gl-label-scroller-segment.o \
@@ -46,7 +46,7 @@ egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-rende
 	-c egl-driver.c -o egl-driver.o \
 	-Wno-deprecated-declarations $(OPTFLAGS)
 
-gl-texture.o: gl-texture.c gl-texture.h gl-object.h gl-bitmap.h
+gl-texture.o: gl-texture.c gl-texture.h infrastructure/gl-object.h gl-bitmap.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
@@ -55,7 +55,7 @@ gl-texture.o: gl-texture.c gl-texture.h gl-object.h gl-bitmap.h
 	-Wno-deprecated-declarations \
 	-c gl-texture.c -o gl-texture.o $(OPTFLAGS)
 
-gl-shape.o: gl-shape.c gl-shape.h gl-object.h
+gl-shape.o: gl-shape.c gl-shape.h infrastructure/gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
@@ -64,14 +64,14 @@ gl-shape.o: gl-shape.c gl-shape.h gl-object.h
 	-Wno-deprecated-declarations \
 	-c gl-shape.c -o gl-shape.o $(OPTFLAGS)
 
-gl-object.o: gl-object.c gl-object.h
+infrastructure/gl-object.o: infrastructure/gl-object.c infrastructure/gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
 	-Wno-deprecated-declarations \
-	-c gl-object.c -o gl-object.o $(OPTFLAGS)
+	-c infrastructure/gl-object.c -o infrastructure/gl-object.o $(OPTFLAGS)
 
-gl-bitmap.o: gl-bitmap.c gl-bitmap.h gl-object.h
+gl-bitmap.o: gl-bitmap.c gl-bitmap.h infrastructure/gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
@@ -96,7 +96,7 @@ gl-rectangle.o: gl-rectangle.c gl-rectangle.h gl-shape.h
 	-Wno-deprecated-declarations \
 	-c gl-rectangle.c -o gl-rectangle.o $(OPTFLAGS)
 
-gl-stage.o: gl-stage.c gl-stage.h gl-object.h
+gl-stage.o: gl-stage.c gl-stage.h infrastructure/gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
@@ -105,7 +105,7 @@ gl-stage.o: gl-stage.c gl-stage.h gl-object.h
 	-Wno-deprecated-declarations \
 	-c gl-stage.c -o gl-stage.o $(OPTFLAGS)
 
-gl-container.o: gl-container.c gl-shape.h gl-object.h
+gl-container.o: gl-container.c gl-shape.h infrastructure/gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
@@ -123,7 +123,8 @@ gl-container-2d.o: gl-container.h gl-shape.h gl-object.h gl-container-2d.h gl-co
 	-Wno-deprecated-declarations \
 	-c gl-container-2d.c -o gl-container-2d.o $(OPTFLAGS)
 
-gl-tiled-image.o: gl-tiled-image.c gl-tiled-image.h gl-container-2d.h gl-container.h gl-shape.h gl-object.h
+gl-tiled-image.o: gl-tiled-image.c gl-tiled-image.h gl-container-2d.h \
+		gl-container.h gl-shape.h infrastructure/gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
@@ -132,21 +133,23 @@ gl-tiled-image.o: gl-tiled-image.c gl-tiled-image.h gl-container-2d.h gl-contain
 	-Wno-deprecated-declarations \
 	-c gl-tiled-image.c -o gl-tiled-image.o $(OPTFLAGS)
 
-gl-renderloop.o: gl-renderloop.c gl-renderloop.h gl-object.h
+gl-renderloop.o: gl-renderloop.c gl-renderloop.h infrastructure/gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
 	-Wno-deprecated-declarations \
 	-c gl-renderloop.c -o gl-renderloop.o $(OPTFLAGS)
 
-gl-renderloop-member.o: gl-renderloop-member.c gl-renderloop.h gl-renderloop-member.h gl-object.h
+gl-renderloop-member.o: gl-renderloop-member.c gl-renderloop.h \
+		gl-renderloop-member.h infrastructure/gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \
 	-Wno-deprecated-declarations \
 	-c gl-renderloop-member.c -o gl-renderloop-member.o $(OPTFLAGS)
 
-gl-value-animation.o: gl-value-animation.c gl-value-animation.h gl-renderloop.h gl-renderloop-member.h gl-object.h
+gl-value-animation.o: gl-value-animation.c gl-value-animation.h \
+		gl-renderloop.h gl-renderloop-member.h infrastructure/gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
@@ -156,7 +159,7 @@ gl-value-animation.o: gl-value-animation.c gl-value-animation.h gl-renderloop.h 
 	-c gl-value-animation.c -o gl-value-animation.o $(OPTFLAGS)
 
 gl-value-animation-easing.o: gl-value-animation-easing.c gl-value-animation-easing.h gl-value-animation.h \
-		 gl-renderloop.h gl-renderloop-member.h gl-object.h
+		 gl-renderloop.h gl-renderloop-member.h infrastructure/gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
@@ -165,7 +168,8 @@ gl-value-animation-easing.o: gl-value-animation-easing.c gl-value-animation-easi
 	-Wno-deprecated-declarations \
 	-c gl-value-animation-easing.c -o gl-value-animation-easing.o $(OPTFLAGS)
 
-labels/gl-label.o: labels/gl-label.c labels/gl-label.h gl-container-2d.h gl-container.h gl-shape.h gl-object.h gl-texture.h gl-tile.h
+labels/gl-label.o: labels/gl-label.c labels/gl-label.h gl-container-2d.h \
+		gl-container.h gl-shape.h infrastructure/gl-object.h gl-texture.h gl-tile.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
@@ -175,7 +179,8 @@ labels/gl-label.o: labels/gl-label.c labels/gl-label.h gl-container-2d.h gl-cont
 	-c labels/gl-label.c -o labels/gl-label.o $(OPTFLAGS)
 
 labels/gl-label-scroller-segment.o: labels/gl-label-scroller-segment.c labels/gl-label-scroller-segment.h \
-                 labels/gl-label.h gl-container-2d.h gl-container.h gl-shape.h gl-object.h gl-texture.h gl-tile.h
+                labels/gl-label.h gl-container-2d.h gl-container.h gl-shape.h \
+		infrastructure/gl-object.h gl-texture.h gl-tile.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
@@ -185,7 +190,8 @@ labels/gl-label-scroller-segment.o: labels/gl-label-scroller-segment.c labels/gl
 	-c labels/gl-label-scroller-segment.c -o labels/gl-label-scroller-segment.o $(OPTFLAGS)
 
 labels/gl-label-scroller.o: labels/gl-label-scroller.c labels/gl-label-scroller.h \
-		labels/gl-label.h gl-container-2d.h gl-container.h gl-shape.h gl-object.h gl-texture.h gl-tile.h \
+		labels/gl-label.h gl-container-2d.h gl-container.h gl-shape.h \
+		infrastructure/gl-object.h gl-texture.h gl-tile.h \
 		labels/gl-label-scroller-segment.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
@@ -195,7 +201,8 @@ labels/gl-label-scroller.o: labels/gl-label-scroller.c labels/gl-label-scroller.
 	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
 	-c labels/gl-label-scroller.c -o labels/gl-label-scroller.o $(OPTFLAGS)
 
-labels/gl-label-renderer.o: labels/gl-label-renderer.c labels/gl-label-renderer.h gl-object.h gl-texture.h gl-tile.h
+labels/gl-label-renderer.o: labels/gl-label-renderer.c labels/gl-label-renderer.h \
+		infrastructure/gl-object.h gl-texture.h gl-tile.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \

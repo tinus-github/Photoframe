@@ -6,7 +6,7 @@
 //
 // Implements a very basic object scheme
 
-#include "gl-object.h"
+#include "infrastructure/gl-object.h"
 
 #include <assert.h>
 #include <stdlib.h>

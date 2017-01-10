@@ -14,7 +14,7 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-#include "gl-object.h"
+#include "infrastructure/gl_object.h"
 
 typedef float vec4[4];
 typedef vec4 mat4x4[4];

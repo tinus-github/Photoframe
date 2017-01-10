@@ -220,16 +220,16 @@
 		0D071E501E12C31500145717 /* test-tagtable.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "test-tagtable.c"; sourceTree = "<group>"; };
 		0D071E511E12C31500145717 /* test-value.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "test-value.c"; sourceTree = "<group>"; };
 		0D071E521E1313EF00145717 /* gl-renderloop.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-renderloop.c"; sourceTree = "<group>"; };
-		0D071E531E1313EF00145717 /* gl-renderloop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-renderloop.h"; sourceTree = "<group>"; };
+		0D071E531E1313EF00145717 /* gl-renderloop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-renderloop.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0D071E541E13182D00145717 /* gl-renderloop-member.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-renderloop-member.c"; sourceTree = "<group>"; };
-		0D071E551E13182D00145717 /* gl-renderloop-member.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-renderloop-member.h"; sourceTree = "<group>"; };
+		0D071E551E13182D00145717 /* gl-renderloop-member.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-renderloop-member.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0D2B2FED1C9073AA0063393E /* loadimage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = loadimage.c; sourceTree = "<group>"; };
 		0D2B2FEE1C9073AA0063393E /* loadimage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loadimage.h; sourceTree = "<group>"; };
 		0D2B2FEF1C90DE7F0063393E /* loadexif.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = loadexif.c; sourceTree = "<group>"; };
 		0D2B2FF01C90DE7F0063393E /* loadexif.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loadexif.h; sourceTree = "<group>"; };
 		0D2B2FF51CB443900063393E /* linmath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = linmath.h; sourceTree = "<group>"; };
 		0D3ADC701E0089A4009A40B1 /* gl-stage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-stage.c"; sourceTree = "<group>"; };
-		0D3ADC711E0089A4009A40B1 /* gl-stage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-stage.h"; sourceTree = "<group>"; };
+		0D3ADC711E0089A4009A40B1 /* gl-stage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-stage.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0D3ADC721E01EE8A009A40B1 /* gl-container.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-container.c"; sourceTree = "<group>"; };
 		0D3ADC731E01EE8A009A40B1 /* gl-container.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-container.h"; sourceTree = "<group>"; };
 		0D3ADC741E01F041009A40B1 /* gl-objects.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "gl-objects.rtf"; sourceTree = "<group>"; };
@@ -248,21 +248,21 @@
 		0D80FE081E251939008827AA /* gl-rectangle.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "gl-rectangle.c"; path = "testsrc/gl-rectangle.c"; sourceTree = SOURCE_ROOT; };
 		0D80FE091E251939008827AA /* gl-rectangle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "gl-rectangle.h"; path = "testsrc/gl-rectangle.h"; sourceTree = SOURCE_ROOT; };
 		0D80FE0A1E255179008827AA /* gl-bitmap.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-bitmap.c"; sourceTree = "<group>"; };
-		0D80FE0B1E255179008827AA /* gl-bitmap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-bitmap.h"; sourceTree = "<group>"; };
+		0D80FE0B1E255179008827AA /* gl-bitmap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-bitmap.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0D8350051CE63F8200ADCDCC /* gl-texture.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-texture.c"; sourceTree = "<group>"; };
-		0D8350061CE63F8200ADCDCC /* gl-texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-texture.h"; sourceTree = "<group>"; };
+		0D8350061CE63F8200ADCDCC /* gl-texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-texture.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0D8350071CEA1F8800ADCDCC /* gl-shape.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-shape.c"; sourceTree = "<group>"; };
-		0D8350081CEA1F8800ADCDCC /* gl-shape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-shape.h"; sourceTree = "<group>"; };
+		0D8350081CEA1F8800ADCDCC /* gl-shape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-shape.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0DEED0791E15746600C00550 /* egl-driver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "egl-driver.c"; sourceTree = "<group>"; };
 		0DEED07A1E15746600C00550 /* egl-driver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "egl-driver.h"; sourceTree = "<group>"; };
 		0DEED07B1E15E10900C00550 /* gl-value-animation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-value-animation.c"; sourceTree = "<group>"; };
-		0DEED07C1E15E10900C00550 /* gl-value-animation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-value-animation.h"; sourceTree = "<group>"; };
+		0DEED07C1E15E10900C00550 /* gl-value-animation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-value-animation.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0DEED07D1E15F89B00C00550 /* gl-value-animation-easing.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-value-animation-easing.c"; sourceTree = "<group>"; };
 		0DEED07E1E15F89B00C00550 /* gl-value-animation-easing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-value-animation-easing.h"; sourceTree = "<group>"; };
 		0DEED07F1E19C39800C00550 /* gl-label.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-label.c"; sourceTree = "<group>"; };
 		0DEED0801E19C39800C00550 /* gl-label.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-label.h"; sourceTree = "<group>"; };
-		0DFBB1C51E1E90CE00E50758 /* gl-label-renderer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-label-renderer.c"; sourceTree = "<group>"; };
-		0DFBB1C61E1E90CE00E50758 /* gl-label-renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-label-renderer.h"; sourceTree = "<group>"; };
+		0DFBB1C51E1E90CE00E50758 /* gl-label-renderer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = "gl-label-renderer.c"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		0DFBB1C61E1E90CE00E50758 /* gl-label-renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-label-renderer.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0DFBB1C71E1FDFDB00E50758 /* gl-label-scroller-segment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-label-scroller-segment.c"; sourceTree = "<group>"; };
 		0DFBB1CA1E204CAE00E50758 /* gl-label-scroller-segment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-label-scroller-segment.h"; sourceTree = "<group>"; };
 		0DFBB1CB1E20590C00E50758 /* gl-label-scroller.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-label-scroller.c"; sourceTree = "<group>"; };
@@ -655,6 +655,7 @@
 		0D69BD731C4EA16500A10282 /* testsrc */ = {
 			isa = PBXGroup;
 			children = (
+				0D80FE0C1E2592B7008827AA /* infrastructure */,
 				0DFBB1C91E204BF200E50758 /* labels */,
 				0D69BD751C4EA17900A10282 /* image.c */,
 				0D69BD771C4EA17900A10282 /* Makefile */,
@@ -662,8 +663,6 @@
 				0D2B2FEE1C9073AA0063393E /* loadimage.h */,
 				0D2B2FEF1C90DE7F0063393E /* loadexif.c */,
 				0D2B2FF01C90DE7F0063393E /* loadexif.h */,
-				0D6515341CD8E314007A3C9E /* gl-object.c */,
-				0D6515351CD8E314007A3C9E /* gl-object.h */,
 				0D80FE0A1E255179008827AA /* gl-bitmap.c */,
 				0D80FE0B1E255179008827AA /* gl-bitmap.h */,
 				0D8350051CE63F8200ADCDCC /* gl-texture.c */,
@@ -699,6 +698,15 @@
 			sourceTree = "<group>";
 			tabWidth = 8;
 			usesTabs = 1;
+		};
+		0D80FE0C1E2592B7008827AA /* infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				0D6515341CD8E314007A3C9E /* gl-object.c */,
+				0D6515351CD8E314007A3C9E /* gl-object.h */,
+			);
+			path = infrastructure;
+			sourceTree = "<group>";
 		};
 		0DFBB1C91E204BF200E50758 /* labels */ = {
 			isa = PBXGroup;

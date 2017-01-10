@@ -21,8 +21,8 @@ typedef struct gl_bitmap_funcs {
 typedef struct gl_bitmap_data {
 	gl_object_data p;
 	
-	uint32_t width;
-	uint32_t height;
+	unsigned int width;
+	unsigned int height;
 	
 	unsigned char* bitmap;
 } gl_bitmap_data;

@@ -186,6 +186,7 @@ static gl_tile *gl_label_renderer_render(gl_label_renderer *obj,
 	}
 	
 	gl_texture *texture = gl_texture_new();
+	texture->data.loadPriority = gl_renderloop_member_priority_high;
 	texture->f->load_image_monochrome(texture, bitmap, windowWidth, windowHeight);
 	
 	texture->data.dataType = gl_texture_data_type_alpha;

@@ -112,13 +112,9 @@ static void gl_rectangle_draw(gl_shape *shape_self)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	GLfloat vVertices[] = { 0.0f, 0.0f, 0.0f,  // Position 0
-		0.0f,  0.0f,        // TexCoord 0
 		0.0f,  1.0f, 0.0f,  // Position 1
-		0.0f,  1.0f,        // TexCoord 1
 		1.0f,  1.0f, 0.0f,  // Position 2
-		1.0f,  1.0f,        // TexCoord 2
 		1.0f,  0.0f, 0.0f,  // Position 3
-		1.0f,  0.0f         // TexCoord 3
 	};
 	
 	GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
@@ -128,10 +124,7 @@ static void gl_rectangle_draw(gl_shape *shape_self)
 	
 	// Load the vertex position
 	glVertexAttribPointer ( program->positionLoc, 3, GL_FLOAT,
-			       GL_FALSE, 5 * sizeof(GLfloat), vVertices );
-	// Load the texture coordinate
-	glVertexAttribPointer ( program->texCoordLoc, 2, GL_FLOAT,
-			       GL_FALSE, 5 * sizeof(GLfloat), &vVertices[3] );
+			       GL_FALSE, 3 * sizeof(GLfloat), vVertices );
 	
 	glEnableVertexAttribArray ( program->positionLoc );
 	

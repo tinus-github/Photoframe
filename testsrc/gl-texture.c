@@ -93,8 +93,6 @@ static void load_image_gen(gl_texture *obj, unsigned char *image_data, unsigned 
 	obj->data.texture_loaded = 1;
 	obj->data.width = width;
 	obj->data.height = height;
-	
-	return textureId;
 }
 
 static void load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height)

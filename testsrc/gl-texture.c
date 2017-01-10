@@ -58,8 +58,6 @@ gl_texture *gl_texture_new()
 static void load_image_gen_r_work(void *target, gl_renderloop_member *renderloop_member, void *extra_data)
 {
 	gl_texture *obj = (gl_texture *)target;
-
-	obj->data.imageDataBitmap = data;
 	
 	// Texture object handle
 	GLuint textureId;
@@ -108,6 +106,7 @@ static void load_image_gen_r(gl_texture *obj, gl_bitmap *bitmap, unsigned char *
 	obj->data.imageDataStore = bitmap;
 	gl_object *bitmap_obj = (gl_object *)bitmap;
 	bitmap_obj->f->ref(bitmap_obj);
+	obj->data.imageDataBitmap = data;
 
 	gl_renderloop_member *renderloop_member = gl_renderloop_member_new();
 	renderloop_member->data.target = obj;

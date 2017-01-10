@@ -7,6 +7,8 @@
 //
 
 #include "infrastructure/gl-notice-subscription.h"
+#include <string.h>
+#include <stdlib.h>
 
 static void gl_notice_subscription_run_action(gl_notice_subscription *obj);
 

@@ -80,6 +80,15 @@ gl-tile.o: gl-tile.c gl-tile.h gl-shape.h gl-texture.h
 	-Wno-deprecated-declarations \
 	-c gl-tile.c -o gl-tile.o $(OPTFLAGS)
 
+gl-rectangle.o: gl-rectangle.c gl-rectangle.h gl-shape.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-Wno-deprecated-declarations \
+	-c gl-rectangle.c -o gl-rectangle.o $(OPTFLAGS)
+
 gl-stage.o: gl-stage.c gl-stage.h gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \

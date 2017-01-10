@@ -54,7 +54,7 @@ static int gl_rectangle_load_program() {
 	
 	GLchar fShaderStr[] =
 	"precision mediump float;                            \n"
-	"uniform vec4 u_color                                \n"
+	"uniform vec4 u_color;                               \n"
 	"void main()                                         \n"
 	"{                                                   \n"
 	"  gl_FragColor = u_color;                           \n"

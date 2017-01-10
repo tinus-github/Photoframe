@@ -7,6 +7,8 @@
 //
 
 #include "gl-bitmap.h"
+#include <string.h>
+#include <stdlib.h>
 
 static void gl_bitmap_free(gl_object *obj_obj);
 

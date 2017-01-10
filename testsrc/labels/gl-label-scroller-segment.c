@@ -77,7 +77,6 @@ static void gl_label_scroller_segment_render(gl_label_scroller_segment *obj)
 				found = 1;
 				break;
 			}
-			printf("Discard %d\n", currentChildData->tileIndex);
 			gl_label_scroller_segment_remove_child(obj, currentChildData);
 			currentChildData = nextChildData;
 			nextChildData = currentChildData->siblingR;
@@ -85,7 +84,6 @@ static void gl_label_scroller_segment_render(gl_label_scroller_segment *obj)
 		if (!found) {
 			tile = gl_label_scroller_segment_render_tile(obj, counter);
 			gl_label_scroller_segment_append_child(obj, tile, counter);
-			printf("render %d\n", counter);
 		}
 	}
 }

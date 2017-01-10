@@ -10,6 +10,7 @@
 #define gl_bitmap_h
 
 #include <stdio.h>
+#include "gl-object.h"
 
 typedef struct gl_bitmap gl_bitmap;
 

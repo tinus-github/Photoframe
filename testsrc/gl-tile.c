@@ -199,6 +199,10 @@ static void gl_tile_draw(gl_shape *shape_self)
 		gl_tile_load_program();
 	}
 	
+	if (!texture) {
+		return;
+	}
+	
 	gl_tile_program_data *program;
 	
 	switch (texture->data.dataType) {

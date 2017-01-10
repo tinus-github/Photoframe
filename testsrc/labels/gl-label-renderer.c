@@ -193,7 +193,7 @@ static gl_tile *gl_label_renderer_render(gl_label_renderer *obj,
 	gl_tile *tile = gl_tile_new();
 	tile->f->set_texture(tile, texture);
 	
-	((gl_object *)bitmap)->f->free((gl_object *)bitmap);
+	((gl_object *)bitmap)->f->unref((gl_object *)bitmap);
 	
 	return tile;
 }

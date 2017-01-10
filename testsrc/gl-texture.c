@@ -15,10 +15,6 @@
 static void load_image(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
 static void load_image_r(gl_texture *obj, gl_bitmap *bitmap, unsigned char *rgba_data, unsigned int width, unsigned int height);
 static void load_image_monochrome(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
-static void load_image_tile(gl_texture *obj, gl_bitmap *bitmap,
-			    unsigned int image_width, unsigned int image_height,
-			    unsigned int tile_width, unsigned int tile_height,
-			    unsigned int tile_x, unsigned int tile_y);
 static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 				       unsigned int image_width, unsigned int image_height,
 				       unsigned int tile_height, unsigned int tile_y);
@@ -28,7 +24,6 @@ static struct gl_texture_funcs gl_texture_funcs_global = {
 	.load_image = &load_image,
 	.load_image_r = &load_image_r,
 	.load_image_monochrome = &load_image_monochrome,
-	.load_image_tile = &load_image_tile,
 	.load_image_horizontal_tile = &load_image_horizontal_tile
 };
 

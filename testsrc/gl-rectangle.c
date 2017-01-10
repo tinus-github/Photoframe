@@ -144,13 +144,7 @@ static void gl_rectangle_draw(gl_shape *shape_self)
 	shape_self->f->compute_alpha(shape_self);
 	
 	GLfloat finalAlpha = shape_self->data.computedAlpha * self->data.color[3];
-	vec4 color;
-	color[0] = self->data.color[0];
-	color[1] = self->data.color[1];
-	color[2] = self->data.color[2];
-	color[3] = finalAlpha;
 	
-	glUniformMatrix4fv(program->colorLoc, 1, GL_FALSE, (GLfloat *)&color);
-	
+	glUniform4f(program->colorLoc, self->data.color[0], self->data.color[1], self->data.color[2], finalAlpha);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 }

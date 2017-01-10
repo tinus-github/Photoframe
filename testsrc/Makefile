@@ -114,7 +114,7 @@ gl-container.o: gl-container.c gl-shape.h infrastructure/gl-object.h
 	-Wno-deprecated-declarations \
 	-c gl-container.c -o gl-container.o $(OPTFLAGS)
 
-gl-container-2d.o: gl-container.h gl-shape.h gl-object.h gl-container-2d.h gl-container-2d.c
+gl-container-2d.o: gl-container.h gl-shape.h infrastructure/gl-object.h gl-container-2d.h gl-container-2d.c
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \

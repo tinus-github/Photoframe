@@ -35,6 +35,7 @@ typedef enum {
 typedef struct gl_texture_funcs {
 	gl_object_funcs p;
 	void (*load_image) (gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
+	void (*load_image_r) (gl_texture *obj, gl_bitmap *bitmap, unsigned char *rgba_data, unsigned int width, unsigned int height);
 	void (*load_image_monochrome) (gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
 	void (*load_image_tile) (gl_texture *obj, gl_bitmap *bitmap,
 				 unsigned int image_width, unsigned int image_height,

@@ -13,6 +13,7 @@
 #include <assert.h>
 
 static void load_image(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
+static void load_image_r(gl_texture *obj, gl_bitmap *bitmap, unsigned char *rgba_data, unsigned int width, unsigned int height);
 static void load_image_monochrome(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
 static void load_image_tile(gl_texture *obj, gl_bitmap *bitmap,
 			    unsigned int image_width, unsigned int image_height,
@@ -25,6 +26,7 @@ static void gl_texture_free(gl_object *obj);
 
 static struct gl_texture_funcs gl_texture_funcs_global = {
 	.load_image = &load_image,
+	.load_image_r = &load_image_r,
 	.load_image_monochrome = &load_image_monochrome,
 	.load_image_tile = &load_image_tile,
 	.load_image_horizontal_tile = &load_image_horizontal_tile
@@ -117,6 +119,14 @@ static void load_image(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, u
 	obj->data.width = width;
 	obj->data.height = height;
 	load_image_gen(obj, bitmap);
+}
+
+static void load_image_r(gl_texture *obj, gl_bitmap *bitmap, unsigned char *rgba_data, unsigned int width, unsigned int height)
+{
+	obj->data.dataType = gl_texture_data_type_rgba;
+	obj->data.width = width;
+	obj->data.height = height;
+	load_image_gen_r(obj, bitmap, rgba_data);
 }
 
 static void load_image_monochrome(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height)

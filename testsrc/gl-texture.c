@@ -58,6 +58,8 @@ gl_texture *gl_texture_new()
 
 static void load_image_gen(gl_texture *obj, unsigned char *image_data)
 {
+	obj->data.loadState = gl_texture_loadstate_started;
+	
 	// Texture object handle
 	GLuint textureId;
 	
@@ -90,7 +92,7 @@ static void load_image_gen(gl_texture *obj, unsigned char *image_data)
 	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	
 	obj->data.textureId = textureId;
-	obj->data.texture_loaded = 1;
+	obj->data.loadState = gl_texture_loadstate_done;
 }
 
 static void load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height)
@@ -161,15 +163,23 @@ static void load_image_horizontal_tile(gl_texture *obj, unsigned char *rgba_data
 
 static void gl_texture_free_texture(gl_texture *obj)
 {
+	// TODO: Cancel loading
 	glDeleteTextures ( 1, &obj->data.textureId );
-	obj->data.texture_loaded = 0;
+	obj->data.loadState = gl_texture_loadstate_clear;
 }
 
 static void gl_texture_free(gl_object *obj_obj)
 {
 	gl_texture *obj = (gl_texture *)obj_obj;
-	if (obj->data.texture_loaded) {
-		gl_texture_free_texture(obj);
+	switch (obj->data.loadState) {
+		case gl_texture_loadstate_clear:
+			break;
+		case gl_texture_loadstate_done:
+			gl_texture_free_texture(obj);
+			break;
+		case gl_texture_loadstate_started:
+			// TODO: Cancel loading
+			break;
 	}
 	gl_object_free_org_global(obj_obj);
 }

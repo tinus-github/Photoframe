@@ -24,6 +24,12 @@ typedef enum {
 	gl_texture_data_type_alpha
 } gl_texture_data_type;
 
+typedef enum {
+	gl_texture_loadstate_clear = 0,
+	gl_texture_loadstate_started,
+	gl_texture_loadstate_done
+} gl_texture_loadstate;
+
 typedef struct gl_texture_funcs {
 	gl_object_funcs p;
 	void (*load_image) (gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
@@ -40,7 +46,7 @@ typedef struct gl_texture_funcs {
 typedef struct gl_texture_data {
 	gl_object_data p;
 	GLuint textureId;
-	int texture_loaded;
+	gl_texture_loadstate loadState;
 	GLuint width;
 	GLuint height;
 	

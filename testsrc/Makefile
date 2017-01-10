@@ -71,7 +71,7 @@ gl-object.o: gl-object.c gl-object.h
 	-Wno-deprecated-declarations \
 	-c gl-object.c -o gl-object.o $(OPTFLAGS)
 
-gl-tile.o: gl-tile.c gl-tile.h gl-shape.h gl-texture.h
+gl-tile.o: gl-tile.c gl-tile.h gl-shape.h gl-texture.h gl-renderloop.h gl-renderloop-member.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \

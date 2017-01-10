@@ -7,6 +7,8 @@
 //
 
 #include "gl-texture.h"
+#include "gl-renderloop-member.h"
+#include "gl-renderloop.h"
 #include <string.h>
 #include <assert.h>
 
@@ -59,6 +61,7 @@ gl_texture *gl_texture_new()
 static void load_image_gen(gl_texture *obj, unsigned char *image_data)
 {
 	obj->data.loadState = gl_texture_loadstate_started;
+	obj->data.imageData = image_data;
 	
 	// Texture object handle
 	GLuint textureId;
@@ -76,11 +79,11 @@ static void load_image_gen(gl_texture *obj, unsigned char *image_data)
 	if (obj->data.dataType != gl_texture_data_type_rgba) {
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_ALPHA,
 			      obj->data.width, obj->data.height,
-			      0, GL_ALPHA, GL_UNSIGNED_BYTE, image_data );
+			      0, GL_ALPHA, GL_UNSIGNED_BYTE, obj->data.imageData );
 	} else {
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
 			      obj->data.width, obj->data.height,
-			      0, GL_RGBA, GL_UNSIGNED_BYTE, image_data );
+			      0, GL_RGBA, GL_UNSIGNED_BYTE, obj->data.imageData );
 	}
 	
 	// Set the filtering mode

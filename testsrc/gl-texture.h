@@ -15,6 +15,7 @@
 #include <EGL/eglext.h>
 
 #include "gl-object.h"
+#include "gl-renderloop-member.h"
 
 typedef struct gl_texture gl_texture;
 
@@ -51,6 +52,9 @@ typedef struct gl_texture_data {
 	GLuint height;
 	
 	gl_texture_data_type dataType;
+	
+	gl_renderloop_member *uploadRenderloopMember;
+	unsigned char *imageData;
 } gl_texture_data;
 
 struct gl_texture {

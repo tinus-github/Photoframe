@@ -18,13 +18,15 @@ static void load_image_monochrome(gl_texture *obj, gl_bitmap *bitmap, unsigned i
 static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 				       unsigned int image_width, unsigned int image_height,
 				       unsigned int tile_height, unsigned int tile_y);
+static void gl_texture_cancel_loading(gl_texture *obj);
 static void gl_texture_free(gl_object *obj);
 
 static struct gl_texture_funcs gl_texture_funcs_global = {
 	.load_image = &load_image,
 	.load_image_r = &load_image_r,
 	.load_image_monochrome = &load_image_monochrome,
-	.load_image_horizontal_tile = &load_image_horizontal_tile
+	.load_image_horizontal_tile = &load_image_horizontal_tile,
+	.cancel_loading = &gl_texture_cancel_loading
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
@@ -162,8 +164,25 @@ static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 
 static void gl_texture_free_texture(gl_texture *obj)
 {
-	// TODO: Cancel loading
 	glDeleteTextures ( 1, &obj->data.textureId );
+	obj->data.loadState = gl_texture_loadstate_clear;
+}
+
+static void gl_texture_cancel_loading(gl_texture *obj)
+{
+	assert (obj->data.loadState == gl_texture_loadstate_started);
+	gl_renderloop_member *member = obj->data.uploadRenderloopMember;
+	gl_renderloop *renderloop = member->data.owner;
+	renderloop->f->remove_child(renderloop, member);
+	
+	((gl_object *)member)->f->unref((gl_object *)member);
+	obj->data.uploadRenderloopMember = NULL;
+	
+	gl_object *bitmap_obj = (gl_object *)obj->data.imageDataStore;
+	bitmap_obj->f->unref(bitmap_obj);
+	obj->data.imageDataStore = NULL;
+	obj->data.imageDataBitmap = NULL;
+	
 	obj->data.loadState = gl_texture_loadstate_clear;
 }
 
@@ -177,7 +196,7 @@ static void gl_texture_free(gl_object *obj_obj)
 			gl_texture_free_texture(obj);
 			break;
 		case gl_texture_loadstate_started:
-			// TODO: Cancel loading
+			obj->f->cancel_loading(obj);
 			break;
 	}
 	gl_object_free_org_global(obj_obj);

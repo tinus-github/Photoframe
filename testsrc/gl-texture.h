@@ -40,6 +40,7 @@ typedef struct gl_texture_funcs {
 	void (*load_image_horizontal_tile) (gl_texture *obj, gl_bitmap *bitmap,
 					    unsigned int image_width, unsigned int image_height,
 					    unsigned int tile_height, unsigned int tile_y);
+	void (*cancel_loading) (gl_texture *obj);
 } gl_texture_funcs;
 
 typedef struct gl_texture_data {

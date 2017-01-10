@@ -249,6 +249,10 @@
 		0D80FE091E251939008827AA /* gl-rectangle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "gl-rectangle.h"; path = "testsrc/gl-rectangle.h"; sourceTree = SOURCE_ROOT; };
 		0D80FE0A1E255179008827AA /* gl-bitmap.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-bitmap.c"; sourceTree = "<group>"; };
 		0D80FE0B1E255179008827AA /* gl-bitmap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-bitmap.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		0D80FE0D1E2596AB008827AA /* gl-notice.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-notice.c"; sourceTree = "<group>"; };
+		0D80FE0E1E2596AB008827AA /* gl-notice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-notice.h"; sourceTree = "<group>"; };
+		0D80FE0F1E259865008827AA /* gl-notice-subscription.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-notice-subscription.c"; sourceTree = "<group>"; };
+		0D80FE101E259865008827AA /* gl-notice-subscription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-notice-subscription.h"; sourceTree = "<group>"; };
 		0D8350051CE63F8200ADCDCC /* gl-texture.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-texture.c"; sourceTree = "<group>"; };
 		0D8350061CE63F8200ADCDCC /* gl-texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-texture.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0D8350071CEA1F8800ADCDCC /* gl-shape.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-shape.c"; sourceTree = "<group>"; };
@@ -704,6 +708,10 @@
 			children = (
 				0D6515341CD8E314007A3C9E /* gl-object.c */,
 				0D6515351CD8E314007A3C9E /* gl-object.h */,
+				0D80FE0D1E2596AB008827AA /* gl-notice.c */,
+				0D80FE0E1E2596AB008827AA /* gl-notice.h */,
+				0D80FE0F1E259865008827AA /* gl-notice-subscription.c */,
+				0D80FE101E259865008827AA /* gl-notice-subscription.h */,
 			);
 			path = infrastructure;
 			sourceTree = "<group>";

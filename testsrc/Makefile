@@ -211,6 +211,14 @@ labels/gl-label-renderer.o: labels/gl-label-renderer.c labels/gl-label-renderer.
 	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
 	-c labels/gl-label-renderer.c -o labels/gl-label-renderer.o $(OPTFLAGS)
 
+infrastructure/gl-notice-subscription.o: infrastructure/gl-notice-subscription.c infrastructure/gl-notice-subscription.h \
+		infrastructure/gl-object.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations \
+	-c infrastructure/gl-notice-subscription.c -o infrastructure/gl-notice-subscription.o $(OPTFLAGS)
+
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	 -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \

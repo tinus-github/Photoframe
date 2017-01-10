@@ -43,7 +43,7 @@ void gl_tiled_image_setup()
 static void gl_tiled_image_free(gl_object *obj_obj)
 {
 	gl_tiled_image *obj = (gl_tiled_image *)obj_obj;
-	free(obj->data.rgba_data);
+//	free(obj->data.rgba_data);
 	
 	gl_object_free_org_global(obj_obj);
 }

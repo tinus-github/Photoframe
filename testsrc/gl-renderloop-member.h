@@ -20,6 +20,11 @@ typedef struct gl_renderloop_member_funcs {
 	void (*run_action) (gl_renderloop_member *obj);
 } gl_renderloop_member_funcs;
 
+typedef enum {
+	gl_renderloop_member_priority_low = 0,
+	gl_renderloop_member_priority_high
+} gl_renderloop_member_priority;
+
 typedef struct gl_renderloop_member_data {
 	gl_object_data p;
 	
@@ -32,6 +37,8 @@ typedef struct gl_renderloop_member_data {
 	void (*action) (void *target, gl_renderloop_member *renderloop_member, void *action_data);
 	void *target;
 	void *action_data;
+	
+	gl_renderloop_member_priority load_priority; // Only used for the load phase
 } gl_renderloop_member_data;
 
 struct gl_renderloop_member {

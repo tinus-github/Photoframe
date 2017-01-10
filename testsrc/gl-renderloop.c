@@ -128,13 +128,44 @@ static void gl_renderloop_run_phase(gl_renderloop *obj, gl_renderloop_phase phas
 	gl_renderloop_member *current_child = head->data.siblingR;
 	gl_renderloop_member *next_child = current_child->data.siblingR;
 	
-	while (current_child != head) {
-		assert (current_child->data.owner = obj);
+#define NUM_PRIORITIES 2
+	static const gl_renderloop_member_priority priority_order[NUM_PRIORITIES] = {
+		gl_renderloop_member_priority_high,
+		gl_renderloop_member_priority_low
+	};
+
+	if (phase != gl_renderloop_phase_load) {
+		while (current_child != head) {
+			assert (current_child->data.owner = obj);
+			
+			current_child->f->run_action(current_child);
+			
+			current_child = next_child;
+			next_child = current_child->data.siblingR;
+		}
+	} else {
+		// This phase runs only one action for every frame
+		// The action is automatically removed from the list
+		// The high priority ones are ran first.
+		unsigned int priority_counter;
 		
-		current_child->f->run_action(current_child);
+		for (priority_counter = 0; priority_counter < NUM_PRIORITIES; priority_counter++;) {
+			current_child = head->data.siblingR;
+			next_child = current_child->data.siblingR;
+			while (current_child != head) {
+				assert (current_child->data.owner = obj);
+				if (current_child->data.priority = priority_order[priority_counter]) {
+					current_child->run_action(current_child);
+					if (current_child->data.owner == obj) {
+						obj->f->remove_child(obj, current_child);
+					}
+					return;
+				}
+				current_child = next_child;
+				next_child = current_child->data.siblingR;
+			}
+		}
 		
-		current_child = next_child;
-		next_child = current_child->data.siblingR;
 	}
 }
 

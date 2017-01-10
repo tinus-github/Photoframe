@@ -14,7 +14,7 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-#include "infrastructure/gl_object.h"
+#include "infrastructure/gl-object.h"
 #include "gl-renderloop-member.h"
 #include "gl-bitmap.h"
 

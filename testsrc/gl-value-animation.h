@@ -16,7 +16,7 @@
 #include <EGL/eglext.h>
 #include <sys/time.h>
 
-#include "infrastructure/gl_object.h"
+#include "infrastructure/gl-object.h"
 #include "gl-renderloop-member.h"
 
 

@@ -14,7 +14,7 @@
 #include <string.h>
 #include <hb-ft.h>
 
-#include "infrastructure/gl_object.h"
+#include "infrastructure/gl-object.h"
 #include "gl-tile.h"
 
 #define FONT_FILE "/home/pi/lib/share/font/DejaVuSerif.ttf"

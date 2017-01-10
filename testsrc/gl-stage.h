@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include "infrastructure/gl_object.h"
+#include "infrastructure/gl-object.h"
 #include "gl-shape.h"
 
 typedef float vec4[4];

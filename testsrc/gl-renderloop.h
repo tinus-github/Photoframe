@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 
-#include "infrastructure/gl_object.h"
+#include "infrastructure/gl-object.h"
 
 typedef struct gl_renderloop_member gl_renderloop_member;
 

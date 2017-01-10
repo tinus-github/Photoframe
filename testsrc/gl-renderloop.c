@@ -149,13 +149,13 @@ static void gl_renderloop_run_phase(gl_renderloop *obj, gl_renderloop_phase phas
 		// The high priority ones are ran first.
 		unsigned int priority_counter;
 		
-		for (priority_counter = 0; priority_counter < NUM_PRIORITIES; priority_counter++;) {
+		for (priority_counter = 0; priority_counter < NUM_PRIORITIES; priority_counter++) {
 			current_child = head->data.siblingR;
 			next_child = current_child->data.siblingR;
 			while (current_child != head) {
 				assert (current_child->data.owner = obj);
-				if (current_child->data.priority = priority_order[priority_counter]) {
-					current_child->run_action(current_child);
+				if (current_child->data.load_priority = priority_order[priority_counter]) {
+					current_child->f->run_action(current_child);
 					if (current_child->data.owner == obj) {
 						obj->f->remove_child(obj, current_child);
 					}

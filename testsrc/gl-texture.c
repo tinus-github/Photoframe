@@ -10,15 +10,15 @@
 #include <string.h>
 #include <assert.h>
 
-static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
-static GLuint load_image_monochrome(gl_texture *obj, unsigned char *monochrome_data, unsigned int width, unsigned int height);
-static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,
-			      unsigned int image_width, unsigned int image_height,
-			      unsigned int tile_width, unsigned int tile_height,
-			      unsigned int tile_x, unsigned int tile_y);
-static GLuint load_image_horizontal_tile(gl_texture *obj, unsigned char *rgba_data,
-					 unsigned int image_width, unsigned int image_height,
-					 unsigned int tile_height, unsigned int tile_y);
+static void load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
+static void load_image_monochrome(gl_texture *obj, unsigned char *monochrome_data, unsigned int width, unsigned int height);
+static void load_image_tile(gl_texture *obj, unsigned char *rgba_data,
+			    unsigned int image_width, unsigned int image_height,
+			    unsigned int tile_width, unsigned int tile_height,
+			    unsigned int tile_x, unsigned int tile_y);
+static void load_image_horizontal_tile(gl_texture *obj, unsigned char *rgba_data,
+				       unsigned int image_width, unsigned int image_height,
+				       unsigned int tile_height, unsigned int tile_y);
 static void gl_texture_free(gl_object *obj);
 
 static struct gl_texture_funcs gl_texture_funcs_global = {
@@ -56,7 +56,7 @@ gl_texture *gl_texture_new()
 	return gl_texture_init(ret);
 }
 
-static GLuint load_image_gen(gl_texture *obj, unsigned char *image_data, unsigned int width, unsigned int height)
+static void load_image_gen(gl_texture *obj, unsigned char *image_data, unsigned int width, unsigned int height)
 {
 	// Texture object handle
 	GLuint textureId;
@@ -97,22 +97,22 @@ static GLuint load_image_gen(gl_texture *obj, unsigned char *image_data, unsigne
 	return textureId;
 }
 
-static GLuint load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height)
+static void load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height)
 {
 	obj->data.dataType = gl_texture_data_type_rgba;
-	return load_image_gen(obj, rgba_data, width, height);
+	load_image_gen(obj, rgba_data, width, height);
 }
 
-static GLuint load_image_monochrome(gl_texture *obj, unsigned char *monochrome_data, unsigned int width, unsigned int height)
+static void load_image_monochrome(gl_texture *obj, unsigned char *monochrome_data, unsigned int width, unsigned int height)
 {
 	obj->data.dataType = gl_texture_data_type_monochrome;
-	return load_image_gen(obj, monochrome_data, width, height);
+	load_image_gen(obj, monochrome_data, width, height);
 }
 
-static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,
-			      unsigned int image_width, unsigned int image_height,
-			      unsigned int tile_width, unsigned int tile_height,
-			      unsigned int tile_x, unsigned int tile_y)
+static void load_image_tile(gl_texture *obj, unsigned char *rgba_data,
+			    unsigned int image_width, unsigned int image_height,
+			    unsigned int tile_width, unsigned int tile_height,
+			    unsigned int tile_x, unsigned int tile_y)
 {
 	size_t part_size = 4 * sizeof(unsigned char) * tile_width * tile_height;
 	unsigned char *image_part = malloc(part_size);
@@ -144,13 +144,11 @@ static GLuint load_image_tile(gl_texture *obj, unsigned char *rgba_data,
 		output_row_start += tile_width * 4;
 	}
 	
-	GLuint ret = obj->f->load_image(obj, image_part, tile_width, tile_height);
+	obj->f->load_image(obj, image_part, tile_width, tile_height);
 	free(image_part);
-	
-	return ret;
 }
 
-static GLuint load_image_horizontal_tile(gl_texture *obj, unsigned char *rgba_data,
+static void load_image_horizontal_tile(gl_texture *obj, unsigned char *rgba_data,
 					 unsigned int image_width, unsigned int image_height,
 					 unsigned int tile_height, unsigned int tile_y)
 {
@@ -158,7 +156,7 @@ static GLuint load_image_horizontal_tile(gl_texture *obj, unsigned char *rgba_da
 	
 	unsigned char *tile_data = rgba_data + (4 * sizeof(unsigned char) * image_width * tile_y);
 	
-	return obj->f->load_image(obj, tile_data, image_width, tile_height);
+	obj->f->load_image(obj, tile_data, image_width, tile_height);
 }
 
 static void gl_texture_free_texture(gl_texture *obj)

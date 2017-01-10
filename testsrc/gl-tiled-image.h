@@ -24,11 +24,8 @@ typedef struct gl_tiled_image_funcs {
 
 typedef struct gl_tiled_image_data {
 	gl_container_2d_data p;
-	
-	unsigned int keep_image_data;
-	
+		
 	unsigned int tile_height;
-	unsigned char *rgba_data;
 	unsigned int orientation;
 	
 	unsigned int unrotatedImageWidth;

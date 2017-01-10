@@ -154,8 +154,9 @@ static gl_tile *gl_label_renderer_render(gl_label_renderer *obj,
 					 int32_t windowX, int32_t windowY, int32_t windowWidth, int32_t windowHeight)
 {
 	//gl_label_renderer_layout(obj);
+	gl_bitmap *bitmap = gl_bitmap_new();
+	bitmap->data.bitmap = calloc(1, windowWidth * windowHeight);
 	
-	unsigned char *bitmap = calloc(1, windowWidth * windowHeight);
 	gl_label_renderer_rect bitmap_rect_stack;
 	gl_label_renderer_rect *bitmap_rect = &bitmap_rect_stack;
 	bitmap_rect->x = windowX;
@@ -180,7 +181,7 @@ static gl_tile *gl_label_renderer_render(gl_label_renderer *obj,
 			gl_label_renderer_render_character(obj,
 							   glyphdata->codepoint,
 							   (glyphdata->x / 64), LABEL_BASELINE + (glyphdata->y / 64),
-							   bitmap, bitmap_rect);
+							   bitmap->data.bitmap, bitmap_rect);
 		}
 	}
 	

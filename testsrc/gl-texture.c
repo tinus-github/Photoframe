@@ -12,13 +12,13 @@
 #include <string.h>
 #include <assert.h>
 
-static void load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
-static void load_image_monochrome(gl_texture *obj, unsigned char *monochrome_data, unsigned int width, unsigned int height);
-static void load_image_tile(gl_texture *obj, unsigned char *rgba_data,
+static void load_image(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
+static void load_image_monochrome(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
+static void load_image_tile(gl_texture *obj, gl_bitmap *bitmap,
 			    unsigned int image_width, unsigned int image_height,
 			    unsigned int tile_width, unsigned int tile_height,
 			    unsigned int tile_x, unsigned int tile_y);
-static void load_image_horizontal_tile(gl_texture *obj, unsigned char *rgba_data,
+static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 				       unsigned int image_width, unsigned int image_height,
 				       unsigned int tile_height, unsigned int tile_y);
 static void gl_texture_free(gl_object *obj);
@@ -58,10 +58,14 @@ gl_texture *gl_texture_new()
 	return gl_texture_init(ret);
 }
 
-static void load_image_gen(gl_texture *obj, unsigned char *image_data)
+static void load_image_gen_r(gl_texture *obj, gl_bitmap *bitmap, unsigned char *data)
 {
 	obj->data.loadState = gl_texture_loadstate_started;
-	obj->data.imageData = image_data;
+	obj->data.imageDataStore = bitmap;
+	gl_object *bitmap_obj = (gl_object *)bitmap;
+	bitmap_obj->f->ref(bitmap_obj);
+	
+	obj->data.imageDataBitmap = data;
 	
 	// Texture object handle
 	GLuint textureId;
@@ -79,11 +83,11 @@ static void load_image_gen(gl_texture *obj, unsigned char *image_data)
 	if (obj->data.dataType != gl_texture_data_type_rgba) {
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_ALPHA,
 			      obj->data.width, obj->data.height,
-			      0, GL_ALPHA, GL_UNSIGNED_BYTE, obj->data.imageData );
+			      0, GL_ALPHA, GL_UNSIGNED_BYTE, obj->data.imageDataBitmap );
 	} else {
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
 			      obj->data.width, obj->data.height,
-			      0, GL_RGBA, GL_UNSIGNED_BYTE, obj->data.imageData );
+			      0, GL_RGBA, GL_UNSIGNED_BYTE, obj->data.imageDataBitmap );
 	}
 	
 	// Set the filtering mode
@@ -96,64 +100,34 @@ static void load_image_gen(gl_texture *obj, unsigned char *image_data)
 	
 	obj->data.textureId = textureId;
 	obj->data.loadState = gl_texture_loadstate_done;
+	bitmap_obj = (gl_object *)obj->data.imageDataStore;
+	bitmap_obj->f->unref(bitmap_obj);
+	obj->data.imageDataStore = NULL;
+	obj->data.imageDataBitmap = NULL;
 }
 
-static void load_image(gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height)
+static void load_image_gen(gl_texture *obj, gl_bitmap *bitmap)
+{
+	load_image_gen_r(obj, bitmap, bitmap->data.bitmap);
+}
+
+static void load_image(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height)
 {
 	obj->data.dataType = gl_texture_data_type_rgba;
 	obj->data.width = width;
 	obj->data.height = height;
-	load_image_gen(obj, rgba_data);
+	load_image_gen(obj, bitmap);
 }
 
-static void load_image_monochrome(gl_texture *obj, unsigned char *monochrome_data, unsigned int width, unsigned int height)
+static void load_image_monochrome(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height)
 {
 	obj->data.dataType = gl_texture_data_type_monochrome;
 	obj->data.width = width;
 	obj->data.height = height;
-	load_image_gen(obj, monochrome_data);
+	load_image_gen(obj, bitmap);
 }
 
-static void load_image_tile(gl_texture *obj, unsigned char *rgba_data,
-			    unsigned int image_width, unsigned int image_height,
-			    unsigned int tile_width, unsigned int tile_height,
-			    unsigned int tile_x, unsigned int tile_y)
-{
-	size_t part_size = 4 * sizeof(unsigned char) * tile_width * tile_height;
-	unsigned char *image_part = malloc(part_size);
-	unsigned char *input_row_start;
-	unsigned char *output_row_start;
-	unsigned int counter_y;
-	size_t row_data_length;
-	int tile_is_edge = 0;
-	if ((image_width - (tile_x * tile_width)) < tile_width) tile_is_edge = 1;
-	if ((image_height - (tile_y * tile_height)) < tile_height) tile_is_edge = 1;
-	
-	if (tile_is_edge) {
-		memset(image_part, 0, part_size);
-	}
-	
-	unsigned int x_start = tile_x * tile_width;
-	unsigned int x_end = x_start + tile_width;
-	unsigned int y_start = tile_y * tile_height;
-	unsigned int y_end = y_start + tile_height;
-	if (x_end > image_width) x_end = image_width;
-	if (y_end > image_height) y_end = image_height;
-	
-	row_data_length = 4 * (x_end - x_start);
-	input_row_start = rgba_data + (4 * x_start);
-	output_row_start = image_part;
-	for (counter_y = y_start; counter_y < y_end; counter_y++) {
-		memcpy(output_row_start, input_row_start, row_data_length);
-		input_row_start += image_width * 4;
-		output_row_start += tile_width * 4;
-	}
-	
-	obj->f->load_image(obj, image_part, tile_width, tile_height);
-	free(image_part);
-}
-
-static void load_image_horizontal_tile(gl_texture *obj, unsigned char *rgba_data,
+static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 					 unsigned int image_width, unsigned int image_height,
 					 unsigned int tile_height, unsigned int tile_y)
 {
@@ -161,7 +135,7 @@ static void load_image_horizontal_tile(gl_texture *obj, unsigned char *rgba_data
 	
 	unsigned char *tile_data = rgba_data + (4 * sizeof(unsigned char) * image_width * tile_y);
 	
-	obj->f->load_image(obj, tile_data, image_width, tile_height);
+	obj->f->load_image_r(obj, bitmap, tile_data, image_width, tile_height);
 }
 
 static void gl_texture_free_texture(gl_texture *obj)

@@ -11,6 +11,7 @@
 #include "gl-texture.h"
 #include "gl-tile.h"
 #include "../lib/linmath/linmath.h"
+#include "gl-bitmap.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -42,9 +43,7 @@ void gl_tiled_image_setup()
 static void gl_tiled_image_free(gl_object *obj_obj)
 {
 	gl_tiled_image *obj = (gl_tiled_image *)obj_obj;
-	if (!obj->data.keep_image_data) {
-		free(obj->data.rgba_data);
-	}
+	free(obj->data.rgba_data);
 	
 	gl_object_free_org_global(obj_obj);
 }
@@ -134,13 +133,16 @@ static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_
 	
 	obj->data.orientation = orientation;
 	
+	gl_bitmap *bitmap = gl_bitmap_new();
+	bitmap->data.bitmap = rgba_data;
+	
 	while (current_y < height) {
 		if ((current_y + tile_height) > height) {
 			tile_height = height - current_y;
 		}
 		
 		texture = gl_texture_new();
-		texture->f->load_image_horizontal_tile(texture, rgba_data,
+		texture->f->load_image_horizontal_tile(texture, bitmap,
 						       width, height,
 						       tile_height, current_y);
 		
@@ -156,9 +158,8 @@ static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_
 		current_y += tile_height;
 	}
 	
-	if (!obj->data.keep_image_data) {
-		free(rgba_data);
-	}
+	gl_object *bitmap_obj = (gl_object *)bitmap;
+	bitmap_obj->f->unref(bitmap_obj);
 	
 	gl_tiled_image_calculate_orientation_projection(obj);
 }

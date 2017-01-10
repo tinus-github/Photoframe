@@ -16,6 +16,7 @@
 
 #include "gl-object.h"
 #include "gl-renderloop-member.h"
+#include "gl-bitmap.h"
 
 typedef struct gl_texture gl_texture;
 
@@ -33,13 +34,13 @@ typedef enum {
 
 typedef struct gl_texture_funcs {
 	gl_object_funcs p;
-	void (*load_image) (gl_texture *obj, unsigned char *rgba_data, unsigned int width, unsigned int height);
-	void (*load_image_monochrome) (gl_texture *obj, unsigned char *monochrome_data, unsigned int width, unsigned int height);
-	void (*load_image_tile) (gl_texture *obj, unsigned char *rgba_data,
+	void (*load_image) (gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
+	void (*load_image_monochrome) (gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
+	void (*load_image_tile) (gl_texture *obj, gl_bitmap *bitmap,
 				 unsigned int image_width, unsigned int image_height,
 				 unsigned int tile_width, unsigned int tile_height,
 				 unsigned int tile_x, unsigned int tile_y);
-	void (*load_image_horizontal_tile) (gl_texture *obj, unsigned char *rgba_data,
+	void (*load_image_horizontal_tile) (gl_texture *obj, gl_bitmap *bitmap,
 					    unsigned int image_width, unsigned int image_height,
 					    unsigned int tile_height, unsigned int tile_y);
 } gl_texture_funcs;
@@ -54,7 +55,8 @@ typedef struct gl_texture_data {
 	gl_texture_data_type dataType;
 	
 	gl_renderloop_member *uploadRenderloopMember;
-	unsigned char *imageData;
+	gl_bitmap *imageDataStore;
+	unsigned char *imageDataBitmap;
 } gl_texture_data;
 
 struct gl_texture {

@@ -46,7 +46,7 @@ egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-rende
 	-c egl-driver.c -o egl-driver.o \
 	-Wno-deprecated-declarations $(OPTFLAGS)
 
-gl-texture.o: gl-texture.c gl-texture.h gl-object.h
+gl-texture.o: gl-texture.c gl-texture.h gl-object.h gl-bitmap.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \

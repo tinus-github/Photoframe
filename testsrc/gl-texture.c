@@ -112,6 +112,7 @@ static void load_image_gen_r(gl_texture *obj, gl_bitmap *bitmap, unsigned char *
 	gl_renderloop_member *renderloop_member = gl_renderloop_member_new();
 	renderloop_member->data.target = obj;
 	renderloop_member->data.action = &load_image_gen_r_work;
+	renderloop_member->data.loadPriority = obj->data.loadPriority;
 	
 	gl_renderloop *renderloop = gl_renderloop_get_global_renderloop();
 	renderloop->f->append_child(renderloop, gl_renderloop_phase_load, renderloop_member);

@@ -48,6 +48,7 @@ typedef struct gl_texture_data {
 	gl_texture_loadstate loadState;
 	GLuint width;
 	GLuint height;
+	gl_renderloop_member_priority loadPriority;
 	
 	gl_texture_data_type dataType;
 	

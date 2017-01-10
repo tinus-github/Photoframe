@@ -21,6 +21,7 @@
 #include "labels/gl-label.h"
 #include "labels/gl-label-scroller-segment.h"
 #include "labels/gl-label-scroller.h"
+#include "gl-rectangle.h"
 
 #include <bcm_host.h>
 
@@ -278,6 +279,7 @@ void egl_driver_setup()
 	gl_texture_setup();
 	gl_shape_setup();
 	gl_tile_setup();
+	gl_rectangle_setup();
 	gl_stage_setup();
 	gl_container_setup();
 	gl_container_2d_setup();

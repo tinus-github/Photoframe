@@ -7,6 +7,10 @@
 //
 
 #include "infrastructure/gl-notice.h"
+#include "infrastructure/gl-notice-subscription.h"
+#include <assert.h>
+#include <string.h>
+#include <stdlib.h>
 
 static void (*gl_object_free_org_global) (gl_object *obj);
 

@@ -17,6 +17,7 @@
 #include "infrastructure/gl-object.h"
 #include "gl-renderloop-member.h"
 #include "gl-bitmap.h"
+#include "infrastructure/gl-notice.h"
 
 typedef struct gl_texture gl_texture;
 
@@ -50,6 +51,7 @@ typedef struct gl_texture_data {
 	GLuint width;
 	GLuint height;
 	gl_renderloop_member_priority loadPriority;
+	gl_notice loadedNotice;
 	
 	gl_texture_data_type dataType;
 	

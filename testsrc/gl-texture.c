@@ -47,6 +47,8 @@ gl_texture *gl_texture_init(gl_texture *obj)
 	
 	obj->f = &gl_texture_funcs_global;
 	
+	obj->data.loadedNotice = gl_notice_new();
+	
 	return obj;
 }
 
@@ -101,6 +103,8 @@ static void load_image_gen_r_work(void *target, gl_renderloop_member *renderloop
 	obj->data.imageDataBitmap = NULL;
 	((gl_object *)obj->data.uploadRenderloopMember)->f->unref((gl_object *)obj->data.uploadRenderloopMember);
 	obj->data.uploadRenderloopMember = NULL;
+	
+	obj->data.loadedNotice->f->fire(obj->data.loadedNotice);
 }
 
 static void load_image_gen_r(gl_texture *obj, gl_bitmap *bitmap, unsigned char *data)
@@ -200,4 +204,5 @@ static void gl_texture_free(gl_object *obj_obj)
 			break;
 	}
 	gl_object_free_org_global(obj_obj);
+	((gl_object *)obj->data.loadedNotice)->f->unref((gl_object *)obj->data.loadedNotice);
 }

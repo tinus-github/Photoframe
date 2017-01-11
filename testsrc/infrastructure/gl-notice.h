@@ -25,7 +25,7 @@ typedef struct gl_notice_funcs {
 typedef struct gl_notice_data {
 	gl_object_data p;
 	
-	gl_notice_subscription *first_child;
+	gl_notice_subscription *firstChild;
 	
 	int repeats;
 } gl_notice_data;

@@ -108,7 +108,7 @@ gl_notice *gl_notice_init(gl_notice *obj)
 	obj->f = &gl_notice_funcs_global;
 	
 	gl_notice_subscription *head = gl_notice_subscription_new();
-	obj->data.head = head;
+	obj->data.firstChild = head;
 	head->data.siblingL = head;
 	head->data.siblingR = head;
 	
@@ -128,6 +128,6 @@ static void gl_notice_free(gl_object *obj_obj)
 	
 	gl_notice_remove_subscriptions(obj);
 	
-	((gl_object *)obj->data.head)->f->unref((gl_object *)obj->data.head);
+	((gl_object *)obj->data.firstChild)->f->unref((gl_object *)obj->data.firstChild);
 	gl_object_free_org_global(obj_obj);
 }

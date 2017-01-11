@@ -23,6 +23,8 @@
 #include "labels/gl-label-scroller.h"
 #include "gl-rectangle.h"
 #include "gl-bitmap.h"
+#include "infrastructure/gl-notice.h"
+#include "infrastructure/gl-notice-subscription.h"
 
 #include <bcm_host.h>
 
@@ -293,4 +295,6 @@ void egl_driver_setup()
 	gl_label_scroller_segment_setup();
 	gl_label_scroller_setup();
 	gl_bitmap_setup();
+	gl_notice_setup();
+	gl_notice_subscription_setup();
 }

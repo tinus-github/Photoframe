@@ -6,7 +6,8 @@ OBJECTS = image.o loadimage.o loadexif.o infrastructure/gl-object.o gl-texture.o
 	  gl-container.o gl-container-2d.o gl-tiled-image.o gl-renderloop.o gl-renderloop-member.o egl-driver.o \
 	  gl-value-animation.o gl-value-animation-easing.o \
           labels/gl-label.o labels/gl-label-renderer.o labels/gl-label-scroller-segment.o \
-	  labels/gl-label-scroller.o gl-rectangle.o gl-bitmap.o
+	  labels/gl-label-scroller.o gl-rectangle.o gl-bitmap.o \
+	  infrastructure/gl-notice.o infrastructure/gl-notice-subscription.o
 LIBEXIF_A = ../lib/libexif/libexif/.libs/libexif.a
 LIBEXIF_INCLUDEDIR = -I../lib/libexif
 LIBFREETYPE_CFLAGS = `pkg-config freetype2 --cflags`
@@ -37,7 +38,8 @@ image.o: image.c loadimage.h gl-texture.h gl-shape.h gl-container.h
 
 egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h \
 		gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h egl-driver.h gl-value-animation.h labels/gl-label.h \
-		labels/gl-label-scroller-segment.h gl-rectangle.h gl-bitmap.h
+		labels/gl-label-scroller-segment.h gl-rectangle.h gl-bitmap.h \
+		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \

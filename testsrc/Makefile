@@ -219,6 +219,14 @@ infrastructure/gl-notice-subscription.o: infrastructure/gl-notice-subscription.c
 	-Wno-deprecated-declarations \
 	-c infrastructure/gl-notice-subscription.c -o infrastructure/gl-notice-subscription.o $(OPTFLAGS)
 
+infrastructure/gl-notice.o: infrastructure/gl-notice.c infrastructure/gl-notice.h \
+		infrastructure/gl-object.h infrastructure/gl-notice-subscription.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations \
+	-c infrastructure/gl-notice.c -o infrastructure/gl-notice.o $(OPTFLAGS)
+
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	 -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \

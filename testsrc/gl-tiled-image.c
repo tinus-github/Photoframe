@@ -118,6 +118,19 @@ static void gl_tiled_image_calculate_orientation_projection(gl_tiled_image *obj)
 	mat4x4_mul(orientation_container->data.projection, uncenter, rotated);
 }
 
+static void gl_tiled_image_texture_loaded(void *target,
+					  gl_notice_subscription *subscription,
+					  void *data)
+{
+	gl_tiled_image *obj = (gl_tiled_image *)target;
+	
+	obj->data.tilesToLoad--;
+	
+	if (!obj->data.tilesToLoad) {
+		obj->data.loadedNotice->f->fire(obj->data.loadedNotice);
+	}
+}
+
 static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_data,
 				       unsigned int width, unsigned int height,
 				       unsigned int orientation, unsigned int tile_height)
@@ -128,6 +141,7 @@ static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_
 	
 	gl_container *orientation_container = obj->data.orientation_container;
 	gl_shape *shape_tile;
+	gl_notice_subscription *subscription;
 	
 	obj->data.unrotatedImageWidth = width;
 	obj->data.unrotatedImageHeight = height;
@@ -136,13 +150,23 @@ static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_
 	
 	gl_bitmap *bitmap = gl_bitmap_new();
 	bitmap->data.bitmap = rgba_data;
+	obj->data.tilesToLoad++; // just in case the textures load immediately
 	
 	while (current_y < height) {
 		if ((current_y + tile_height) > height) {
 			tile_height = height - current_y;
 		}
 		
+		obj->data.tilesToLoad++;
+		
 		texture = gl_texture_new();
+		
+		subscription = gl_notice_subscription_new();
+		subscription->data.action = &gl_tiled_image_texture_loaded;
+		subscription->data.target = obj;
+		
+		texture->data.loadedNotice->f->subscribe(texture->data.loadedNotice, subscription);
+		
 		texture->f->load_image_horizontal_tile(texture, bitmap,
 						       width, height,
 						       tile_height, current_y);
@@ -158,6 +182,8 @@ static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_
 		
 		current_y += tile_height;
 	}
+	
+	gl_tiled_image_texture_loaded(obj, NULL, NULL);
 	
 	gl_object *bitmap_obj = (gl_object *)bitmap;
 	bitmap_obj->f->unref(bitmap_obj);
@@ -175,6 +201,10 @@ gl_tiled_image *gl_tiled_image_init(gl_tiled_image *obj)
 	gl_container *container_obj = (gl_container *)obj;
 
 	container_obj->f->append_child(container_obj, (gl_shape *)obj->data.orientation_container);
+	
+	obj->data.loadedNotice = gl_notice_new();
+	obj->data.tilesToLoad = 0;
+	
 	return obj;
 }
 

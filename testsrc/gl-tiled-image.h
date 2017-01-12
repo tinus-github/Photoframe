@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include "gl-container-2d.h"
+#include "infrastructure/gl-notice.h"
 
 typedef struct gl_tiled_image gl_tiled_image;
 
@@ -32,6 +33,9 @@ typedef struct gl_tiled_image_data {
 	unsigned int unrotatedImageHeight;
 	
 	gl_container *orientation_container;
+	
+	gl_notice *loadedNotice; // fires when all tiles have loaded
+	int tilesToLoad;
 } gl_tiled_image_data;
 
 struct gl_tiled_image {

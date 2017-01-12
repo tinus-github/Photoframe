@@ -12,7 +12,7 @@
 #include "gl-tile.h"
 #include "../lib/linmath/linmath.h"
 #include "gl-bitmap.h"
-#include "infratructure/gl-notice-subscription.h"
+#include "infrastructure/gl-notice-subscription.h"
 
 #define TRUE 1
 #define FALSE 0

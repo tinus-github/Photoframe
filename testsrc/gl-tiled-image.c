@@ -21,12 +21,14 @@ static void gl_tiled_image_free(gl_object *obj_obj);
 static void gl_tiled_image_load_image (gl_tiled_image *obj, unsigned char *rgba_data,
 				       unsigned int width, unsigned int height,
 				       unsigned int orientation, unsigned int tile_height);
+static void gl_tiled_image_draw(gl_shape *shape_obj);
 
 static struct gl_tiled_image_funcs gl_tiled_image_funcs_global = {
 	.load_image = &gl_tiled_image_load_image
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
+static void (*gl_shape_draw_org_global) (gl_shape *obj);
 
 void gl_tiled_image_setup()
 {
@@ -36,6 +38,10 @@ void gl_tiled_image_setup()
 	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_tiled_image_funcs_global;
 	gl_object_free_org_global = obj_funcs_global->free;
 	obj_funcs_global->free = &gl_tiled_image_free;
+	
+	gl_shape_funcs *shape_funcs_global = (gl_shape_funcs *) &gl_tiled_image_funcs_global;
+	gl_shape_free_org_global = shape_funcs->draw;
+	shape_funcs->draw = &gl_tiled_image_draw;
 	
 	gl_object *parent_obj = (gl_object *)parent;
 	parent_obj->f->free(parent_obj);
@@ -129,6 +135,15 @@ static void gl_tiled_image_texture_loaded(void *target,
 	
 	if (!obj->data.tilesToLoad) {
 		obj->data.loadedNotice->f->fire(obj->data.loadedNotice);
+	}
+}
+
+static void gl_tiled_image_draw(gl_shape *shape_obj)
+{
+	gl_tiled_image *obj = (gl_tiled_image *)shape_obj;
+	
+	if (!obj->data.tilesToLoad) {
+		gl_shape_draw_org_global(shape_obj);
 	}
 }
 

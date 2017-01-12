@@ -43,8 +43,9 @@ void gl_tiled_image_setup()
 static void gl_tiled_image_free(gl_object *obj_obj)
 {
 	gl_tiled_image *obj = (gl_tiled_image *)obj_obj;
-//	free(obj->data.rgba_data);
-	
+
+	((gl_container *)obj)->f->remove_child((gl_container *)obj,
+					       (gl_shape *)obj->data.orientation_container);
 	gl_object_free_org_global(obj_obj);
 }
 

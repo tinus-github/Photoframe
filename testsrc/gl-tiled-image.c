@@ -40,8 +40,8 @@ void gl_tiled_image_setup()
 	obj_funcs_global->free = &gl_tiled_image_free;
 	
 	gl_shape_funcs *shape_funcs_global = (gl_shape_funcs *) &gl_tiled_image_funcs_global;
-	gl_shape_free_org_global = shape_funcs->draw;
-	shape_funcs->draw = &gl_tiled_image_draw;
+	gl_shape_draw_org_global = shape_funcs_global->draw;
+	shape_funcs_global->draw = &gl_tiled_image_draw;
 	
 	gl_object *parent_obj = (gl_object *)parent;
 	parent_obj->f->free(parent_obj);

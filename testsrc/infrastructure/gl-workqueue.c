@@ -11,6 +11,8 @@
 #include "infrastructure/gl-workqueue.h"
 #include "infrastructure/gl-workqueue-job.h"
 
+static void gl_workqueue_append_job(gl_workqueue *obj, gl_workqueue_job *job);
+
 static struct gl_workqueue_funcs gl_workqueue_funcs_global = {
 	.append_job = &gl_workqueue_append_job
 };
@@ -23,7 +25,7 @@ static void gl_workqueue_append_job_to_queue(gl_workqueue *obj, gl_workqueue_job
 	head->data.siblingL = last_job;
 	last_job->data.siblingR = job;
 	job->data.siblingR = head;
-	head->data.siblingL = child;
+	head->data.siblingL = job;
 }
 
 static gl_workqueue_job *gl_workqueue_remove_job(gl_workqueue *obj, gl_workqueue_job *job)

@@ -44,10 +44,13 @@ static gl_workqueue_job *gl_workqueue_remove_job(gl_workqueue *obj, gl_workqueue
 
 static void gl_workqueue_append_job(gl_workqueue *obj, gl_workqueue_job *job)
 {
-	//LOCK
+	pthread_mutex_lock(&obj->data.queueMutex);
+	
 	gl_workqueue_append_job_to_queue(obj, job, obj->data.queuedJobs);
-	//SIGNAL JOBS AVAILABLE
-	//UNLOCK
+	
+	pthread_cond_signal(&obj->data.workAvailable);
+	
+	pthread_mutex_unlock(&obj->data.queueMutex);
 }
 
 void gl_workqueue_setup()

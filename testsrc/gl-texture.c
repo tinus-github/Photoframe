@@ -203,7 +203,7 @@ static void gl_texture_free(gl_object *obj_obj)
 			obj->f->cancel_loading(obj);
 			break;
 	}
-	((gl_object *)obj->data.loadedNotice)->f->unref((gl_object *)obj->data.loadedNotice)
+	((gl_object *)obj->data.loadedNotice)->f->unref((gl_object *)obj->data.loadedNotice);
 	
 	gl_object_free_org_global(obj_obj);
 }

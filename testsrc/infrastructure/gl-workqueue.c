@@ -6,12 +6,47 @@
 //
 //
 
+#include <stdlib.h>
+#include <string.h>
 #include "infrastructure/gl-workqueue.h"
 #include "infrastructure/gl-workqueue-job.h"
 
 static struct gl_workqueue_funcs gl_workqueue_funcs_global = {
 	.append_job = &gl_workqueue_append_job
 };
+
+// Must lock queueMutex in advance!
+static void gl_workqueue_append_job_to_queue(gl_workqueue *obj, gl_workqueue_job *job, gl_workqueue_job *head)
+{
+	gl_workqueue_job *last_job = head->data.siblingL;
+	
+	head->data.siblingL = last_job;
+	last_job->data.siblingR = job;
+	job->data.siblingR = head;
+	head->data.siblingL = child;
+}
+
+static gl_workqueue_job *gl_workqueue_remove_job(gl_workqueue *obj, gl_workqueue_job *job)
+{
+	gl_workqueue_job *siblingR = job->data.siblingR;
+	gl_workqueue_job *siblingL = job->data.siblingL;
+	
+	siblingR->data.siblingL = job->data.siblingL;
+	siblingL->data.siblingR = job->data.siblingR;
+	
+	job->data.siblingL = job;
+	job->data.siblingR = job;
+	
+	return job;
+}
+
+static void gl_workqueue_append_job(gl_workqueue *obj, gl_workqueue_job *job)
+{
+	//LOCK
+	gl_workqueue_append_job_to_queue(obj, job, obj->data.queuedJobs);
+	//SIGNAL JOBS AVAILABLE
+	//UNLOCK
+}
 
 void gl_workqueue_setup()
 {
@@ -20,7 +55,7 @@ void gl_workqueue_setup()
 	parent->f->free(parent);
 }
 
-static gl_workqueue *gl_workqueue_init(gl_workqueue *obj)
+gl_workqueue *gl_workqueue_init(gl_workqueue *obj)
 {
 	gl_object_init((gl_object *)obj);
 	
@@ -28,7 +63,7 @@ static gl_workqueue *gl_workqueue_init(gl_workqueue *obj)
 	
 	
 	pthread_mutex_init(&obj->data.queueMutex, NULL);
-	pthread_cond_init(&obj->data.workAvailable);
+	pthread_cond_init(&obj->data.workAvailable, NULL);
 	
 	gl_workqueue_job *head = gl_workqueue_job_new();
 	head->data.siblingL = head;

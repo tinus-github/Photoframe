@@ -32,10 +32,10 @@ void gl_workqueue_job_setup()
 
 static void gl_workqueue_job_run(gl_workqueue_job *obj)
 {
-	obj->data.jobReturn = obj->data.action(target, extra_data);
+	obj->data.jobReturn = obj->data.action(obj->data.target, obj->data.extraData);
 }
 
-static gl_workqueue_job *gl_workqueue_job_init(gl_workqueue_job *obj)
+gl_workqueue_job *gl_workqueue_job_init(gl_workqueue_job *obj)
 {
 	gl_object_init((gl_object *)obj);
 	

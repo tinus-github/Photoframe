@@ -25,8 +25,8 @@ typedef struct gl_workqueue_job_data {
 	gl_object_data p;
 	
 	void *target;
-	void *(*action) (void *target, void *extra_data);
-	void *extra_data;
+	void *(*action) (void *target, void *extraData);
+	void *extraData;
 	
 	void *jobReturn;
 	

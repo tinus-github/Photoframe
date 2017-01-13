@@ -14,13 +14,15 @@ LIBFREETYPE_CFLAGS = `pkg-config freetype2 --cflags`
 LIBFREETYPE_LIBS = `pkg-config freetype2 --libs`
 LIBHARFBUZZ_CFLAGS = `pkg-config harfbuzz --cflags`
 LIBHARFBUZZ_LIBS = `pkg-config harfbuzz --libs`
+PTHREAD_LIBS = -pthread
+PTHREAD_CFLAGS = $(PTHREAD_LIBS)
 
 image: $(OBJECTS) $(LIBEXIF_A)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
 	-L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
 	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS) \
-	$(LIBFREETYPE_LIBS) $(LIBHARFBUZZ_LIBS)
+	$(LIBFREETYPE_LIBS) $(LIBHARFBUZZ_LIBS) $(PTHREAD_LIBS)
 
 image.o: image.c loadimage.h gl-texture.h gl-shape.h gl-container.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
@@ -228,6 +230,23 @@ infrastructure/gl-notice.o: infrastructure/gl-notice.c infrastructure/gl-notice.
 	-ftree-vectorize -pipe -Wno-psabi \
 	-Wno-deprecated-declarations \
 	-c infrastructure/gl-notice.c -o infrastructure/gl-notice.o $(OPTFLAGS)
+
+infrastructure/gl-workqueue-job.o: infrastructure/gl-workqueue-job.c infrastructure/gl-workqueue-job.h \
+		infrastructure/gl-object.h infrastructure/gl-notice.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations \
+	-c infrastructure/gl-workqueue-job.c -o infrastructure/gl-workqueue-job.o $(OPTFLAGS)
+
+infrastructure/gl-workqueue.o: infrastructure/gl-workqueue.c infrastructure/gl-workqueue.h \
+		infrastructure/gl-object.h infrastructure/gl-workqueue-job.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations \
+	-c infrastructure/gl-workqueue.c -o infrastructure/gl-workqueue.o $(OPTFLAGS) \
+	$(PTHREAD_LIBS)
 
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

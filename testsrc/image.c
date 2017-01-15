@@ -31,7 +31,7 @@
 #include "gl-value-animation.h"
 #include "gl-value-animation-easing.h"
 #include "labels/gl-label-scroller.h"
-#include "infrastructure/gl-workqueue.c"
+#include "infrastructure/gl-workqueue.h"
 
 #include "../lib/linmath/linmath.h"
 

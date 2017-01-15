@@ -8,15 +8,19 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
+#include <sched.h>
 #include "infrastructure/gl-workqueue.h"
 #include "infrastructure/gl-workqueue-job.h"
 #include "gl-renderloop.h"
 #include "gl-renderloop-member.h"
 
 static void gl_workqueue_append_job(gl_workqueue *obj, gl_workqueue_job *job);
+gl_workqueue *gl_workqueue_start(gl_workqueue *obj);
 
 static struct gl_workqueue_funcs gl_workqueue_funcs_global = {
-	.append_job = &gl_workqueue_append_job
+	.append_job = &gl_workqueue_append_job,
+	.start = &gl_workqueue_start
 };
 
 // Must lock queueMutex in advance!
@@ -136,6 +140,29 @@ gl_workqueue *gl_workqueue_init(gl_workqueue *obj)
 	
 	gl_renderloop *loop = gl_renderloop_get_global_renderloop();
 	loop->f->append_child(loop, gl_renderloop_phase_start, member);
+	
+	obj->data.schedulingPolicy = SCHED_OTHER;
+	
+	return obj;
+}
+
+gl_workqueue *gl_workqueue_start(gl_workqueue *obj)
+{
+	pthread_t thread_id;
+	pthread_attr_t attr;
+	sched_param schedule;
+	int ret;
+	
+	assert (!pthread_attr_init(&attr));
+	
+	schedule.sched_priority = obj->data.schedulingPolicy;
+	
+	assert (!pthread_attr_setschedparam(&attr, &schedule));
+	
+	assert (!pthread_create(&thread_id, &attr, &gl_workqueue_runloop, obj));
+	
+	assert (!pthread_attr_destroy(&attr));
+	
 	
 	return obj;
 }

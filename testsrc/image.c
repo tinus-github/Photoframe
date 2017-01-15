@@ -16,6 +16,7 @@
 
 #include <bcm_host.h>
 
+#include <pthread.h>
 #include <sched.h>
 
 #include "loadimage.h"

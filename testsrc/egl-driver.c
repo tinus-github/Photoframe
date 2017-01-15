@@ -25,6 +25,8 @@
 #include "gl-bitmap.h"
 #include "infrastructure/gl-notice.h"
 #include "infrastructure/gl-notice-subscription.h"
+#include "infrastructure/gl-workqueue.h"
+#include "infrastructure/gl-workqueue-job.h"
 
 #include <bcm_host.h>
 
@@ -297,4 +299,6 @@ void egl_driver_setup()
 	gl_bitmap_setup();
 	gl_notice_setup();
 	gl_notice_subscription_setup();
+	gl_workqueue_setup();
+	gl_workqueue_job_setup();
 }

@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
 	sub->data.target = &displayData;
 	sub->data.action_data = &renderData;
 	sub->data.action = &use_image;
-	job->data.doneNotice->f->subscripe(job->data.doneNotice, sub);
+	job->data.doneNotice->f->subscribe(job->data.doneNotice, sub);
 	
 	workqueue->f->append_job(workqueue, job);
 	

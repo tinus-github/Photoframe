@@ -46,6 +46,10 @@ struct render_data {
 	unsigned int orientation;
 };
 
+struct image_display_data {
+	gl_container_2d *container_2d;
+};
+
 void *image_render_job(void *target, void *extra_data)
 {
 	struct render_data *renderDataP = (struct render_data *)target;
@@ -60,11 +64,24 @@ void *image_render_job(void *target, void *extra_data)
 	return NULL;
 }
 
-
+void use_image(void *target, gl_notice_subscription *subscription, void *extra_data)
+{
+	struct image_display_data *displayDataP = (struct image_display_data *)target;
+	struct render_data *renderDataP = (struct render_data *)extra_data;
+	
+	gl_tiled_image *tiled_image = gl_tiled_image_new();
+	
+	tiled_image->f->load_image(tiled_image, renderDataP->image,
+				   renderDataP->width, renderDataP->height,
+				   renderDataP->orientation, 128);
+	displayDataP->container_2d->f->append_child(displayDataP->container_2d, (gl_shape *)tiled_image);
+}
 
 int main(int argc, char *argv[])
 {
 	struct render_data renderData;
+	struct image_display_data displayData;
+	
 	int width, height;
 	unsigned int orientation;
 	
@@ -109,7 +126,7 @@ int main(int argc, char *argv[])
 	printf("Image loaded in %1.4f seconds\n", deltatime);
 #endif
 	
-	gl_tiled_image *tiled_image = gl_tiled_image_new();
+//	gl_tiled_image *tiled_image = gl_tiled_image_new();
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;
 	gl_shape *main_container_2d_shape = (gl_shape *)main_container_2d;
@@ -131,7 +148,16 @@ int main(int argc, char *argv[])
 	
 	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
- 
+
+	displayData.container_2d = main_container_2d;
+	gl_notice_subscription *sub = gl_notice_subscription_new();
+	sub->data.target = &displayData;
+	sub->data.action_data = &renderData;
+	sub->data.action = &use_image;
+	job->data.doneNotice->f->subscripe(job->data.doneNotice, sub);
+	
+	workqueue->f->append_job(workqueue, job);
+	
 	gl_renderloop_loop();
 	
 	return 0; // not reached

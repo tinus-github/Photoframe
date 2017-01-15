@@ -91,10 +91,10 @@ static void gl_workqueue_complete_jobs(gl_workqueue *obj, gl_renderloop_member *
 {
 	gl_workqueue_job *job;
 	pthread_mutex_lock(&obj->data.queueMutex);
-	while (job = gl_workqueue_pop_first_job_nl(obj, obj->data.doneJobs)) {
+	while ((job = gl_workqueue_pop_first_job_nl(obj, obj->data.doneJobs))) {
 		pthread_mutex_unlock(&obj->data.queueMutex);
 		
-		gl_notice *notice = job->f->doneNotice;
+		gl_notice *notice = job->data.doneNotice;
 		notice->f->fire(notice);
 		
 		((gl_object *)job)->f->unref((gl_object *)job);

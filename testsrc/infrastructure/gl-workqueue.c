@@ -59,7 +59,6 @@ static gl_workqueue_job *gl_workqueue_pop_first_job_nl(gl_workqueue *obj)
 	gl_workqueue_job *job = head->data.siblingR;
 	
 	if (job == head) {
-		pthread_mutex_unlock (&obj->data.queueMutex);
 		return NULL;
 	}
 	gl_workqueue_remove_job_nl(obj, job);

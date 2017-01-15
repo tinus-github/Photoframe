@@ -71,7 +71,7 @@ static gl_workqueue_job *gl_workqueue_pop_first_job_nl(gl_workqueue *obj, gl_wor
 	return job;
 }
 
-static void gl_workqueue_runloop(gl_workqueue *obj)
+static void *gl_workqueue_runloop(gl_workqueue *obj)
 {
 	gl_workqueue_job *job;
 	
@@ -150,8 +150,7 @@ gl_workqueue *gl_workqueue_start(gl_workqueue *obj)
 {
 	pthread_t thread_id;
 	pthread_attr_t attr;
-	sched_param schedule;
-	int ret;
+	struct sched_param schedule;
 	
 	assert (!pthread_attr_init(&attr));
 	

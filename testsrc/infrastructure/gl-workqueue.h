@@ -20,7 +20,7 @@ typedef struct gl_workqueue_job gl_workqueue_job;
 typedef struct gl_workqueue_funcs {
 	gl_object_funcs p;
 	void (*append_job) (gl_workqueue *obj, gl_workqueue_job *child);
-	gl_workqueue *(start) (gl_workqueue *obj);
+	gl_workqueue *(*start) (gl_workqueue *obj);
 } gl_workqueue_funcs;
 
 typedef struct gl_workqueue_data {

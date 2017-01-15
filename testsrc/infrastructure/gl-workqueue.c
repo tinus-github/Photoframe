@@ -158,7 +158,7 @@ gl_workqueue *gl_workqueue_start(gl_workqueue *obj)
 	
 	schedule.sched_priority = obj->data.schedulingPolicy;
 	
-	assert (!pthread_attr_setschedparam(&attr, &schedule));
+	assert (!pthread_attr_setschedpolicy(&attr, &schedule));
 	
 	assert (!pthread_create(&thread_id, &attr, &gl_workqueue_runloop, obj));
 	

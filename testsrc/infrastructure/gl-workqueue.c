@@ -90,6 +90,7 @@ static void *gl_workqueue_runloop(void *obj_void)
 			gl_workqueue_append_job_to_queue_nl(obj, job, obj->data.doneJobs);
 		}
 	}
+	return NULL; //not reached
 }
 
 static void gl_workqueue_complete_jobs(void *obj_void, gl_renderloop_member *renderloop_member, void *action_data)

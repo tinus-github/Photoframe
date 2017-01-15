@@ -17,9 +17,12 @@ typedef struct gl_renderloop_member gl_renderloop_member;
 
 typedef struct gl_renderloop gl_renderloop;
 
-#define GL_RENDERLOOP_PHASES 5
+#define GL_RENDERLOOP_PHASES 6
 typedef enum {
-	gl_renderloop_phase_animate = 0,
+	gl_renderloop_phase_start = 0,
+	gl_renderloop_phase_animate,
+	// Load is a special phase: this one runs only one item per iteration. The item is
+ 	// automatically removed. High priority items are run first.
 	gl_renderloop_phase_load,
 	gl_renderloop_phase_clear,
 	gl_renderloop_phase_draw,

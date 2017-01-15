@@ -129,6 +129,13 @@ gl_workqueue *gl_workqueue_init(gl_workqueue *obj)
 	head->data.siblingR = head;
 	obj->data.doneJobs = head;
 	
+	gl_renderloop_member *member = gl_renderloop_member_new();
+	member->data.action = &gl_workqueue_complete_jobs;
+	member->data.target = obj;
+	
+	gl_renderloop *loop = gl_renderloop_get_global_renderloop();
+	loop->f->append_child(loop, gl_renderloop_phase_start, member);
+	
 	return obj;
 }
 

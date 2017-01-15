@@ -86,6 +86,9 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
+	egl_driver_setup();
+	egl_driver_init();
+	
 	gl_workqueue *workqueue = gl_workqueue_new();
 	workqueue->data.schedulingPolicy = SCHED_BATCH;
 	workqueue->f->start(workqueue);
@@ -109,9 +112,6 @@ int main(int argc, char *argv[])
 	printf("Image loaded in %1.4f seconds\n", deltatime);
 #endif
 	
-	egl_driver_setup();
-	egl_driver_init();
-
 	gl_tiled_image *tiled_image = gl_tiled_image_new();
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;

@@ -51,13 +51,13 @@ void *image_render_job(void *target, void *extra_data)
 {
 	struct render_data *renderDataP = (struct render_data *)target;
 	
-	renderDataP->image = loadJPEG(renderData->filename,
+	renderDataP->image = loadJPEG(renderDataP->filename,
 				      1920,1080,
-				      &renderData->width,
-				      &renderData->height,
-				      &renderData->orientation);
+				      &renderDataP->width,
+				      &renderDataP->height,
+				      &renderDataP->orientation);
 	
-	fprintf(stderr, "Image is %d x %d\n", width, height);
+	fprintf(stderr, "Image is %d x %d\n", renderDataP->width, renderDataP->height);
 	return NULL;
 }
 
@@ -84,12 +84,14 @@ int main(int argc, char *argv[])
 	}
 	
 	gl_workqueue *workqueue = gl_workqueue_new();
-	workqueue->data.priority = SCHED_BATCH;
-	workqueue->f->start();
+	workqueue->data.schedulingPolicy = SCHED_BATCH;
+	workqueue->f->start(workqueue);
 	
 	gl_workqueue_job *job = gl_workqueue_job_new();
 	job->data.target = &renderData;
 	job->data.action = &image_render_job;
+	
+	workqueue->f->append_job(workqueue, job);
 	
 	
 #if 0

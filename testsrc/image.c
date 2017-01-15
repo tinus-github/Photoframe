@@ -114,9 +114,6 @@ int main(int argc, char *argv[])
 	job->data.target = &renderData;
 	job->data.action = &image_render_job;
 	
-	workqueue->f->append_job(workqueue, job);
-	
-	
 #if 0
 	if (image == NULL) {
 		fprintf(stderr, "No such image\n");

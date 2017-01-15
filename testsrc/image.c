@@ -29,6 +29,7 @@
 #include "labels/gl-label-scroller.h"
 #include "infrastructure/gl-workqueue.h"
 #include "infrastructure/gl-workqueue-job.h"
+#include "infrastructure/gl-notice-subscription.h"
 
 #include "../lib/linmath/linmath.h"
 

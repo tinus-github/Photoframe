@@ -32,6 +32,7 @@
 #include "gl-value-animation-easing.h"
 #include "labels/gl-label-scroller.h"
 #include "infrastructure/gl-workqueue.h"
+#include "infrastructure/gl-workqueue-job.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -39,7 +40,7 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef struct render_data {
+struct render_data {
 	const char *filename;
 	
 	unsigned char *image;

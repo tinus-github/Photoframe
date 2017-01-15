@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;
 	gl_shape *main_container_2d_shape = (gl_shape *)main_container_2d;
 
-	gl_container_2d image_container_2d = gl_container_2d_new();
+	gl_container_2d *image_container_2d = gl_container_2d_new();
 	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)image_container_2d);
 	
 //	tiled_image->f->load_image(tiled_image, image, width, height, orientation, 128);

@@ -42,14 +42,16 @@ static gl_workqueue_job *gl_workqueue_remove_job_nl(gl_workqueue *obj, gl_workqu
 	siblingR->data.siblingL = job->data.siblingL;
 	siblingL->data.siblingR = job->data.siblingR;
 	
-	job->data.siblingL = job;
-	job->data.siblingR = job;
+	job->data.siblingL = NULL;
+	job->data.siblingR = NULL;
 	
 	return job;
 }
 
 static void gl_workqueue_append_job(gl_workqueue *obj, gl_workqueue_job *job)
 {
+	// Make sure it isn't already being run
+	assert (job->data.siblingL == NULL);
 	pthread_mutex_lock(&obj->data.queueMutex);
 	
 	gl_workqueue_append_job_to_queue_nl(obj, job, obj->data.queuedJobs);

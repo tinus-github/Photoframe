@@ -16,6 +16,8 @@
 
 #include <bcm_host.h>
 
+#include <sched.h>
+
 #include "loadimage.h"
 #include "gl-texture.h"
 #include "gl-tile.h"
@@ -27,6 +29,7 @@
 #include "gl-value-animation.h"
 #include "gl-value-animation-easing.h"
 #include "labels/gl-label-scroller.h"
+#include "infrastructure/gl-workqueue.c"
 
 #include "../lib/linmath/linmath.h"
 
@@ -34,8 +37,35 @@
 #define TRUE 1
 #define FALSE 0
 
+typedef struct render_data {
+	const char *filename;
+	
+	unsigned char *image;
+	int width;
+	int height;
+	
+	unsigned int orientation;
+};
+
+void *image_render_job(void *target, void *extra_data)
+{
+	struct render_data *renderDataP = (struct render_data *)target;
+	
+	renderDataP->image = loadJPEG(renderData->filename,
+				      1920,1080,
+				      &renderData->width,
+				      &renderData->height,
+				      &renderData->orientation);
+	
+	fprintf(stderr, "Image is %d x %d\n", width, height);
+	return NULL;
+}
+
+
+
 int main(int argc, char *argv[])
 {
+	struct render_data renderData;
 	int width, height;
 	unsigned int orientation;
 	
@@ -53,7 +83,16 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
-	image = loadJPEG(argv[1], 1920, 1080, &width, &height, &orientation);
+	gl_workqueue *workqueue = gl_workqueue_new();
+	workqueue->data.priority = SCHED_BATCH;
+	workqueue->f->start();
+	
+	gl_workqueue_job *job = gl_workqueue_job_new();
+	job->data.target = &renderData;
+	job->data.action = &image_render_job;
+	
+	
+#if 0
 	if (image == NULL) {
 		fprintf(stderr, "No such image\n");
 		exit(1);
@@ -63,18 +102,18 @@ int main(int argc, char *argv[])
 	deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
 	
 	printf("Image loaded in %1.4f seconds\n", deltatime);
+#endif
 	
 	egl_driver_setup();
 	egl_driver_init();
 
-	
 	gl_tiled_image *tiled_image = gl_tiled_image_new();
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;
 	gl_shape *main_container_2d_shape = (gl_shape *)main_container_2d;
-	
-	tiled_image->f->load_image(tiled_image, image, width, height, orientation, 128);
-	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)tiled_image);
+
+//	tiled_image->f->load_image(tiled_image, image, width, height, orientation, 128);
+//	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)tiled_image);
 	
 	gl_label_scroller *scroller = gl_label_scroller_new();
 	gl_shape *scroller_shape = (gl_shape *)scroller;

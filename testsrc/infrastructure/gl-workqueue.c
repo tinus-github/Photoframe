@@ -10,6 +10,8 @@
 #include <string.h>
 #include "infrastructure/gl-workqueue.h"
 #include "infrastructure/gl-workqueue-job.h"
+#include "gl-renderloop.h"
+#include "gl-renderloop-member.h"
 
 static void gl_workqueue_append_job(gl_workqueue *obj, gl_workqueue_job *job);
 
@@ -53,9 +55,8 @@ static void gl_workqueue_append_job(gl_workqueue *obj, gl_workqueue_job *job)
 	pthread_mutex_unlock(&obj->data.queueMutex);
 }
 
-static gl_workqueue_job *gl_workqueue_pop_first_job_nl(gl_workqueue *obj)
+static gl_workqueue_job *gl_workqueue_pop_first_job_nl(gl_workqueue *obj, gl_workqueue_job *head)
 {
-	gl_workqueue_job *head = obj->data.queuedJobs;
 	gl_workqueue_job *job = head->data.siblingR;
 	
 	if (job == head) {
@@ -72,11 +73,11 @@ static void gl_workqueue_runloop(gl_workqueue *obj)
 	
 	pthread_mutex_lock(&obj->data.queueMutex);
 	while (1) {
-		job = gl_workqueue_pop_first_job_nl(obj);
+		job = gl_workqueue_pop_first_job_nl(obj, obj->data.queuedJobs);
 		if (!job) {
 			pthread_cond_wait(&obj->data.workAvailable, &obj->data.queueMutex);
 		} else {
-			pthread_mutex_unlock (&obj->data.queueMutex);
+			pthread_mutex_unlock(&obj->data.queueMutex);
 			
 			job->f->run(job);
 			
@@ -84,6 +85,21 @@ static void gl_workqueue_runloop(gl_workqueue *obj)
 			gl_workqueue_append_job_to_queue_nl(obj, job, obj->data.doneJobs);
 		}
 	}
+}
+
+static void gl_workqueue_complete_jobs(gl_workqueue *obj, gl_renderloop_member *renderloop_member, void *action_data)
+{
+	gl_workqueue_job *job;
+	pthread_mutex_lock(&obj->data.queueMutex);
+	while (job = gl_workqueue_pop_first_job_nl(obj, obj->data.doneJobs)) {
+		pthread_mutex_unlock(&obj->data.queueMutex);
+		
+		gl_notice *notice = job->f->doneNotice;
+		notice->f->fire(notice);
+		
+		((gl_object *)job)->f->unref((gl_object *)job);
+	}
+	pthread_mutex_unlock(&obj->data.queueMutex);
 }
 
 void gl_workqueue_setup()

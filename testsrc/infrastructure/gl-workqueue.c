@@ -66,6 +66,26 @@ static gl_workqueue_job *gl_workqueue_pop_first_job_nl(gl_workqueue *obj)
 	return job;
 }
 
+static void gl_workqueue_runloop(gl_workqueue *obj)
+{
+	gl_workqueue_job *job;
+	
+	pthread_mutex_lock(&obj->data.queueMutex);
+	while (1) {
+		job = gl_workqueue_pop_first_job_nl(obj);
+		if (!job) {
+			pthread_cond_wait(&obj->data.workAvailable, &obj->data.queueMutex);
+		} else {
+			pthread_mutex_unlock (&obj->data.queueMutex);
+			
+			job->f->run(job);
+			
+			pthread_mutex_lock(&obj->data.queueMutex);
+			gl_workqueue_append_job_to_queue_nl(obj, job, obj->data.doneJobs);
+		}
+	}
+}
+
 void gl_workqueue_setup()
 {
 	gl_object *parent = gl_object_new();

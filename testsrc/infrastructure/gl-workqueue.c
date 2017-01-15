@@ -28,7 +28,7 @@ static void gl_workqueue_append_job_to_queue_nl(gl_workqueue *obj, gl_workqueue_
 {
 	gl_workqueue_job *last_job = head->data.siblingL;
 	
-	head->data.siblingL = last_job;
+	job->data.siblingL = last_job;
 	last_job->data.siblingR = job;
 	job->data.siblingR = head;
 	head->data.siblingL = job;

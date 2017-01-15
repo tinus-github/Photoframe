@@ -18,7 +18,7 @@ static struct gl_workqueue_funcs gl_workqueue_funcs_global = {
 };
 
 // Must lock queueMutex in advance!
-static void gl_workqueue_append_job_to_queue(gl_workqueue *obj, gl_workqueue_job *job, gl_workqueue_job *head)
+static void gl_workqueue_append_job_to_queue_nl(gl_workqueue *obj, gl_workqueue_job *job, gl_workqueue_job *head)
 {
 	gl_workqueue_job *last_job = head->data.siblingL;
 	
@@ -28,7 +28,7 @@ static void gl_workqueue_append_job_to_queue(gl_workqueue *obj, gl_workqueue_job
 	head->data.siblingL = job;
 }
 
-static gl_workqueue_job *gl_workqueue_remove_job(gl_workqueue *obj, gl_workqueue_job *job)
+static gl_workqueue_job *gl_workqueue_remove_job_nl(gl_workqueue *obj, gl_workqueue_job *job)
 {
 	gl_workqueue_job *siblingR = job->data.siblingR;
 	gl_workqueue_job *siblingL = job->data.siblingL;
@@ -46,11 +46,25 @@ static void gl_workqueue_append_job(gl_workqueue *obj, gl_workqueue_job *job)
 {
 	pthread_mutex_lock(&obj->data.queueMutex);
 	
-	gl_workqueue_append_job_to_queue(obj, job, obj->data.queuedJobs);
+	gl_workqueue_append_job_to_queue_nl(obj, job, obj->data.queuedJobs);
 	
 	pthread_cond_signal(&obj->data.workAvailable);
 	
 	pthread_mutex_unlock(&obj->data.queueMutex);
+}
+
+static gl_workqueue_job *gl_workqueue_pop_first_job_nl(gl_workqueue *obj)
+{
+	gl_workqueue_job *head = obj->data.queuedJobs;
+	gl_workqueue_job *job = head->data.siblingR;
+	
+	if (job == head) {
+		pthread_mutex_unlock (&obj->data.queueMutex);
+		return NULL;
+	}
+	gl_workqueue_remove_job_nl(obj, job);
+	
+	return job;
 }
 
 void gl_workqueue_setup()

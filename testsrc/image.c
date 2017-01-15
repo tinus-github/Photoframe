@@ -131,6 +131,9 @@ int main(int argc, char *argv[])
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;
 	gl_shape *main_container_2d_shape = (gl_shape *)main_container_2d;
 
+	gl_container_2d image_container_2d = gl_container_2d_new();
+	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)image_container_2d);
+	
 //	tiled_image->f->load_image(tiled_image, image, width, height, orientation, 128);
 //	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)tiled_image);
 	
@@ -149,7 +152,7 @@ int main(int argc, char *argv[])
 	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
 
-	displayData.container_2d = main_container_2d;
+	displayData.container_2d = image_container_2d;
 	gl_notice_subscription *sub = gl_notice_subscription_new();
 	sub->data.target = &displayData;
 	sub->data.action_data = &renderData;

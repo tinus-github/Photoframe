@@ -85,6 +85,8 @@ int main(int argc, char *argv[])
 	egl_driver_setup();
 	egl_driver_init();
 	
+	renderData.filename = argv[0];
+	
 	gl_workqueue *workqueue = gl_workqueue_new();
 	workqueue->f->start(workqueue);
 	

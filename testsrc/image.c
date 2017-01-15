@@ -18,6 +18,7 @@
 
 #include <pthread.h>
 #include <sched.h>
+#include <linux/sched.h>
 
 #include "loadimage.h"
 #include "gl-texture.h"

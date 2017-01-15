@@ -68,13 +68,15 @@ void use_image(void *target, gl_notice_subscription *subscription, void *extra_d
 {
 	struct image_display_data *displayDataP = (struct image_display_data *)target;
 	struct render_data *renderDataP = (struct render_data *)extra_data;
+
+	gl_container *main_container_2d_container = (gl_container *)displayDataP->container_2d;
 	
 	gl_tiled_image *tiled_image = gl_tiled_image_new();
 	
 	tiled_image->f->load_image(tiled_image, renderDataP->image,
 				   renderDataP->width, renderDataP->height,
 				   renderDataP->orientation, 128);
-	displayDataP->container_2d->f->append_child(displayDataP->container_2d, (gl_shape *)tiled_image);
+	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)tiled_image);
 }
 
 int main(int argc, char *argv[])

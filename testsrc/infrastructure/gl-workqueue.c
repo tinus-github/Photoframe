@@ -142,9 +142,7 @@ gl_workqueue *gl_workqueue_init(gl_workqueue *obj)
 	
 	gl_renderloop *loop = gl_renderloop_get_global_renderloop();
 	loop->f->append_child(loop, gl_renderloop_phase_start, member);
-	
-	obj->data.schedulingPolicy = SCHED_OTHER;
-	
+		
 	return obj;
 }
 
@@ -154,8 +152,6 @@ gl_workqueue *gl_workqueue_start(gl_workqueue *obj)
 	pthread_attr_t attr;
 
 	assert (!pthread_attr_init(&attr));
-	
-	assert (!pthread_attr_setschedpolicy(&attr, obj->data.schedulingPolicy));
 	
 	assert (!pthread_create(&thread_id, &attr, &gl_workqueue_runloop, obj));
 	

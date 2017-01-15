@@ -25,9 +25,7 @@ typedef struct gl_workqueue_funcs {
 
 typedef struct gl_workqueue_data {
 	gl_object_data p;
-	
-	int schedulingPolicy;
-	
+		
 	pthread_mutex_t queueMutex;
 	
 	pthread_cond_t workAvailable;

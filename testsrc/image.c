@@ -16,10 +16,6 @@
 
 #include <bcm_host.h>
 
-#include <pthread.h>
-#include <sched.h>
-#include <linux/sched.h>
-
 #include "loadimage.h"
 #include "gl-texture.h"
 #include "gl-tile.h"
@@ -90,7 +86,6 @@ int main(int argc, char *argv[])
 	egl_driver_init();
 	
 	gl_workqueue *workqueue = gl_workqueue_new();
-	workqueue->data.schedulingPolicy = SCHED_BATCH;
 	workqueue->f->start(workqueue);
 	
 	gl_workqueue_job *job = gl_workqueue_job_new();

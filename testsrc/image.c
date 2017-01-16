@@ -51,7 +51,7 @@ struct image_display_data {
 	gl_container_2d *container_2d;
 };
 
-void fade_in_image(void *target, gl_notice_subscription, void *extra_data);
+void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data);
 
 void *image_render_job(void *target, void *extra_data)
 {
@@ -77,7 +77,7 @@ void use_image(void *target, gl_notice_subscription *subscription, void *extra_d
 	gl_tiled_image *tiled_image = gl_tiled_image_new();
 	
 	gl_notice_subscription *sub = gl_notice_subscription_new();
-	sub->data.target = &image;
+	sub->data.target = &tiled_image;
 	sub->data.action = &fade_in_image;
 	tiled_image->data.loadedNotice->f->subscribe(tiled_image->data.loadedNotice, sub);
 	
@@ -91,7 +91,7 @@ void image_set_alpha(void *target, void *extra_data, GLfloat value)
 {
 	gl_shape *image_shape = (gl_shape *)target;
 	
-	image->data.alpha = value;
+	image_shape->data.alpha = value;
 }
 
 void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)

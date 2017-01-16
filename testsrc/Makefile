@@ -251,7 +251,7 @@ infrastructure/gl-workqueue.o: infrastructure/gl-workqueue.c infrastructure/gl-w
 	$(PTHREAD_LIBS)
 
 gl-image.o: gl-image.c gl-image.h \
-		infrastructure/gl-workqueue.h infrastructure/gl-workqueue-job-h gl-stage.h \
+		infrastructure/gl-workqueue.h infrastructure/gl-workqueue-job.h gl-stage.h \
 		loadimage.h gl-tiled-image.h gl-container-2d.h \
 		gl-container.h gl-object.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \

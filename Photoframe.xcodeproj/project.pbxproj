@@ -261,6 +261,8 @@
 		0D8350061CE63F8200ADCDCC /* gl-texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-texture.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0D8350071CEA1F8800ADCDCC /* gl-shape.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-shape.c"; sourceTree = "<group>"; };
 		0D8350081CEA1F8800ADCDCC /* gl-shape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-shape.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		0D9FD15A1E2D756300B82200 /* gl-image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-image.c"; sourceTree = "<group>"; };
+		0D9FD15B1E2D756300B82200 /* gl-image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-image.h"; sourceTree = "<group>"; };
 		0DEED0791E15746600C00550 /* egl-driver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "egl-driver.c"; sourceTree = "<group>"; };
 		0DEED07A1E15746600C00550 /* egl-driver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "egl-driver.h"; sourceTree = "<group>"; };
 		0DEED07B1E15E10900C00550 /* gl-value-animation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-value-animation.c"; sourceTree = "<group>"; };
@@ -700,6 +702,8 @@
 				0DEED07C1E15E10900C00550 /* gl-value-animation.h */,
 				0DEED07D1E15F89B00C00550 /* gl-value-animation-easing.c */,
 				0DEED07E1E15F89B00C00550 /* gl-value-animation-easing.h */,
+				0D9FD15A1E2D756300B82200 /* gl-image.c */,
+				0D9FD15B1E2D756300B82200 /* gl-image.h */,
 			);
 			indentWidth = 8;
 			path = testsrc;

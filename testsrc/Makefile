@@ -250,6 +250,15 @@ infrastructure/gl-workqueue.o: infrastructure/gl-workqueue.c infrastructure/gl-w
 	-c infrastructure/gl-workqueue.c -o infrastructure/gl-workqueue.o $(OPTFLAGS) \
 	$(PTHREAD_LIBS)
 
+gl-image.o: gl-image.c gl-image.h \
+		gl-workqueue.h gl-workqueue-job-h gl-stage.h loadimage.h gl-tiled-image.h gl-container-2d.h \
+		gl-container.h gl-object.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations \
+	-c gl-image.c -o gl-image.o $(OPTFLAGS)
+
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	 -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \

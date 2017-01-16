@@ -108,6 +108,7 @@ void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
 	animation->data.action = image_set_alpha;
 	
 	animation->f->start(animation);
+	image_set_alpha(target, NULL, 0.0);
 }
 
 int main(int argc, char *argv[])

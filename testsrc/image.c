@@ -51,6 +51,8 @@ struct image_display_data {
 	gl_container_2d *container_2d;
 };
 
+void fade_in_image(void *target, gl_notice_subscription, void *extra_data);
+
 void *image_render_job(void *target, void *extra_data)
 {
 	struct render_data *renderDataP = (struct render_data *)target;
@@ -74,10 +76,37 @@ void use_image(void *target, gl_notice_subscription *subscription, void *extra_d
 	
 	gl_tiled_image *tiled_image = gl_tiled_image_new();
 	
+	gl_notice_subscription *sub = gl_notice_subscription_new();
+	sub->data.target = &image;
+	sub->data.action = &fade_in_image;
+	tiled_image->data.loadedNotice->f->subscribe(tiled_image->data.loadedNotice, sub);
+	
 	tiled_image->f->load_image(tiled_image, renderDataP->image,
 				   renderDataP->width, renderDataP->height,
 				   renderDataP->orientation, 128);
 	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)tiled_image);
+}
+
+void image_set_alpha(void *target, void *extra_data, GLfloat value)
+{
+	gl_shape *image_shape = (gl_shape *)target;
+	
+	image->data.alpha = value;
+}
+
+void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
+{
+	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
+	animation_e->data.easingType = gl_value_animation_ease_linear;
+	
+	gl_value_animation *animation = (gl_value_animation *)animation_e;
+	animation->data.startValue = 0.0;
+	animation->data.endValue = 1.0;
+	animation->data.duration = 0.4;
+	animation->data.target = target;
+	animation->data.action = image_set_alpha;
+	
+	animation->f->start(animation);
 }
 
 int main(int argc, char *argv[])
@@ -85,14 +114,9 @@ int main(int argc, char *argv[])
 	struct render_data renderData;
 	struct image_display_data displayData;
 	
-	int width, height;
-	unsigned int orientation;
-	
 	struct timeval t1, t2;
 	struct timezone tz;
 	float deltatime;
-	
-	unsigned char *image;
 	
 	//image = esLoadTGA("jan.tga", &width, &height);
 	gettimeofday ( &t1 , &tz );
@@ -126,7 +150,6 @@ int main(int argc, char *argv[])
 	printf("Image loaded in %1.4f seconds\n", deltatime);
 #endif
 	
-//	gl_tiled_image *tiled_image = gl_tiled_image_new();
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;
 	gl_shape *main_container_2d_shape = (gl_shape *)main_container_2d;
@@ -134,8 +157,6 @@ int main(int argc, char *argv[])
 	gl_container_2d *image_container_2d = gl_container_2d_new();
 	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)image_container_2d);
 	
-//	tiled_image->f->load_image(tiled_image, image, width, height, orientation, 128);
-//	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)tiled_image);
 	
 	gl_label_scroller *scroller = gl_label_scroller_new();
 	gl_shape *scroller_shape = (gl_shape *)scroller;

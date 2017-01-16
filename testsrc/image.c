@@ -77,7 +77,7 @@ void use_image(void *target, gl_notice_subscription *subscription, void *extra_d
 	gl_tiled_image *tiled_image = gl_tiled_image_new();
 	
 	gl_notice_subscription *sub = gl_notice_subscription_new();
-	sub->data.target = &tiled_image;
+	sub->data.target = tiled_image;
 	sub->data.action = &fade_in_image;
 	tiled_image->data.loadedNotice->f->subscribe(tiled_image->data.loadedNotice, sub);
 	

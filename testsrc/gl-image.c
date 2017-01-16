@@ -83,7 +83,7 @@ static void gl_image_load_file(gl_image *obj, const char* filename)
 	gl_notice_subscription *sub = gl_notice_subscription_new();
 	sub->data.target = obj;
 	sub->data.action = gl_image_loading_completed;
-	sub->data.extra_data = job;
+	sub->data.action_data = job;
 	((gl_object *)job)->f->ref((gl_object *)job);
 	
 	job->data.doneNotice->f->subscribe(job->data.doneNotice, sub);

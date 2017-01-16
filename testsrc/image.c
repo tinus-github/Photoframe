@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 	gl_notice_subscription *sub = gl_notice_subscription_new();
 	sub->data.target = img;
 	sub->data.action = &fade_in_image;
-	sub->data.action_data = sub;
+	sub->data.action_data = image_container_2d;
 	
 	img->data.readyNotice->f->subscribe(img->data.readyNotice, sub);
 	img->f->load_file(img, argv[1]);

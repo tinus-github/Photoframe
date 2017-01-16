@@ -92,6 +92,7 @@ void image_set_alpha(void *target, void *extra_data, GLfloat value)
 	gl_shape *image_shape = (gl_shape *)target;
 	
 	image_shape->data.alpha = value;
+	image_shape->f->set_computed_alpha_dirty(image_shape);
 }
 
 void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)

@@ -58,8 +58,8 @@ void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
 	
 	gl_container_2d *container_2d = (gl_container_2d *)extra_data;
 	
-	((gl_container *)gl_container_2d)->f->append_child(
-							   (gl_container *)gl_container_2d, (gl_shape *)img);
+	((gl_container *)container_2d)->f->append_child(
+							(gl_container *)container_2d, (gl_shape *)img);
 	
 	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
 	animation_e->data.easingType = gl_value_animation_ease_linear;

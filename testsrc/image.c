@@ -30,6 +30,7 @@
 #include "infrastructure/gl-workqueue.h"
 #include "infrastructure/gl-workqueue-job.h"
 #include "infrastructure/gl-notice-subscription.h"
+#include "gl-image.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -37,55 +38,11 @@
 #define TRUE 1
 #define FALSE 0
 
-struct render_data {
-	const char *filename;
-	
-	unsigned char *image;
-	int width;
-	int height;
-	
-	unsigned int orientation;
-};
-
 struct image_display_data {
 	gl_container_2d *container_2d;
 };
 
 void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data);
-
-void *image_render_job(void *target, void *extra_data)
-{
-	struct render_data *renderDataP = (struct render_data *)target;
-	
-	renderDataP->image = loadJPEG(renderDataP->filename,
-				      1920,1080,
-				      &renderDataP->width,
-				      &renderDataP->height,
-				      &renderDataP->orientation);
-	
-	fprintf(stderr, "Image is %d x %d\n", renderDataP->width, renderDataP->height);
-	return NULL;
-}
-
-void use_image(void *target, gl_notice_subscription *subscription, void *extra_data)
-{
-	struct image_display_data *displayDataP = (struct image_display_data *)target;
-	struct render_data *renderDataP = (struct render_data *)extra_data;
-
-	gl_container *main_container_2d_container = (gl_container *)displayDataP->container_2d;
-	
-	gl_tiled_image *tiled_image = gl_tiled_image_new();
-	
-	gl_notice_subscription *sub = gl_notice_subscription_new();
-	sub->data.target = tiled_image;
-	sub->data.action = &fade_in_image;
-	tiled_image->data.loadedNotice->f->subscribe(tiled_image->data.loadedNotice, sub);
-	
-	tiled_image->f->load_image(tiled_image, renderDataP->image,
-				   renderDataP->width, renderDataP->height,
-				   renderDataP->orientation, 128);
-	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)tiled_image);
-}
 
 void image_set_alpha(void *target, void *extra_data, GLfloat value)
 {
@@ -97,6 +54,13 @@ void image_set_alpha(void *target, void *extra_data, GLfloat value)
 
 void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
 {
+	gl_image *img = (gl_image *)target;
+	
+	gl_container_2d *container_2d = (gl_container_2d *)extra_data;
+	
+	((gl_container *)gl_container_2d)->f->append_child(
+							   (gl_container *)gl_container_2d, (gl_shape *)img);
+	
 	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
 	animation_e->data.easingType = gl_value_animation_ease_linear;
 	
@@ -113,9 +77,6 @@ void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
 
 int main(int argc, char *argv[])
 {
-	struct render_data renderData;
-	struct image_display_data displayData;
-	
 	struct timeval t1, t2;
 	struct timezone tz;
 	float deltatime;
@@ -130,15 +91,18 @@ int main(int argc, char *argv[])
 	
 	egl_driver_setup();
 	egl_driver_init();
+
+	gl_container_2d *image_container_2d = gl_container_2d_new();
 	
-	renderData.filename = argv[1];
+	gl_image *img = gl_image_new();
 	
-	gl_workqueue *workqueue = gl_workqueue_new();
-	workqueue->f->start(workqueue);
+	gl_notice_subscription *sub = gl_notice_subscription_new();
+	sub->data.target = img;
+	sub->data.action = &fade_in_image;
+	sub->data.action_data = sub;
 	
-	gl_workqueue_job *job = gl_workqueue_job_new();
-	job->data.target = &renderData;
-	job->data.action = &image_render_job;
+	img->data.readyNotice->f->subscribe(img->data.readyNotice, sub);
+	img->f->load_file(img, argv[1]);
 	
 #if 0
 	if (image == NULL) {
@@ -156,10 +120,8 @@ int main(int argc, char *argv[])
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;
 	gl_shape *main_container_2d_shape = (gl_shape *)main_container_2d;
 
-	gl_container_2d *image_container_2d = gl_container_2d_new();
 	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)image_container_2d);
-	
-	
+
 	gl_label_scroller *scroller = gl_label_scroller_new();
 	gl_shape *scroller_shape = (gl_shape *)scroller;
 	scroller_shape->data.objectHeight = 160;
@@ -174,15 +136,6 @@ int main(int argc, char *argv[])
 	
 	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
-
-	displayData.container_2d = image_container_2d;
-	gl_notice_subscription *sub = gl_notice_subscription_new();
-	sub->data.target = &displayData;
-	sub->data.action_data = &renderData;
-	sub->data.action = &use_image;
-	job->data.doneNotice->f->subscribe(job->data.doneNotice, sub);
-	
-	workqueue->f->append_job(workqueue, job);
 	
 	gl_renderloop_loop();
 	

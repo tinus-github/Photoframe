@@ -27,6 +27,7 @@
 #include "infrastructure/gl-notice-subscription.h"
 #include "infrastructure/gl-workqueue.h"
 #include "infrastructure/gl-workqueue-job.h"
+#include "gl-image.h"
 
 #include <bcm_host.h>
 
@@ -301,4 +302,5 @@ void egl_driver_setup()
 	gl_notice_subscription_setup();
 	gl_workqueue_setup();
 	gl_workqueue_job_setup();
+	gl_image_setup();
 }

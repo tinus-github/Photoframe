@@ -10,8 +10,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "gl-workqueue-job.h"
-#include "gl-workqueue.h"
+#include "infrastructure/gl-workqueue-job.h"
+#include "infrastructure/gl-workqueue.h"
 #include "gl-stage.h"
 #include "loadimage.h"
 

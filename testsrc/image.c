@@ -27,8 +27,6 @@
 #include "gl-value-animation.h"
 #include "gl-value-animation-easing.h"
 #include "labels/gl-label-scroller.h"
-#include "infrastructure/gl-workqueue.h"
-#include "infrastructure/gl-workqueue-job.h"
 #include "infrastructure/gl-notice-subscription.h"
 #include "gl-image.h"
 
@@ -37,12 +35,6 @@
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0
-
-struct image_display_data {
-	gl_container_2d *container_2d;
-};
-
-void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data);
 
 void image_set_alpha(void *target, void *extra_data, GLfloat value)
 {
@@ -77,13 +69,6 @@ void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
 
 int main(int argc, char *argv[])
 {
-	struct timeval t1, t2;
-	struct timezone tz;
-	float deltatime;
-	
-	//image = esLoadTGA("jan.tga", &width, &height);
-	gettimeofday ( &t1 , &tz );
-	
 	if (argc < 2) {
 		printf("Usage: %s <filename>\n", argv[0]);
 		return -1;
@@ -103,18 +88,6 @@ int main(int argc, char *argv[])
 	
 	img->data.readyNotice->f->subscribe(img->data.readyNotice, sub);
 	img->f->load_file(img, argv[1]);
-	
-#if 0
-	if (image == NULL) {
-		fprintf(stderr, "No such image\n");
-		exit(1);
-	}
-	fprintf(stderr, "Image is %d x %d\n", width, height);
-	gettimeofday(&t2, &tz);
-	deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
-	
-	printf("Image loaded in %1.4f seconds\n", deltatime);
-#endif
 	
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;

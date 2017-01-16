@@ -17,10 +17,14 @@
 
 #define GL_IMAGE_TILE_HEIGHT 128
 
-static const char** file_formats = {
-	"jpg",
-	"png",
-	"gif"
+static const char *file_format_jpg_string = "jpg";
+static const char *file_format_png_string = "png";
+static const char *file_format_gif_string = "gif";
+
+static const char **file_formats = {
+	file_format_jpg_string,
+	file_format_png_string,
+	file_format_gif_string
 };
 
 #define FORMAT_JPG 0
@@ -28,6 +32,7 @@ static const char** file_formats = {
 #define FORMAT_GIF 2
 
 static void gl_image_free(gl_object *obj_obj);
+static void gl_image_load_file(gl_image *obj, const char* filename);
 
 static struct gl_image_funcs gl_image_funcs_global = {
 	.load_file = &gl_image_load_file

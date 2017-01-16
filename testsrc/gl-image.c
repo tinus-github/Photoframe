@@ -14,17 +14,15 @@
 #include "infrastructure/gl-workqueue.h"
 #include "gl-stage.h"
 #include "loadimage.h"
+#include "infrastructure/gl-notice-subscription.h"
+#include "infrastructure/gl-notice.h"
 
 #define GL_IMAGE_TILE_HEIGHT 128
 
-static const char *file_format_jpg_string = "jpg";
-static const char *file_format_png_string = "png";
-static const char *file_format_gif_string = "gif";
-
-static const char **file_formats = {
-	file_format_jpg_string,
-	file_format_png_string,
-	file_format_gif_string
+static const char *file_formats[] = {
+	"jpg",
+	"png",
+	"gif"
 };
 
 #define FORMAT_JPG 0
@@ -45,7 +43,7 @@ static void gl_image_transfer_completed(void *target, gl_notice_subscription *su
 
 static int gl_image_setup_done = 0;
 
-static gl_workqueue *loading_workqueue;
+static gl_workqueue *loading_workqueue;
 
 static void gl_image_setup_workqueue()
 {

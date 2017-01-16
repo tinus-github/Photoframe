@@ -33,7 +33,7 @@ typedef struct gl_image_data {
 	char *_filename;
 	int _width;
 	int _height;
-	int _orientation;
+	unsigned int _orientation;
 } gl_image_data;
 
 struct gl_image {

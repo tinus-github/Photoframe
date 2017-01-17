@@ -13,11 +13,12 @@
 static void gl_slideshow_set_entrance_animation(gl_slideshow *obj, gl_value_animation *animation);
 static void gl_slideshow_set_exit_animation(gl_slideshow *obj, gl_value_animation *animation);
 static void gl_slideshow_free(gl_object *obj_obj);
+void gl_slideshow_engine(gl_slideshow *obj);
 
 static struct gl_slideshow_funcs gl_slideshow_funcs_global = {
 	.set_entrance_animation = &gl_slideshow_set_entrance_animation,
 	.set_exit_animation = &gl_slideshow_set_exit_animation,
-	.start = &gl_slideshow_start
+	.start = &gl_slideshow_engine
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
@@ -52,7 +53,7 @@ void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
 	gl_slide *newSlide = obj->data.getNextSlideCallback(obj->data.callbackTarget,
 							    obj->data.callbackExtraData);
 	obj->data._incomingSlide = newSlide;
-	((gl_container *)obj)->f->append_child((gl_container *)obj, newSlide);
+	((gl_container *)obj)->f->append_child((gl_container *)obj, (gl_shape *)newSlide);
 	
 	gl_notice_subscription *sub = gl_notice_subscription_new();
 	sub->data.target = obj;
@@ -64,7 +65,7 @@ void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
 	gl_value_animation *new_animation;
 	if (obj->data._entranceAnimation) {
  		new_animation = obj->data._entranceAnimation->f->dup(obj->data._entranceAnimation);
-		newSlide->f->set_enter_animation(newSlide, new_animation);
+		newSlide->f->set_entrance_animation(newSlide, new_animation);
 	}
 	
 	if (obj->data._exitAnimation) {
@@ -95,7 +96,7 @@ void gl_slideshow_engine(gl_slideshow *obj)
 			gl_slide *currentSlide = obj->data._currentSlide;
 			if (!currentSlide || (currentSlide->data.loadstate == gl_slide_loadstate_offscreen)) {
 				if (currentSlide) {
-					((gl_container *)obj)->f->remove_child((gl_container *)obj, currentSlide);
+					((gl_container *)obj)->f->remove_child((gl_container *)obj, (gl_shape *)currentSlide);
 				}
 				obj->data._currentSlide = incomingSlide;
 				obj->data._incomingSlide = NULL;

@@ -32,7 +32,7 @@ typedef struct gl_slideshow_data {
 	gl_container_2d_data p;
 	
 	GLfloat slideDuration;
-	gl_slide *(getNextSlideCallback) (void *target, void *extra_data);
+	gl_slide *(*getNextSlideCallback) (void *target, void *extra_data);
 	void *callbackTarget;
 	void *callbackExtraData;
 	

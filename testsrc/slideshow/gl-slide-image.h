@@ -31,7 +31,7 @@ typedef struct gl_slide_image_data {
 	gl_container_2d_data p;
 	
 	gl_slide_loadstate loadstate;
-	gl_notice loadstateChanged;
+	gl_notice *loadstateChanged;
 	
 	char *filename;
 	

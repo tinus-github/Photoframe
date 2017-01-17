@@ -16,6 +16,7 @@
 static void (*gl_object_free_org_global) (gl_object *obj);
 
 static void gl_slide_image_free(gl_object *obj_obj);
+static void gl_slide_image_load(gl_slide_image *obj);
 
 static struct gl_slide_image_funcs gl_slide_image_funcs_global = {
 	.load = &gl_slide_image_load

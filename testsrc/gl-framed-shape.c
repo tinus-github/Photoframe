@@ -115,6 +115,8 @@ static void gl_framed_shape_update_frame(gl_framed_shape *obj)
 					   0.0, topBorder + shapeHeight,
 					   ownWidth, bottomBorder);
 	}
+	
+	((gl_shape *)obj)->f->set_computed_projection_dirty((gl_shape *)obj);
 }
 
 void gl_framed_shape_setup()

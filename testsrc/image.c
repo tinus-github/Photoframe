@@ -53,6 +53,8 @@ void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
 	
 	gl_framed_shape *framed_shape = gl_framed_shape_new();
 	framed_shape->data.shape = (gl_shape *)img;
+	((gl_shape *)framed_shape)->data.objectWidth = 1920;
+	((gl_shape *)framed_shape)->data.objectHeight = 1080;
 	framed_shape->f->update_frame(framed_shape);
 	
 	((gl_container *)container_2d)->f->append_child(

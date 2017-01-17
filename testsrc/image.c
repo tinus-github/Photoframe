@@ -76,11 +76,11 @@ int main(int argc, char *argv[])
 	gl_slide *slide = (gl_slide *)slide_img;
 	
 	gl_notice_subscription *sub = gl_notice_subscription_new();
-	sub->data.target = slide_image;
+	sub->data.target = slide_img;
 	sub->data.action = &fade_in_image;
 	
 	slide->data.loadstateChanged->f->subscribe(slide->data.loadstateChanged, sub);
-	img->f->load_file(img, argv[1]);
+	slide_img->f->load_file(img, argv[1]);
 	
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;

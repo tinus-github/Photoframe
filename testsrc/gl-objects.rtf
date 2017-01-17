@@ -31,7 +31,7 @@ Empty object .c:\
 \{\
 	gl_shape *parent = gl_shape_new();\
 	memcpy(&gl_container_funcs_global.p, parent->f, \cf6 sizeof\cf3 (gl_shape_funcs));\
-	parent->f->free(parent);\
+	((gl_object *)parent)->f->free((gl_object *)parent);\
 \}\
 \
 gl_container *gl_container_init(gl_container *obj)\

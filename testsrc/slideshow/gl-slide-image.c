@@ -28,8 +28,8 @@ void gl_slide_image_setup()
 	((gl_object *)parent)->f->free((gl_object *)parent);
 	
 	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_slide_image_funcs_global;
-	gl_object_free_org_global = obj_funcs_global.free;
-	gl_slide_image_funcs_global.p.free = &gl_slide_image_free;
+	gl_object_free_org_global = obj_funcs_global->free;
+	obj_funcs_global->free = &gl_slide_image_free;
 }
 
 static void gl_slide_image_set_loadstate(gl_slide_image *obj, gl_slide_loadstate new_state)

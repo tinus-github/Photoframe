@@ -14,6 +14,7 @@
 
 static void (*gl_object_free_org_global) (gl_object *obj);
 static void gl_framed_shape_update_frame(gl_framed_shape *obj);
+static void gl_framed_shape_free(gl_object *obj_obj);
 
 static struct gl_framed_shape_funcs gl_framed_shape_funcs_global = {
 	.update_frame = &gl_framed_shape_update_frame
@@ -63,7 +64,7 @@ static void gl_framed_shape_add_border(gl_framed_shape *obj, unsigned int index,
 	obj->data._borders[index] = rectangle;
 	((gl_container *)obj)->f->append_child((gl_container *)obj, rectangle_shape);
 	
-	rectangle->f->set_color(0.0, 0.0, 1.0, 1.0);
+	rectangle->f->set_color(rectangle, 0.0, 0.0, 1.0, 1.0);
 }
 
 static void gl_framed_shape_update_frame(gl_framed_shape *obj)
@@ -81,7 +82,7 @@ static void gl_framed_shape_update_frame(gl_framed_shape *obj)
 	gl_shape *contained_shape = obj->data._contained_shape;
 	
 	GLfloat ownWidth = ((gl_shape *)obj)->data.objectWidth;
-	GLfloat ownheight = ((gl_shape *)obj)->data.objectHeight;
+	GLfloat ownHeight = ((gl_shape *)obj)->data.objectHeight;
 	
 	GLfloat shapeWidth = contained_shape->data.objectWidth;
 	GLfloat shapeHeight = contained_shape->data.objectHeight;

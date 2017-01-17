@@ -12,6 +12,8 @@
 #include <stdio.h>
 
 #include "gl-container-2d.h"
+#include "gl-shape.h"
+#include "gl-rectangle.h"
 
 typedef struct gl_framed_shape gl_framed_shape;
 

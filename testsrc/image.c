@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 	
 	slide->data.loadstateChanged->f->subscribe(slide->data.loadstateChanged, sub);
 	slide_img->data.filename = strdup(argv[1]);
-	slide->f->load_file(slide_img);
+	slide->f->load(slide_img);
 	
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;

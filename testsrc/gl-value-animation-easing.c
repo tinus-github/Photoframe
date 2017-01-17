@@ -10,6 +10,10 @@
 #include "math.h"
 
 static GLfloat gl_value_animation_easing_calculate_value_normalized(gl_value_animation *obj, GLfloat normalized_time_elapsed);
+static void gl_value_animation_easing_copy(gl_value_animation *source, gl_value_animation *target);
+static gl_value_animation *gl_value_animation_easing_dup(gl_value_animation *source);
+
+static void (*gl_value_animation_copy_org_global) (gl_value_animation *source, gl_value_animation *target);
 
 static struct gl_value_animation_easing_funcs gl_value_animation_easing_funcs_global = {
 	
@@ -24,6 +28,9 @@ void gl_value_animation_easing_setup()
 	
 	gl_value_animation_funcs *parent_f = (gl_value_animation_funcs *)&gl_value_animation_easing_funcs_global;
 	parent_f->calculate_value_normalized = &gl_value_animation_easing_calculate_value_normalized;
+	parent_f->dup = &gl_value_animation_easing_dup;
+	gl_value_animation_copy_org_global = parent_f->copy;
+	parent_f->copy = &gl_value_animation_easing_copy;
 }
 
 GLfloat calculate_linear(GLfloat n)
@@ -63,6 +70,24 @@ static GLfloat gl_value_animation_easing_calculate_value_normalized(gl_value_ani
 		case gl_value_animation_ease_Sine:
 			return calculate_sine(normalized_time_elapsed);
 	}
+}
+
+static void gl_value_animation_easing_copy(gl_value_animation *source, gl_value_animation *target)
+{
+	gl_value_animation_copy_org_global(source, target);
+	
+	gl_value_animation_easing *source_easing = (gl_value_animation_easing *)source;
+	gl_value_animation_easing *target_easing = (gl_value_animation_easing *)target;
+	
+	target->data.easingType = source->data.easingType;
+}
+
+static gl_value_animation *gl_value_animation_easing_dup(gl_value_animation *source)
+{
+	gl_value_animation_easing *ret = gl_value_animation_easing_new();
+	ret->f->copy(source, (gl_value_animation *)ret);
+	
+	return (gl_value_animation *)ret;
 }
 
 gl_value_animation_easing *gl_value_animation_easing_init(gl_value_animation_easing *obj)

@@ -25,6 +25,8 @@ static GLfloat gl_value_animation_calculate_value(gl_value_animation *obj,
 						  GLfloat normalized_time_elapsed, GLfloat startValue, GLfloat endValue);
 static GLfloat gl_value_animation_calculate_value_normalized(gl_value_animation *obj, GLfloat normalized_time_elapsed);
 static void gl_value_animation_animate(gl_value_animation *obj, GLfloat normalized_time_elapsed);
+static gl_value_animation *gl_value_animation_dup(gl_value_animation *obj);
+static void gl_value_animation_copy(gl_value_animation *obj);
 
 static struct gl_value_animation_funcs gl_value_animation_funcs_global = {
 	.start = &gl_value_animation_start,
@@ -33,6 +35,8 @@ static struct gl_value_animation_funcs gl_value_animation_funcs_global = {
 	.calculate_value = &gl_value_animation_calculate_value,
 	.calculate_value_normalized = &gl_value_animation_calculate_value_normalized,
 	.set_speed = &gl_value_animation_set_speed,
+	.dup = &gl_value_animation_dup,
+	.copy = &gl_value_animation_copy
 };
 
 static void gl_value_animation_start(gl_value_animation *obj)
@@ -153,6 +157,30 @@ static void gl_value_animation_done(gl_value_animation *obj)
 	}
 
 	obj->data.animationCompleted->f->fire(obj->data.animationCompleted);
+}
+
+static void gl_value_animation_copy(gl_value_animation *source, gl_value_animation *target)
+{
+	assert (!source->data.isRunning);
+	
+	target->data.timeElapsed = source->data.timeElapsed;
+	target->data.startValue = source->data.startValue;
+	target->data.endValue = source->data.endValue;
+	target->data.duration = source->data.duration;
+	target->data.repeats = source->data.repeats;
+	target->data.target = source->data.target;
+	target->data.extraData = source->data.extraData;
+	target->data.action = source->data.action;
+	
+	// Note that the notice is not copied
+}
+
+static gl_value_animation *gl_value_animation_dup(gl_value_animation *source)
+{
+	gl_value_animation *ret = gl_value_animation_new();
+	ret->f->copy(source, ret);
+	
+	return ret;
 }
 
 void gl_value_animation_setup()

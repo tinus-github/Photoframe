@@ -26,7 +26,7 @@ static GLfloat gl_value_animation_calculate_value(gl_value_animation *obj,
 static GLfloat gl_value_animation_calculate_value_normalized(gl_value_animation *obj, GLfloat normalized_time_elapsed);
 static void gl_value_animation_animate(gl_value_animation *obj, GLfloat normalized_time_elapsed);
 static gl_value_animation *gl_value_animation_dup(gl_value_animation *obj);
-static void gl_value_animation_copy(gl_value_animation *obj);
+static void gl_value_animation_copy(gl_value_animation *source, gl_value_animation *target);
 
 static struct gl_value_animation_funcs gl_value_animation_funcs_global = {
 	.start = &gl_value_animation_start,

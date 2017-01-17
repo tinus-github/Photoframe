@@ -49,6 +49,10 @@ void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
 	gl_slide_image *slide_img = (gl_slide_image *)target;
 	gl_slide *slide = (gl_slide *)slide_img;
 	
+	if (slide->data.loadstate != gl_slide_loadstate_ready) {
+		return;
+	}
+	
 	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
 	animation_e->data.easingType = gl_value_animation_ease_linear;
 	

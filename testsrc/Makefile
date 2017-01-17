@@ -210,6 +210,14 @@ gl-framed-shape.o: gl-framed-shape.c gl-framed-shape.h \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c gl-framed-shape.c -o gl-framed-shape.o $(OPTFLAGS)
 
+slideshow/gl-slide-image.o: slideshow/gl-slide-image.c slideshow/gl-slide-image.h \
+		gl-container.h gl-container-2d.h gl-shape.h infrastructure/gl-object.h \
+		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h
+	cc -g $(CFLAGS_ALL) \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-c slideshow/gl-slide-image.c -o slideshow/gl-slide-image.o $(OPTFLAGS)
+
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	 -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \

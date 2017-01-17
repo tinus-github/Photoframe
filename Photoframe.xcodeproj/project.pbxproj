@@ -265,6 +265,8 @@
 		0D9FD15B1E2D756300B82200 /* gl-image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-image.h"; sourceTree = "<group>"; };
 		0D9FD15C1E2D995000B82200 /* gl-framed-shape.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-framed-shape.c"; sourceTree = "<group>"; };
 		0D9FD15D1E2D995000B82200 /* gl-framed-shape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-framed-shape.h"; sourceTree = "<group>"; };
+		0D9FD15F1E2E594500B82200 /* gl-slide-image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-slide-image.c"; sourceTree = "<group>"; };
+		0D9FD1601E2E594500B82200 /* gl-slide-image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-slide-image.h"; sourceTree = "<group>"; };
 		0DEED0791E15746600C00550 /* egl-driver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "egl-driver.c"; sourceTree = "<group>"; };
 		0DEED07A1E15746600C00550 /* egl-driver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "egl-driver.h"; sourceTree = "<group>"; };
 		0DEED07B1E15E10900C00550 /* gl-value-animation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-value-animation.c"; sourceTree = "<group>"; };
@@ -667,6 +669,7 @@
 		0D69BD731C4EA16500A10282 /* testsrc */ = {
 			isa = PBXGroup;
 			children = (
+				0D9FD15E1E2E58F600B82200 /* slideshow */,
 				0D80FE0C1E2592B7008827AA /* infrastructure */,
 				0DFBB1C91E204BF200E50758 /* labels */,
 				0D69BD751C4EA17900A10282 /* image.c */,
@@ -730,6 +733,15 @@
 				0D72ED0D1E2923ED001B6839 /* gl-workqueue-job.h */,
 			);
 			path = infrastructure;
+			sourceTree = "<group>";
+		};
+		0D9FD15E1E2E58F600B82200 /* slideshow */ = {
+			isa = PBXGroup;
+			children = (
+				0D9FD15F1E2E594500B82200 /* gl-slide-image.c */,
+				0D9FD1601E2E594500B82200 /* gl-slide-image.h */,
+			);
+			path = slideshow;
 			sourceTree = "<group>";
 		};
 		0DFBB1C91E204BF200E50758 /* labels */ = {

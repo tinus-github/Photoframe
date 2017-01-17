@@ -29,6 +29,7 @@
 #include "labels/gl-label-scroller.h"
 #include "infrastructure/gl-notice-subscription.h"
 #include "gl-image.h"
+#include "gl-framed-shape.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -50,8 +51,12 @@ void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
 	
 	gl_container_2d *container_2d = (gl_container_2d *)extra_data;
 	
+	gl_framed_shape *framed_shape = gl_framed_shape_new();
+	framed_shape->data.shape = img;
+	framed_shape->f->update_frame(framed_shape);
+	
 	((gl_container *)container_2d)->f->append_child(
-							(gl_container *)container_2d, (gl_shape *)img);
+							(gl_container *)container_2d, (gl_shape *)framed_shape);
 	
 	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
 	animation_e->data.easingType = gl_value_animation_ease_linear;
@@ -60,7 +65,7 @@ void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
 	animation->data.startValue = 0.0;
 	animation->data.endValue = 1.0;
 	animation->data.duration = 0.4;
-	animation->data.target = target;
+	animation->data.target = framed_shape;
 	animation->data.action = image_set_alpha;
 	
 	animation->f->start(animation);

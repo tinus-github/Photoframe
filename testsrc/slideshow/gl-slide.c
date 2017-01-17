@@ -129,11 +129,12 @@ static void gl_slide_free(gl_object *obj_obj)
 	
 	if (obj->data._entranceAnimation) {
 		((gl_object *)obj->data._entranceAnimation)->f->unref((gl_object *)obj->data._entranceAnimation);
-		obj->data._entranceAnimation = NULL
+		obj->data._entranceAnimation = NULL;
 	}
+	
 	if (obj->data._exitAnimation) {
 		((gl_object *)obj->data._exitAnimation)->f->unref((gl_object *)obj->data._exitAnimation);
-		obj->data._exitAnimation = NULL
+		obj->data._exitAnimation = NULL;
 	}
 	gl_object_free_org_global(obj_obj);
 }

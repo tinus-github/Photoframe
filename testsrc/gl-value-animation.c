@@ -21,6 +21,7 @@ static void gl_value_animation_set_speed(gl_value_animation *obj, GLfloat speed)
 static GLfloat gl_value_animation_calculate_value(gl_value_animation *obj,
 						  GLfloat normalized_time_elapsed, GLfloat startValue, GLfloat endValue);
 static GLfloat gl_value_animation_calculate_value_normalized(gl_value_animation *obj, GLfloat normalized_time_elapsed);
+static void gl_value_animation_animate(gl_value_animation *obj, GLfloat normalized_time_elapsed);
 
 static struct gl_value_animation_funcs gl_value_animation_funcs_global = {
 	.start = &gl_value_animation_start,
@@ -56,6 +57,8 @@ static void gl_value_animation_start(gl_value_animation *obj)
 	gl_renderloop *renderloop = gl_renderloop_get_global_renderloop();
 	renderloop->f->append_child(renderloop, gl_renderloop_phase_animate, renderloop_member);
 	obj->data.isRunning = TRUE;
+	
+	gl_value_animation_animate(obj, 0.0);
 }
 
 static void gl_value_animation_pause(gl_value_animation *obj)
@@ -81,6 +84,13 @@ static void gl_value_animation_pause(gl_value_animation *obj)
 	obj->data.renderloopMember = NULL;
 }
 
+static void gl_value_animation_animate(gl_value_animation *obj, GLfloat normalized_time_elapsed)
+{
+	GLfloat value = obj->f->calculate_value(obj, normalized_time_elapsed, obj->data.startValue, obj->data.endValue);
+	
+	obj->data.action(obj->data.target, obj->data.extraData, value);
+}
+
 static void gl_value_animation_tick(void *target, gl_renderloop_member *renderloop_member, void *action_data)
 {
 	gl_value_animation *obj = (gl_value_animation *)target;
@@ -96,9 +106,7 @@ static void gl_value_animation_tick(void *target, gl_renderloop_member *renderlo
 	if (normalized_time_elapsed < 0.0) normalized_time_elapsed = 0.0;
 	if (normalized_time_elapsed > 1.0) normalized_time_elapsed = 1.0;
 	
-	GLfloat value = obj->f->calculate_value(obj, normalized_time_elapsed, obj->data.startValue, obj->data.endValue);
-	
-	obj->data.action(obj->data.target, obj->data.extraData, value);
+	gl_value_animation_animate(obj, normalized_time_elapsed);
 	
 	if (obj->data.timeElapsed > obj->data.duration) {
 		obj->f->done(obj);

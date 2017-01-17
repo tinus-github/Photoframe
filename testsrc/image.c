@@ -28,8 +28,7 @@
 #include "gl-value-animation-easing.h"
 #include "labels/gl-label-scroller.h"
 #include "infrastructure/gl-notice-subscription.h"
-#include "gl-image.h"
-#include "gl-framed-shape.h"
+#include "slideshow/gl-slide-image.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -47,18 +46,8 @@ void image_set_alpha(void *target, void *extra_data, GLfloat value)
 
 void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
 {
-	gl_image *img = (gl_image *)target;
-	
-	gl_container_2d *container_2d = (gl_container_2d *)extra_data;
-	
-	gl_framed_shape *framed_shape = gl_framed_shape_new();
-	framed_shape->data.shape = (gl_shape *)img;
-	((gl_shape *)framed_shape)->data.objectWidth = 1920;
-	((gl_shape *)framed_shape)->data.objectHeight = 1080;
-	framed_shape->f->update_frame(framed_shape);
-	
-	((gl_container *)container_2d)->f->append_child(
-							(gl_container *)container_2d, (gl_shape *)framed_shape);
+	gl_slide_image *slide_img = (gl_slide_image *)target;
+	gl_slide *slide = (gl_slide *)slide_img;
 	
 	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
 	animation_e->data.easingType = gl_value_animation_ease_linear;
@@ -67,10 +56,10 @@ void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
 	animation->data.startValue = 0.0;
 	animation->data.endValue = 1.0;
 	animation->data.duration = 0.4;
-	animation->data.target = framed_shape;
+	animation->data.target = slide_img;
 	animation->data.action = image_set_alpha;
-	
-	animation->f->start(animation);
+	slide->f->set_entrance_animation(slide, animation);
+	slide->f->enter(slide);
 }
 
 int main(int argc, char *argv[])
@@ -82,25 +71,23 @@ int main(int argc, char *argv[])
 	
 	egl_driver_setup();
 	egl_driver_init();
-
-	gl_container_2d *image_container_2d = gl_container_2d_new();
 	
-	gl_image *img = gl_image_new();
+	gl_slide_image *slide_img = gl_slide_image_new();
+	gl_slide *slide = (gl_slide *)slide_img;
 	
 	gl_notice_subscription *sub = gl_notice_subscription_new();
-	sub->data.target = img;
+	sub->data.target = slide_image;
 	sub->data.action = &fade_in_image;
-	sub->data.action_data = image_container_2d;
 	
-	img->data.readyNotice->f->subscribe(img->data.readyNotice, sub);
+	slide->data.loadstateChanged->f->subscribe(slide->data.loadstateChanged, sub);
 	img->f->load_file(img, argv[1]);
 	
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;
 	gl_shape *main_container_2d_shape = (gl_shape *)main_container_2d;
 
-	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)image_container_2d);
-
+	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)slide_img);
+	
 	gl_label_scroller *scroller = gl_label_scroller_new();
 	gl_shape *scroller_shape = (gl_shape *)scroller;
 	scroller_shape->data.objectHeight = 160;

@@ -9,7 +9,7 @@ OBJECTS = image.o loadimage.o loadexif.o infrastructure/gl-object.o gl-texture.o
 	  labels/gl-label-scroller.o gl-rectangle.o gl-bitmap.o \
 	  infrastructure/gl-notice.o infrastructure/gl-notice-subscription.o \
 	  infrastructure/gl-workqueue.o infrastructure/gl-workqueue-job.o \
-	  gl-image.o
+	  gl-image.o gl-framed-shape.o
 LIBEXIF_A = ../lib/libexif/libexif/.libs/libexif.a
 LIBEXIF_INCLUDEDIR = -I../lib/libexif
 LIBFREETYPE_CFLAGS = `pkg-config freetype2 --cflags`
@@ -45,7 +45,7 @@ egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-rende
 		labels/gl-label-scroller-segment.h gl-rectangle.h gl-bitmap.h \
 		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h \
 		infrastructure/gl-workqueue.h infrastructure/gl-workqueue-job.h \
-		gl-image.h
+		gl-image.h gl-framed-shape.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	-ftree-vectorize -pipe -Wno-psabi \

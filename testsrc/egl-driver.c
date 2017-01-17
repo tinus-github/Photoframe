@@ -293,14 +293,14 @@ void egl_driver_setup()
 	gl_tiled_image_setup();
 	gl_renderloop_member_setup();
 	gl_renderloop_setup();
+	gl_notice_setup();
+	gl_notice_subscription_setup();
 	gl_value_animation_setup();
 	gl_value_animation_easing_setup();
 	gl_label_setup();
 	gl_label_scroller_segment_setup();
 	gl_label_scroller_setup();
 	gl_bitmap_setup();
-	gl_notice_setup();
-	gl_notice_subscription_setup();
 	gl_workqueue_setup();
 	gl_workqueue_job_setup();
 	gl_image_setup();

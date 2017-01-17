@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "gl-container-2d.h"
 #include "gl-value-animation.h"
+#include "slideshow/gl-slide.h"
 
 typedef struct gl_slideshow gl_slideshow;
 

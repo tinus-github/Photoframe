@@ -22,7 +22,7 @@ static void gl_slide_enter(gl_slide *obj);
 static void gl_slide_exit(gl_slide *obj);
 static void gl_slide_done_entering(void *target, gl_notice_subscription *sub, void *action_data);
 static void gl_slide_done_exiting(void *target, gl_notice_subscription *sub, void *action_data);
-static void gl_slide_set_entrance_animation(gl_slide *obj, gl_value_animation *animation)
+static void gl_slide_set_entrance_animation(gl_slide *obj, gl_value_animation *animation);
 static void gl_slide_set_exit_animation(gl_slide *obj, gl_value_animation *animation);
 
 static struct gl_slide_funcs gl_slide_funcs_global = {

@@ -43,7 +43,7 @@ static void gl_slide_image_set_loadstate(gl_slide_image *obj, gl_slide_loadstate
 static void gl_slide_image_loaded_notice(void *action, gl_notice_subscription *sub, void *action_data)
 {
 	gl_slide_image *obj = (gl_slide_image *)action;
-	gl_image *complete_image = =(gl_image *)action_data;
+	gl_image *complete_image = (gl_image *)action_data;
 	
 	gl_framed_shape *frame = gl_framed_shape_new();
 	frame->data.shape = (gl_shape *)complete_image;

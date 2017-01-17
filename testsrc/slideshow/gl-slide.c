@@ -55,14 +55,14 @@ static void gl_slide_load(gl_slide *obj)
 
 static void gl_slide_enter(gl_slide *obj)
 {
-	if (obj->data._entrance_animation) {
+	if (obj->data._entranceAnimation) {
 		gl_notice_subscription *sub = gl_notice_subscription_new();
 		sub->data.action = &gl_slide_done_entering;
 		sub->data.target = obj;
 		
-		gl_notice *notice = obj->data._entrance_animation->data.animationCompleted;
+		gl_notice *notice = obj->data._entranceAnimation->data.animationCompleted;
 		notice->f->subscribe(notice, sub);
-		obj->data._entrance_animation->f->start(obj->data._entrance_animation);
+		obj->data._entranceAnimation->f->start(obj->data._entranceAnimation);
 	} else {
 		gl_slide_done_entering(obj, NULL, NULL);
 	}
@@ -77,14 +77,14 @@ static void gl_slide_done_entering(void *target, gl_notice_subscription *sub, vo
 
 static void gl_slide_exit(gl_slide *obj)
 {
-	if (obj->data._exit_animation) {
+	if (obj->data._exitAnimation) {
 		gl_notice_subscription *sub = gl_notice_subscription_new();
 		sub->data.action = &gl_slide_done_exiting;
 		sub->data.target = obj;
 		
-		gl_notice *notice = obj->data._exit_animation->data.animationCompleted;
+		gl_notice *notice = obj->data._exitAnimation->data.animationCompleted;
 		notice->f->subscribe(notice, sub);
-		obj->data._exit_animation->f->start(obj->data._exit_animation);
+		obj->data._exitAnimation->f->start(obj->data._exitAnimation);
 	} else {
 		gl_slide_done_exiting(obj, NULL, NULL);
 	}

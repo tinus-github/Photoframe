@@ -9,7 +9,7 @@ OBJECTS = image.o loadimage.o loadexif.o infrastructure/gl-object.o gl-texture.o
 	  labels/gl-label-scroller.o gl-rectangle.o gl-bitmap.o \
 	  infrastructure/gl-notice.o infrastructure/gl-notice-subscription.o \
 	  infrastructure/gl-workqueue.o infrastructure/gl-workqueue-job.o \
-	  gl-image.o gl-framed-shape.o
+	  gl-image.o gl-framed-shape.o slideshow/gl-slide.o slideshow/gl-slide-image.o
 
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	  -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
@@ -50,7 +50,7 @@ egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-rende
 		labels/gl-label-scroller-segment.h gl-rectangle.h gl-bitmap.h \
 		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h \
 		infrastructure/gl-workqueue.h infrastructure/gl-workqueue-job.h \
-		gl-image.h gl-framed-shape.h
+		gl-image.h gl-framed-shape.h slideshow/gl-slide.h slideshow/gl-slide-image.h
 	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \

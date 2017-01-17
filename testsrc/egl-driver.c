@@ -29,6 +29,8 @@
 #include "infrastructure/gl-workqueue-job.h"
 #include "gl-image.h"
 #include "gl-framed-shape.h"
+#include "slideshow/gl-slide.h"
+#include "slideshow/gl-slide-image.h"
 
 #include <bcm_host.h>
 
@@ -305,4 +307,6 @@ void egl_driver_setup()
 	gl_workqueue_job_setup();
 	gl_image_setup();
 	gl_framed_shape_setup();
+	gl_slide_setup();
+	gl_slide_image_setup();
 }

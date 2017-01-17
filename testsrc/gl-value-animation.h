@@ -18,7 +18,7 @@
 
 #include "infrastructure/gl-object.h"
 #include "gl-renderloop-member.h"
-
+#include "infrastructure/gl-notice.h"
 
 typedef struct gl_value_animation gl_value_animation;
 
@@ -50,7 +50,8 @@ typedef struct gl_value_animation_data {
 	void *extraData;
 	
 	void (*action) (void *target, void *extra_data, GLfloat value);
-	void (*final_action) (void *target, void *extra_data);
+	
+	gl_notice *animationCompleted;
 } gl_value_animation_data;
 
 struct gl_value_animation {

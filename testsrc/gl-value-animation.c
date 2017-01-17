@@ -13,6 +13,9 @@
 #define TRUE 1
 #define FALSE 0
 
+static void (*gl_object_free_org_global) (gl_object *obj);
+
+static void gl_value_animation_free(gl_object *obj_obj);
 static void gl_value_animation_start(gl_value_animation *obj);
 static void gl_value_animation_pause(gl_value_animation *obj);
 static void gl_value_animation_done(gl_value_animation *obj);
@@ -148,10 +151,8 @@ static void gl_value_animation_done(gl_value_animation *obj)
 	} else {
 		obj->f->pause(obj);
 	}
-	
-	if (obj->data.final_action) {
-		obj->data.final_action(obj->data.target, obj->data.extraData);
-	}
+
+	obj->data.animationCompleted->f->fire(obj->data.animationCompleted);
 }
 
 void gl_value_animation_setup()
@@ -159,6 +160,10 @@ void gl_value_animation_setup()
 	gl_object *parent = gl_object_new();
 	memcpy(&gl_value_animation_funcs_global.p, parent->f, sizeof(gl_object_funcs));
 	parent->f->free(parent);
+	
+	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_value_animation_funcs_global;
+	gl_object_free_org_global = obj_funcs_global->free;
+	obj_funcs_global->free = &gl_value_animation_free;
 }
 
 gl_value_animation *gl_value_animation_init(gl_value_animation *obj)
@@ -166,6 +171,8 @@ gl_value_animation *gl_value_animation_init(gl_value_animation *obj)
 	gl_object_init((gl_object *)obj);
 	
 	obj->f = &gl_value_animation_funcs_global;
+	
+	obj->data.animationCompleted = gl_notice_new();
 	
 	return obj;
 }
@@ -175,4 +182,14 @@ gl_value_animation *gl_value_animation_new()
 	gl_value_animation *ret = calloc(1, sizeof(gl_value_animation));
 	
 	return gl_value_animation_init(ret);
+}
+
+void gl_value_animation_free(gl_object *obj_obj)
+{
+	gl_value_animation *obj = (gl_value_animation *)obj_obj;
+	
+	((gl_object *)obj->data.animationCompleted)->unref((gl_object *)obj->data.animationCompleted);
+	obj->data.animationCompleted = NULL;
+	
+	gl_object_free_org_global(obj_obj);
 }

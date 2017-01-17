@@ -124,6 +124,7 @@ gl_slide *gl_slide_init(gl_slide *obj)
 	obj->f = &gl_slide_funcs_global;
 	
 	obj->data.loadstateChanged = gl_notice_new();
+	obj->data.loadstateChanged->data.repeats = 1;
 	
 	gl_shape *obj_shape = (gl_shape *)obj;
 	gl_stage *stage = gl_stage_get_global_stage();

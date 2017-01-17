@@ -188,7 +188,7 @@ void gl_value_animation_free(gl_object *obj_obj)
 {
 	gl_value_animation *obj = (gl_value_animation *)obj_obj;
 	
-	((gl_object *)obj->data.animationCompleted)->unref((gl_object *)obj->data.animationCompleted);
+	((gl_object *)obj->data.animationCompleted)->f->unref((gl_object *)obj->data.animationCompleted);
 	obj->data.animationCompleted = NULL;
 	
 	gl_object_free_org_global(obj_obj);

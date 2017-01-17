@@ -10,28 +10,18 @@
 #define gl_slide_image_h
 
 #include <stdio.h>
-#include "gl-container-2d.h"
+#include "slideshow/gl-slide.h"
 #include "gl-framed-shape.h"
 #include "infrastructure/gl-notice.h"
-
-typedef enum {
-	gl_slide_loadstate_new = 0,
-	gl_slide_loadstate_loading,
-	gl_slide_loadstate_ready
-} gl_slide_loadstate;
 
 typedef struct gl_slide_image gl_slide_image;
 
 typedef struct gl_slide_image_funcs {
-	gl_container_2d_funcs p;
-	void (*load) (gl_slide_image *obj);
+	gl_slide_funcs p;
 } gl_slide_image_funcs;
 
 typedef struct gl_slide_image_data {
-	gl_container_2d_data p;
-	
-	gl_slide_loadstate loadstate;
-	gl_notice *loadstateChanged;
+	gl_slide_data p;
 	
 	char *filename;
 	

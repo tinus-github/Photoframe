@@ -210,7 +210,7 @@ gl-framed-shape.o: gl-framed-shape.c gl-framed-shape.h \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c gl-framed-shape.c -o gl-framed-shape.o $(OPTFLAGS)
 
-slideshow/gl-slide-image.o: slideshow/gl-slide-image.c slideshow/gl-slide-image.h \
+slideshow/gl-slide-image.o: slideshow/gl-slide-image.c slideshow/gl-slide-image.h slideshow/gl-slide.h \
 		gl-container.h gl-container-2d.h gl-shape.h infrastructure/gl-object.h \
 		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h
 	cc -g $(CFLAGS_ALL) \

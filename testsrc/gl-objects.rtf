@@ -27,11 +27,16 @@ Empty object .c:\
 	.append_child = &gl_container_append_child\
 \};\
 \
+\cf6 static\cf3  \cf6 void\cf3  (*gl_object_free_org_global) (gl_object *obj);\
+\
 \cf6 void\cf3  gl_container_setup()\
 \{\
 	gl_shape *parent = gl_shape_new();\
 	memcpy(&gl_container_funcs_global.p, parent->f, \cf6 sizeof\cf3 (gl_shape_funcs));\
 	((gl_object *)parent)->f->free((gl_object *)parent);\
+\
+	gl_object_free_org_global = gl_container_funcs_global.p.free;\
+	gl_container_funcs_global.p.free = &gl_container_free;\
 \}\
 \
 gl_container *gl_container_init(gl_container *obj)\

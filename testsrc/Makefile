@@ -265,6 +265,16 @@ gl-image.o: gl-image.c gl-image.h \
 	-Wno-deprecated-declarations \
 	-c gl-image.c -o gl-image.o $(OPTFLAGS)
 
+gl-framed-shape.o: gl-framed-shape.c gl-framed-shape.h \
+		gl-rectangle.h gl-container.h gl-container-2d.h gl-shape.h infrastructure/gl-object.h
+	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-ftree-vectorize -pipe -Wno-psabi \
+	-Wno-deprecated-declarations \
+	-c gl-framed-shape.c -o gl-framed-shape.o $(OPTFLAGS)
+
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	 -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \

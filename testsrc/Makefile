@@ -10,6 +10,11 @@ OBJECTS = image.o loadimage.o loadexif.o infrastructure/gl-object.o gl-texture.o
 	  infrastructure/gl-notice.o infrastructure/gl-notice-subscription.o \
 	  infrastructure/gl-workqueue.o infrastructure/gl-workqueue-job.o \
 	  gl-image.o gl-framed-shape.o
+
+CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
+	  -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	  -ftree-vectorize -pipe -Wno-psabi -Wno-deprecated-declarations
+
 LIBEXIF_A = ../lib/libexif/libexif/.libs/libexif.a
 LIBEXIF_INCLUDEDIR = -I../lib/libexif
 LIBFREETYPE_CFLAGS = `pkg-config freetype2 --cflags`
@@ -46,209 +51,145 @@ egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-rende
 		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h \
 		infrastructure/gl-workqueue.h infrastructure/gl-workqueue-job.h \
 		gl-image.h gl-framed-shape.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c egl-driver.c -o egl-driver.o \
-	-Wno-deprecated-declarations $(OPTFLAGS)
+	$(OPTFLAGS)
 
 gl-texture.o: gl-texture.c gl-texture.h infrastructure/gl-object.h gl-bitmap.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-Wno-deprecated-declarations \
 	-c gl-texture.c -o gl-texture.o $(OPTFLAGS)
 
 gl-shape.o: gl-shape.c gl-shape.h infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-Wno-deprecated-declarations \
 	-c gl-shape.c -o gl-shape.o $(OPTFLAGS)
 
 infrastructure/gl-object.o: infrastructure/gl-object.c infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
+	cc -g $(CFLAGS_ALL) \
 	-c infrastructure/gl-object.c -o infrastructure/gl-object.o $(OPTFLAGS)
 
 gl-bitmap.o: gl-bitmap.c gl-bitmap.h infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
+	cc -g $(CFLAGS_ALL) \
 	-c gl-bitmap.c -o gl-bitmap.o $(OPTFLAGS)
 
 gl-tile.o: gl-tile.c gl-tile.h gl-shape.h gl-texture.h gl-renderloop.h gl-renderloop-member.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
+	cc -g $(CLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-Wno-deprecated-declarations \
 	-c gl-tile.c -o gl-tile.o $(OPTFLAGS)
 
 gl-rectangle.o: gl-rectangle.c gl-rectangle.h gl-shape.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
+	cc -g $(CLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-Wno-deprecated-declarations \
 	-c gl-rectangle.c -o gl-rectangle.o $(OPTFLAGS)
 
 gl-stage.o: gl-stage.c gl-stage.h infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-Wno-deprecated-declarations \
 	-c gl-stage.c -o gl-stage.o $(OPTFLAGS)
 
 gl-container.o: gl-container.c gl-shape.h infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-Wno-deprecated-declarations \
 	-c gl-container.c -o gl-container.o $(OPTFLAGS)
 
 gl-container-2d.o: gl-container.h gl-shape.h infrastructure/gl-object.h gl-container-2d.h gl-container-2d.c
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-Wno-deprecated-declarations \
 	-c gl-container-2d.c -o gl-container-2d.o $(OPTFLAGS)
 
 gl-tiled-image.o: gl-tiled-image.c gl-tiled-image.h gl-container-2d.h \
 		gl-container.h gl-shape.h infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-Wno-deprecated-declarations \
 	-c gl-tiled-image.c -o gl-tiled-image.o $(OPTFLAGS)
 
 gl-renderloop.o: gl-renderloop.c gl-renderloop.h infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
+	cc -g $(CFLAGS_ALL) \
 	-c gl-renderloop.c -o gl-renderloop.o $(OPTFLAGS)
 
 gl-renderloop-member.o: gl-renderloop-member.c gl-renderloop.h \
 		gl-renderloop-member.h infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
+	cc -g $(CFLAGS_ALL) \
 	-c gl-renderloop-member.c -o gl-renderloop-member.o $(OPTFLAGS)
 
 gl-value-animation.o: gl-value-animation.c gl-value-animation.h \
 		gl-renderloop.h gl-renderloop-member.h infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
 	-c gl-value-animation.c -o gl-value-animation.o $(OPTFLAGS)
 
 gl-value-animation-easing.o: gl-value-animation-easing.c gl-value-animation-easing.h gl-value-animation.h \
 		 gl-renderloop.h gl-renderloop-member.h infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
 	-c gl-value-animation-easing.c -o gl-value-animation-easing.o $(OPTFLAGS)
 
 labels/gl-label.o: labels/gl-label.c labels/gl-label.h gl-container-2d.h \
 		gl-container.h gl-shape.h infrastructure/gl-object.h gl-texture.h gl-tile.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
+	$(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
 	-c labels/gl-label.c -o labels/gl-label.o $(OPTFLAGS)
 
 labels/gl-label-scroller-segment.o: labels/gl-label-scroller-segment.c labels/gl-label-scroller-segment.h \
                 labels/gl-label.h gl-container-2d.h gl-container.h gl-shape.h \
 		infrastructure/gl-object.h gl-texture.h gl-tile.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
+	$(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
 	-c labels/gl-label-scroller-segment.c -o labels/gl-label-scroller-segment.o $(OPTFLAGS)
 
 labels/gl-label-scroller.o: labels/gl-label-scroller.c labels/gl-label-scroller.h \
 		labels/gl-label.h gl-container-2d.h gl-container.h gl-shape.h \
 		infrastructure/gl-object.h gl-texture.h gl-tile.h \
 		labels/gl-label-scroller-segment.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
+	$(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
 	-c labels/gl-label-scroller.c -o labels/gl-label-scroller.o $(OPTFLAGS)
 
 labels/gl-label-renderer.o: labels/gl-label-renderer.c labels/gl-label-renderer.h \
 		infrastructure/gl-object.h gl-texture.h gl-tile.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	cc $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations $(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
+	$(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
 	-c labels/gl-label-renderer.c -o labels/gl-label-renderer.o $(OPTFLAGS)
 
 infrastructure/gl-notice-subscription.o: infrastructure/gl-notice-subscription.c infrastructure/gl-notice-subscription.h \
 		infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
+	cc -g $(CFLAGS_ALL) \
 	-c infrastructure/gl-notice-subscription.c -o infrastructure/gl-notice-subscription.o $(OPTFLAGS)
 
 infrastructure/gl-notice.o: infrastructure/gl-notice.c infrastructure/gl-notice.h \
 		infrastructure/gl-object.h infrastructure/gl-notice-subscription.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
+	cc -g $(CFLAGS_ALL) \
 	-c infrastructure/gl-notice.c -o infrastructure/gl-notice.o $(OPTFLAGS)
 
 infrastructure/gl-workqueue-job.o: infrastructure/gl-workqueue-job.c infrastructure/gl-workqueue-job.h \
 		infrastructure/gl-object.h infrastructure/gl-notice.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
+	cc -g $(CFLAGS_ALL) \
 	-c infrastructure/gl-workqueue-job.c -o infrastructure/gl-workqueue-job.o $(OPTFLAGS)
 
 infrastructure/gl-workqueue.o: infrastructure/gl-workqueue.c infrastructure/gl-workqueue.h \
 		infrastructure/gl-object.h infrastructure/gl-workqueue-job.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
+	cc -g $(CFLAGS_ALL) \
 	-c infrastructure/gl-workqueue.c -o infrastructure/gl-workqueue.o $(OPTFLAGS) \
 	$(PTHREAD_LIBS)
 
@@ -257,22 +198,16 @@ gl-image.o: gl-image.c gl-image.h \
 		loadimage.h gl-tiled-image.h gl-container-2d.h \
 		gl-container.h infrastructure/gl-object.h \
 		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
 	-c gl-image.c -o gl-image.o $(OPTFLAGS)
 
 gl-framed-shape.o: gl-framed-shape.c gl-framed-shape.h \
 		gl-rectangle.h gl-container.h gl-container-2d.h gl-shape.h infrastructure/gl-object.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	-D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-ftree-vectorize -pipe -Wno-psabi \
-	-Wno-deprecated-declarations \
 	-c gl-framed-shape.c -o gl-framed-shape.o $(OPTFLAGS)
 
 loadimage.o: loadimage.c loadimage.h

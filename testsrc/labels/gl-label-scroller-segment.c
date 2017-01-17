@@ -192,7 +192,7 @@ gl_label_scroller_segment *gl_label_scroller_segment_new()
 	return gl_label_scroller_segment_init(ret);
 }
 
-void gl_label_scroller_segment_free(gl_object *obj_obj)
+static void gl_label_scroller_segment_free(gl_object *obj_obj)
 {
 	gl_label_scroller_segment *obj = (gl_label_scroller_segment *)obj_obj;
 	free (obj->data.text);

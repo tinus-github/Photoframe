@@ -18,8 +18,8 @@ static void (*gl_object_free_org_global) (gl_object *obj);
 static void gl_slide_free(gl_object *obj_obj);
 static void gl_slide_load(gl_slide *obj);
 static void gl_slide_set_loadstate(gl_slide *obj, gl_slide_loadstate new_state);
-static void gl_slide_enter(gl_slide *obj)
-static void gl_slide_exit(gl_slide *obj)
+static void gl_slide_enter(gl_slide *obj);
+static void gl_slide_exit(gl_slide *obj);
 static void gl_slide_done_entering(void *target, gl_notice_subscription *sub, void *action_data);
 static void gl_slide_done_exiting(void *target, gl_notice_subscription *sub, void *action_data);
 

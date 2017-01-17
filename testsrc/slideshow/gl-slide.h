@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #include "gl-container-2d.h"
-#include "gl-notice.h"
+#include "infrastructure/gl-notice.h"
 
 typedef enum {
 	gl_slide_loadstate_new = 0,

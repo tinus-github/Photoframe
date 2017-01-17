@@ -27,7 +27,8 @@ void gl_slide_image_setup()
 	memcpy(&gl_slide_image_funcs_global.p, parent->f, sizeof(gl_container_2d_funcs));
 	((gl_object *)parent)->f->free((gl_object *)parent);
 	
-	gl_object_free_org_global = gl_slide_image_funcs_global.p.free;
+	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_slide_image_funcs_global;
+	gl_object_free_org_global = obj_funcs_global.free;
 	gl_slide_image_funcs_global.p.free = &gl_slide_image_free;
 }
 

@@ -9,6 +9,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "gl-framed-shape.h"
 #include "gl-rectangle.h"
 

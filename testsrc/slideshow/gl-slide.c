@@ -48,7 +48,7 @@ void gl_slide_setup()
 static void gl_slide_set_entrance_animation(gl_slide *obj, gl_value_animation *animation)
 {
 	if (obj->data._entranceAnimation) {
-		((gl_object *)obj->data._entranceAnimation)->unref((gl_object *)obj->data._entranceAnimation);
+		((gl_object *)obj->data._entranceAnimation)->f->unref((gl_object *)obj->data._entranceAnimation);
 	}
 	obj->data._entranceAnimation = animation;
 }
@@ -56,7 +56,7 @@ static void gl_slide_set_entrance_animation(gl_slide *obj, gl_value_animation *a
 static void gl_slide_set_exit_animation(gl_slide *obj, gl_value_animation *animation)
 {
 	if (obj->data._exitAnimation) {
-		((gl_object *)obj->data._exitAnimation)->unref((gl_object *)obj->data._exitAnimation);
+		((gl_object *)obj->data._exitAnimation)->f->unref((gl_object *)obj->data._exitAnimation);
 	}
 	obj->data._exitAnimation = animation;
 }

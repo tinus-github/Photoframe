@@ -82,6 +82,7 @@ static void gl_slide_enter(gl_slide *obj)
 		
 		gl_notice *notice = obj->data._entranceAnimation->data.animationCompleted;
 		notice->f->subscribe(notice, sub);
+		gl_slide_set_loadstate(obj, gl_slide_loadstate_moving_onscreen);
 		obj->data._entranceAnimation->f->start(obj->data._entranceAnimation);
 	} else {
 		gl_slide_done_entering(obj, NULL, NULL);
@@ -104,6 +105,7 @@ static void gl_slide_exit(gl_slide *obj)
 		
 		gl_notice *notice = obj->data._exitAnimation->data.animationCompleted;
 		notice->f->subscribe(notice, sub);
+		gl_slide_set_loadstate(obj, gl_slide_loadstate_moving_offscreen);
 		obj->data._exitAnimation->f->start(obj->data._exitAnimation);
 	} else {
 		gl_slide_done_exiting(obj, NULL, NULL);

@@ -226,6 +226,15 @@ slideshow/gl-slide.o: slideshow/gl-slide.c slideshow/gl-slide.h \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c slideshow/gl-slide.c -o slideshow/gl-slide.o $(OPTFLAGS)
 
+slideshow/gl-slideshow.o slideshow/gl-slideshow.c slideshow/gl-slideshow.h \
+		slideshow/gl-slide.h gl-container-2d.h gl-value-animation.h \
+		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h \
+		infrastructure/gl-object.h gl-container.h gl-shape.h
+	cc -g $(CFLAGS_ALL) \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-c slideshow/gl-slideshow.c -o slideshow/gl-slideshow.o $(OPTFLAGS)
+
 loadimage.o: loadimage.c loadimage.h
 	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	 -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \

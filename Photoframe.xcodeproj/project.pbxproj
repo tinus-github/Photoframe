@@ -269,6 +269,8 @@
 		0D9FD1601E2E594500B82200 /* gl-slide-image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-slide-image.h"; sourceTree = "<group>"; };
 		0D9FD1611E2E6DF400B82200 /* gl-slide.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-slide.c"; sourceTree = "<group>"; };
 		0D9FD1621E2E6DF400B82200 /* gl-slide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-slide.h"; sourceTree = "<group>"; };
+		0D9FD1631E2EC0D200B82200 /* gl-slideshow.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-slideshow.c"; sourceTree = "<group>"; };
+		0D9FD1641E2EC0D200B82200 /* gl-slideshow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-slideshow.h"; sourceTree = "<group>"; };
 		0DEED0791E15746600C00550 /* egl-driver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "egl-driver.c"; sourceTree = "<group>"; };
 		0DEED07A1E15746600C00550 /* egl-driver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "egl-driver.h"; sourceTree = "<group>"; };
 		0DEED07B1E15E10900C00550 /* gl-value-animation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-value-animation.c"; sourceTree = "<group>"; };
@@ -744,6 +746,8 @@
 				0D9FD1601E2E594500B82200 /* gl-slide-image.h */,
 				0D9FD1611E2E6DF400B82200 /* gl-slide.c */,
 				0D9FD1621E2E6DF400B82200 /* gl-slide.h */,
+				0D9FD1631E2EC0D200B82200 /* gl-slideshow.c */,
+				0D9FD1641E2EC0D200B82200 /* gl-slideshow.h */,
 			);
 			path = slideshow;
 			sourceTree = "<group>";

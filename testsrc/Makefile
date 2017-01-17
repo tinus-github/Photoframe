@@ -226,7 +226,7 @@ slideshow/gl-slide.o: slideshow/gl-slide.c slideshow/gl-slide.h \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c slideshow/gl-slide.c -o slideshow/gl-slide.o $(OPTFLAGS)
 
-slideshow/gl-slideshow.o slideshow/gl-slideshow.c slideshow/gl-slideshow.h \
+slideshow/gl-slideshow.o: slideshow/gl-slideshow.c slideshow/gl-slideshow.h \
 		slideshow/gl-slide.h gl-container-2d.h gl-value-animation.h \
 		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h \
 		infrastructure/gl-object.h gl-container.h gl-shape.h

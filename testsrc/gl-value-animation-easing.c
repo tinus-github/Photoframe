@@ -79,13 +79,13 @@ static void gl_value_animation_easing_copy(gl_value_animation *source, gl_value_
 	gl_value_animation_easing *source_easing = (gl_value_animation_easing *)source;
 	gl_value_animation_easing *target_easing = (gl_value_animation_easing *)target;
 	
-	target->data.easingType = source->data.easingType;
+	target_easing->data.easingType = source_easing->data.easingType;
 }
 
 static gl_value_animation *gl_value_animation_easing_dup(gl_value_animation *source)
 {
 	gl_value_animation_easing *ret = gl_value_animation_easing_new();
-	ret->f->copy(source, (gl_value_animation *)ret);
+	source->f->copy(source, (gl_value_animation *)ret);
 	
 	return (gl_value_animation *)ret;
 }

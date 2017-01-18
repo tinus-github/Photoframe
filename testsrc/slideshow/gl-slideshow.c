@@ -111,8 +111,8 @@ void gl_slideshow_engine(gl_slideshow *obj)
 
 void gl_slideshow_setup()
 {
-	gl_container_2d *parent = gl_container_2d_new();
-	memcpy(&gl_slideshow_funcs_global.p, parent->f, sizeof(gl_container_2d_funcs));
+	gl_slide *parent = gl_slide_new();
+	memcpy(&gl_slideshow_funcs_global.p, parent->f, sizeof(gl_slide_funcs));
 	((gl_object *)parent)->f->free((gl_object *)parent);
 	
 	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_slideshow_funcs_global;
@@ -122,7 +122,7 @@ void gl_slideshow_setup()
 
 gl_slideshow *gl_slideshow_init(gl_slideshow *obj)
 {
-	gl_container_2d_init((gl_container_2d *)obj);
+	gl_slide_init((gl_slide *)obj);
 	
 	obj->f = &gl_slideshow_funcs_global;
 	

@@ -65,13 +65,13 @@ void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
 	gl_value_animation *new_animation;
 	if (obj->data._entranceAnimation) {
  		new_animation = obj->data._entranceAnimation->f->dup(obj->data._entranceAnimation);
-		animation->data.extraData = newSlide;
+		new_animation->data.extraData = newSlide;
 		newSlide->f->set_entrance_animation(newSlide, new_animation);
 	}
 	
 	if (obj->data._exitAnimation) {
 		new_animation = obj->data._exitAnimation->f->dup(obj->data._exitAnimation);
-		animation->data.extraData = newSlide;
+		new_animation->data.extraData = newSlide;
 		newSlide->f->set_exit_animation(newSlide, new_animation);
 	}
 	

@@ -29,6 +29,7 @@
 #include "labels/gl-label-scroller.h"
 #include "infrastructure/gl-notice-subscription.h"
 #include "slideshow/gl-slide-image.h"
+#include "slideshow/gl-slideshow.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -52,9 +53,9 @@ gl_slide *get_next_slide(void *target, void *extra_data)
 	gl_slide_image *slide_image = gl_slide_image_new();
 	char *argv[] = (char**) extra_data;
 	
-	char *filename = argv[counter++];
-	if (counter > (num_files + 1)) {
-		counter = 1;
+	char *filename = argv[slide_counter++];
+	if (slide_counter > (num_files + 1)) {
+		slide_counter = 1;
 	}
 	
 	slide_image->data.filename = strdup(filename);

@@ -24,6 +24,8 @@ static void gl_slide_done_entering(void *target, gl_notice_subscription *sub, vo
 static void gl_slide_done_exiting(void *target, gl_notice_subscription *sub, void *action_data);
 static void gl_slide_set_entrance_animation(gl_slide *obj, gl_value_animation *animation);
 static void gl_slide_set_exit_animation(gl_slide *obj, gl_value_animation *animation);
+static gl_value_animation *gl_slide_get_entrance_animation(gl_slide *obj);
+static gl_value_animation *gl_slide_get_exit_animation(gl_slide *obj);
 
 static struct gl_slide_funcs gl_slide_funcs_global = {
 	.load = &gl_slide_load,
@@ -32,6 +34,8 @@ static struct gl_slide_funcs gl_slide_funcs_global = {
 	.exit = &gl_slide_exit,
 	.set_entrance_animation = &gl_slide_set_entrance_animation,
 	.set_exit_animation = &gl_slide_set_exit_animation,
+	.get_entrance_animation = &gl_slide_get_entrance_animation,
+	.get_exit_animation = &gl_slide_get_exit_animation
 };
 
 void gl_slide_setup()
@@ -59,6 +63,18 @@ static void gl_slide_set_exit_animation(gl_slide *obj, gl_value_animation *anima
 		((gl_object *)obj->data._exitAnimation)->f->unref((gl_object *)obj->data._exitAnimation);
 	}
 	obj->data._exitAnimation = animation;
+}
+
+static gl_value_animation *gl_slide_get_entrance_animation(gl_slide *obj)
+{
+	((gl_object *)obj->data._entranceAnimation)->f->ref((gl_object *)obj->data._entranceAnimation);
+	return obj->data._entranceAnimation;
+}
+
+static gl_value_animation *gl_slide_get_exit_animation(gl_slide *obj)
+{
+	((gl_object *)obj->data._exitAnimation)->f->ref((gl_object *)obj->data._exitAnimation);
+	return obj->data._exitAnimation;
 }
 
 static void gl_slide_set_loadstate(gl_slide *obj, gl_slide_loadstate new_state)

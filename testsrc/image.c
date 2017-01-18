@@ -51,7 +51,7 @@ static unsigned int num_files;
 gl_slide *get_next_slide(void *target, void *extra_data)
 {
 	gl_slide_image *slide_image = gl_slide_image_new();
-	char *argv[] = (char**) extra_data;
+	char **argv = (char**) extra_data;
 	
 	char *filename = argv[slide_counter++];
 	if (slide_counter > (num_files + 1)) {

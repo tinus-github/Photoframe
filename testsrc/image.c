@@ -38,32 +38,27 @@
 
 void image_set_alpha(void *target, void *extra_data, GLfloat value)
 {
-	gl_shape *image_shape = (gl_shape *)target;
+	gl_shape *image_shape = (gl_shape *)extra_data;
 	
 	image_shape->data.alpha = value;
 	image_shape->f->set_computed_alpha_dirty(image_shape);
 }
 
-void fade_in_image(void *target, gl_notice_subscription *sub, void *extra_data)
+static unsigned int slide_counter = 1;
+static unsigned int num_files;
+
+gl_slide *get_next_slide(void *target, void *extra_data)
 {
-	gl_slide_image *slide_img = (gl_slide_image *)target;
-	gl_slide *slide = (gl_slide *)slide_img;
+	gl_slide_image *slide_image = gl_slide_image_new();
+	char *argv[] = (char**) extra_data;
 	
-	if (slide->data.loadstate != gl_slide_loadstate_ready) {
-		return;
+	char *filename = argv[counter++];
+	if (counter > (num_files + 1)) {
+		counter = 1;
 	}
 	
-	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
-	animation_e->data.easingType = gl_value_animation_ease_linear;
-	
-	gl_value_animation *animation = (gl_value_animation *)animation_e;
-	animation->data.startValue = 0.0;
-	animation->data.endValue = 1.0;
-	animation->data.duration = 0.4;
-	animation->data.target = slide_img;
-	animation->data.action = image_set_alpha;
-	slide->f->set_entrance_animation(slide, animation);
-	slide->f->enter(slide);
+	slide_image->data.filename = strdup(filename);
+	return (gl_slide *)slide_image;
 }
 
 int main(int argc, char *argv[])
@@ -73,25 +68,42 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
+	num_files = argc-1;
+	
 	egl_driver_setup();
 	egl_driver_init();
 	
-	gl_slide_image *slide_img = gl_slide_image_new();
-	gl_slide *slide = (gl_slide *)slide_img;
+	gl_slideshow *slideshow = gl_slideshow_new();
+	slideshow->data.getNextSlideCallback = &get_next_slide;
+	slideshow->data.callbackExtraData = argv;
 	
-	gl_notice_subscription *sub = gl_notice_subscription_new();
-	sub->data.target = slide_img;
-	sub->data.action = &fade_in_image;
+	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
+	animation_e->data.easingType = gl_value_animation_ease_linear;
 	
-	slide->data.loadstateChanged->f->subscribe(slide->data.loadstateChanged, sub);
-	slide_img->data.filename = strdup(argv[1]);
-	slide->f->load(slide);
+	gl_value_animation *animation = (gl_value_animation *)animation_e;
+	animation->data.startValue = 0.0;
+	animation->data.endValue = 1.0;
+	animation->data.duration = 0.4;
+	animation->data.action = image_set_alpha;
+	
+	slideshow->f->set_entrance_animation(slideshow, animation);
+	
+	animation_e = gl_value_animation_easing_new();
+	animation_e->data.easingType = gl_value_animation_ease_linear;
+	
+	animation = (gl_value_animation *)animation_e;
+	animation->data.startValue = 1.0;
+	animation->data.endValue = 0.0;
+	animation->data.duration = 0.4;
+	animation->data.action = image_set_alpha;
+	
+	slideshow->f->set_exit_animation(slideshow, animation);
 	
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;
 	gl_shape *main_container_2d_shape = (gl_shape *)main_container_2d;
 
-	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)slide_img);
+	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)slideshow);
 	
 	gl_label_scroller *scroller = gl_label_scroller_new();
 	gl_shape *scroller_shape = (gl_shape *)scroller;
@@ -107,6 +119,8 @@ int main(int argc, char *argv[])
 	
 	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
+	
+	slideshow->f->start(slideshow);
 	
 	gl_renderloop_loop();
 	

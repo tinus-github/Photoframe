@@ -19,6 +19,9 @@ static void gl_container_set_computed_projection_dirty(gl_shape *shape_obj);
 static void gl_container_set_computed_alpha_dirty(gl_shape *shape_obj);
 static void gl_container_compute_projection(gl_shape *shape_obj);
 static void gl_container_draw(gl_shape *shape_obj);
+static void gl_container_free(gl_object *obj);
+
+static void (*gl_object_free_org_global) (gl_object *obj);
 
 static struct gl_container_funcs gl_container_funcs_global = {
 	.append_child = &gl_container_append_child,
@@ -38,6 +41,10 @@ void gl_container_setup()
 	
 	gl_object *parent_obj = (gl_object *)parent;
 	parent_obj->f->free(parent_obj);
+	
+	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_container_funcs_global;
+	gl_object_free_org_global = obj_funcs_global->free;
+	obj_funcs_global->free = &gl_container_free;
 }
 
 gl_container *gl_container_init(gl_container *obj)
@@ -56,6 +63,17 @@ gl_container *gl_container_new()
 	gl_container *ret = calloc(1, sizeof(gl_container));
 	
 	return gl_container_init(ret);
+}
+
+static void gl_container_free(gl_object *obj_obj)
+{
+	gl_container *obj = (gl_container *)obj_obj;
+	
+	while (obj->data.first_child) {
+		obj->f->remove_child(obj, obj->data.first_child);
+	}
+	
+	gl_object_free_org_global(obj_obj);
 }
 
 static void gl_container_append_child(gl_container *obj, gl_shape *child)

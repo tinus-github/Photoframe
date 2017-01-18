@@ -31,6 +31,7 @@
 #include "gl-framed-shape.h"
 #include "slideshow/gl-slide.h"
 #include "slideshow/gl-slide-image.h"
+#include "slideshow/gl-slideshow.h"
 
 #include <bcm_host.h>
 
@@ -309,4 +310,5 @@ void egl_driver_setup()
 	gl_framed_shape_setup();
 	gl_slide_setup();
 	gl_slide_image_setup();
+	gl_slideshow_setup();
 }

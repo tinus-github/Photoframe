@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 	
 	animation = (gl_value_animation *)animation_e;
 	animation->data.startValue = 1.0;
-	animation->data.endValue = 0.0;
+	animation->data.endValue = 1.0;
 	animation->data.duration = 0.4;
 	animation->data.action = image_set_alpha;
 	

@@ -13,10 +13,12 @@
 static void gl_slideshow_set_entrance_animation(gl_slideshow *obj, gl_value_animation *animation);
 static void gl_slideshow_set_exit_animation(gl_slideshow *obj, gl_value_animation *animation);
 static void gl_slideshow_free(gl_object *obj_obj);
-void gl_slideshow_engine(gl_slideshow *obj);
-void gl_slideshow_slide_load(gl_slide *obj_slide);
-void gl_slideshow_slide_enter(gl_slide *obj_slide);
-void gl_slideshow_slide_exit(gl_slide *obj_slide);
+static void gl_slideshow_engine(gl_slideshow *obj);
+static void gl_slideshow_slide_load(gl_slide *obj_slide);
+static void gl_slideshow_slide_enter(gl_slide *obj_slide);
+static void gl_slideshow_slide_exit(gl_slide *obj_slide);
+static void gl_slide_set_loadstate(gl_slide *obj, gl_slide_loadstate new_state)
+
 
 static struct gl_slideshow_funcs gl_slideshow_funcs_global = {
 	.set_entrance_animation = &gl_slideshow_set_entrance_animation,
@@ -26,6 +28,7 @@ static struct gl_slideshow_funcs gl_slideshow_funcs_global = {
 static void (*gl_object_free_org_global) (gl_object *obj);
 static void (*gl_slide_enter_org_global) (gl_slide *obj);
 static void (*gl_slide_exit_org_global) (gl_slide *obj);
+static void (*gl_slide_set_loadstate_org_global) (gl_slide *obj, gl_slide_loadstate new_state);
 
 static void gl_slideshow_set_entrance_animation(gl_slideshow *obj, gl_value_animation *animation)
 {
@@ -43,14 +46,14 @@ static void gl_slideshow_set_exit_animation(gl_slideshow *obj, gl_value_animatio
 	obj->data._exitAnimation = animation;
 }
 
-void gl_slideshow_engine_notice(void *target, gl_notice_subscription *sub, void *extra_data)
+static void gl_slideshow_engine_notice(void *target, gl_notice_subscription *sub, void *extra_data)
 {
 	gl_slideshow *obj = (gl_slideshow *)target;
 	
 	gl_slideshow_engine(obj);
 }
 
-void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
+static void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
 {
 	assert (!obj->data._incomingSlide);
 	
@@ -82,7 +85,7 @@ void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
 	newSlide->f->load(newSlide);
 }
 
-void gl_slideshow_engine(gl_slideshow *obj)
+static void gl_slideshow_engine(gl_slideshow *obj)
 {
 	if (!obj->data._isRunning) {
 		if (obj->data._incomingSlide) {
@@ -126,7 +129,7 @@ void gl_slideshow_engine(gl_slideshow *obj)
 	}
 }
 
-void gl_slideshow_slide_load(gl_slide *obj_slide)
+static void gl_slideshow_slide_load(gl_slide *obj_slide)
 {
 	gl_slideshow *obj = (gl_slideshow *)obj_slide;
 	
@@ -146,7 +149,7 @@ void gl_slideshow_slide_load(gl_slide *obj_slide)
 	}
 }
 
-void gl_slideshow_slide_enter(gl_slide *obj_slide)
+static void gl_slideshow_slide_enter(gl_slide *obj_slide)
 {
 	gl_slideshow *obj = (gl_slideshow *)obj_slide;
 	
@@ -155,13 +158,20 @@ void gl_slideshow_slide_enter(gl_slide *obj_slide)
 	gl_slide_enter_org_global(obj_slide);
 }
 
-void gl_slideshow_slide_exit(gl_slide *obj_slide)
+static void gl_slideshow_slide_exit(gl_slide *obj_slide)
 {
 	gl_slideshow *obj = (gl_slideshow *)obj_slide;
 	
 	obj->data._isRunning = 0;
 	
 	gl_slide_exit_org_global(obj_slide);
+}
+
+static void gl_slide_set_loadstate(gl_slide *obj, gl_slide_loadstate new_state)
+{
+	gl_slide_set_loadstate_org_global(obj, new_state);
+	
+	gl_slideshow_engine((gl_slideshow *)obj);
 }
 
 void gl_slideshow_setup()
@@ -182,6 +192,8 @@ void gl_slideshow_setup()
 	gl_slide_exit_org_global = slide_funcs_global->exit;
 	slide_funcs_global->exit = &gl_slideshow_slide_exit;
 	
+	gl_slide_set_loadstate_org_global = slide_funcs_global->set_loadstate;
+	slide_funcs_global->set_loadstate = &gl_slideshow_slide_set_loadstate;
 }
 
 gl_slideshow *gl_slideshow_init(gl_slideshow *obj)

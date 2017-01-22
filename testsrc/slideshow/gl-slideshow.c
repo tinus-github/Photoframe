@@ -20,8 +20,7 @@ void gl_slideshow_slide_exit(gl_slide *obj_slide);
 
 static struct gl_slideshow_funcs gl_slideshow_funcs_global = {
 	.set_entrance_animation = &gl_slideshow_set_entrance_animation,
-	.set_exit_animation = &gl_slideshow_set_exit_animation,
-	.start = &gl_slideshow_engine
+	.set_exit_animation = &gl_slideshow_set_exit_animation
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);

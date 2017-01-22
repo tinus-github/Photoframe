@@ -20,7 +20,6 @@ typedef struct gl_slideshow_funcs {
 	gl_slide_funcs p;
 	void (*set_entrance_animation) (gl_slideshow *obj, gl_value_animation *animation);
 	void (*set_exit_animation) (gl_slideshow *obj, gl_value_animation *animation);
-	void (*start) (gl_slideshow *obj);
 } gl_slideshow_funcs;
 
 typedef struct gl_slideshow_data {

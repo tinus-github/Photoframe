@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
 	
-	slideshow->f->start(slideshow);
+	((gl_slide *)slideshow)->f->enter((gl_slide *)slideshow);
 	
 	gl_renderloop_loop();
 	

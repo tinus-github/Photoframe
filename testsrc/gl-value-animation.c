@@ -221,5 +221,9 @@ void gl_value_animation_free(gl_object *obj_obj)
 		obj->data.animationCompleted = NULL;
 	}
 	
+	if (obj->data.isRunning) {
+		obj->f->pause(obj);
+	}
+	
 	gl_object_free_org_global(obj_obj);
 }

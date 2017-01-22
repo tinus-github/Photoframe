@@ -37,6 +37,8 @@ typedef struct gl_slideshow_data {
 	
 	gl_slide *_currentSlide;
 	gl_slide *_incomingSlide;
+	
+	int _isRunning;
 } gl_slideshow_data;
 
 struct gl_slideshow {

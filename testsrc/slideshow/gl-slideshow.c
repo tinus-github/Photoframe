@@ -26,6 +26,7 @@ static struct gl_slideshow_funcs gl_slideshow_funcs_global = {
 
 static void (*gl_object_free_org_global) (gl_object *obj);
 static void (*gl_slide_enter_org_global) (gl_slide *obj);
+static void (*gl_slide_exit_org_global) (gl_slide *obj);
 
 static void gl_slideshow_set_entrance_animation(gl_slideshow *obj, gl_value_animation *animation)
 {
@@ -84,7 +85,7 @@ void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
 
 void gl_slideshow_engine(gl_slideshow *obj)
 {
-	if (!_isRunning) {
+	if (!obj->data._isRunning) {
 		if (obj->data._incomingSlide) {
 			gl_slide *incomingSlide = obj->data._incomingSlide;
 			

@@ -17,8 +17,7 @@ static void gl_slideshow_engine(gl_slideshow *obj);
 static void gl_slideshow_slide_load(gl_slide *obj_slide);
 static void gl_slideshow_slide_enter(gl_slide *obj_slide);
 static void gl_slideshow_slide_exit(gl_slide *obj_slide);
-static void gl_slide_set_loadstate(gl_slide *obj, gl_slide_loadstate new_state)
-
+static void gl_slide_set_loadstate(gl_slide *obj, gl_slide_loadstate new_state);
 
 static struct gl_slideshow_funcs gl_slideshow_funcs_global = {
 	.set_entrance_animation = &gl_slideshow_set_entrance_animation,

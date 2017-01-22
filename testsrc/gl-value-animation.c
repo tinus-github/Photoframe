@@ -89,6 +89,8 @@ static void gl_value_animation_pause(gl_value_animation *obj)
 	gl_object *renderloop_member_obj = (gl_object *)renderloop_member;
 	renderloop_member_obj->f->unref(renderloop_member_obj);
 	obj->data.renderloopMember = NULL;
+	
+	obj->data.isRunning = FALSE;
 }
 
 static void gl_value_animation_animate(gl_value_animation *obj, GLfloat normalized_time_elapsed)

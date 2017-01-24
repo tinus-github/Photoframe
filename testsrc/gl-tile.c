@@ -72,8 +72,9 @@ static int gl_tile_load_program() {
 	"uniform float u_alpha;                              \n"
 	"void main()                                         \n"
 	"{                                                   \n"
-	"  gl_FragColor = texture2D( s_texture, v_texCoord );\n"
-	"  gl_FragColor.a = gl_FragColor.a * u_alpha;        \n"
+	"  vec4 color = texture2D( s_texture, v_texCoord );  \n"
+	"  color.a = color.a * u_alpha;                      \n"
+	"  gl_FragColor = vec4(color.r * color.a, color.g * color.a, color.b * color.a, color.a);\n"
 	"}                                                   \n";
 	
 	GLchar fShaderBWStr[] =
@@ -97,7 +98,7 @@ static int gl_tile_load_program() {
 	"{                                                   \n"
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
 	"  float luminance = texelColor.a * u_alpha;         \n"
-	"  gl_FragColor = vec4(1, 1, 1, luminance);\n"
+	"  gl_FragColor = vec4(luminance, luminance, luminance, luminance);\n"
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object
@@ -209,13 +210,14 @@ static void gl_tile_draw(gl_shape *shape_self)
 		default:
 		case gl_texture_data_type_rgba:
 			program = &gl_rgba_program;
+			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			break;
 		case gl_texture_data_type_monochrome:
 			program = &gl_mono_program;
 			break;
 		case gl_texture_data_type_alpha:
 			program = &gl_alpha_program;
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			break;
 	}
 	

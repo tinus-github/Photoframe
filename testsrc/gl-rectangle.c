@@ -57,7 +57,7 @@ static int gl_rectangle_load_program() {
 	"uniform vec4 u_color;                               \n"
 	"void main()                                         \n"
 	"{                                                   \n"
-	"  gl_FragColor = u_color;                           \n"
+	"  gl_FragColor = vec4(u_color.r * u_color.a, u_color.g * u_color.a, u_color.b * u_color.a, u_color.a); \n"
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object
@@ -117,7 +117,7 @@ static void gl_rectangle_draw(gl_shape *shape_self)
 	gl_rectangle_program_data *program;
 	
 	program = &gl_rgba_program;
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	
 	GLfloat vVertices[] = { 0.0f, 0.0f, 0.0f,  // Position 0
 		0.0f,  1.0f, 0.0f,  // Position 1

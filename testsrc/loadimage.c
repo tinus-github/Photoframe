@@ -471,11 +471,13 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 		return NULL;
 	}
 	
+	f = fopen(fileName, "rb");
+	if (!f) {
+		return NULL;
+	}
+	
 	jpeg_create_decompress(&cinfo);
 	cinfo.client_data = &client_data;
-	
-	f = fopen(fileName, "rb");
-	if (f == NULL) return NULL;
 	
 	jpeg_stdio_src(&cinfo, f);
 	

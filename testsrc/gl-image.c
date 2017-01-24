@@ -116,15 +116,20 @@ static void gl_image_loading_completed(void *target, gl_notice_subscription *sub
 	unsigned char* bitmap = job->data.jobReturn;
 	((gl_object *)job)->f->unref((gl_object *)job);
 	
-	gl_notice_subscription *sub = gl_notice_subscription_new();
-	sub->data.target = obj;
-	sub->data.action = &gl_image_transfer_completed;
-	obj_tiled->data.loadedNotice->f->subscribe(obj_tiled->data.loadedNotice, sub);
+	if (bitmap) {
+		gl_notice_subscription *sub = gl_notice_subscription_new();
+		sub->data.target = obj;
+		sub->data.action = &gl_image_transfer_completed;
+		obj_tiled->data.loadedNotice->f->subscribe(obj_tiled->data.loadedNotice, sub);
 	
-	obj_tiled->f->load_image(obj_tiled, bitmap,
-				 obj->data._width, obj->data._height,
-				 obj->data._orientation,
-				 GL_IMAGE_TILE_HEIGHT);
+		obj_tiled->f->load_image(obj_tiled, bitmap,
+					 obj->data._width, obj->data._height,
+					 obj->data._orientation,
+					 GL_IMAGE_TILE_HEIGHT);
+	} else {
+		obj->data.failedNotice->f->fire(obj->data.failedNotice);
+		((gl_object *)obj)->f->unref((gl_object *)obj);
+	}
 }
 
 static void gl_image_transfer_completed(void *target, gl_notice_subscription *subscription, void *extra_data)
@@ -142,6 +147,7 @@ gl_image *gl_image_init(gl_image *obj)
 	obj->f = &gl_image_funcs_global;
 	
 	obj->data.readyNotice = gl_notice_new();
+	obj->data.failedNotice = gl_notice_new();
 	
 	gl_stage *main_stage = gl_stage_get_global_stage();
 	obj->data.desiredWidth = main_stage->data.width;
@@ -163,6 +169,7 @@ static void gl_image_free(gl_object *obj_obj)
 	
 	free(obj->data._filename);
 	((gl_object *)obj->data.readyNotice)->f->unref((gl_object *)obj->data.readyNotice);
+	((gl_object *)obj->data.failedNotice)->f->unref((gl_object *)obj->data.failedNotice);
 	
 	gl_object_free_org_global(obj_obj);
 }

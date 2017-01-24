@@ -29,6 +29,7 @@ typedef struct gl_image_data {
 	const char *format;
 	
 	gl_notice *readyNotice;
+	gl_notice *failedNotice;
 	
 	char *_filename;
 	int _width;

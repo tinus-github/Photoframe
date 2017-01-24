@@ -18,6 +18,7 @@
 typedef enum {
 	gl_slide_loadstate_new = 0,
 	gl_slide_loadstate_loading,
+	gl_slide_loadstate_failed,
 	gl_slide_loadstate_ready,
 	gl_slide_loadstate_moving_onscreen,
 	gl_slide_loadstate_onscreen,

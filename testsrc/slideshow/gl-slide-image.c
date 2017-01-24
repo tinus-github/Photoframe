@@ -35,9 +35,9 @@ void gl_slide_image_setup()
 	obj_funcs_global->free = &gl_slide_image_free;
 }
 
-static void gl_slide_image_loaded_notice(void *action, gl_notice_subscription *sub, void *action_data)
+static void gl_slide_image_loaded_notice(void *target, gl_notice_subscription *sub, void *action_data)
 {
-	gl_slide_image *obj = (gl_slide_image *)action;
+	gl_slide_image *obj = (gl_slide_image *)target;
 	gl_image *complete_image = (gl_image *)action_data;
 	
 	gl_framed_shape *frame = gl_framed_shape_new();
@@ -52,6 +52,16 @@ static void gl_slide_image_loaded_notice(void *action, gl_notice_subscription *s
 	
 	((gl_container *)obj)->f->append_child((gl_container *)obj, (gl_shape *)frame);
 	((gl_slide *)obj)->f->set_loadstate((gl_slide *)obj, gl_slide_loadstate_ready);
+}
+
+static void gl_slide_image_failed_notice(void *target, gl_notice_subscription *sub, void *action_data)
+{
+	gl_slide_image *obj = (gl_slide_image *)target;
+	gl_image *complete_image = (gl_image *)action_data;
+	
+	((gl_object *)complete_image)->f->unref((gl_object *)complete_image);
+	
+	((gl_slide *)obj)->f->set_loadstate((gl_slide *)obj, gl_slide_loadstate_failed);
 }
 
 static void gl_slide_image_load(gl_slide *obj_slide)
@@ -69,6 +79,12 @@ static void gl_slide_image_load(gl_slide *obj_slide)
 	sub->data.action = &gl_slide_image_loaded_notice;
 	
 	complete_image->data.readyNotice->f->subscribe(complete_image->data.readyNotice, sub);
+	
+	sub = gl_notice_subscription_new();
+	sub->data.target = obj;
+	sub->data.action_data = complete_image;
+	sub->data.action = &gl_slide_image_failed_notice;
+	complete_image->data.readyNotice->f->subscribe(complete_image->data.failedNotice, sub);
 	
 	((gl_slide *)obj)->f->set_loadstate((gl_slide *)obj, gl_slide_loadstate_loading);
 	complete_image->f->load_file(complete_image, obj->data.filename);

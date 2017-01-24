@@ -84,8 +84,18 @@ static void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
 	newSlide->f->load(newSlide);
 }
 
+// call this when the state changes and it'll decide what to do
 static void gl_slideshow_engine(gl_slideshow *obj)
 {
+	if (obj->data._incomingSlide &&
+	    (obj->data._incomingSlide->data.loadstate == gl_slide_loadstate_failed)) {
+		gl_slide *incomingSlide = obj->data._incomingSlide;
+		((gl_object *)incomingSlide)->f->unref((gl_object *)incomingSlide);
+		obj->data._incomingSlide = NULL;
+		
+		// fallthrough: try again
+	}
+	
 	if (!obj->data._isRunning) {
 		if (obj->data._incomingSlide) {
 			gl_slide *incomingSlide = obj->data._incomingSlide;
@@ -95,11 +105,11 @@ static void gl_slideshow_engine(gl_slideshow *obj)
 			} else if (incomingSlide->data.loadstate == gl_slide_loadstate_onscreen) {
 				((gl_slide *)obj)->f->set_loadstate((gl_slide *)obj, gl_slide_loadstate_ready);
 			}
+		} else {
+			gl_slideshow_engine_get_new_slide(obj);
 		}
-		
 		return;
 	}
-	// call this when the state changes and it'll decide what to do
 	
 	if (!obj->data._incomingSlide) {
 		gl_slideshow_engine_get_new_slide(obj);

@@ -126,7 +126,7 @@ static int gl_tile_load_program() {
 	gl_tile_load_program_attribute_locations(&gl_alpha_program);
 
 	// Flip (testing)
-	gl_flip_program.program = egl_driver_load_program ( vShaderStr, fShaderFlipStr );
+	gl_flip_program.program = egl_driver_load_program ( vShaderStr, fShaderFlipAlphaStr );
 	gl_tile_load_program_attribute_locations(&gl_flip_program);
 	
 	gl_tile_program_loaded = 1;

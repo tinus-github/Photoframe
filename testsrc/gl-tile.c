@@ -32,6 +32,7 @@ typedef struct gl_tile_program_data {
 static gl_tile_program_data gl_rgba_program;
 static gl_tile_program_data gl_mono_program;
 static gl_tile_program_data gl_alpha_program;
+static gl_tile_program_data gl_flip_program;
 
 static uint gl_tile_program_loaded = 0;
 
@@ -101,6 +102,17 @@ static int gl_tile_load_program() {
 	"  gl_FragColor = vec4(luminance, luminance, luminance, luminance);\n"
 	"}                                                   \n";
 	
+	GLchar fShaderFlipAlphaStr[] =
+	"precision mediump float;                            \n"
+	"varying vec2 v_texCoord;                            \n"
+	"uniform sampler2D s_texture;                        \n"
+	"void main()                                         \n"
+	"{                                                   \n"
+	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
+	"  float luminance = 1 - texelColor.a;               \n"
+	"  gl_FragColor = vec4(luminance, luminance, luminance, luminance);\n"
+	"}                                                   \n";
+	
 	// Load the shaders and get a linked program object
 	gl_rgba_program.program = egl_driver_load_program ( vShaderStr, fShaderStr );
 	gl_tile_load_program_attribute_locations(&gl_rgba_program);
@@ -113,6 +125,10 @@ static int gl_tile_load_program() {
 	gl_alpha_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaStr );
 	gl_tile_load_program_attribute_locations(&gl_alpha_program);
 
+	// Flip (testing)
+	gl_flip_program.program = egl_driver_load_program ( vShaderStr, fShaderFlipStr );
+	gl_tile_load_program_attribute_locations(&gl_flip_program);
+	
 	gl_tile_program_loaded = 1;
 	
 	return GL_TRUE;

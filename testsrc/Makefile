@@ -80,13 +80,13 @@ gl-bitmap.o: gl-bitmap.c gl-bitmap.h infrastructure/gl-object.h
 	-c gl-bitmap.c -o gl-bitmap.o $(OPTFLAGS)
 
 gl-tile.o: gl-tile.c gl-tile.h gl-shape.h gl-texture.h gl-renderloop.h gl-renderloop-member.h
-	cc -g $(CLAGS_ALL) \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c gl-tile.c -o gl-tile.o $(OPTFLAGS)
 
 gl-rectangle.o: gl-rectangle.c gl-rectangle.h gl-shape.h
-	cc -g $(CLAGS_ALL) \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c gl-rectangle.c -o gl-rectangle.o $(OPTFLAGS)

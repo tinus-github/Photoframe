@@ -287,7 +287,7 @@ static void gl_tile_flip(gl_tile *self)
 	texture->data.dataType = gl_texture_data_type_rgba;
 	
 	// Make sure to unbind the fbo
-	glBindFramebuffer(GL_FRAMEBUFFER, 0)
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 ///

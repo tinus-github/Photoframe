@@ -9,6 +9,7 @@
 #include "gl-tile.h"
 #include "egl-driver.h"
 #include "gl-stage.h"
+#include "../lib/linmath/linmath.h"
 
 static void gl_tile_set_texture(gl_tile *obj, gl_texture *texture);
 static void gl_tile_draw(gl_shape *self);
@@ -202,6 +203,92 @@ gl_tile *gl_tile_new()
 	return gl_tile_init(ret);
 }
 
+static void gl_tile_flip(gl_tile *self)
+{
+	gl_texture *texture = self->data.texture;
+	gl_stage *stage = gl_stage_get_global_stage();
+	
+	if (!gl_tile_program_loaded) {
+		gl_tile_load_program();
+	}
+	
+	if (!texture || (texture->data.loadState != gl_texture_loadstate_done)) {
+		return;
+	}
+	gl_tile_program_data *program = &gl_flip_program;
+	
+	GLfloat vVertices[] = { 0.0f, 0.0f, 0.0f,  // Position 0
+		0.0f,  0.0f,        // TexCoord 0
+		0.0f,  1.0f, 0.0f,  // Position 1
+		0.0f,  1.0f,        // TexCoord 1
+		1.0f,  1.0f, 0.0f,  // Position 2
+		1.0f,  1.0f,        // TexCoord 2
+		1.0f,  0.0f, 0.0f,  // Position 3
+		1.0f,  0.0f         // TexCoord 3
+	};
+	
+	GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+
+	
+	glActiveTexture ( GL_TEXTURE0 );
+
+	// Create output texture
+	GLuint newTexture;
+	glGenTextures(1, &newTexture);
+	glBindTexture ( GL_TEXTURE_2D, newTexture );
+	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
+		      texture->data.width, texture->data.height,
+		      0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
+	
+	
+	glBindTexture ( GL_TEXTURE_2D, texture->data.textureId );
+	
+	// Create and setup FBO
+	GLuint fbo;
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+			       GL_TEXTURE_2D, newTexture, 0);
+	
+	// Setup rendering
+	glViewport(0,0, texture->data.width, texture->data.height);
+	glClear(GL_COLOR_BUFFER_BIT);
+	
+	mat4x4 identity;
+	mat4x4_identity(identity);
+	
+	glBindTexture ( GL_TEXTURE_2D, texture->data.textureId );
+	
+	// Use the program object
+	glUseProgram ( program->program );
+	
+	// Load the vertex position
+	glVertexAttribPointer ( program->positionLoc, 3, GL_FLOAT,
+			       GL_FALSE, 5 * sizeof(GLfloat), vVertices );
+	// Load the texture coordinate
+	glVertexAttribPointer ( program->texCoordLoc, 2, GL_FLOAT,
+			       GL_FALSE, 5 * sizeof(GLfloat), &vVertices[3] );
+	
+	glEnableVertexAttribArray ( program->positionLoc );
+	glEnableVertexAttribArray ( program->texCoordLoc );
+	
+	// Set the sampler texture unit to 0
+	glUniform1i ( program->samplerLoc, 0 );
+	
+	glUniformMatrix4fv(program->projectionLoc, 1, GL_FALSE, (GLfloat *)identity);
+	glUniformMatrix4fv(program->modelViewLoc,  1, GL_FALSE, (GLfloat *)identity);
+	
+	// Draw
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+
+	// TODO: Probably nicer if we ask the texture object to do this
+	glDeleteTextures(1, &texture->data.textureId);
+	texture->data.textureId = newTexture;
+	texture->data.dataType = gl_texture_data_type_rgba;
+	
+	// Make sure to unbind the fbo
+	glBindFramebuffer(GL_FRAMEBUFFER, 0)
+}
 
 ///
 // Draw triangles using the shader pair created in Init()

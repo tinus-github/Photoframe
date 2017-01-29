@@ -409,7 +409,7 @@ static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_pro
 
 static void gl_texture_flip_alpha(gl_texture *obj)
 {
-	gl_texture_apply_program(obj, gl_texture_program_flip);
+	gl_texture_apply_shader(obj, gl_texture_program_flip);
 }
 
 

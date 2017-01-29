@@ -240,6 +240,9 @@ static void gl_tile_flip(gl_tile *self)
 		      texture->data.width, texture->data.height,
 		      0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
 	
+	// Set the filtering mode
+	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	
 	glBindTexture ( GL_TEXTURE_2D, texture->data.textureId );
 	

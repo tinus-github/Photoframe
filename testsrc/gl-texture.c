@@ -308,6 +308,30 @@ static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 	obj->f->load_image_r(obj, bitmap, tile_data, image_width, tile_height);
 }
 
+static void gl_texture_setup_rendering(gl_texture *obj, GLuint texture, GLuint fbo)
+{
+	glActiveTexture ( GL_TEXTURE0 );
+	
+	// Create output texture
+	glBindTexture ( GL_TEXTURE_2D, texture );
+	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
+		      obj->data.width, obj->data.height,
+		      0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
+	
+	// Set the filtering mode
+	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	
+	// Create and setup FBO
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+			       GL_TEXTURE_2D, texture, 0);
+	
+	glViewport(0,0, obj->data.width, obj->data.height);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
 static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_program programNumber)
 {
 	if (!gl_texture_program_loaded) {
@@ -341,32 +365,15 @@ static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_pro
 	
 	GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
 	
-	
-	glActiveTexture ( GL_TEXTURE0 );
-	
-	// Create output texture
+	// Create gl objects
 	GLuint newTexture;
 	glGenTextures(1, &newTexture);
-	glBindTexture ( GL_TEXTURE_2D, newTexture );
-	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
-		      obj->data.width, obj->data.height,
-		      0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
-	
-	// Set the filtering mode
-	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	
-	// Create and setup FBO
 	GLuint fbo;
 	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-			       GL_TEXTURE_2D, newTexture, 0);
 	
-	// Setup rendering
-	glViewport(0,0, obj->data.width, obj->data.height);
-	glClear(GL_COLOR_BUFFER_BIT);
+	gl_texture_setup_rendering(obj, newTexture, fbo);
 	
+	// setup rendering
 	glBindTexture ( GL_TEXTURE_2D, obj->data.textureId );
 	
 	// Use the program object

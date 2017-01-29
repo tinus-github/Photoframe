@@ -345,7 +345,7 @@ static void gl_texture_setup_rendering_texture(gl_texture *obj, GLuint texture)
 	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 }
 
-static void gl_texture_setup_rendering_fbo(gl_texture *obj, GLuint fbo)
+static void gl_texture_setup_rendering_fbo(gl_texture *obj, GLuint fbo, GLuint texture)
 {
 	// Create and setup FBO
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -438,7 +438,7 @@ static void gl_texture_apply_outline(gl_texture *obj)
 	glGenFramebuffers(1, &fbo);
 	
 	gl_texture_setup_rendering_texture(obj, blurHTexture);
-	gl_texture_setup_rendering_fbo(obj, fbo);
+	gl_texture_setup_rendering_fbo(obj, fbo, blurHTexture);
 	gl_texture_apply_shader_draw(obj, gl_texture_program_blur_h,
 				     blurHTexture, obj->data.textureId);
 	
@@ -446,7 +446,7 @@ static void gl_texture_apply_outline(gl_texture *obj)
 	glGenTextures(1, &blurVTexture);
 
 	gl_texture_setup_rendering_texture(obj, blurVTexture);
-	gl_texture_setup_rendering_fbo(obj, fbo);
+	gl_texture_setup_rendering_fbo(obj, fbo, blurVTexture);
 	gl_texture_apply_shader_draw(obj, gl_texture_program_blur_v,
 				     blurVTexture, blurHtexture);
 	gl_texture_apply_shader_draw(obj, gl_texture_program_stencil_alpha,

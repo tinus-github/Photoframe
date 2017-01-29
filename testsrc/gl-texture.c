@@ -47,6 +47,12 @@ static gl_texture_program_data gl_flip_program;
 static gl_texture_program_data gl_blur_h_program;
 static gl_texture_program_data gl_blur_v_program;
 
+typedef enum {
+	gl_texture_program_flip,
+	gl_texture_program_blur_h,
+	gl_texture_program_blur_v
+} gl_texture_manipulation_program;
+
 static uint gl_texture_program_loaded = 0;
 
 static void (*gl_object_free_org_global) (gl_object *obj);
@@ -302,17 +308,25 @@ static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 	obj->f->load_image_r(obj, bitmap, tile_data, image_width, tile_height);
 }
 
-// test program that flips an alpha texture into a RGBA texture
-static void gl_texture_flip_alpha(gl_texture *obj)
+static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_program programNumber)
 {
 	if (!gl_texture_program_loaded) {
 		gl_texture_load_program();
 	}
 	
 	assert (obj->data.loadState == gl_texture_loadstate_done);
-	assert (obj->data.dataType == gl_texture_data_type_alpha);
 	
-	gl_texture_program_data *program = &gl_flip_program;
+	switch (programNumber) {
+		case gl_texture_program_flip:
+			gl_texture_program_data *program = &gl_flip_program;
+			break;
+		case gl_texture_program_blur_h:
+			gl_texture_program_data *program = &gl_blur_h_program;
+			break;
+		case gl_texture_program_blur_v:
+			gl_texture_program_data *program = &gl_blur_h_program;
+			break;
+	}
 	
 	GLfloat vVertices[] = { -1.0f, -1.0f, 0.0f,  // Position 0
 		0.0f,  0.0f,        // TexCoord 0
@@ -370,6 +384,16 @@ static void gl_texture_flip_alpha(gl_texture *obj)
 	// Set the sampler texture unit to 0
 	glUniform1i ( program->samplerLoc, 0 );
 	
+	switch (programNumber) {
+		case gl_texture_program_blur_h:
+		case gl_texture_program_blur_v:
+			glUniform1f(program->widthLoc, obj->data.width);
+			glUniform1f(program->heightLoc, obj->data.height);
+			break;
+		default:
+			break;
+	}
+	
 	// Draw
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 	
@@ -381,6 +405,12 @@ static void gl_texture_flip_alpha(gl_texture *obj)
 	// Make sure to unbind the fbo
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+static void gl_texture_flip_alpha(gl_texture *obj)
+{
+	gl_texture_apply_program(obj, gl_texture_program_flip);
+}
+
 
 static void gl_texture_free_texture(gl_texture *obj)
 {

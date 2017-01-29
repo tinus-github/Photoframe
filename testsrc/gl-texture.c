@@ -412,6 +412,7 @@ static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_pro
 	
 	// Make sure to unbind the fbo
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDeleteFramebuffers(1, &fbo);
 }
 
 static void gl_texture_flip_alpha(gl_texture *obj)

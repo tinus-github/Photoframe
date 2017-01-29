@@ -45,6 +45,7 @@ typedef struct gl_texture_program_data {
 
 static gl_texture_program_data gl_flip_program;
 static gl_texture_program_data gl_blur_h_program;
+static gl_texture_program_data gl_blur_v_program;
 
 static uint gl_texture_program_loaded = 0;
 
@@ -144,6 +145,36 @@ static int gl_texture_load_program() {
 	
 	"   gl_FragColor = vec4(0.0, 0.0, 0.0, luminance);   \n"
 	"}                                                   \n";
+
+	GLchar fShaderAlphaBlurVStr[] =
+	"precision mediump float;                            \n"
+	"varying vec2 v_texCoord;                            \n"
+	"uniform sampler2D s_texture;                        \n"
+	"uniform float u_width;                              \n"
+	"uniform float u_height;                             \n"
+	// No static arrays in openGL ES
+	"float weight0 = 0.3225806452;                       \n"
+	"float weight1 = 0.2419354838;                       \n"
+	"float weight2 = 0.0967741935;                       \n"
+	
+	"void main()                                         \n"
+	"{                                                   \n"
+	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
+	"  float luminance = texelColor.a * weight0;         \n"
+	
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, 1.0 / u_height, 0.0));\n"
+	"   luminance += texelColor.a * weight1;             \n"
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, -1.0 / u_height, 0.0));\n"
+	"   luminance += texelColor.a * weight1;             \n"
+	
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, 2.0 / u_height, 0.0));\n"
+	"   luminance += texelColor.a * weight2;             \n"
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, -2.0 / u_height, 0.0));\n"
+	"   luminance += texelColor.a * weight2;             \n"
+	
+	"   gl_FragColor = vec4(0.0, 0.0, 0.0, luminance);   \n"
+	"}                                                   \n";
+
 	
 	// Load the shaders and get a linked program object
 	// Flip (testing)
@@ -153,6 +184,10 @@ static int gl_texture_load_program() {
 	// Blur horizontally
 	gl_blur_h_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaBlurHStr );
 	gl_texture_load_program_attribute_locations(&gl_blur_h_program);
+	
+	// Blur vertically
+	gl_blur_v_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaBlurVStr );
+	gl_texture_load_program_attribute_locations(&gl_blur_v_program);
 	
 	gl_texture_program_loaded = 1;
 	

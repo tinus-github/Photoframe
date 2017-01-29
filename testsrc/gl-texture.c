@@ -443,7 +443,7 @@ static void gl_texture_apply_outline(gl_texture *obj)
 	gl_texture_apply_shader_draw(obj, gl_texture_program_blur_h,
 				     blurVTexture, obj->data.textureId);
 
-	glDeleteTextures(1, blurHTexture);
+	glDeleteTextures(1, &blurHTexture);
 	
 	// Swap out the old texture for the newly created one
 	glDeleteTextures(1, &obj->data.textureId);

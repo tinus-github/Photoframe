@@ -372,8 +372,8 @@ static void gl_texture_apply_shader_draw(gl_texture *obj, gl_texture_manipulatio
 		case gl_texture_program_blur_v:
 			program = &gl_blur_v_program;
 			break;
-		case gl_texture_program_stencil_color:
-			program = &gl_stencil_color_program;
+		case gl_texture_program_stencil_alpha:
+			program = &gl_stencil_alpha_program;
 			break;
 	}
 	

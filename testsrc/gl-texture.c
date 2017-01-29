@@ -9,6 +9,8 @@
 #include "gl-texture.h"
 #include "gl-renderloop-member.h"
 #include "gl-renderloop.h"
+#include "egl-driver.h"
+
 #include <string.h>
 #include <assert.h>
 
@@ -70,7 +72,7 @@ gl_texture *gl_texture_new()
 	return gl_texture_init(ret);
 }
 
-static void gl_texture_load_program_attribute_locations(gl_tile_program_data *data)
+static void gl_texture_load_program_attribute_locations(gl_texture_program_data *data)
 {
 	GLuint program = data->program;
 	// Get the attribute locations
@@ -254,7 +256,7 @@ static void gl_texture_flip_alpha(gl_texture *obj)
 	glGenTextures(1, &newTexture);
 	glBindTexture ( GL_TEXTURE_2D, newTexture );
 	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
-		      texture->data.width, texture->data.height,
+		      obj->data.width, obj->data.height,
 		      0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
 	
 	// Set the filtering mode
@@ -271,9 +273,6 @@ static void gl_texture_flip_alpha(gl_texture *obj)
 	// Setup rendering
 	glViewport(0,0, obj->data.width, obj->data.height);
 	glClear(GL_COLOR_BUFFER_BIT);
-	
-	mat4x4 identity;
-	mat4x4_identity(identity);
 	
 	glBindTexture ( GL_TEXTURE_2D, obj->data.textureId );
 	

@@ -330,7 +330,7 @@ static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 	obj->f->load_image_r(obj, bitmap, tile_data, image_width, tile_height);
 }
 
-static void gl_texture_setup_rendering(gl_texture *obj, GLuint texture, GLuint fbo)
+static void gl_texture_setup_rendering_texture(gl_texture *obj, GLuint texture)
 {
 	glActiveTexture ( GL_TEXTURE0 );
 	
@@ -343,7 +343,10 @@ static void gl_texture_setup_rendering(gl_texture *obj, GLuint texture, GLuint f
 	// Set the filtering mode
 	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	
+}
+
+static void gl_texture_setup_rendering_fbo(gl_texture *obj, GLuint fbo)
+{
 	// Create and setup FBO
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
@@ -415,6 +418,9 @@ static void gl_texture_apply_shader_draw(gl_texture *obj, gl_texture_manipulatio
 			glUniform1f(program->widthLoc, obj->data.width);
 			glUniform1f(program->heightLoc, obj->data.height);
 			break;
+		case gl_texture_program_stencil_alpha:
+			// TODO: expose multiple colors
+			glUniform4f(program->colorLoc, 1.0, 1.0, 1.0, 1.0);
 		default:
 			break;
 	}
@@ -431,18 +437,23 @@ static void gl_texture_apply_outline(gl_texture *obj)
 	GLuint fbo;
 	glGenFramebuffers(1, &fbo);
 	
-	gl_texture_setup_rendering(obj, blurHTexture, fbo);
+	gl_texture_setup_rendering_texture(obj, blurHTexture);
+	gl_texture_setup_rendering_fbo(obj, fbo);
 	gl_texture_apply_shader_draw(obj, gl_texture_program_blur_h,
 				     blurHTexture, obj->data.textureId);
 	
 	GLuint blurVTexture;
 	glGenTextures(1, &blurVTexture);
 
-	gl_texture_setup_rendering(obj, blurVTexture, fbo);
+	gl_texture_setup_rendering_texture(obj, blurVTexture);
+	gl_texture_setup_rendering_fbo(obj, fbo);
 	gl_texture_apply_shader_draw(obj, gl_texture_program_blur_v,
+				     blurVTexture, blurHtexture);
+	gl_texture_apply_shader_draw(obj, gl_texture_program_stencil_alpha,
 				     blurVTexture, obj->data.textureId);
-
+	
 	glDeleteTextures(1, &blurHTexture);
+	
 	
 	// Swap out the old texture for the newly created one
 	glDeleteTextures(1, &obj->data.textureId);

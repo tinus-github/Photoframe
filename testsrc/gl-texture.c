@@ -345,7 +345,6 @@ static void gl_texture_setup_rendering(gl_texture *obj, GLuint texture, GLuint f
 	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	
 	// Create and setup FBO
-	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 			       GL_TEXTURE_2D, texture, 0);

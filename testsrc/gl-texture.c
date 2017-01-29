@@ -473,7 +473,8 @@ static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_pro
 	GLuint fbo;
 	glGenFramebuffers(1, &fbo);
 	
-	gl_texture_setup_rendering(obj, newTexture, fbo);
+	gl_texture_setup_rendering_texture(obj, newTexture);
+	gl_texture_setup_rendering_fbo(obj, fbo, newTexture);
 	gl_texture_apply_shader_draw(obj, programNumber,
 				     newTexture, obj->data.textureId);
 	

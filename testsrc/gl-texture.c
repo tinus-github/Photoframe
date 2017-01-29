@@ -20,6 +20,7 @@ static void load_image_monochrome(gl_texture *obj, gl_bitmap *bitmap, unsigned i
 static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 				       unsigned int image_width, unsigned int image_height,
 				       unsigned int tile_height, unsigned int tile_y);
+static void gl_texture_flip_alpha(gl_texture *obj);
 static void gl_texture_cancel_loading(gl_texture *obj);
 static void gl_texture_free(gl_object *obj);
 
@@ -28,7 +29,8 @@ static struct gl_texture_funcs gl_texture_funcs_global = {
 	.load_image_r = &load_image_r,
 	.load_image_monochrome = &load_image_monochrome,
 	.load_image_horizontal_tile = &load_image_horizontal_tile,
-	.cancel_loading = &gl_texture_cancel_loading
+	.cancel_loading = &gl_texture_cancel_loading,
+	.flip_alpha = &gl_texture_flip_alpha
 };
 
 typedef struct gl_texture_program_data {

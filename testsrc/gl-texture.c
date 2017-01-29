@@ -21,6 +21,7 @@ static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 				       unsigned int image_width, unsigned int image_height,
 				       unsigned int tile_height, unsigned int tile_y);
 static void gl_texture_flip_alpha(gl_texture *obj);
+static void gl_texture_apply_outline(gl_texture *obj);
 static void gl_texture_cancel_loading(gl_texture *obj);
 static void gl_texture_free(gl_object *obj);
 
@@ -30,7 +31,8 @@ static struct gl_texture_funcs gl_texture_funcs_global = {
 	.load_image_monochrome = &load_image_monochrome,
 	.load_image_horizontal_tile = &load_image_horizontal_tile,
 	.cancel_loading = &gl_texture_cancel_loading,
-	.flip_alpha = &gl_texture_flip_alpha
+	.flip_alpha = &gl_texture_flip_alpha,
+	.apply_outline = &gl_texture_apply_outline
 };
 
 typedef struct gl_texture_program_data {
@@ -420,6 +422,37 @@ static void gl_texture_apply_shader_draw(gl_texture *obj, gl_texture_manipulatio
 	
 	// Draw
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+}
+
+static void gl_texture_apply_outline(gl_texture *obj)
+{
+	// Create gl objects
+	GLuint blurHTexture;
+	glGenTextures(1, &blurHTexture);
+	GLuint fbo;
+	glGenFramebuffers(1, &fbo);
+	
+	gl_texture_setup_rendering(obj, blurHTexture, fbo);
+	gl_texture_apply_shader_draw(obj, gl_texture_program_blur_h,
+				     blurHTexture, obj->data.textureId);
+	
+	GLuint blurVTexture;
+	glGenTextures(1, &blurVTexture);
+
+	gl_texture_setup_rendering(obj, blurVTexture, fbo);
+	gl_texture_apply_shader_draw(obj, gl_texture_program_blur_h,
+				     blurVTexture, obj->data.textureId);
+
+	glDeleteTextures(1, blurHTexture);
+	
+	// Swap out the old texture for the newly created one
+	glDeleteTextures(1, &obj->data.textureId);
+	obj->data.textureId = blurVTexture;
+	obj->data.dataType = gl_texture_data_type_rgba;
+	
+	// Make sure to unbind the fbo
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDeleteFramebuffers(1, &fbo);
 }
 
 static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_program programNumber)

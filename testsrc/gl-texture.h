@@ -42,6 +42,7 @@ typedef struct gl_texture_funcs {
 					    unsigned int image_width, unsigned int image_height,
 					    unsigned int tile_height, unsigned int tile_y);
 	void (*flip_alpha) (gl_texture *obj);
+	void (*apply_outline) (gl_texture *obj);
 	void (*cancel_loading) (gl_texture *obj);
 } gl_texture_funcs;
 

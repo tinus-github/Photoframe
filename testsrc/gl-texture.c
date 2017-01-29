@@ -448,7 +448,7 @@ static void gl_texture_apply_outline(gl_texture *obj)
 	gl_texture_setup_rendering_texture(obj, blurVTexture);
 	gl_texture_setup_rendering_fbo(obj, fbo, blurVTexture);
 	gl_texture_apply_shader_draw(obj, gl_texture_program_blur_v,
-				     blurVTexture, blurHtexture);
+				     blurVTexture, blurHTexture);
 	gl_texture_apply_shader_draw(obj, gl_texture_program_stencil_alpha,
 				     blurVTexture, obj->data.textureId);
 	

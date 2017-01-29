@@ -332,13 +332,14 @@ static void gl_texture_setup_rendering(gl_texture *obj, GLuint texture, GLuint f
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_program programNumber)
+static void gl_texture_apply_shader_draw(gl_texture *obj, gl_texture_manipulation_program programNumber,
+					 GLuint destTexture, GLuint srcTexture)
 {
+	assert (obj->data.loadState == gl_texture_loadstate_done);
+	
 	if (!gl_texture_program_loaded) {
 		gl_texture_load_program();
 	}
-	
-	assert (obj->data.loadState == gl_texture_loadstate_done);
 	
 	gl_texture_program_data *program;
 	switch (programNumber) {
@@ -365,16 +366,8 @@ static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_pro
 	
 	GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
 	
-	// Create gl objects
-	GLuint newTexture;
-	glGenTextures(1, &newTexture);
-	GLuint fbo;
-	glGenFramebuffers(1, &fbo);
-	
-	gl_texture_setup_rendering(obj, newTexture, fbo);
-	
 	// setup rendering
-	glBindTexture ( GL_TEXTURE_2D, obj->data.textureId );
+	glBindTexture ( GL_TEXTURE_2D, srcTexture );
 	
 	// Use the program object
 	glUseProgram ( program->program );
@@ -404,6 +397,19 @@ static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_pro
 	
 	// Draw
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+}
+
+static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_program programNumber)
+{
+	// Create gl objects
+	GLuint newTexture;
+	glGenTextures(1, &newTexture);
+	GLuint fbo;
+	glGenFramebuffers(1, &fbo);
+	
+	gl_texture_setup_rendering(obj, newTexture, fbo);
+	gl_texture_apply_shader_draw(obj, programNumber,
+				     newTexture, obj->data.textureId);
 	
 	// Swap out the old texture for the newly created one
 	glDeleteTextures(1, &obj->data.textureId);

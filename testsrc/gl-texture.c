@@ -105,7 +105,7 @@ static int gl_texture_load_program() {
 	"{                                                   \n"
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
 	"  float luminance = 1.0 - texelColor.a;             \n"
-	"  gl_FragColor = vec4(luminance, luminance, luminance, luminance);\n"
+	"  gl_FragColor = vec4(1.0, 1.0, 1.0, luminance);    \n"
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object

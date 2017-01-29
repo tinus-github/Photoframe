@@ -39,6 +39,7 @@ typedef struct gl_texture_program_data {
 	GLint texCoordLoc;
 	GLint samplerLoc;
 	
+	GLint colorLoc;
 	GLint widthLoc;
 	GLint heightLoc;
 } gl_texture_program_data;
@@ -46,11 +47,13 @@ typedef struct gl_texture_program_data {
 static gl_texture_program_data gl_flip_program;
 static gl_texture_program_data gl_blur_h_program;
 static gl_texture_program_data gl_blur_v_program;
+static gl_texture_program_data gl_stencil_alpha_program;
 
 typedef enum {
 	gl_texture_program_flip,
 	gl_texture_program_blur_h,
-	gl_texture_program_blur_v
+	gl_texture_program_blur_v,
+	gl_texture_program_stencil_alpha
 } gl_texture_manipulation_program;
 
 static uint gl_texture_program_loaded = 0;
@@ -98,6 +101,7 @@ static void gl_texture_load_program_attribute_locations(gl_texture_program_data 
 	// Get the uniform locations (if present)
 	data->widthLoc = glGetUniformLocation ( program, "u_width" );
 	data->heightLoc = glGetUniformLocation ( program, "u_height" );
+	data->colorLoc = glGetUniformLocation ( program, "u_color" );
 }
 
 static int gl_texture_load_program() {
@@ -123,6 +127,18 @@ static int gl_texture_load_program() {
 	"  gl_FragColor = vec4(1.0, 1.0, 1.0, luminance);    \n"
 	"}                                                   \n";
 	
+	GLchar fShaderStencilAlphaStr[] =
+	"precision mediump float;                            \n"
+	"varying vec2 v_texCoord;                            \n"
+	"uniform sampler2D s_texture;                        \n"
+	"uniform vec4 u_color;                               \n"
+	"void main()                                         \n"
+	"{                                                   \n"
+	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
+	"  gl_FragColor = u_color;                           \n"
+	"  gl_FragColor.a = texelColor.a;                    \n"
+	"}                                                   \n";
+
 	GLchar fShaderAlphaBlurHStr[] =
 	"precision mediump float;                            \n"
 	"varying vec2 v_texCoord;                            \n"
@@ -194,6 +210,10 @@ static int gl_texture_load_program() {
 	// Blur vertically
 	gl_blur_v_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaBlurVStr );
 	gl_texture_load_program_attribute_locations(&gl_blur_v_program);
+	
+	// Stencil
+	gl_stencil_alpha_program.program = egl_driver_load_program ( vShaderStr, fShaderStencilAlphaStr );
+	gl_texture_load_program_attribute_locations(&gl_stencil_alpha_program);
 	
 	gl_texture_program_loaded = 1;
 	
@@ -351,6 +371,9 @@ static void gl_texture_apply_shader_draw(gl_texture *obj, gl_texture_manipulatio
 			break;
 		case gl_texture_program_blur_v:
 			program = &gl_blur_v_program;
+			break;
+		case gl_texture_program_stencil_color:
+			program = &gl_stencil_color_program;
 			break;
 	}
 	

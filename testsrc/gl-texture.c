@@ -38,9 +38,13 @@ typedef struct gl_texture_program_data {
 	GLint positionLoc;
 	GLint texCoordLoc;
 	GLint samplerLoc;
+	
+	GLint widthLoc;
+	GLint heightLoc;
 } gl_texture_program_data;
 
 static gl_texture_program_data gl_flip_program;
+static gl_texture_program_data gl_blur_h_program;
 
 static uint gl_texture_program_loaded = 0;
 
@@ -83,6 +87,10 @@ static void gl_texture_load_program_attribute_locations(gl_texture_program_data 
 	
 	// Get the sampler location
 	data->samplerLoc = glGetUniformLocation ( program, "s_texture" );
+	
+	// Get the uniform locations (if present)
+	data->widthLoc = glGetUniformLocation ( program, "u_width" );
+	data->heightLoc = glGetUniformLocation ( program, "u_height" );
 }
 
 static int gl_texture_load_program() {
@@ -108,10 +116,43 @@ static int gl_texture_load_program() {
 	"  gl_FragColor = vec4(1.0, 1.0, 1.0, luminance);    \n"
 	"}                                                   \n";
 	
+	GLchar fShaderAlphaBlurHStr[] =
+	"precision mediump float;                            \n"
+	"varying vec2 v_texCoord;                            \n"
+	"uniform sampler2D s_texture;                        \n"
+	"uniform float u_width;                              \n"
+	"uniform float u_height;                             \n"
+// No static arrays in openGL ES
+	"float weight0 = 0.3225806452;                       \n"
+	"float weight1 = 0.2419354838;                       \n"
+	"float weight2 = 0.0967741935;                       \n"
+
+	"void main()                                         \n"
+	"{                                                   \n"
+	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
+	"  float luminance = texelColor.a * weight0;         \n"
+	
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(1.0 / u_width, 0.0));\n"
+	"   luminance += texelColor.a * weight1;             \n"
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(-1.0 / u_width, 0.0));\n"
+	"   luminance += texelColor.a * weight1;             \n"
+	
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(2.0 / u_width, 0.0));\n"
+	"   luminance += texelColor.a * weight2;             \n"
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(-2.0 / u_width, 0.0));\n"
+	"   luminance += texelColor.a * weight2;             \n"
+	
+	"   gl_FragColor = vec4(0.0, 0.0, 0.0, luminance);   \n"
+	"}                                                   \n";
+	
 	// Load the shaders and get a linked program object
 	// Flip (testing)
 	gl_flip_program.program = egl_driver_load_program ( vShaderStr, fShaderFlipAlphaStr );
 	gl_texture_load_program_attribute_locations(&gl_flip_program);
+
+	// Blur horizontally
+	gl_blur_h_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaBlurHStr );
+	gl_texture_load_program_attribute_locations(&gl_blur_h_program);
 	
 	gl_texture_program_loaded = 1;
 	

@@ -29,6 +29,17 @@ static struct gl_texture_funcs gl_texture_funcs_global = {
 	.cancel_loading = &gl_texture_cancel_loading
 };
 
+typedef struct gl_texture_program_data {
+	GLuint program;
+	GLint positionLoc;
+	GLint texCoordLoc;
+	GLint samplerLoc;
+} gl_texture_program_data;
+
+static gl_texture_program_data gl_flip_program;
+
+static uint gl_texture_program_loaded = 0;
+
 static void (*gl_object_free_org_global) (gl_object *obj);
 
 void gl_texture_setup()
@@ -58,6 +69,51 @@ gl_texture *gl_texture_new()
 	
 	return gl_texture_init(ret);
 }
+
+static void gl_texture_load_program_attribute_locations(gl_tile_program_data *data)
+{
+	GLuint program = data->program;
+	// Get the attribute locations
+	data->positionLoc = glGetAttribLocation ( program, "a_position" );
+	data->texCoordLoc = glGetAttribLocation ( program, "a_texCoord" );
+	
+	// Get the sampler location
+	data->samplerLoc = glGetUniformLocation ( program, "s_texture" );
+}
+
+static int gl_texture_load_program() {
+	// The simplest do nothing vertex shader possible
+	GLchar vShaderStr[] =
+	"attribute vec4 a_position;            \n"
+	"attribute vec2 a_texCoord;            \n"
+	"varying vec2 v_texCoord;              \n"
+	"void main()                           \n"
+	"{                                     \n"
+	"   gl_Position = a_position;          \n"
+	"   v_texCoord = a_texCoord;           \n"
+	"}                                     \n";
+	
+	GLchar fShaderFlipAlphaStr[] =
+	"precision mediump float;                            \n"
+	"varying vec2 v_texCoord;                            \n"
+	"uniform sampler2D s_texture;                        \n"
+	"void main()                                         \n"
+	"{                                                   \n"
+	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
+	"  float luminance = 1.0 - texelColor.a;             \n"
+	"  gl_FragColor = vec4(luminance, luminance, luminance, luminance);\n"
+	"}                                                   \n";
+	
+	// Load the shaders and get a linked program object
+	// Flip (testing)
+	gl_flip_program.program = egl_driver_load_program ( vShaderStr, fShaderFlipAlphaStr );
+	gl_texture_load_program_attribute_locations(&gl_flip_program);
+	
+	gl_texture_program_loaded = 1;
+	
+	return GL_TRUE;
+}
+
 
 static void load_image_gen_r_work(void *target, gl_renderloop_member *renderloop_member, void *extra_data)
 {
@@ -164,6 +220,89 @@ static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 	unsigned char *tile_data = (bitmap->data.bitmap) + (4 * sizeof(unsigned char) * image_width * tile_y);
 	
 	obj->f->load_image_r(obj, bitmap, tile_data, image_width, tile_height);
+}
+
+// test program that flips an alpha texture into a RGBA texture
+static void gl_texture_flip_alpha(gl_texture *obj)
+{
+	if (!gl_texture_program_loaded) {
+		gl_texture_load_program();
+	}
+	
+	assert (obj->data.loadState == gl_texture_loadstate_done);
+	assert (obj->data.dataType == gl_texture_data_type_alpha);
+	
+	gl_texture_program_data *program = &gl_flip_program;
+	
+	GLfloat vVertices[] = { -1.0f, -1.0f, 0.0f,  // Position 0
+		0.0f,  0.0f,        // TexCoord 0
+		-1.0f,  1.0f, 0.0f,  // Position 1
+		0.0f,  1.0f,        // TexCoord 1
+		1.0f,  1.0f, 0.0f,  // Position 2
+		1.0f,  1.0f,        // TexCoord 2
+		1.0f,  -1.0f, 0.0f,  // Position 3
+		1.0f,  0.0f         // TexCoord 3
+	};
+	
+	GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+	
+	
+	glActiveTexture ( GL_TEXTURE0 );
+	
+	// Create output texture
+	GLuint newTexture;
+	glGenTextures(1, &newTexture);
+	glBindTexture ( GL_TEXTURE_2D, newTexture );
+	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
+		      texture->data.width, texture->data.height,
+		      0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
+	
+	// Set the filtering mode
+	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	
+	// Create and setup FBO
+	GLuint fbo;
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+			       GL_TEXTURE_2D, newTexture, 0);
+	
+	// Setup rendering
+	glViewport(0,0, obj->data.width, obj->data.height);
+	glClear(GL_COLOR_BUFFER_BIT);
+	
+	mat4x4 identity;
+	mat4x4_identity(identity);
+	
+	glBindTexture ( GL_TEXTURE_2D, obj->data.textureId );
+	
+	// Use the program object
+	glUseProgram ( program->program );
+	
+	// Load the vertex position
+	glVertexAttribPointer ( program->positionLoc, 3, GL_FLOAT,
+			       GL_FALSE, 5 * sizeof(GLfloat), vVertices );
+	// Load the texture coordinate
+	glVertexAttribPointer ( program->texCoordLoc, 2, GL_FLOAT,
+			       GL_FALSE, 5 * sizeof(GLfloat), &vVertices[3] );
+	
+	glEnableVertexAttribArray ( program->positionLoc );
+	glEnableVertexAttribArray ( program->texCoordLoc );
+	
+	// Set the sampler texture unit to 0
+	glUniform1i ( program->samplerLoc, 0 );
+	
+	// Draw
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+	
+	// Swap out the old texture for the newly created one
+	glDeleteTextures(1, &obj->data.textureId);
+	obj->data.textureId = newTexture;
+	obj->data.dataType = gl_texture_data_type_rgba;
+	
+	// Make sure to unbind the fbo
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 static void gl_texture_free_texture(gl_texture *obj)

@@ -162,14 +162,14 @@ static int gl_texture_load_program() {
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
 	"  float luminance = texelColor.a * weight0;         \n"
 	
-	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, 1.0 / u_height, 0.0));\n"
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, 1.0 / u_height));\n"
 	"   luminance += texelColor.a * weight1;             \n"
-	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, -1.0 / u_height, 0.0));\n"
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, -1.0 / u_height));\n"
 	"   luminance += texelColor.a * weight1;             \n"
 	
-	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, 2.0 / u_height, 0.0));\n"
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, 2.0 / u_height));\n"
 	"   luminance += texelColor.a * weight2;             \n"
-	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, -2.0 / u_height, 0.0));\n"
+	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(0.0, -2.0 / u_height));\n"
 	"   luminance += texelColor.a * weight2;             \n"
 	
 	"   gl_FragColor = vec4(0.0, 0.0, 0.0, luminance);   \n"

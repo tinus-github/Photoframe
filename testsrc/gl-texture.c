@@ -316,15 +316,16 @@ static void gl_texture_apply_shader(gl_texture *obj, gl_texture_manipulation_pro
 	
 	assert (obj->data.loadState == gl_texture_loadstate_done);
 	
+	gl_texture_program_data *program;
 	switch (programNumber) {
 		case gl_texture_program_flip:
-			gl_texture_program_data *program = &gl_flip_program;
+			program = &gl_flip_program;
 			break;
 		case gl_texture_program_blur_h:
-			gl_texture_program_data *program = &gl_blur_h_program;
+			program = &gl_blur_h_program;
 			break;
 		case gl_texture_program_blur_v:
-			gl_texture_program_data *program = &gl_blur_h_program;
+			program = &gl_blur_v_program;
 			break;
 	}
 	

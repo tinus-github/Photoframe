@@ -62,6 +62,8 @@ static void gl_notice_fire(gl_notice *obj)
 	gl_notice_subscription *head = obj->data.firstChild;
 	gl_notice_subscription *current_child = head->data.siblingR;
 	gl_notice_subscription *next_child = current_child->data.siblingR;
+	
+	((gl_object *)obj)->f->ref((gl_object *)obj);
 
 	while (current_child != head) {
 		assert (current_child->data.owner = obj);
@@ -74,6 +76,8 @@ static void gl_notice_fire(gl_notice *obj)
 	if (!obj->data.repeats) {
 		gl_notice_remove_subscriptions(obj);
 	}
+	
+	((gl_object *)obj)->f->unref((gl_object *)obj);
 }
 
 static void gl_notice_remove_subscriptions(gl_notice *obj)

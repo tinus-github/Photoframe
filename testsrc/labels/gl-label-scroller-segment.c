@@ -37,13 +37,11 @@ static void (*gl_object_free_org_global) (gl_object *obj);
 
 static void gl_label_scroller_segment_apply_outline(void *target, gl_renderloop_member *renderloop_member, void *extra_data)
 {
-	gl_label_scroller_segment *obj = (gl_label_scroller_segment *)target;
 	gl_tile *tile = (gl_tile *)extra_data;
 	
 	gl_texture *texture = tile->data.texture;
 	texture->f->apply_outline(texture);
 	
-	((gl_object *)renderloop_member)->f->unref((gl_object *)renderloop_member);
 	((gl_object *)tile)->f->unref((gl_object *)tile);
 }
 
@@ -57,7 +55,6 @@ static void gl_label_scroller_segment_prepare_outline(gl_label_scroller_segment 
 	
 	gl_renderloop *renderloop = gl_renderloop_get_global_renderloop();
 	renderloop->f->append_child(renderloop, gl_renderloop_phase_load, renderloop_member);
-	((gl_object *)renderloop_member)->f->ref((gl_object *)renderloop_member);
 	((gl_object *)tile)->f->ref((gl_object *)tile);
 }
 

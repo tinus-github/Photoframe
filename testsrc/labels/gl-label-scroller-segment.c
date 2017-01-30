@@ -7,6 +7,12 @@
 //
 
 #include "labels/gl-label-scroller-segment.h"
+
+#include "gl-renderloop-member.h"
+#include "gl-renderloop.h"
+#include "gl-notice.h"
+#include "gl-notice-subscription.h"
+
 #define SEGMENT_WIDTH 512
 
 static void gl_label_scroller_segment_free(gl_object *obj);
@@ -29,6 +35,42 @@ static struct gl_label_scroller_segment_funcs gl_label_scroller_segment_funcs_gl
 
 static void (*gl_object_free_org_global) (gl_object *obj);
 
+static void gl_label_scroller_segment_apply_outline(void *target, gl_renderloop_member *renderloop_member, void *extra_data)
+{
+	gl_label_scroller_segment *obj = (gl_label_scroller_segment *)target;
+	gl_tile *tile = (gl_tile *)extra_data;
+	
+	gl_texture *texture = tile->data.texture;
+	texture->f->apply_outline(texture);
+	
+	((gl_object *)renderloop_member)->f->unref((gl_object *)renderloop_member);
+	((gl_object *)tile)->f->unref((gl_object *)tile);
+}
+
+static void gl_label_scroller_segment_prepare_outline(gl_label_scroller_segment *obj, gl_tile *tile)
+{
+	gl_renderloop_member *renderloop_member = gl_renderloop_member_new();
+	renderloop_member->data.target = obj;
+	renderloop_member->data.action = &gl_label_scroller_segment_apply_outline;
+	renderloop_member->data.action_data = tile;
+	renderloop_member->data.loadPriority = gl_renderloop_member_priority_high;
+	
+	gl_renderloop *renderloop = gl_renderloop_get_global_renderloop();
+	renderloop->f->append_child(renderloop, gl_renderloop_phase_load, renderloop_member);
+	((gl_object *)renderloop_member)->f->ref((gl_object *)renderloop_member);
+	((gl_object *)tile)->f->ref((gl_object *)tile);
+}
+
+static void gl_label_scroller_segment_tile_loaded(void *target,
+						  gl_notice_subscription *subscription,
+						  void *data)
+{
+	gl_label_scroller_segment *obj = (gl_label_scroller_segment *)target;
+	gl_tile *tile = (gl_tile *)data;
+	
+	gl_label_scroller_segment_prepare_outline(obj, tile);
+}
+
 static gl_tile *gl_label_scroller_segment_render_tile(gl_label_scroller_segment *obj, uint32_t tile_index)
 {
 	gl_label_renderer *renderer = obj->data.renderer;
@@ -41,6 +83,18 @@ static gl_tile *gl_label_scroller_segment_render_tile(gl_label_scroller_segment 
 				   obj->data.height);
 	tile_shape = (gl_shape *)tile;
 	tile_shape->data.objectX = tile_index * SEGMENT_WIDTH;
+	
+	gl_texture *texture = tile->data.texture;
+	if (texture->data.loadState == gl_texture_loadstate_done) {
+		gl_label_scroller_segment_prepare_outline(obj, tile);
+	} else {
+		gl_notice_subscription *subscription = gl_notice_subscription_new();
+		subscription->data.action = &gl_label_scroller_segment_tile_loaded;
+		subscription->data.target = obj;
+		subscription->data.action_data = tile;
+		
+		texture->data.loadedNotice->f->subscribe(texture->data.loadedNotice, subscription);
+	}
 	
 	return tile;
 }

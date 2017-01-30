@@ -10,8 +10,8 @@
 
 #include "gl-renderloop-member.h"
 #include "gl-renderloop.h"
-#include "gl-notice.h"
-#include "gl-notice-subscription.h"
+#include "infrastructure/gl-notice.h"
+#include "infrastructure/gl-notice-subscription.h"
 
 #define SEGMENT_WIDTH 512
 

@@ -32,6 +32,7 @@
 #include "slideshow/gl-slide.h"
 #include "slideshow/gl-slide-image.h"
 #include "slideshow/gl-slideshow.h"
+#include "images/gl-bitmap-scaler.h"
 
 #include <bcm_host.h>
 
@@ -311,4 +312,5 @@ void egl_driver_setup()
 	gl_slide_setup();
 	gl_slide_image_setup();
 	gl_slideshow_setup();
+	gl_bitmap_scaler_setup();
 }

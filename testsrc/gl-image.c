@@ -13,7 +13,7 @@
 #include "infrastructure/gl-workqueue-job.h"
 #include "infrastructure/gl-workqueue.h"
 #include "gl-stage.h"
-#include "loadimage.h"
+#include "images/loadimage.h"
 #include "infrastructure/gl-notice-subscription.h"
 #include "infrastructure/gl-notice.h"
 

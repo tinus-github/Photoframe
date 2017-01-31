@@ -14,12 +14,12 @@
 static void gl_bitmap_scaler_start(gl_bitmap_scaler *obj);
 static void gl_bitmap_scaler_end(gl_bitmap_scaler *obj);
 
-static void add_line_coarse(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsigned char *inputbuf);
+static void add_line(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsigned char *inputbuf);
 
 static struct gl_bitmap_scaler_funcs gl_bitmap_scaler_funcs_global = {
 	.start = &gl_bitmap_scaler_start,
 	.end = &gl_bitmap_scaler_end,
-	.process_line = &add_line_coarse
+	.process_line = &add_line
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
@@ -41,10 +41,16 @@ static void gl_bitmap_scaler_start(gl_bitmap_scaler *obj)
 {
 	obj->data._scaleFactor = (float)obj->data.outputWidth / obj->data.inputWidth;
 	
-	obj->data._yContributions = calloc(4 * sizeof(unsigned int), obj->data.outputWidth);
-	
 	obj->data._scaleRest = 0;
 	obj->data._current_y_out = 0;
+	switch (obj->data.verticalType) {
+		case gl_bitmap_scaler_type_coarse:
+			obj->data._yContributions = NULL;
+			break;
+		case gl_bitmap_scaler_type_smooth:
+		case gl_bitmap_scaler_type_bresenham:
+			obj->data._yContributions = calloc(4 * sizeof(unsigned int), obj->data.outputWidth);
+	}
 }
 
 static void gl_bitmap_scaler_end(gl_bitmap_scaler *obj)
@@ -89,6 +95,9 @@ static inline unsigned char average_channel(unsigned char value1, unsigned char 
 	return (unsigned char)((value1 + value2) >> 1);
 }
 
+typedef void (scale_line_func)(gl_bitmap_scaler *obj, unsigned char *outputptr, const unsigned char *inputptr);
+typedef void (copy_pixel_func)(unsigned char *outputptr, const unsigned char *inputptr);
+
 static void copy_pixel_rgb_to_rgba(unsigned char *outputptr, const unsigned char *inputptr)
 {
 	outputptr[0] = inputptr[0];
@@ -105,7 +114,16 @@ static void copy_pixel_rgba_to_rgba(unsigned char *outputptr, const unsigned cha
 	outputptr[3] = inputptr[3];
 }
 
-typedef void (scale_line_func)(gl_bitmap_scaler *obj, unsigned char *outputptr, const unsigned char *inputptr);
+static copy_pixel_func *copy_pixel_func_for_type(gl_bitmap_scaler_input_type t)
+{
+	switch (t) {
+		case gl_bitmap_scaler_input_type_rgb:
+			return &copy_pixel_rgb_to_rgba;
+		case gl_bitmap_scaler_input_type_rgba:
+			return &copy_pixel_rgba_to_rgba;
+	}
+	return NULL;
+}
 
 // horizontal scaling funcs
 static void scale_line_coarse(gl_bitmap_scaler *obj, unsigned char *outputptr, const unsigned char *inputptr)
@@ -115,16 +133,7 @@ static void scale_line_coarse(gl_bitmap_scaler *obj, unsigned char *outputptr, c
 	int scalerest = 0;
 	unsigned int bytesPerPixel = inputBytesPerPixel(obj);
 	
-	void (* copy_pixel_func) (unsigned char *outputptr, const unsigned char *inputptr);
-	
-	switch (obj->data.inputType) {
-		case gl_bitmap_scaler_input_type_rgb:
-			copy_pixel_func = &copy_pixel_rgb_to_rgba;
-			break;
-		case gl_bitmap_scaler_input_type_rgba:
-			copy_pixel_func = &copy_pixel_rgba_to_rgba;
-			break;
-	}
+	copy_pixel_func *pixel_func = copy_pixel_func_for_type(obj->data.inputType);
 	
 	while (current_x_in < obj->data.inputWidth) {
 		scalerest += obj->data.outputWidth;
@@ -152,16 +161,7 @@ static void scale_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputptr, c
 	
 	unsigned int bytesPerPixel = inputBytesPerPixel(obj);
 	
-	void (* copy_pixel_func) (unsigned char *outputptr, const unsigned char *inputptr);
-	
-	switch (obj->data.inputType) {
-		case gl_bitmap_scaler_input_type_rgb:
-			copy_pixel_func = &copy_pixel_rgb_to_rgba;
-			break;
-		case gl_bitmap_scaler_input_type_rgba:
-			copy_pixel_func = &copy_pixel_rgba_to_rgba;
-			break;
-	}
+	copy_pixel_func *pixel_func = copy_pixel_func_for_type(obj->data.inputType);
 	
 	while (current_x_in < obj->data.inputWidth) {
 		remaining_contribution = obj->data.outputWidth;
@@ -170,7 +170,7 @@ static void scale_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputptr, c
 			if (possible_contribution <= remaining_contribution) {
 				contribution = possible_contribution;
 				if (contribution == obj->data.inputWidth) { // if (!scalerest)?
-					copy_pixel_func(outputptr, inputptr);
+					pixel_func(outputptr, inputptr);
 				} else {
 					x_total[0] += contribution * inputptr[0];
 					x_total[1] += contribution * inputptr[1];
@@ -216,16 +216,7 @@ static void scale_line_smooth_fast(gl_bitmap_scaler *obj, unsigned char *outputp
 	
 	unsigned int bytesPerPixel = inputBytesPerPixel(obj);
 	
-	void (* copy_pixel_func) (unsigned char *outputptr, const unsigned char *inputptr);
-	
-	switch (obj->data.inputType) {
-		case gl_bitmap_scaler_input_type_rgb:
-			copy_pixel_func = &copy_pixel_rgb_to_rgba;
-			break;
-		case gl_bitmap_scaler_input_type_rgba:
-			copy_pixel_func = &copy_pixel_rgba_to_rgba;
-			break;
-	}
+	copy_pixel_func *pixel_func = copy_pixel_func_for_type(obj->data.inputType);
 	
 	while (numpixels-- > 0) {
 		if ((accumulated_error > mid) && (input_x < obj->data.inputWidth)) {
@@ -234,7 +225,7 @@ static void scale_line_smooth_fast(gl_bitmap_scaler *obj, unsigned char *outputp
 			outputptr[2] = average_channel(inputptr[bytesPerPixel + 2], inputptr[2]);
 			outputptr[3] = 255;
 		} else {
-			copy_pixel_func(outputptr, inputptr);
+			pixel_func(outputptr, inputptr);
 		}
 		
 		outputptr += 4;
@@ -275,5 +266,76 @@ static void add_line_coarse(gl_bitmap_scaler *obj, unsigned char *outputbuf, con
 		
 		obj->data._current_y_out++;
 		obj->data._scaleRest -= obj->data.inputHeight;
+	}
+}
+
+static void add_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsigned char *inputbuf)
+{
+	scale_line_func *line_func = scale_line_func_for_type(obj->data.horizontalType);
+
+	unsigned int contribution;
+	unsigned int possible_contribution;
+	unsigned int remaining_contribution = obj->data.outputHeight;
+	
+	unsigned char *outputptr;
+	const unsigned char *inputptr;
+	
+	copy_pixel_func *pixel_func = copy_pixel_func_for_type(obj->data.inputType);
+	
+	do {
+		possible_contribution = obj->data.inputHeight - obj->data._scaleRest;
+		if (possible_contribution <= remaining_contribution) {
+			contribution = possible_contribution;
+		} else {
+			contribution = remaining_contribution;
+		}
+		
+		outputptr = outputbuf + 4 * obj->data.outputWidth * obj->data._current_y_out;
+		inputptr = inputbuf;
+		
+		line_func(obj, outputptr, inputptr);
+		
+		if (contribution != remaining_contribution) {
+			if (contribution != obj->data.inputHeight) {
+				for (counter = 0; counter < obj->data.outputWidth; counter++) {
+					unsigned int offset = counter * 4;
+					obj->data._yContributions[offset] += outputptr[offset] * contribution;
+					obj->data._yContributions[offset + 1] += outputptr[offset + 1] * contribution;
+					obj->data._yContributions[offset + 2] += outputptr[offset + 2] * contribution;
+					outputptr[offset] = obj->data._yContributions[offset] / obj->data.inputHeight;
+					outputptr[offset + 1] = obj->data._yContributions[offset + 1] / obj->data.inputHeight;
+					outputptr[offset + 2] = obj->data._yContributions[offset + 2] / obj->data.inputHeight;
+					outputptr[offset + 3] = 255;
+				}
+			}
+			memset(obj->data._yContributions, 0, obj->data.outputWidth * 4 * sizeof(unsigned int));
+			obj->data._current_y_out++;
+			remaining_contribution -= contribution;
+			obj->data._scaleRest = 0;
+			continue;
+		} else {
+			for (counter = 0; counter < obj->data.outputWidth; counter++) {
+				unsigned int offset = counter * 4;
+				obj->data.yContributions[offset] += contribution * outputptr[offset];
+				obj->data.yContributions[offset + 1] += contribution * outputptr[offset + 1];
+				obj->data.yContributions[offset + 2] += contribution * outputptr[offset + 2];
+			}
+			obj->data._scaleRest = remaining_contribution;
+		}
+	} while (1);
+	
+	assert (obj->data.current_y_out < obj->data.outputHeight);
+}
+
+static void add_line(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsigned char *inputbuf)
+{
+	switch (obj->data.verticalType) {
+		case gl_bitmap_scaler_type_coarse:
+			add_line_coarse(obj, outputbuf, inputbuf);
+			break;
+		case gl_bitmap_scaler_type_smooth:
+			add_line_smooth(obj, outputbuf, inputbuf);
+			break;
+		case gl_bitmap_scaler_type_bresenham:
 	}
 }

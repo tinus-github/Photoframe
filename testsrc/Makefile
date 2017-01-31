@@ -251,6 +251,11 @@ images/loadexif.o: images/loadexif.c images/loadexif.h images/loadimage.h
 	-c images/loadexif.c -o images/loadexif.o \
 	-Wno-deprecated-declarations $(OPTFLAGS)
 
+images/gl-bitmap-scaler.o: images/gl-bitmap-scaler.c images/gl-bitmap-scaler.h infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-c images/gl-bitmap-scaler.c -o images/gl-bitmap-scaler.o \
+	$(OPTFLAGS)
+
 decodejpeg2rgb: decodejpeg2rgb.o
 	cc -o decodejpeg2rgb -Wl,--whole-archive decodejpeg2rgb.o -L/opt/vc/lib/ \
 	-lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \

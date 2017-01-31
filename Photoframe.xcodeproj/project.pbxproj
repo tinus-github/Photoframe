@@ -245,6 +245,8 @@
 		0D69BD721C4EA0E300A10282 /* trein.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = trein.jpg; sourceTree = "<group>"; };
 		0D69BD751C4EA17900A10282 /* image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = image.c; sourceTree = "<group>"; };
 		0D69BD771C4EA17900A10282 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		0D6DBB081E40E0BA00F05BAC /* gl-bitmap-scaler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-bitmap-scaler.c"; sourceTree = "<group>"; };
+		0D6DBB091E40E0BA00F05BAC /* gl-bitmap-scaler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-bitmap-scaler.h"; sourceTree = "<group>"; };
 		0D72ED0A1E291B06001B6839 /* gl-workqueue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-workqueue.c"; sourceTree = "<group>"; };
 		0D72ED0B1E291B06001B6839 /* gl-workqueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-workqueue.h"; sourceTree = "<group>"; };
 		0D72ED0C1E2923ED001B6839 /* gl-workqueue-job.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-workqueue-job.c"; sourceTree = "<group>"; };
@@ -639,6 +641,8 @@
 				0D2B2FEE1C9073AA0063393E /* loadimage.h */,
 				0D2B2FEF1C90DE7F0063393E /* loadexif.c */,
 				0D2B2FF01C90DE7F0063393E /* loadexif.h */,
+				0D6DBB081E40E0BA00F05BAC /* gl-bitmap-scaler.c */,
+				0D6DBB091E40E0BA00F05BAC /* gl-bitmap-scaler.h */,
 			);
 			path = images;
 			sourceTree = "<group>";

@@ -2,7 +2,7 @@
 
 OPTFLAGS = -O3 -I$(CURDIR)
 
-OBJECTS = image.o loadimage.o loadexif.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
+OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
 	  gl-container.o gl-container-2d.o gl-tiled-image.o gl-renderloop.o gl-renderloop-member.o egl-driver.o \
 	  gl-value-animation.o gl-value-animation-easing.o \
           labels/gl-label.o labels/gl-label-renderer.o labels/gl-label-scroller-segment.o \
@@ -10,7 +10,8 @@ OBJECTS = image.o loadimage.o loadexif.o infrastructure/gl-object.o gl-texture.o
 	  infrastructure/gl-notice.o infrastructure/gl-notice-subscription.o \
 	  infrastructure/gl-workqueue.o infrastructure/gl-workqueue-job.o \
 	  gl-image.o gl-framed-shape.o slideshow/gl-slide.o slideshow/gl-slide-image.o \
-	  slideshow/gl-slideshow.o
+	  slideshow/gl-slideshow.o \
+	  images/loadimage.o images/loadexif.o
 
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	  -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
@@ -32,7 +33,7 @@ image: $(OBJECTS) $(LIBEXIF_A)
 	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS) \
 	$(LIBFREETYPE_LIBS) $(LIBHARFBUZZ_LIBS) $(PTHREAD_LIBS)
 
-image.o: image.c loadimage.h gl-texture.h gl-shape.h gl-container.h
+image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
 	 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DTARGET_POSIX \
 	 -D_LINUX -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
@@ -237,22 +238,18 @@ slideshow/gl-slideshow.o: slideshow/gl-slideshow.c slideshow/gl-slideshow.h \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c slideshow/gl-slideshow.c -o slideshow/gl-slideshow.o $(OPTFLAGS)
 
-loadimage.o: loadimage.c loadimage.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	 -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	 -ftree-vectorize -pipe -Wno-psabi \
-	 -I/opt/vc/include/ \
-	 -c loadimage.c -o loadimage.o \
-	 -Wno-deprecated-declarations $(OPTFLAGS)
+images/loadimage.o: images/loadimage.c images/loadimage.h
+	cc -g $(CFLAGS_ALL) \
+	-I/opt/vc/include/ \
+	-c images/loadimage.c -o images/loadimage.o \
+	-Wno-deprecated-declarations $(OPTFLAGS)
 
-loadexif.o: loadexif.c loadexif.h loadimage.h
-	cc -g -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	 -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
-	 -ftree-vectorize -pipe -Wno-psabi \
-	 -I/opt/vc/include/ \
-	 $(LIBEXIF_INCLUDEDIR) \
-	 -c loadexif.c -o loadexif.o \
-	 -Wno-deprecated-declarations $(OPTFLAGS)
+images/loadexif.o: images/loadexif.c images/loadexif.h images/loadimage.h
+	cc -g $(CFLAGS_ALL) \
+	-I/opt/vc/include/ \
+	$(LIBEXIF_INCLUDEDIR) \
+	-c images/loadexif.c -o images/loadexif.o \
+	-Wno-deprecated-declarations $(OPTFLAGS)
 
 decodejpeg2rgb: decodejpeg2rgb.o
 	cc -o decodejpeg2rgb -Wl,--whole-archive decodejpeg2rgb.o -L/opt/vc/lib/ \

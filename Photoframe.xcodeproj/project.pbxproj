@@ -632,6 +632,17 @@
 			);
 			sourceTree = "<group>";
 		};
+		0D2199361E40D9E9004877C3 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				0D2B2FED1C9073AA0063393E /* loadimage.c */,
+				0D2B2FEE1C9073AA0063393E /* loadimage.h */,
+				0D2B2FEF1C90DE7F0063393E /* loadexif.c */,
+				0D2B2FF01C90DE7F0063393E /* loadexif.h */,
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
 		0D2B2FF31CB443510063393E /* lib */ = {
 			isa = PBXGroup;
 			children = (
@@ -673,15 +684,12 @@
 		0D69BD731C4EA16500A10282 /* testsrc */ = {
 			isa = PBXGroup;
 			children = (
+				0D2199361E40D9E9004877C3 /* images */,
 				0D9FD15E1E2E58F600B82200 /* slideshow */,
 				0D80FE0C1E2592B7008827AA /* infrastructure */,
 				0DFBB1C91E204BF200E50758 /* labels */,
 				0D69BD751C4EA17900A10282 /* image.c */,
 				0D69BD771C4EA17900A10282 /* Makefile */,
-				0D2B2FED1C9073AA0063393E /* loadimage.c */,
-				0D2B2FEE1C9073AA0063393E /* loadimage.h */,
-				0D2B2FEF1C90DE7F0063393E /* loadexif.c */,
-				0D2B2FF01C90DE7F0063393E /* loadexif.h */,
 				0D80FE0A1E255179008827AA /* gl-bitmap.c */,
 				0D80FE0B1E255179008827AA /* gl-bitmap.h */,
 				0D8350051CE63F8200ADCDCC /* gl-texture.c */,

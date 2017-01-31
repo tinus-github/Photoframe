@@ -29,7 +29,7 @@ typedef enum {
 typedef struct gl_bitmap_scaler_funcs {
 	gl_object_funcs p;
 	void (*start) (gl_bitmap_scaler *obj);
-	void (*process_line) (gl_bitmap_scaler *obj, unsigned char *outputBuf, unsigned char *inputBuf);
+	void (*process_line) (gl_bitmap_scaler *obj, unsigned char *outputBuf, const unsigned char *inputBuf);
 	void (*end) (gl_bitmap_scaler *obj);
 } gl_bitmap_scaler_funcs;
 

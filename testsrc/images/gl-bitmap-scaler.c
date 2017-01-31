@@ -29,10 +29,12 @@ void gl_bitmap_scaler_setup()
 	gl_object *parent = gl_object_new();
 	memcpy(&gl_bitmap_scaler_funcs_global.p, parent->f, sizeof(gl_object_funcs));
 	((gl_object *)parent)->f->free((gl_object *)parent);
-	
+
+#if 0
 	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_bitmap_scaler_funcs_global;
 	gl_object_free_org_global = obj_funcs_global->free;
 	obj_funcs_global->free = &gl_bitmap_scaler_free;
+#endif
 }
 
 static void gl_bitmap_scaler_start(gl_bitmap_scaler *obj)

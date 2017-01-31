@@ -280,23 +280,17 @@ static void add_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputbuf, con
 	unsigned char *outputptr;
 	const unsigned char *inputptr;
 	
-	copy_pixel_func *pixel_func = copy_pixel_func_for_type(obj->data.inputType);
 	unsigned int counter;
 	
 	do {
-		possible_contribution = obj->data.inputHeight - obj->data._scaleRest;
-		if (possible_contribution <= remaining_contribution) {
-			contribution = possible_contribution;
-		} else {
-			contribution = remaining_contribution;
-		}
-		
 		outputptr = outputbuf + 4 * obj->data.outputWidth * obj->data._current_y_out;
 		inputptr = inputbuf;
 		
 		line_func(obj, outputptr, inputptr);
 		
-		if (contribution != remaining_contribution) {
+		possible_contribution = obj->data.inputHeight - obj->data._scaleRest;
+		if (possible_contribution <= remaining_contribution) {
+			contribution = possible_contribution;
 			if (contribution != obj->data.inputHeight) {
 				for (counter = 0; counter < obj->data.outputWidth; counter++) {
 					unsigned int offset = counter * 4;
@@ -315,13 +309,16 @@ static void add_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputbuf, con
 			obj->data._scaleRest = 0;
 			continue;
 		} else {
+			contribution = remaining_contribution;
+
 			for (counter = 0; counter < obj->data.outputWidth; counter++) {
 				unsigned int offset = counter * 4;
 				obj->data._yContributions[offset] += contribution * outputptr[offset];
 				obj->data._yContributions[offset + 1] += contribution * outputptr[offset + 1];
 				obj->data._yContributions[offset + 2] += contribution * outputptr[offset + 2];
 			}
-			obj->data._scaleRest = remaining_contribution;
+			obj->data._scaleRest += remaining_contribution;
+			break;
 		}
 	} while (1);
 	

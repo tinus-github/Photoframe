@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 
-#include "gl-object.h"
+#include "infrastructure/gl-object.h"
 
 typedef struct gl_bitmap_scaler gl_bitmap_scaler;
 

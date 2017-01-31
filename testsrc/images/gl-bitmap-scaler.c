@@ -9,6 +9,7 @@
 #include "gl-bitmap-scaler.h"
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 static void gl_bitmap_scaler_start(gl_bitmap_scaler *obj);
 static void gl_bitmap_scaler_end(gl_bitmap_scaler *obj);
@@ -36,9 +37,9 @@ void gl_bitmap_scaler_setup()
 
 static void gl_bitmap_scaler_start(gl_bitmap_scaler *obj)
 {
-	obj->data._scaleFactor = (float)obj->data.outputwidth / obj->data.inputwidth;
+	obj->data._scaleFactor = (float)obj->data.outputWidth / obj->data.inputWidth;
 	
-	obj->data._yContributions = calloc(4 * sizeof(unsigned int), obj->data.outputwidth);
+	obj->data._yContributions = calloc(4 * sizeof(unsigned int), obj->data.outputWidth);
 	
 	obj->data._scaleRest = 0;
 	obj->data._current_y_out = 0;
@@ -122,7 +123,7 @@ static void scale_line_coarse(gl_bitmap_scaler *obj, unsigned char *outputptr, c
 	}
 	
 	while (current_x_in < obj->data.inputWidth) {
-		scalerest += outputWidth;
+		scalerest += obj->data.outputWidth;
 		while (scalerest > obj->data.inputWidth) {
 			copy_pixel_func(outputptr + (4 * current_x_out), inputptr + (bytesPerPixel * current_x_in));
 			

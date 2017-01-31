@@ -16,7 +16,7 @@
 
 #include <bcm_host.h>
 
-#include "loadimage.h"
+#include "images/loadimage.h"
 #include "gl-texture.h"
 #include "gl-tile.h"
 #include "gl-container-2d.h"

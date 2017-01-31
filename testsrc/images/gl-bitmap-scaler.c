@@ -138,7 +138,7 @@ static void scale_line_coarse(gl_bitmap_scaler *obj, unsigned char *outputptr, c
 	while (current_x_in < obj->data.inputWidth) {
 		scalerest += obj->data.outputWidth;
 		while (scalerest > obj->data.inputWidth) {
-			copy_pixel_func(outputptr + (4 * current_x_out), inputptr + (bytesPerPixel * current_x_in));
+			pixel_func(outputptr + (4 * current_x_out), inputptr + (bytesPerPixel * current_x_in));
 			
 			current_x_out++;
 			scalerest -= obj->data.inputWidth;
@@ -281,6 +281,7 @@ static void add_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputbuf, con
 	const unsigned char *inputptr;
 	
 	copy_pixel_func *pixel_func = copy_pixel_func_for_type(obj->data.inputType);
+	unsigned int counter;
 	
 	do {
 		possible_contribution = obj->data.inputHeight - obj->data._scaleRest;
@@ -316,15 +317,15 @@ static void add_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputbuf, con
 		} else {
 			for (counter = 0; counter < obj->data.outputWidth; counter++) {
 				unsigned int offset = counter * 4;
-				obj->data.yContributions[offset] += contribution * outputptr[offset];
-				obj->data.yContributions[offset + 1] += contribution * outputptr[offset + 1];
-				obj->data.yContributions[offset + 2] += contribution * outputptr[offset + 2];
+				obj->data._yContributions[offset] += contribution * outputptr[offset];
+				obj->data._yContributions[offset + 1] += contribution * outputptr[offset + 1];
+				obj->data._yContributions[offset + 2] += contribution * outputptr[offset + 2];
 			}
 			obj->data._scaleRest = remaining_contribution;
 		}
 	} while (1);
 	
-	assert (obj->data.current_y_out < obj->data.outputHeight);
+	assert (obj->data._current_y_out < obj->data.outputHeight);
 }
 
 static void add_line(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsigned char *inputbuf)
@@ -337,5 +338,6 @@ static void add_line(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsi
 			add_line_smooth(obj, outputbuf, inputbuf);
 			break;
 		case gl_bitmap_scaler_type_bresenham:
+			;
 	}
 }

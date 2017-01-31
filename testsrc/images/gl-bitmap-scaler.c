@@ -105,7 +105,7 @@ static void copy_pixel_rgba_to_rgba(unsigned char *outputptr, const unsigned cha
 	outputptr[3] = inputptr[3];
 }
 
-typedef (scale_line_func)(gl_bitmap_scaler *obj, unsigned char *outputptr, const unsigned char *inputptr);
+typedef void (scale_line_func)(gl_bitmap_scaler *obj, unsigned char *outputptr, const unsigned char *inputptr);
 
 // horizontal scaling funcs
 static void scale_line_coarse(gl_bitmap_scaler *obj, unsigned char *outputptr, const unsigned char *inputptr)
@@ -175,7 +175,7 @@ static void scale_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputptr, c
 					x_total[0] += contribution * inputptr[0];
 					x_total[1] += contribution * inputptr[1];
 					x_total[2] += contribution * inputptr[2];
-					float inputwidthFactor = 1.0 / obj->data.inputWidth;
+					float inputWidthFactor = 1.0 / obj->data.inputWidth;
 					outputptr[0] = x_total[0] * inputWidthFactor;
 					outputptr[1] = x_total[1] * inputWidthFactor;
 					outputptr[2] = x_total[2] * inputWidthFactor;

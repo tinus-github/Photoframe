@@ -167,7 +167,7 @@ static void scale_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputptr, c
 		remaining_contribution = obj->data.outputWidth;
 		do {
 			possible_contribution = obj->data.inputWidth - scalerest;
-			if (possible_contributino <= remaining_contribution) {
+			if (possible_contribution <= remaining_contribution) {
 				contribution = possible_contribution;
 				if (contribution == obj->data.inputWidth) { // if (!scalerest)?
 					copy_pixel_func(outputptr, inputptr);

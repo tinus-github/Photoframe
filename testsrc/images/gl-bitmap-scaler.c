@@ -207,14 +207,55 @@ static void scale_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputptr, c
 	}
 }
 
+static void scale_line_smooth_fast(gl_bitmap_scaler *obj, unsigned char *outputptr, const unsigned char *inputptr)
+{
+	unsigned int numpixels = obj->data.outputWidth;
+	unsigned int mid = numpixels / 2;
+	unsigned int accumulated_error = 0;
+	unsigned int input_x = 1;
+	
+	unsigned int bytesPerPixel = inputBytesPerPixel(obj);
+	
+	void (* copy_pixel_func) (unsigned char *outputptr, const unsigned char *inputptr);
+	
+	switch (obj->data.inputType) {
+		case gl_bitmap_scaler_input_type_rgb:
+			copy_pixel_func = &copy_pixel_rgb_to_rgba;
+			break;
+		case gl_bitmap_scaler_input_type_rgba:
+			copy_pixel_func = &copy_pixel_rgba_to_rgba;
+			break;
+	}
+	
+	while (numpixels-- > 0) {
+		if ((accumulated_error > mid) && (input_x < obj->data.inputWidth)) {
+			outputptr[0] = average_channel(inputptr[bytesPerPixel], inputptr[0]);
+			outputptr[1] = average_channel(inputptr[bytesPerPixel + 1], inputptr[1]);
+			outputptr[2] = average_channel(inputptr[bytesPerPixel + 2], inputptr[2]);
+			outputptr[3] = 255;
+		} else {
+			copy_pixel_func(outputptr, inputptr);
+		}
+		
+		outputptr += 4;
+		
+		accumulated_error += obj->data.inputWidth;
+		unsigned int steps = accumulated_error / obj->data.outputWidth;
+		accumulated_error -= steps * obj->data.outputWidth;
+		inputptr += bytesPerPixel*steps;
+		input_x += steps;
+	}
+}
+
 static scale_line_func *scale_line_func_for_type(gl_bitmap_scaler_type t)
 {
 	switch (t) {
 		case gl_bitmap_scaler_type_coarse:
 			return &scale_line_coarse;
 		case gl_bitmap_scaler_type_smooth:
-		case gl_bitmap_scaler_type_bresenham:
 			return &scale_line_smooth;
+		case gl_bitmap_scaler_type_bresenham:
+			return &scale_line_smooth_fast;
 	}
 	return NULL;
 }

@@ -222,7 +222,7 @@ static scale_line_func *scale_line_func_for_type(gl_bitmap_scaler_type t)
 // vertical scaling funcs
 static void add_line_coarse(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsigned char *inputbuf)
 {
-	scale_line_func *line_func = scale_line_func_for_type(obj->data.verticalType);
+	scale_line_func *line_func = scale_line_func_for_type(obj->data.horizontalType);
 	
 	obj->data._scaleRest += obj->data.outputHeight;
 

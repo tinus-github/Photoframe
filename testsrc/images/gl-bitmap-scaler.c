@@ -320,9 +320,7 @@ static void add_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputbuf, con
 			obj->data._scaleRest += remaining_contribution;
 			break;
 		}
-	} while (1);
-	
-	assert (obj->data._current_y_out < obj->data.outputHeight);
+	} while (obj->data._current_y_out < obj->data.outputHeight); // avoid running outside the buffer
 }
 
 static void add_line(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsigned char *inputbuf)

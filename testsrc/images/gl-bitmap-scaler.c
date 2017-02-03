@@ -219,7 +219,7 @@ static void scale_line_smooth_fast(gl_bitmap_scaler *obj, unsigned char *outputp
 	copy_pixel_func *pixel_func = copy_pixel_func_for_type(obj->data.inputType);
 	
 	while (numpixels-- > 0) {
-		if ((accumulated_error > mid) && (input_x < obj->data.inputWidth)) {
+		if ((accumulated_error > mid) && (input_x < (obj->data.inputWidth - 1))) {
 			outputptr[0] = average_channel(inputptr[bytesPerPixel], inputptr[0]);
 			outputptr[1] = average_channel(inputptr[bytesPerPixel + 1], inputptr[1]);
 			outputptr[2] = average_channel(inputptr[bytesPerPixel + 2], inputptr[2]);

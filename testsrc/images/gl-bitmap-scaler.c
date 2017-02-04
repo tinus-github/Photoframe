@@ -52,7 +52,7 @@ static void gl_bitmap_scaler_start(gl_bitmap_scaler *obj)
 		case gl_bitmap_scaler_type_smooth:
 			obj->data._yContributions = calloc(4 * sizeof(unsigned int), obj->data.outputWidth);
 			break;
-		case gl_bitmap_scalar_type_bresenham:
+		case gl_bitmap_scaler_type_bresenham:
 			add_line_smooth_fast_prepare(obj);
 			break;
 	}
@@ -347,7 +347,7 @@ static void add_line_smooth_fast(gl_bitmap_scaler *obj, unsigned char *outputbuf
 	scale_line_func *line_func = scale_line_func_for_type(obj->data.horizontalType);
 	
 	while (obj->data._current_y_out < obj->data.outputHeight) {
-		wanted_line = obj->data._y_used_lines[obj->data._current_y_out];
+		wanted_line = obj->data._yUsedLines[obj->data._current_y_out];
 		want_combine = !!(wanted_line & 0x80000000);
 		wanted_line &= 0x3fffffff;
 		
@@ -406,7 +406,7 @@ static void add_line_smooth_fast_prepare(gl_bitmap_scaler *obj)
 		if ((accumulated_error > mid) && (current_y < (obj->data.outputHeight - 1))) {
 			obj->data._yUsedLines[counter] |= 0x80000000;
 		}
-		accumulated_error == obj->data.inputHeight;
+		accumulated_error += obj->data.inputHeight;
 		while (accumulated_error >= obj->data.outputHeight) {
 			accumulated_error -= obj->data.outputHeight;
 			current_y++;

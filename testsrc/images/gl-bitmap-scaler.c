@@ -14,6 +14,8 @@
 static void gl_bitmap_scaler_start(gl_bitmap_scaler *obj);
 static void gl_bitmap_scaler_end(gl_bitmap_scaler *obj);
 
+static void gl_bitmap_scaler_free(gl_object *obj);
+
 static void add_line(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsigned char *inputbuf);
 static void add_line_smooth_fast_prepare(gl_bitmap_scaler *obj);
 
@@ -31,11 +33,9 @@ void gl_bitmap_scaler_setup()
 	memcpy(&gl_bitmap_scaler_funcs_global.p, parent->f, sizeof(gl_object_funcs));
 	((gl_object *)parent)->f->free((gl_object *)parent);
 
-#if 0
 	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_bitmap_scaler_funcs_global;
 	gl_object_free_org_global = obj_funcs_global->free;
 	obj_funcs_global->free = &gl_bitmap_scaler_free;
-#endif
 }
 
 static void gl_bitmap_scaler_start(gl_bitmap_scaler *obj)
@@ -56,6 +56,7 @@ static void gl_bitmap_scaler_start(gl_bitmap_scaler *obj)
 			add_line_smooth_fast_prepare(obj);
 			break;
 	}
+	obj->data._isRunning = 1;
 }
 
 static void gl_bitmap_scaler_end(gl_bitmap_scaler *obj)
@@ -68,6 +69,8 @@ static void gl_bitmap_scaler_end(gl_bitmap_scaler *obj)
 	obj->data._lastLine = NULL;
 	free(obj->data._combinedLine);
 	obj->data._combinedLine = NULL;
+	
+	obj->data._isRunning = 0;
 }
 
 gl_bitmap_scaler *gl_bitmap_scaler_init(gl_bitmap_scaler *obj)
@@ -428,4 +431,14 @@ static void add_line(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsi
 			add_line_smooth_fast(obj, outputbuf, inputbuf);
 			break;
 	}
+}
+
+static void gl_bitmap_scaler_free(gl_object *obj_obj)
+{
+	gl_bitmap_scaler *obj = (gl_bitmap_scaler *)obj_obj;
+	
+	if (obj->data._isRunning) {
+		obj->f->end(obj);
+	}
+	gl_object_free_org_global(obj_obj);
 }

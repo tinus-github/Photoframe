@@ -48,7 +48,11 @@ typedef struct gl_bitmap_scaler_data {
 	
 	float _scaleFactor;
 	unsigned int *_yContributions;
+	unsigned int *_yUsedLines;
+	unsigned char *_lastLine;
+	unsigned char *_combinedLine;
 	unsigned int _current_y_out;
+	unsigned int _current_y_in;
 	unsigned int _scaleRest;
 } gl_bitmap_scaler_data;
 

@@ -15,6 +15,7 @@ static void gl_bitmap_scaler_start(gl_bitmap_scaler *obj);
 static void gl_bitmap_scaler_end(gl_bitmap_scaler *obj);
 
 static void add_line(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsigned char *inputbuf);
+static void add_line_smooth_fast_prepare(gl_bitmap_scaler *obj);
 
 static struct gl_bitmap_scaler_funcs gl_bitmap_scaler_funcs_global = {
 	.start = &gl_bitmap_scaler_start,
@@ -43,13 +44,17 @@ static void gl_bitmap_scaler_start(gl_bitmap_scaler *obj)
 	
 	obj->data._scaleRest = 0;
 	obj->data._current_y_out = 0;
+	obj->data._current_y_in = 0;
 	switch (obj->data.verticalType) {
 		case gl_bitmap_scaler_type_coarse:
 			obj->data._yContributions = NULL;
 			break;
 		case gl_bitmap_scaler_type_smooth:
-		case gl_bitmap_scaler_type_bresenham:
 			obj->data._yContributions = calloc(4 * sizeof(unsigned int), obj->data.outputWidth);
+			break;
+		case gl_bitmap_scalar_type_bresenham:
+			add_line_smooth_fast_prepare(obj);
+			break;
 	}
 }
 
@@ -57,6 +62,12 @@ static void gl_bitmap_scaler_end(gl_bitmap_scaler *obj)
 {
 	free(obj->data._yContributions);
 	obj->data._yContributions = NULL;
+	free(obj->data._yUsedLines);
+	obj->data._yUsedLines = NULL;
+	free(obj->data._lastLine);
+	obj->data._lastLine = NULL;
+	free(obj->data._combinedLine);
+	obj->data._combinedLine = NULL;
 }
 
 gl_bitmap_scaler *gl_bitmap_scaler_init(gl_bitmap_scaler *obj)
@@ -323,6 +334,86 @@ static void add_line_smooth(gl_bitmap_scaler *obj, unsigned char *outputbuf, con
 	} while (obj->data._current_y_out < obj->data.outputHeight); // avoid running outside the buffer
 }
 
+static void add_line_smooth_fast(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsigned char *inputbuf)
+{
+	unsigned int wanted_line;
+	int want_combine;
+	unsigned int counter;
+	unsigned int offset;
+	
+	unsigned char *outputptr;
+	const unsigned char *inputptr = inputbuf;
+	
+	scale_line_func *line_func = scale_line_func_for_type(obj->data.horizontalType);
+	
+	while (obj->data._current_y_out < obj->data.outputHeight) {
+		wanted_line = obj->data._y_used_lines[obj->data._current_y_out];
+		want_combine = !!(wanted_line & 0x80000000);
+		wanted_line &= 0x3fffffff;
+		
+		outputptr = outputbuf + 4 * obj->data.outputWidth * obj->data._current_y_out;
+		
+		if (!want_combine) {
+			if (wanted_line == obj->data._current_y_in) {
+				line_func(obj, outputptr, inputptr);
+				obj->data._current_y_out++;
+				continue;
+			} else {
+				assert (wanted_line > obj->data._current_y_in);
+				break;
+			}
+		} else {
+			if (wanted_line == obj->data._current_y_in) {
+				line_func(obj, obj->data._lastLine, inputptr);
+				break;
+			} else if (wanted_line == (obj->data._current_y_in - 1)) {
+				line_func(obj, obj->data._combinedLine, inputptr);
+				
+				for (counter = 0, offset = 0; counter < obj->data.outputWidth; counter++, offset += 4) {
+					outputptr[offset] = ((unsigned int)obj->data._lastLine[offset] +
+							     obj->data._combinedLine[offset] / 2);
+					outputptr[offset+1] = ((unsigned int)obj->data._lastLine[offset+1] +
+							       obj->data._combinedLine[offset+1] / 2);
+					outputptr[offset+2] = ((unsigned int)obj->data._lastLine[offset+2] +
+							       obj->data._combinedLine[offset+2] / 2);
+				}
+				
+				obj->data._current_y_out++;
+				continue;
+			} else {
+				assert (wanted_line > obj->data._current_y_in);
+				break;
+			}
+		}
+	}
+	obj->data._current_y_in++;
+}
+
+static void add_line_smooth_fast_prepare(gl_bitmap_scaler *obj)
+{
+	unsigned int accumulated_error = 0;
+	unsigned int mid = obj->data.outputHeight / 2;
+	unsigned int current_y = 0;
+	unsigned int counter;
+	
+	obj->data._yContributions = calloc(4 * sizeof(unsigned int), obj->data.outputWidth);
+	obj->data._yUsedLines = calloc(sizeof(unsigned int), obj->data.outputHeight);
+	obj->data._lastLine = calloc(sizeof(unsigned char) * 4, obj->data.outputWidth);
+	obj->data._combinedLine = calloc(sizeof(unsigned char) * 4, obj->data.outputWidth);
+	
+	for (counter = 0; counter < obj->data.outputHeight; counter++) {
+		obj->data._yUsedLines[counter] = current_y;
+		if ((accumulated_error > mid) && (current_y < (obj->data.outputHeight - 1))) {
+			obj->data._yUsedLines[counter] |= 0x80000000;
+		}
+		accumulated_error == obj->data.inputHeight;
+		while (accumulated_error >= obj->data.outputHeight) {
+			accumulated_error -= obj->data.outputHeight;
+			current_y++;
+		}
+	}
+}
+
 static void add_line(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsigned char *inputbuf)
 {
 	switch (obj->data.verticalType) {
@@ -333,6 +424,7 @@ static void add_line(gl_bitmap_scaler *obj, unsigned char *outputbuf, const unsi
 			add_line_smooth(obj, outputbuf, inputbuf);
 			break;
 		case gl_bitmap_scaler_type_bresenham:
-			;
+			add_line_smooth_fast(obj, outputbuf, inputbuf);
+			break;
 	}
 }

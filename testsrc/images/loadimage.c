@@ -456,7 +456,7 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	
 	float scalefactor, scalefactortmp;
 	
-	gl_bitmap_scaler *scaler = NULL
+	gl_bitmap_scaler *scaler = NULL;
 	
 	cinfo.err = jpeg_std_error(&jerr.org);
 	jerr.org.error_exit = handle_decode_error;

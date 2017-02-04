@@ -8,6 +8,7 @@
 
 #include "images/loadimage.h"
 #include "images/loadexif.h"
+#include "images/gl-bitmap-scaler.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -454,20 +455,21 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	unsigned char *outputcurrentline;
 	
 	float scalefactor, scalefactortmp;
-	void *scaledata = NULL;
+	
+	gl_bitmap_scaler *scaler = NULL
 	
 	cinfo.err = jpeg_std_error(&jerr.org);
 	jerr.org.error_exit = handle_decode_error;
 	if (setjmp(jerr.setjmp_buffer)) {
 		/* Something went wrong, abort! */
 		jpeg_destroy_decompress(&cinfo);
-		if (scaledata) {
-			done_upscale(scaledata);
-		}
 		fclose(f);
 		free(buffer);
 		free(scanbuf);
 		free(row_pointers);
+		if (scaler) {
+			((gl_object *)scaler)->f->unref((gl_object *)scaler);
+		}
 		return NULL;
 	}
 	
@@ -512,9 +514,20 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	if (scalefactortmp < scalefactor) {
 		scalefactor = scalefactortmp;
 	}
+
+	scaler = gl_bitmap_scaler_new();
 	
-	scaledata = setup_upscale();
+	scaler->data.inputWidth = cinfo.image_width;
+	scaler->data.inputHeight = cinfo.image_height;
+	scaler->data.outputWidth = cinfo.output_width * scalefactor;
+	scaler->data.outputHeight = cinfo.output_height * scalefactor;
+	scaler->data.inputType = gl_bitmap_scaler_input_type_rgb;
 	
+	scaler->data.horizontalType = gl_bitmap_scaler_type_bresenham;
+	scaler->data.verticalType = gl_bitmap_scaler_type_bresenham;
+	
+	scaler->f->start(scaler);
+
 	*width = cinfo.output_width * scalefactor;
 	*height = cinfo.output_height * scalefactor;
 	
@@ -534,8 +547,7 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 			scanbufcurrentline = scanbuf;
 		}
 		if (scalefactor != 1.0f) {
-			upscaleLineSmoothFast(scanbufcurrentline, cinfo.output_width, cinfo.output_height,
-					      buffer, *width, *height, lines_in_buf, scaledata);
+			scaler->f->process_line(scaler, buffer, scanbufcurrentline);
 		} else {
 			inputoffset = outputoffset = 0;
 			outputcurrentline = buffer + 4  * (lines_in_buf * cinfo.output_width);
@@ -552,7 +564,8 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 		lines_in_buf++;
 	}
 	
-	done_upscale(scaledata);
+	scaler->f->end(scaler);
+	((gl_object *)scaler)->f->unref((gl_object *)scaler);
 	
 	jpeg_finish_decompress(&cinfo);
 	jpeg_destroy_decompress(&cinfo);

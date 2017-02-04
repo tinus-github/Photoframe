@@ -376,6 +376,7 @@ static void add_line_smooth_fast(gl_bitmap_scaler *obj, unsigned char *outputbuf
 							       obj->data._combinedLine[offset+1] / 2);
 					outputptr[offset+2] = ((unsigned int)obj->data._lastLine[offset+2] +
 							       obj->data._combinedLine[offset+2] / 2);
+					outputptr[offset+3] = 255;
 				}
 				
 				obj->data._current_y_out++;

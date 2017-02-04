@@ -370,12 +370,12 @@ static void add_line_smooth_fast(gl_bitmap_scaler *obj, unsigned char *outputbuf
 				line_func(obj, obj->data._combinedLine, inputptr);
 				
 				for (counter = 0, offset = 0; counter < obj->data.outputWidth; counter++, offset += 4) {
-					outputptr[offset] = ((unsigned int)obj->data._lastLine[offset] +
-							     obj->data._combinedLine[offset] / 2);
-					outputptr[offset+1] = ((unsigned int)obj->data._lastLine[offset+1] +
-							       obj->data._combinedLine[offset+1] / 2);
-					outputptr[offset+2] = ((unsigned int)obj->data._lastLine[offset+2] +
-							       obj->data._combinedLine[offset+2] / 2);
+					outputptr[offset] = average_channel(obj->data._lastLine[offset],
+									    obj->data._combinedLine[offset]);
+					outputptr[offset+1] = average_channel(obj->data._lastLine[offset+1],
+									    obj->data._combinedLine[offset+1]);
+					outputptr[offset+2] = average_channel(obj->data._lastLine[offset+2],
+									      obj->data._combinedLine[offset+2]);
 					outputptr[offset+3] = 255;
 				}
 				

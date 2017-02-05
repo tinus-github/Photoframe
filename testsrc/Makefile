@@ -10,7 +10,7 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  infrastructure/gl-notice.o infrastructure/gl-notice-subscription.o \
 	  infrastructure/gl-workqueue.o infrastructure/gl-workqueue-job.o \
 	  gl-image.o gl-framed-shape.o slideshow/gl-slide.o slideshow/gl-slide-image.o \
-	  slideshow/gl-slideshow.o \
+	  slideshow/gl-slideshow.o common-driver.o \
 	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o
 
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
@@ -58,6 +58,19 @@ egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-rende
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c egl-driver.c -o egl-driver.o \
+	$(OPTFLAGS)
+
+common-driver.o: common-driver.c common-driver.h gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h \
+		gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h egl-driver.h gl-value-animation.h labels/gl-label.h \
+		labels/gl-label-scroller-segment.h gl-rectangle.h gl-bitmap.h \
+		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h \
+		infrastructure/gl-workqueue.h infrastructure/gl-workqueue-job.h \
+		gl-image.h gl-framed-shape.h slideshow/gl-slide.h slideshow/gl-slide-image.h \
+		slideshow/gl-slideshow.h images/gl-bitmap-scaler.h
+	cc -g $(CFLAGS_ALL) \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-c common-driver.c -o common-driver.o \
 	$(OPTFLAGS)
 
 gl-texture.o: gl-texture.c gl-texture.h infrastructure/gl-object.h gl-bitmap.h

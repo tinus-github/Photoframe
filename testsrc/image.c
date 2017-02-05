@@ -29,6 +29,10 @@
 
 #include "../lib/linmath/linmath.h"
 
+#ifdef __APPLE__
+#include "macosx/GLWindow-C.h"
+#endif
+
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0
@@ -67,9 +71,14 @@ int main(int argc, char *argv[])
 	}
 	
 	num_files = argc-1;
+
+	gl_objects_setup();
 	
-	egl_driver_setup();
+#ifdef __APPLE__
+	startCocoa(argc, (const char**)argv);
+#else
 	egl_driver_init();
+#endif
 	
 	gl_slideshow *slideshow = gl_slideshow_new();
 	slideshow->data.getNextSlideCallback = &get_next_slide;

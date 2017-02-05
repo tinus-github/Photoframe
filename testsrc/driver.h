@@ -17,5 +17,6 @@
 
 #endif
 
+#include "common-driver.h"
 
 #endif /* driver_h */

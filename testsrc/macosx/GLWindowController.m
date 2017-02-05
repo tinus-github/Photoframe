@@ -6,7 +6,7 @@
 //
 //
 
-#import "GLWindow.h"
+#import "GLWindowController.h"
 
 #import "error.h"
 
@@ -103,8 +103,8 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 - (void)createOpenGLResources
 {
 	[[[self view] openGLContext] makeCurrentContext];
-	[self loadShader];
-	[self loadBufferData];
+//	[self loadShader];
+//	[self loadBufferData];
 }
 
 - (void)loadShader
@@ -298,7 +298,8 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 	GetError();
 	glClear(GL_COLOR_BUFFER_BIT);
 	GetError();
-	
+
+#if 0
 	glUseProgram(shaderProgram);
 	GetError();
 	
@@ -309,7 +310,7 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 	
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	GetError();
-	
+#endif
 	[[[self view] openGLContext] flushBuffer];
 }
 

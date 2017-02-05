@@ -18,7 +18,12 @@
 #include "infrastructure/gl-object.h"
 #include "gl-tile.h"
 
+#ifdef __APPLE__
+#define FONT_FILE "/Library/Fonts/Arial Unicode.ttf"
+#else
 #define FONT_FILE "/home/pi/lib/share/font/DejaVuSerif.ttf"
+#endif
+
 #define LABEL_HEIGHT 64
 #define LABEL_BASELINE LABEL_HEIGHT
 

@@ -380,6 +380,8 @@ static void gl_texture_apply_shader_draw(gl_texture *obj, gl_texture_manipulatio
 		case gl_texture_program_stencil_alpha:
 			program = &gl_stencil_alpha_program;
 			break;
+		default:
+			program = NULL;
 	}
 	
 	GLfloat vVertices[] = { -1.0f, -1.0f, 0.0f,  // Position 0

@@ -10,7 +10,9 @@
 #define common_driver_h
 
 #include <stdio.h>
+#include "gl-includes.h"
 
 void gl_objects_setup();
+GLuint driver_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc );
 
 #endif /* common_driver_h */

@@ -64,7 +64,7 @@ static int gl_rectangle_load_program() {
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object
-	gl_rgba_program.program = egl_driver_load_program ( vShaderStr, fShaderStr );
+	gl_rgba_program.program = driver_load_program ( vShaderStr, fShaderStr );
 	gl_rectangle_load_program_attribute_locations(&gl_rgba_program);
 	
 	gl_rectangle_program_loaded = 1;

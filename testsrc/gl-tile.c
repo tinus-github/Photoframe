@@ -118,19 +118,19 @@ static int gl_tile_load_program() {
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object
-	gl_rgba_program.program = egl_driver_load_program ( vShaderStr, fShaderStr );
+	gl_rgba_program.program = driver_load_program ( vShaderStr, fShaderStr );
 	gl_tile_load_program_attribute_locations(&gl_rgba_program);
 	
 	// Monochrome
-	gl_mono_program.program = egl_driver_load_program ( vShaderStr, fShaderBWStr );
+	gl_mono_program.program = driver_load_program ( vShaderStr, fShaderBWStr );
 	gl_tile_load_program_attribute_locations(&gl_mono_program);
 
 	// Alpha
-	gl_alpha_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaStr );
+	gl_alpha_program.program = driver_load_program ( vShaderStr, fShaderAlphaStr );
 	gl_tile_load_program_attribute_locations(&gl_alpha_program);
 
 	// Flip (testing)
-	gl_flip_program.program = egl_driver_load_program ( vShaderStr, fShaderFlipAlphaStr );
+	gl_flip_program.program = driver_load_program ( vShaderStr, fShaderFlipAlphaStr );
 	gl_tile_load_program_attribute_locations(&gl_flip_program);
 	
 	gl_tile_program_loaded = 1;

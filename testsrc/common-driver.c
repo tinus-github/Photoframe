@@ -35,6 +35,13 @@
 #include "slideshow/gl-slideshow.h"
 #include "images/gl-bitmap-scaler.h"
 
+#ifdef __APPLE__
+
+#else
+#include "egl-driver.h"
+#endif
+
+
 void gl_objects_setup()
 {
 	gl_texture_setup();
@@ -64,3 +71,13 @@ void gl_objects_setup()
 	gl_slideshow_setup();
 	gl_bitmap_scaler_setup();
 }
+
+GLuint driver_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
+{
+#ifdef __APPLE__
+	return 0;
+#else
+	return egl_driver_load_program(vertShaderSrc, fragShaderSrc);
+#endif
+}
+

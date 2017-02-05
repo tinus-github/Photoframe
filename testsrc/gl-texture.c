@@ -203,19 +203,19 @@ static int gl_texture_load_program() {
 	
 	// Load the shaders and get a linked program object
 	// Flip (testing)
-	gl_flip_program.program = egl_driver_load_program ( vShaderStr, fShaderFlipAlphaStr );
+	gl_flip_program.program = driver_load_program ( vShaderStr, fShaderFlipAlphaStr );
 	gl_texture_load_program_attribute_locations(&gl_flip_program);
 
 	// Blur horizontally
-	gl_blur_h_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaBlurHStr );
+	gl_blur_h_program.program = driver_load_program ( vShaderStr, fShaderAlphaBlurHStr );
 	gl_texture_load_program_attribute_locations(&gl_blur_h_program);
 	
 	// Blur vertically
-	gl_blur_v_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaBlurVStr );
+	gl_blur_v_program.program = driver_load_program ( vShaderStr, fShaderAlphaBlurVStr );
 	gl_texture_load_program_attribute_locations(&gl_blur_v_program);
 	
 	// Stencil
-	gl_stencil_alpha_program.program = egl_driver_load_program ( vShaderStr, fShaderStencilAlphaStr );
+	gl_stencil_alpha_program.program = driver_load_program ( vShaderStr, fShaderStencilAlphaStr );
 	gl_texture_load_program_attribute_locations(&gl_stencil_alpha_program);
 	
 	gl_texture_program_loaded = 1;

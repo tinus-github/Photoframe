@@ -10,11 +10,7 @@
 #include <sys/time.h>
 #include <string.h>
 
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-#include <GLES2/gl2.h>
-
-#include <bcm_host.h>
+#include "gl-includes.h"
 
 #include "images/loadimage.h"
 #include "gl-texture.h"
@@ -23,7 +19,7 @@
 #include "gl-stage.h"
 #include "gl-tiled-image.h"
 #include "gl-renderloop.h"
-#include "egl-driver.h"
+#include "driver.h"
 #include "gl-value-animation.h"
 #include "gl-value-animation-easing.h"
 #include "labels/gl-label-scroller.h"

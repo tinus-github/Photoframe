@@ -10,6 +10,8 @@
 #define FALSE 0
 
 #include "labels/gl-label-scroller.h"
+#include <stdlib.h>
+#include <string.h>
 
 static void (*gl_object_free_org_global) (gl_object *obj);
 static void gl_label_scroller_free(gl_object *obj);

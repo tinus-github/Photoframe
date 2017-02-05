@@ -8,6 +8,8 @@
 
 #include "gl-slideshow.h"
 #include "infrastructure/gl-notice-subscription.h"
+#include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 
 static void gl_slideshow_set_entrance_animation(gl_slideshow *obj, gl_value_animation *animation);

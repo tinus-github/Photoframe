@@ -9,10 +9,11 @@
 #include "gl-texture.h"
 #include "gl-renderloop-member.h"
 #include "gl-renderloop.h"
-#include "egl-driver.h"
+#include "driver.h"
 
 #include <string.h>
 #include <assert.h>
+#include <stdlib.h>
 
 static void load_image(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
 static void load_image_r(gl_texture *obj, gl_bitmap *bitmap, unsigned char *rgba_data, unsigned int width, unsigned int height);

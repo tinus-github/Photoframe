@@ -8,6 +8,9 @@
 
 #include "gl-tiled-image.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "gl-texture.h"
 #include "gl-tile.h"
 #include "../lib/linmath/linmath.h"

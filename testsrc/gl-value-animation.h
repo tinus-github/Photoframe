@@ -11,9 +11,7 @@
 
 #include <stdio.h>
 
-#include <GLES2/gl2.h>
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
+#include "gl-includes.h"
 #include <sys/time.h>
 
 #include "infrastructure/gl-object.h"

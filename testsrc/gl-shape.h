@@ -10,9 +10,7 @@
 #define gl_shape_h
 
 #include <stdio.h>
-#include <GLES2/gl2.h>
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
+#include "gl-includes.h"
 
 #include "infrastructure/gl-object.h"
 

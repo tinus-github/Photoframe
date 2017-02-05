@@ -6,8 +6,11 @@
 //
 //
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "gl-tile.h"
-#include "egl-driver.h"
+#include "driver.h"
 #include "gl-stage.h"
 #include "../lib/linmath/linmath.h"
 

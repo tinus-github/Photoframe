@@ -13,6 +13,7 @@
 #include <assert.h>
 #include <string.h>
 #include <hb-ft.h>
+#include <limits.h>
 
 #include "infrastructure/gl-object.h"
 #include "gl-tile.h"
@@ -168,7 +169,8 @@ static gl_tile *gl_label_renderer_render(gl_label_renderer *obj,
 	
 	uint32_t counter;
 	uint32_t x_ppem = face->size->metrics.x_ppem;
-	uint32_t maxwidth = ((face->bbox.xMax - face->bbox.xMin) * x_ppem) / face->units_per_EM;
+	long maxwidth_l = ((face->bbox.xMax - face->bbox.xMin) * x_ppem) / face->units_per_EM;
+	uint32_t maxwidth = (uint32_t)maxwidth_l; // INT_MAX should be enough for everyone
 	
 	int32_t minx = (windowX - maxwidth) * 64;
 	int32_t maxx = (windowX + windowWidth + maxwidth) * 64;
@@ -203,7 +205,14 @@ static void gl_label_renderer_layout(gl_label_renderer *obj)
 {
 	hb_buffer_t *buf = hb_buffer_create();
 	ssize_t text_length = strlen(obj->data.text);
-	hb_buffer_add_utf8(buf, obj->data.text, text_length, 0, text_length);
+	int text_length_int; // Harfbuzz chose the wrong type :(
+	if (text_length > INT_MAX) {
+		text_length = INT_MAX;
+		text_length_int = INT_MAX;
+	} else {
+		text_length_int = (int)text_length;
+	}
+	hb_buffer_add_utf8(buf, obj->data.text, text_length_int, 0, text_length_int);
 	hb_buffer_set_direction(buf, HB_DIRECTION_LTR);
 	hb_buffer_set_language(buf, global_rendering_data.hb_language);
 	

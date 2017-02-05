@@ -7,8 +7,11 @@
 //
 
 #include "gl-rectangle.h"
-#include "egl-driver.h"
+#include "driver.h"
 #include "gl-stage.h"
+
+#include <string.h>
+#include <stdlib.h>
 
 static void gl_rectangle_draw(gl_shape *self);
 static void gl_rectangle_set_color(gl_rectangle *obj, GLfloat r, GLfloat g, GLfloat b, GLfloat alpha);

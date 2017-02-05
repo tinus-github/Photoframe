@@ -9,6 +9,7 @@
 #include "labels/gl-label.h"
 #include <assert.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define SEGMENT_WIDTH 512
 

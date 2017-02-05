@@ -8,6 +8,8 @@
 
 #include "gl-container-2d.h"
 #include "../lib/linmath/linmath.h"
+#include <stdlib.h>
+#include <string.h>
 
 static struct gl_container_2d_funcs gl_container_2d_funcs_global = {
 //	.append_child = &gl_container_append_child

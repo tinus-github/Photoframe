@@ -29,10 +29,6 @@
 
 #include "../lib/linmath/linmath.h"
 
-#ifdef __APPLE__
-#include "macosx/GLWindow-C.h"
-#endif
-
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0

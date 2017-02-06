@@ -11,6 +11,8 @@
 
 #ifdef __APPLE__
 
+#include "macosx/GLWindow-C.h"
+
 #else
 
 #include "egl-driver.h"

@@ -243,9 +243,15 @@ static void load_image_gen_r_work(void *target, gl_renderloop_member *renderloop
 	
 	// Load the texture
 	if (obj->data.dataType != gl_texture_data_type_rgba) {
+#ifdef __APPLE__
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RED,
 			      obj->data.width, obj->data.height,
 			      0, GL_RED, GL_UNSIGNED_BYTE, obj->data.imageDataBitmap );
+#else
+		glTexImage2D ( GL_TEXTURE_2D, 0, GL_ALPHA,
+			      obj->data.width, obj->data.height,
+			      0, GL_ALPHA, GL_UNSIGNED_BYTE, obj->data.imageDataBitmap );
+#endif
 	} else {
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
 			      obj->data.width, obj->data.height,

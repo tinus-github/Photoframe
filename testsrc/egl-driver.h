@@ -21,7 +21,7 @@ typedef struct egl_driver_data {
 } egl_driver_data;
 
 void egl_driver_setup();
-egl_driver_data *egl_driver_init(void(*initFunc)())
+egl_driver_data *egl_driver_init(void(*initFunc)());
 
 GLuint egl_driver_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc );
 

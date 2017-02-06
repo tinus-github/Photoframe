@@ -37,6 +37,8 @@
 #define TRUE 1
 #define FALSE 0
 
+void slideshow_init();
+
 void image_set_alpha(void *target, void *extra_data, GLfloat value)
 {
 	gl_shape *image_shape = (gl_shape *)extra_data;
@@ -47,6 +49,7 @@ void image_set_alpha(void *target, void *extra_data, GLfloat value)
 
 static unsigned int slide_counter = 1;
 static unsigned int num_files;
+static char** filenames;
 
 gl_slide *get_next_slide(void *target, void *extra_data)
 {
@@ -71,18 +74,24 @@ int main(int argc, char *argv[])
 	}
 	
 	num_files = argc-1;
+	filenames = argv;
 
 	gl_objects_setup();
 	
 #ifdef __APPLE__
-	startCocoa(argc, (const char**)argv);
+	startCocoa(argc, (const char**)argv, &slideshow_init);
 #else
-	egl_driver_init();
+	egl_driver_init(&slideshow_init);
+	gl_renderloop_loop();
 #endif
-	
+}
+
+void slideshow_init()
+{
+
 	gl_slideshow *slideshow = gl_slideshow_new();
 	slideshow->data.getNextSlideCallback = &get_next_slide;
-	slideshow->data.callbackExtraData = argv;
+	slideshow->data.callbackExtraData = filenames;
 	
 	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
 	animation_e->data.easingType = gl_value_animation_ease_linear;
@@ -129,7 +138,5 @@ int main(int argc, char *argv[])
 	
 	((gl_slide *)slideshow)->f->enter((gl_slide *)slideshow);
 	
-	gl_renderloop_loop();
-	
-	return 0; // not reached
+	return; // not reached
 }

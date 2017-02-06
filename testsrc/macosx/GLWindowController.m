@@ -10,11 +10,17 @@
 
 #import "error.h"
 
+#include "gl-renderloop.h"
+#include "gl-stage.h"
+
 typedef struct
 {
 	Vector4 position;
 	Colour colour;
 } Vertex;
+
+static void (*initFunction)();
+static GLWindowController* mainWindowController;
 
 @interface GLWindowController ()
 
@@ -61,8 +67,10 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 
 - (void)awakeFromNib
 {
+	mainWindowController = self;
 	[self createOpenGLView];
 	[self createOpenGLResources];
+	initFunction();
 	[self createDisplayLink];
 }
 
@@ -70,7 +78,8 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 {
 	NSOpenGLPixelFormatAttribute pixelFormatAttributes[] =
 	{
-		NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
+		//NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
+		NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersionLegacy ,
 		NSOpenGLPFAColorSize    , 24                           ,
 		NSOpenGLPFAAlphaSize    , 8                            ,
 		NSOpenGLPFADoubleBuffer ,
@@ -299,6 +308,15 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 	glClear(GL_COLOR_BUFFER_BIT);
 	GetError();
 
+	GLenum framebufferStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (framebufferStatus != GL_FRAMEBUFFER_UNDEFINED) {
+		NSRect b = [[self view] bounds];
+		gl_stage *stage = gl_stage_get_global_stage();
+		stage->f->set_dimensions(stage, b.size.width, b.size.height);
+		
+		gl_renderloop_loop_once();
+	}
+	
 #if 0
 	glUseProgram(shaderProgram);
 	GetError();
@@ -328,10 +346,86 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 	[super dealloc];
 }
 
+- (GLuint)compileShaderOfType:(GLenum)type string:(const GLchar *)source
+{
+	GLuint shader;
+	
+	const GLchar *sources[2];
+	sources[0] =
+		"#version 120 \n"
+		"#define precision \n"
+		"#define mediump \n";
+	sources[1] = source;
+	
+	shader = glCreateShader(type);
+	GetError();
+	glShaderSource(shader, 2, sources, NULL);
+	GetError();
+	glCompileShader(shader);
+	GetError();
+	
+#if 1//defined(DEBUG)
+	GLint logLength;
+	
+	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
+	GetError();
+	if (logLength > 0)
+	{
+		GLchar *log = malloc((size_t)logLength);
+		glGetShaderInfoLog(shader, logLength, &logLength, log);
+		GetError();
+		NSLog(@"Shader compilation failed with error:\n%s", log);
+		free(log);
+	}
+#endif
+	
+	GLint status;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+	GetError();
+	if (0 == status)
+	{
+		glDeleteShader(shader);
+		GetError();
+		[NSException raise:kFailedToInitialiseGLException format:@"Shader compilation failed for source %s", source];
+	}
+	
+	return shader;
+}
+
+- (GLuint)loadProgram:(const GLchar *)vertexStr fragment:(const GLchar *)fragmentStr
+{
+	GLuint vertexShader;
+	GLuint fragmentShader;
+	GLuint ret;
+	
+	vertexShader   = [self compileShaderOfType:GL_VERTEX_SHADER   string:vertexStr];
+	fragmentShader = [self compileShaderOfType:GL_FRAGMENT_SHADER string:fragmentStr];
+	
+	ret = glCreateProgram();
+	GetError();
+	
+	glAttachShader(ret, vertexShader  );
+	GetError();
+	glAttachShader(ret, fragmentShader);
+	GetError();
+	
+	glLinkProgram ( ret );
+	GetError();
+	
+	//[self validateProgram:ret];
+	
+	return ret;
+}
+
 @end
 
-
-void startCocoa(int argc, const char *argv[])
+GLuint gl_driver_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
 {
+	return [mainWindowController loadProgram:vertShaderSrc fragment:fragShaderSrc];
+}
+
+void startCocoa(int argc, const char *argv[], void (*initFunc)())
+{
+	initFunction = initFunc;
 	NSApplicationMain(argc, argv);
 }

@@ -274,13 +274,15 @@ GLuint egl_driver_load_program ( const GLchar *vertShaderSrc, const GLchar *frag
 	return programObject;
 }
 
-egl_driver_data *egl_driver_init()
+egl_driver_data *egl_driver_init(void(*initFunc)())
 {
 	egl_driver_data *data = calloc(1, sizeof(egl_driver_data));
 
 	egl_driver_init_display(data);
 	
 	egl_driver_register_renderloop(data);
+	
+	initFunc();
 	
 	return data;
 }

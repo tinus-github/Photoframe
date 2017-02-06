@@ -21,4 +21,17 @@
 
 #endif
 
+#include <assert.h>
+
+static void check_gl_error()
+{
+	GLenum glError = glGetError();
+	assert (!glError);
+}
+
+static void check_gl_framebuffer()
+{
+	GLenum framebufferStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	assert (framebufferStatus == GL_FRAMEBUFFER_COMPLETE);
+}
 #endif /* gl_includes_h */

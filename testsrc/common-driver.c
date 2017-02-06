@@ -36,7 +36,7 @@
 #include "images/gl-bitmap-scaler.h"
 
 #ifdef __APPLE__
-
+#include "macosx/GLWindow-C.h"
 #else
 #include "egl-driver.h"
 #endif
@@ -75,7 +75,7 @@ void gl_objects_setup()
 GLuint driver_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
 {
 #ifdef __APPLE__
-	return 0;
+	return gl_driver_load_program(vertShaderSrc, fragShaderSrc);
 #else
 	return egl_driver_load_program(vertShaderSrc, fragShaderSrc);
 #endif

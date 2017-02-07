@@ -240,6 +240,9 @@ unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
 	png_structp png_ptr = NULL;
 	png_infop info_ptr = NULL;
 	
+	int color_type;
+	int bit_depth;
+	
 	unsigned int imageWidth;
 	unsigned int imageHeight;
 	
@@ -295,8 +298,7 @@ unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
 	background_color.blue = 0; //black
 	
 	png_read_info(png_ptr, info_ptr);
-	imageWidth = png_get_image_width(png_ptr, info_ptr);
-	imageHeight = png_get_image_width(png_ptr, info_ptr);
+	png_get_IHDR(png_ptr, info_ptr, &imageWidth, &imageHeight, &bit_depth, &color_type, NULL, NULL, NULL);
 	
 	float scalefactor = (float)wantedwidth / imageWidth;
 	float scalefactortmp = (float)wantedheight / imageHeight;
@@ -309,9 +311,19 @@ unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
 	png_set_background(png_ptr,
 			   &background_color,
 			   PNG_BACKGROUND_GAMMA_SCREEN, 0, 1);
-	png_set_strip_16(png_ptr);
-	png_set_gray_to_rgb(png_ptr);
-	png_set_palette_to_rgb(png_ptr);
+	
+	if (color_type == PNG_COLOR_TYPE_PALETTE)
+		png_set_expand(png_ptr);
+	if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+		png_set_expand(png_ptr);
+	if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+		png_set_expand(png_ptr);
+	
+	if (bit_depth == 16)
+		png_set_strip_16(png_ptr);
+	if (color_type == PNG_COLOR_TYPE_GRAY ||
+	    color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+		png_set_gray_to_rgb(png_ptr);
 	
 	ssize_t rowBytes = png_get_rowbytes(png_ptr, info_ptr);
 	row = calloc(1, rowBytes);

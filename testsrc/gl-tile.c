@@ -319,6 +319,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 		default:
 		case gl_texture_data_type_rgba:
 			program = &gl_rgba_program;
+			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			break;
 		case gl_texture_data_type_monochrome:
@@ -326,6 +327,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 			break;
 		case gl_texture_data_type_alpha:
 			program = &gl_alpha_program;
+			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			break;
 	}
@@ -370,6 +372,6 @@ static void gl_tile_draw(gl_shape *shape_self)
 	shape_self->f->compute_alpha(shape_self);
 	
 	glUniform1f(program->alphaLoc, shape_self->data.computedAlpha);
-
+	
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 }

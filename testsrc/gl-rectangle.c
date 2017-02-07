@@ -79,6 +79,8 @@ void gl_rectangle_setup()
 	
 	gl_shape_funcs *shapef = (gl_shape_funcs *)&gl_rectangle_funcs_global;
 	shapef->draw = &gl_rectangle_draw;
+	
+	((gl_object *)parent)->f->free((gl_object *)parent);
 }
 
 gl_rectangle *gl_rectangle_init(gl_rectangle *obj)

@@ -39,8 +39,6 @@ static void gl_notice_subscribe(gl_notice *obj, gl_notice_subscription *sub)
 	last_child->data.siblingR = sub;
 	sub->data.siblingR = head;
 	head->data.siblingL = sub;
-	
-	((gl_object *)sub)->f->ref((gl_object *)sub);
 }
 
 static void gl_notice_cancel_subscription(gl_notice *obj, gl_notice_subscription *sub)

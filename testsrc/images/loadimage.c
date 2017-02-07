@@ -298,7 +298,14 @@ unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
 	background_color.blue = 0; //black
 	
 	png_read_info(png_ptr, info_ptr);
-	png_get_IHDR(png_ptr, info_ptr, &imageWidth, &imageHeight, &bit_depth, &color_type, NULL, NULL, NULL);
+	
+	png_uint_32 png_height;
+	png_uint_32 png_width;
+	
+	png_get_IHDR(png_ptr, info_ptr, &png_width, &png_height, &bit_depth, &color_type, NULL, NULL, NULL);
+	
+	imageWidth = (unsigned int)png_width;
+	imageHeight = (unsigned int)png_height;
 	
 	float scalefactor = (float)wantedwidth / imageWidth;
 	float scalefactortmp = (float)wantedheight / imageHeight;

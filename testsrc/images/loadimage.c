@@ -23,6 +23,9 @@
 
 #include <setjmp.h>
 
+#include <png.h>
+#include <zlib.h>
+
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0
@@ -226,6 +229,35 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 	fclose(f);
 	
 	return buffer;
+}
+
+#define PNG_HEADER_SIZE 8
+
+unsigned char* loadPNG(char *fileName, int *width, int *height)
+{
+	FILE *f;
+	unsigned char header[PNG_HEADER_SIZE];
+	ssize_t num_read;
+	
+	f = fopen(fileName, "rb");
+	if (!f) {
+		return NULL;
+	}
+	
+	num_read = fread(header, 1, PNG_HEADER_SIZE, f);
+	if (num_read != PNG_HEADER_SIZE) {
+		// file is too short to be a PNG
+		fclose(f);
+		return NULL;
+	}
+	
+	if (!png_sig_cmp(header, 0, num_read)) {
+		// not a PNG
+		fclose(f);
+		return NULL;
+	}
+	
+	return NULL;
 }
 
 

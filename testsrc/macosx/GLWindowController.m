@@ -11,6 +11,7 @@
 #import "error.h"
 
 #include "gl-renderloop.h"
+#include "gl-renderloop-member.h"
 #include "gl-stage.h"
 
 typedef struct
@@ -21,6 +22,8 @@ typedef struct
 
 static void (*initFunction)();
 static GLWindowController* mainWindowController;
+
+static void gl_driver_clear();
 
 @interface GLWindowController ()
 
@@ -111,6 +114,13 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 		NSLog(@"Display Link created with error: %d", error);
 		displayLink = NULL;
 	}
+	
+	gl_renderloop *renderloop = gl_renderloop_get_global_renderloop();
+	
+	gl_renderloop_member *renderloop_member = gl_renderloop_member_new();
+	renderloop_member->data.action = &gl_driver_clear;
+	
+	renderloop->f->append_child(renderloop, gl_renderloop_phase_clear, renderloop_member);
 }
 
 - (void)createOpenGLResources
@@ -421,6 +431,17 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 }
 
 @end
+
+static void gl_driver_clear()
+{
+	gl_stage *stage = gl_stage_get_global_stage();
+	
+	// Set the viewport
+	glViewport(0, 0, stage->data.width, stage->data.height);
+	
+	// Clear the color buffer
+	glClear(GL_COLOR_BUFFER_BIT);
+}
 
 GLuint gl_driver_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )
 {

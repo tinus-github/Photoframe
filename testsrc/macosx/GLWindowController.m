@@ -90,6 +90,10 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 	NSOpenGLPixelFormat *pixelFormat = [[[NSOpenGLPixelFormat alloc] initWithAttributes:pixelFormatAttributes] autorelease];
 	[self setView:[[[NSOpenGLView alloc] initWithFrame:[[[self window] contentView] bounds] pixelFormat:pixelFormat] autorelease]];
 	[[[self window] contentView] addSubview:[self view]];
+	
+	NSRect b = [[self view] bounds];
+	gl_stage *stage = gl_stage_get_global_stage();
+	stage->f->set_dimensions(stage, b.size.width, b.size.height);
 }
 
 - (void)createDisplayLink
@@ -307,13 +311,12 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 	GetError();
 	glClear(GL_COLOR_BUFFER_BIT);
 	GetError();
+	
+	gl_stage *stage = gl_stage_get_global_stage();
+	glViewport(0, 0, stage->data.width, stage->data.height);
 
 	GLenum framebufferStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (framebufferStatus != GL_FRAMEBUFFER_UNDEFINED) {
-		NSRect b = [[self view] bounds];
-		gl_stage *stage = gl_stage_get_global_stage();
-		stage->f->set_dimensions(stage, b.size.width, b.size.height);
-		
 		gl_renderloop_loop_once();
 	}
 	

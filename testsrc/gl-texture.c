@@ -108,6 +108,12 @@ static void gl_texture_load_program_attribute_locations(gl_texture_program_data 
 }
 
 static int gl_texture_load_program() {
+#ifdef __APPLE__
+#define MONO_CHANNEL "r"
+#else
+#define MONO_CHANNEL "a"
+#endif
+	
 	// The simplest do nothing vertex shader possible
 	GLchar vShaderStr[] =
 	"attribute vec4 a_position;            \n"
@@ -126,7 +132,7 @@ static int gl_texture_load_program() {
 	"void main()                                         \n"
 	"{                                                   \n"
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
-	"  float luminance = 1.0 - texelColor.a;             \n"
+	"  float luminance = 1.0 - texelColor." MONO_CHANNEL ";             \n"
 	"  gl_FragColor = vec4(1.0, 1.0, 1.0, luminance);    \n"
 	"}                                                   \n";
 	
@@ -139,7 +145,7 @@ static int gl_texture_load_program() {
 	"{                                                   \n"
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
 	"  gl_FragColor = u_color;                           \n"
-	"  gl_FragColor.a = texelColor.a;                    \n"
+	"  gl_FragColor.a = texelColor." MONO_CHANNEL ";                    \n"
 	"}                                                   \n";
 
 	GLchar fShaderAlphaBlurHStr[] =
@@ -156,17 +162,17 @@ static int gl_texture_load_program() {
 	"void main()                                         \n"
 	"{                                                   \n"
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
-	"  float luminance = texelColor.a * weight0;         \n"
+	"  float luminance = texelColor." MONO_CHANNEL " * weight0;         \n"
 	
 	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(1.0 / u_width, 0.0));\n"
-	"   luminance += texelColor.a * weight1;             \n"
+	"   luminance += texelColor." MONO_CHANNEL " * weight1;             \n"
 	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(-1.0 / u_width, 0.0));\n"
-	"   luminance += texelColor.a * weight1;             \n"
+	"   luminance += texelColor." MONO_CHANNEL " * weight1;             \n"
 	
 	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(2.0 / u_width, 0.0));\n"
-	"   luminance += texelColor.a * weight2;             \n"
+	"   luminance += texelColor." MONO_CHANNEL " * weight2;             \n"
 	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(-2.0 / u_width, 0.0));\n"
-	"   luminance += texelColor.a * weight2;             \n"
+	"   luminance += texelColor." MONO_CHANNEL " * weight2;             \n"
 	
 	"   gl_FragColor = vec4(0.0, 0.0, 0.0, luminance);   \n"
 	"}                                                   \n";

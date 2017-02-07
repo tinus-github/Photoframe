@@ -325,7 +325,7 @@ unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
 	    color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
 		png_set_gray_to_rgb(png_ptr);
 	
-	ssize_t rowBytes = png_get_rowbytes(png_ptr, info_ptr);
+	ssize_t rowBytes = 4 * imageWidth;
 	row = calloc(1, rowBytes);
 	
 	scaler = gl_bitmap_scaler_new();

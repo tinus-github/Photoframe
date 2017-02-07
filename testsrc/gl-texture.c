@@ -452,6 +452,8 @@ static void gl_texture_apply_outline(gl_texture *obj)
 	GLuint fbo;
 	glGenFramebuffers(1, &fbo);
 	
+	glDisable(GL_BLEND);
+	
 	gl_texture_setup_rendering_texture(obj, blurHTexture);
 	gl_texture_setup_rendering_fbo(obj, fbo, blurHTexture);
 	gl_texture_apply_shader_draw(obj, gl_texture_program_blur_h,

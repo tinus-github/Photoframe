@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D0A8F941E4A220A00C9C0F0 /* libpng.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D0A8F931E4A220A00C9C0F0 /* libpng.dylib */; };
 		0D13C1F41E47E51B00FB9F43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D13C1F31E47E51B00FB9F43 /* Assets.xcassets */; };
 		0D13C1F71E47E51B00FB9F43 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D13C1F51E47E51B00FB9F43 /* MainMenu.xib */; };
 		0D13C1FC1E47E55C00FB9F43 /* loadimage.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2B2FED1C9073AA0063393E /* loadimage.c */; };
@@ -326,6 +327,7 @@
 		0D071E531E1313EF00145717 /* gl-renderloop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-renderloop.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0D071E541E13182D00145717 /* gl-renderloop-member.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-renderloop-member.c"; sourceTree = "<group>"; };
 		0D071E551E13182D00145717 /* gl-renderloop-member.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-renderloop-member.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		0D0A8F931E4A220A00C9C0F0 /* libpng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng.dylib; path = ../../../../../opt/local/lib/libpng.dylib; sourceTree = "<group>"; };
 		0D13C1EB1E47E51B00FB9F43 /* image-cocoa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "image-cocoa.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D13C1ED1E47E51B00FB9F43 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0D13C1EE1E47E51B00FB9F43 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -425,6 +427,7 @@
 				0D13C21E1E47E6D300FB9F43 /* libfreetype.6.dylib in Frameworks */,
 				0D13C2201E47E6E300FB9F43 /* OpenGL.framework in Frameworks */,
 				0D13C2211E47E6FA00FB9F43 /* libexif.a in Frameworks */,
+				0D0A8F941E4A220A00C9C0F0 /* libpng.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -977,6 +980,7 @@
 		0DAFDA521E477D6100C5100E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0D0A8F931E4A220A00C9C0F0 /* libpng.dylib */,
 				0D13C21F1E47E6E300FB9F43 /* OpenGL.framework */,
 				0D7377141E47941A00FA9EC7 /* libjpeg.8.dylib */,
 				0D7377121E4793D600FA9EC7 /* libjpeg.a */,
@@ -1321,6 +1325,7 @@
 					/Users/tinus/dev/Photoframe/Photoframe/testsrc,
 					/opt/X11/include/freetype2,
 					/opt/local/include,
+					/opt/local/include/libpng14,
 				);
 				INFOPLIST_FILE = "image-cocoa/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -1366,6 +1371,7 @@
 					/Users/tinus/dev/Photoframe/Photoframe/testsrc,
 					/opt/X11/include/freetype2,
 					/opt/local/include,
+					/opt/local/include/libpng14,
 				);
 				INFOPLIST_FILE = "image-cocoa/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -1608,6 +1614,7 @@
 				0D13C1FB1E47E51B00FB9F43 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0D73770C1E478CDC00FA9EC7 /* Build configuration list for PBXLegacyTarget "harfbuzz" */ = {
 			isa = XCConfigurationList;

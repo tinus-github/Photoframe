@@ -23,6 +23,8 @@ LIBFREETYPE_CFLAGS = `pkg-config freetype2 --cflags`
 LIBFREETYPE_LIBS = `pkg-config freetype2 --libs`
 LIBHARFBUZZ_CFLAGS = `pkg-config harfbuzz --cflags`
 LIBHARFBUZZ_LIBS = `pkg-config harfbuzz --libs`
+LIBPNG_CFLAGS = `pkg-config libpng --cflags`
+LIBPNG_LIBS = `pkg-config libpng --libs`
 PTHREAD_LIBS = -pthread
 PTHREAD_CFLAGS = $(PTHREAD_LIBS)
 
@@ -31,7 +33,8 @@ image: $(OBJECTS) $(LIBEXIF_A)
 	-L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
 	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS) \
-	$(LIBFREETYPE_LIBS) $(LIBHARFBUZZ_LIBS) $(PTHREAD_LIBS)
+	$(LIBFREETYPE_LIBS) $(LIBHARFBUZZ_LIBS) $(PTHREAD_LIBS) \
+	$(LIBPNG_LIBS)
 
 image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \

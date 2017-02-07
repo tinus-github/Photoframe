@@ -258,7 +258,7 @@ unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
 		goto loadPNGCancel0;
 	}
 	
-	if (!png_sig_cmp(header, 0, num_read)) {
+	if (png_sig_cmp(header, 0, num_read)) {
 		// not a PNG
 		goto loadPNGCancel0;
 	}
@@ -322,7 +322,7 @@ unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
 	scaler->data.inputHeight = imageHeight;
 	scaler->data.outputWidth = imageHeight * scalefactor;
 	scaler->data.outputHeight = imageHeight * scalefactor;
-	scaler->data.inputType = gl_bitmap_scaler_input_type_rgba;
+	scaler->data.inputType = gl_bitmap_scaler_input_type_rgb;
 	
 	scaler->data.horizontalType = gl_bitmap_scaler_type_bresenham;
 	scaler->data.verticalType = gl_bitmap_scaler_type_bresenham;

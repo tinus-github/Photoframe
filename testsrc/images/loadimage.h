@@ -14,6 +14,8 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 
 unsigned char *loadTGA ( char *fileName, int *width, int *height );
 
+unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
+		       int *width, int *height, unsigned int *orientation );
 
 // internal
 

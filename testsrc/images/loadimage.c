@@ -231,11 +231,21 @@ unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
 
 #define PNG_HEADER_SIZE 8
 
-unsigned char* loadPNG(char *fileName, int *width, int *height)
+unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
+		       int *width, int *height, unsigned int *orientation )
 {
 	FILE *f;
 	unsigned char header[PNG_HEADER_SIZE];
 	ssize_t num_read;
+	png_structp png_ptr = NULL;
+	png_infop info_ptr = NULL;
+	
+	unsigned int imageWidth;
+	unsigned int imageHeight;
+	
+	gl_bitmap_scaler *scaler = NULL;
+	unsigned char* row = NULL;
+	unsigned char* buffer = NULL;
 	
 	f = fopen(fileName, "rb");
 	if (!f) {
@@ -245,16 +255,120 @@ unsigned char* loadPNG(char *fileName, int *width, int *height)
 	num_read = fread(header, 1, PNG_HEADER_SIZE, f);
 	if (num_read != PNG_HEADER_SIZE) {
 		// file is too short to be a PNG
-		fclose(f);
-		return NULL;
+		goto loadPNGCancel0;
 	}
 	
 	if (!png_sig_cmp(header, 0, num_read)) {
 		// not a PNG
-		fclose(f);
-		return NULL;
+		goto loadPNGCancel0;
+	}
+	png_ptr = png_create_read_struct(
+					 PNG_LIBPNG_VER_STRING,
+					 NULL, //(png_voidp)user_error_ptr,
+					 NULL, //user_error_fn,
+					 NULL //user_warning_fn
+					 );
+	
+	if (!png_ptr) {
+		goto loadPNGCancel0;
 	}
 	
+	info_ptr = png_create_info_struct(png_ptr);
+	if (!info_ptr) {
+		goto loadPNGCancel1;
+	}
+	
+	if (setjmp(png_jmpbuf(png_ptr))) {
+		goto loadPNGCancel2;
+	}
+	
+	// TODO: Custom io
+	png_init_io(png_ptr, f);
+	
+	png_set_sig_bytes(png_ptr, PNG_HEADER_SIZE);
+	
+	png_set_user_limits(png_ptr, 10000, 10000); // 100k should be enough for everyone
+	
+	png_color_16 background_color;
+	background_color.red = 0;
+	background_color.green = 0;
+	background_color.blue = 0; //black
+	
+	png_read_info(png_ptr, info_ptr);
+	imageWidth = png_get_image_width(png_ptr, info_ptr);
+	imageHeight = png_get_image_width(png_ptr, info_ptr);
+	
+	float scalefactor = (float)wantedwidth / imageWidth;
+	float scalefactortmp = (float)wantedheight / imageHeight;
+	
+	if (scalefactortmp < scalefactor) {
+		scalefactor = scalefactortmp;
+	}
+
+	
+	png_set_background(png_ptr,
+			   &background_color,
+			   PNG_BACKGROUND_GAMMA_SCREEN, 0, 1);
+	png_set_strip_16(png_ptr);
+	png_set_gray_to_rgb(png_ptr);
+	png_set_palette_to_rgb(png_ptr);
+	
+	ssize_t rowBytes = png_get_rowbytes(png_ptr, info_ptr);
+	row = calloc(1, rowBytes);
+	
+	scaler = gl_bitmap_scaler_new();
+	
+	scaler->data.inputWidth = imageWidth;
+	scaler->data.inputHeight = imageHeight;
+	scaler->data.outputWidth = imageHeight * scalefactor;
+	scaler->data.outputHeight = imageHeight * scalefactor;
+	scaler->data.inputType = gl_bitmap_scaler_input_type_rgba;
+	
+	scaler->data.horizontalType = gl_bitmap_scaler_type_bresenham;
+	scaler->data.verticalType = gl_bitmap_scaler_type_bresenham;
+	
+	scaler->f->start(scaler);
+	
+	buffer = calloc(sizeof(unsigned char) * 4, scaler->data.outputWidth * scaler->data.outputHeight);
+	
+	// TODO: This is wrong if the image is interlaced.
+	unsigned int counter;
+	for (counter = 0; counter < imageHeight; counter++) {
+		png_read_row(png_ptr, row, NULL);
+		scaler->f->process_line(scaler, buffer, row);
+	}
+	
+	scaler->f->end(scaler);
+	
+	free (row);
+	((gl_object *)scaler)->f->unref((gl_object *)scaler);
+	
+	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+	
+	*width = scaler->data.outputWidth;
+	*height = scaler->data.outputHeight;
+	*orientation = 0;
+	
+	return buffer;
+	
+loadPNGCancel2:
+	free(buffer);
+	if (scaler) {
+		((gl_object *)scaler)->f->unref((gl_object *)scaler);
+	}
+	free(row);
+	
+	
+loadPNGCancel1:
+	
+	if (info_ptr) {
+		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+	} else {
+		png_destroy_read_struct(&png_ptr, NULL, NULL);
+	}
+	
+loadPNGCancel0:
+	fclose(f);
 	return NULL;
 }
 

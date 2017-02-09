@@ -59,14 +59,14 @@ static const char* BMP_ERROR_STRING[] =
 
 
 /*********************************** Forward declarations **********************************/
-int		ReadHeader	( BMP* bmp, FILE* f );
-int		WriteHeader	( BMP* bmp, FILE* f );
+static int	ReadHeader	( BMP* bmp, FILE* f );
+static int	WriteHeader	( BMP* bmp, FILE* f );
 
-int		ReadUINT	( UINT* x, FILE* f );
-int		ReadUSHORT	( USHORT *x, FILE* f );
+static int	ReadUINT	( UINT* x, FILE* f );
+static int	ReadUSHORT	( USHORT *x, FILE* f );
 
-int		WriteUINT	( UINT x, FILE* f );
-int		WriteUSHORT	( USHORT x, FILE* f );
+static int	WriteUINT	( UINT x, FILE* f );
+static int	WriteUSHORT	( USHORT x, FILE* f );
 
 
 
@@ -654,7 +654,7 @@ const char* BMP_GetErrorDescription()
 	Reads the BMP file's header into the data structure.
 	Returns BMP_OK on success.
 **************************************************************/
-int	ReadHeader( BMP* bmp, FILE* f )
+static int	ReadHeader( BMP* bmp, FILE* f )
 {
 	if ( bmp == NULL || f == NULL )
 	{
@@ -688,7 +688,7 @@ int	ReadHeader( BMP* bmp, FILE* f )
 	Writes the BMP file's header into the data structure.
 	Returns BMP_OK on success.
 **************************************************************/
-int	WriteHeader( BMP* bmp, FILE* f )
+static int	WriteHeader( BMP* bmp, FILE* f )
 {
 	if ( bmp == NULL || f == NULL )
 	{
@@ -722,7 +722,7 @@ int	WriteHeader( BMP* bmp, FILE* f )
 	Reads a little-endian unsigned int from the file.
 	Returns non-zero on success.
 **************************************************************/
-int	ReadUINT( UINT* x, FILE* f )
+static int	ReadUINT( UINT* x, FILE* f )
 {
 	UCHAR little[ 4 ];	/* BMPs use 32 bit ints */
 
@@ -746,7 +746,7 @@ int	ReadUINT( UINT* x, FILE* f )
 	Reads a little-endian unsigned short int from the file.
 	Returns non-zero on success.
 **************************************************************/
-int	ReadUSHORT( USHORT *x, FILE* f )
+static int	ReadUSHORT( USHORT *x, FILE* f )
 {
 	UCHAR little[ 2 ];	/* BMPs use 16 bit shorts */
 
@@ -770,7 +770,7 @@ int	ReadUSHORT( USHORT *x, FILE* f )
 	Writes a little-endian unsigned int to the file.
 	Returns non-zero on success.
 **************************************************************/
-int	WriteUINT( UINT x, FILE* f )
+static int	WriteUINT( UINT x, FILE* f )
 {
 	UCHAR little[ 4 ];	/* BMPs use 32 bit ints */
 
@@ -787,7 +787,7 @@ int	WriteUINT( UINT x, FILE* f )
 	Writes a little-endian unsigned short int to the file.
 	Returns non-zero on success.
 **************************************************************/
-int	WriteUSHORT( USHORT x, FILE* f )
+static int	WriteUSHORT( USHORT x, FILE* f )
 {
 	UCHAR little[ 2 ];	/* BMPs use 16 bit shorts */
 

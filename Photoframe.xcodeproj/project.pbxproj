@@ -48,6 +48,8 @@
 		0D13C2201E47E6E300FB9F43 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D13C21F1E47E6E300FB9F43 /* OpenGL.framework */; };
 		0D13C2211E47E6FA00FB9F43 /* libexif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA531E477D6100C5100E /* libexif.a */; };
 		0D13C2221E47E75D00FB9F43 /* GLWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D893B781E47A14E000DD5BF /* GLWindowController.m */; };
+		0D1806131E4D2C6200449219 /* qdbmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D1805FD1E4D2BC800449219 /* qdbmp.c */; };
+		0D1806141E4D2CA300449219 /* qdbmp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D1805FE1E4D2BC800449219 /* qdbmp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0D7377101E478E1100FA9EC7 /* libharfbuzz.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D73770F1E478E1100FA9EC7 /* libharfbuzz.0.dylib */; };
 		0D7377151E47941A00FA9EC7 /* libjpeg.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7377141E47941A00FA9EC7 /* libjpeg.8.dylib */; };
 		0D893B791E47A14E000DD5BF /* GLWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D893B781E47A14E000DD5BF /* GLWindowController.m */; };
@@ -336,6 +338,13 @@
 		0D13C1F61E47E51B00FB9F43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		0D13C1F81E47E51B00FB9F43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0D13C21F1E47E6E300FB9F43 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
+		0D1805FC1E4D2BC800449219 /* license */ = {isa = PBXFileReference; lastKnownFileType = text; path = license; sourceTree = "<group>"; };
+		0D1805FD1E4D2BC800449219 /* qdbmp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = qdbmp.c; sourceTree = "<group>"; };
+		0D1805FE1E4D2BC800449219 /* qdbmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qdbmp.h; sourceTree = "<group>"; };
+		0D1805FF1E4D2BC800449219 /* readme */ = {isa = PBXFileReference; lastKnownFileType = text; path = readme; sourceTree = "<group>"; };
+		0D1806011E4D2BC800449219 /* negative.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = negative.c; sourceTree = "<group>"; };
+		0D1806021E4D2BC800449219 /* show_palette.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = show_palette.c; sourceTree = "<group>"; };
+		0D18060F1E4D2C5500449219 /* libqdbmp.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libqdbmp.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D2B2FED1C9073AA0063393E /* loadimage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = loadimage.c; sourceTree = "<group>"; };
 		0D2B2FEE1C9073AA0063393E /* loadimage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loadimage.h; sourceTree = "<group>"; };
 		0D2B2FEF1C90DE7F0063393E /* loadexif.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = loadexif.c; sourceTree = "<group>"; };
@@ -428,6 +437,13 @@
 				0D13C2201E47E6E300FB9F43 /* OpenGL.framework in Frameworks */,
 				0D13C2211E47E6FA00FB9F43 /* libexif.a in Frameworks */,
 				0D0A8F941E4A220A00C9C0F0 /* libpng.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D18060C1E4D2C5500449219 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -814,6 +830,27 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		0D1805FB1E4D2B7D00449219 /* qdbmp */ = {
+			isa = PBXGroup;
+			children = (
+				0D1805FC1E4D2BC800449219 /* license */,
+				0D1805FD1E4D2BC800449219 /* qdbmp.c */,
+				0D1805FE1E4D2BC800449219 /* qdbmp.h */,
+				0D1805FF1E4D2BC800449219 /* readme */,
+				0D1806001E4D2BC800449219 /* samples */,
+			);
+			path = qdbmp;
+			sourceTree = "<group>";
+		};
+		0D1806001E4D2BC800449219 /* samples */ = {
+			isa = PBXGroup;
+			children = (
+				0D1806011E4D2BC800449219 /* negative.c */,
+				0D1806021E4D2BC800449219 /* show_palette.c */,
+			);
+			path = samples;
+			sourceTree = "<group>";
+		};
 		0D2199361E40D9E9004877C3 /* images */ = {
 			isa = PBXGroup;
 			children = (
@@ -830,6 +867,7 @@
 		0D2B2FF31CB443510063393E /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				0D1805FB1E4D2B7D00449219 /* qdbmp */,
 				0D893B731E479AFA000DD5BF /* harfbuzz */,
 				0D071D701E12C27600145717 /* libexif */,
 				0D2B2FF41CB4436C0063393E /* linmath */,
@@ -973,6 +1011,7 @@
 			children = (
 				0DAFDA3C1E4773A000C5100E /* image */,
 				0D13C1EB1E47E51B00FB9F43 /* image-cocoa.app */,
+				0D18060F1E4D2C5500449219 /* libqdbmp.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1008,6 +1047,17 @@
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		0D18060D1E4D2C5500449219 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D1806141E4D2CA300449219 /* qdbmp.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXLegacyTarget section */
 		0D73770B1E478CDC00FA9EC7 /* harfbuzz */ = {
@@ -1058,6 +1108,23 @@
 			productReference = 0D13C1EB1E47E51B00FB9F43 /* image-cocoa.app */;
 			productType = "com.apple.product-type.application";
 		};
+		0D18060E1E4D2C5500449219 /* qdbmp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D1806101E4D2C5500449219 /* Build configuration list for PBXNativeTarget "qdbmp" */;
+			buildPhases = (
+				0D18060B1E4D2C5500449219 /* Sources */,
+				0D18060C1E4D2C5500449219 /* Frameworks */,
+				0D18060D1E4D2C5500449219 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = qdbmp;
+			productName = qdbmp;
+			productReference = 0D18060F1E4D2C5500449219 /* libqdbmp.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		0DAFDA3B1E4773A000C5100E /* image */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0DAFDA411E4773A100C5100E /* Build configuration list for PBXNativeTarget "image" */;
@@ -1092,6 +1159,10 @@
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
 					};
+					0D18060E1E4D2C5500449219 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
 					0DAFDA3B1E4773A000C5100E = {
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
@@ -1119,6 +1190,7 @@
 				0DAFDA4C1E47784100C5100E /* libexif */,
 				0D73770B1E478CDC00FA9EC7 /* harfbuzz */,
 				0D13C1EA1E47E51B00FB9F43 /* image-cocoa */,
+				0D18060E1E4D2C5500449219 /* qdbmp */,
 			);
 		};
 /* End PBXProject section */
@@ -1180,6 +1252,14 @@
 				0D13C2191E47E55C00FB9F43 /* gl-image.c in Sources */,
 				0D13C21A1E47E55C00FB9F43 /* gl-framed-shape.c in Sources */,
 				0D13C21B1E47E55C00FB9F43 /* common-driver.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D18060B1E4D2C5500449219 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D1806131E4D2C6200449219 /* qdbmp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1385,6 +1465,69 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "mvernooij.image-cocoa";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		0D1806111E4D2C5500449219 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0D1806121E4D2C5500449219 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_NS_ASSERTIONS = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};
@@ -1615,6 +1758,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		0D1806101E4D2C5500449219 /* Build configuration list for PBXNativeTarget "qdbmp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D1806111E4D2C5500449219 /* Debug */,
+				0D1806121E4D2C5500449219 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		0D73770C1E478CDC00FA9EC7 /* Build configuration list for PBXLegacyTarget "harfbuzz" */ = {
 			isa = XCConfigurationList;

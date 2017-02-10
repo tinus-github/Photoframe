@@ -41,6 +41,7 @@ struct _BMP
 	UINT		CurrentRow;
 	UINT		MaxDimensions;
 	UCHAR*		RowBuf;
+	UINT		Cursor;
 };
 
 
@@ -653,6 +654,8 @@ BMP* BMP_CreateReadStruct()
 	
 	bmp->MaxDimensions = 10000; // Don't read insane files (by default)
 	
+	bmp->Cursor = 0;
+	
 	BMP_LAST_ERROR_CODE = BMP_OK;
 	return bmp;
 }
@@ -716,6 +719,17 @@ BMP_STATUS BMP_ReadHeader(BMP *bmp)
 		bmp->Palette = NULL;
 	}
 	
+	// Skip bytes if neccessary
+	ssize_t bytesToSkip;
+	if (bmp->Header.DataOffset > bmp->Cursor) {
+		// otherwise it's probably just not set
+		
+		bytesToSkip = bmp->Header.DataOffset - bmp->Cursor;
+		if (fseek(bmp->file, bytesToSkip, SEEK_CUR)) {
+			return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
+		}
+	}
+	
 	bmp->RowBuf = malloc(BMP_GetBytesPerRowInFile(bmp));
 	if (!bmp->RowBuf) {
 		return BMP_LAST_ERROR_CODE = BMP_OUT_OF_MEMORY;
@@ -756,8 +770,10 @@ static void BMP_Row_GetPixelRGB( BMP* bmp, UINT x, UCHAR* r, UCHAR* g, UCHAR* b 
 BMP_STATUS BMP_ReadRow(BMP *bmp, UCHAR *row)
 {
 	ssize_t bytesToRead = BMP_GetBytesPerRowInFile(bmp);
+	ssize_t bytesRead;
 	
-	if (fread(bmp->RowBuf, bytesToRead, 1, bmp->file) != bytesToRead) {
+	bytesRead = fread(bmp->RowBuf, 1, bytesToRead, bmp->file);
+ 	if (bytesRead != bytesToRead) {
 		return BMP_LAST_ERROR_CODE = BMP_IO_ERROR;
 	}
 	
@@ -839,6 +855,8 @@ static int	ReadHeader( BMP* bmp, FILE* f )
 	if ( !ReadUINT( &( bmp->Header.VPixelsPerMeter ), f ) )	return BMP_IO_ERROR;
 	if ( !ReadUINT( &( bmp->Header.ColorsUsed ), f ) )		return BMP_IO_ERROR;
 	if ( !ReadUINT( &( bmp->Header.ColorsRequired ), f ) )	return BMP_IO_ERROR;
+	
+	bmp->Cursor += 54;
 
 	return BMP_OK;
 }

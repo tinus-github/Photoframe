@@ -52,6 +52,11 @@
 		0D1806141E4D2CA300449219 /* qdbmp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D1805FE1E4D2BC800449219 /* qdbmp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0D7377101E478E1100FA9EC7 /* libharfbuzz.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D73770F1E478E1100FA9EC7 /* libharfbuzz.0.dylib */; };
 		0D7377151E47941A00FA9EC7 /* libjpeg.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7377141E47941A00FA9EC7 /* libjpeg.8.dylib */; };
+		0D74EEDC1E4DF09600A4CE92 /* libqdbmp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D18060F1E4D2C5500449219 /* libqdbmp.dylib */; };
+		0D74EEDF1E4DF15C00A4CE92 /* loadimage-jpg.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */; };
+		0D74EEE01E4DF17B00A4CE92 /* loadimage-jpg.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */; };
+		0D74EEE31E4DF34A00A4CE92 /* loadimage-png.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEE11E4DF34A00A4CE92 /* loadimage-png.c */; };
+		0D74EEE41E4DF34A00A4CE92 /* loadimage-png.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEE11E4DF34A00A4CE92 /* loadimage-png.c */; };
 		0D893B791E47A14E000DD5BF /* GLWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D893B781E47A14E000DD5BF /* GLWindowController.m */; };
 		0D893B7E1E47A9E6000DD5BF /* common-driver.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D893B7C1E47A9E6000DD5BF /* common-driver.c */; };
 		0DAFDA541E477D6100C5100E /* libexif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA531E477D6100C5100E /* libexif.a */; };
@@ -91,6 +96,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0D74EEDA1E4DF08E00A4CE92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D07D26C1C4E974B00E42556 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D18060E1E4D2C5500449219;
+			remoteInfo = qdbmp;
+		};
 		0DAFDA501E477D2900C5100E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0D07D26C1C4E974B00E42556 /* Project object */;
@@ -377,6 +389,10 @@
 		0D7377111E4790FA00FA9EC7 /* driver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = driver.h; sourceTree = "<group>"; };
 		0D7377121E4793D600FA9EC7 /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = ../../../../../opt/local/lib/libjpeg.a; sourceTree = "<group>"; };
 		0D7377141E47941A00FA9EC7 /* libjpeg.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libjpeg.8.dylib; path = ../../../../../opt/local/lib/libjpeg.8.dylib; sourceTree = "<group>"; };
+		0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "loadimage-jpg.c"; sourceTree = "<group>"; };
+		0D74EEDE1E4DF15C00A4CE92 /* loadimage-jpg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "loadimage-jpg.h"; sourceTree = "<group>"; };
+		0D74EEE11E4DF34A00A4CE92 /* loadimage-png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "loadimage-png.c"; sourceTree = "<group>"; };
+		0D74EEE21E4DF34A00A4CE92 /* loadimage-png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "loadimage-png.h"; sourceTree = "<group>"; };
 		0D80FE081E251939008827AA /* gl-rectangle.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "gl-rectangle.c"; path = "testsrc/gl-rectangle.c"; sourceTree = SOURCE_ROOT; };
 		0D80FE091E251939008827AA /* gl-rectangle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "gl-rectangle.h"; path = "testsrc/gl-rectangle.h"; sourceTree = SOURCE_ROOT; };
 		0D80FE0A1E255179008827AA /* gl-bitmap.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-bitmap.c"; sourceTree = "<group>"; };
@@ -431,6 +447,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D74EEDC1E4DF09600A4CE92 /* libqdbmp.dylib in Frameworks */,
 				0D13C21C1E47E6AD00FB9F43 /* libjpeg.8.dylib in Frameworks */,
 				0D13C21D1E47E6C000FB9F43 /* libharfbuzz.0.dylib in Frameworks */,
 				0D13C21E1E47E6D300FB9F43 /* libfreetype.6.dylib in Frameworks */,
@@ -860,6 +877,10 @@
 				0D2B2FF01C90DE7F0063393E /* loadexif.h */,
 				0D6DBB081E40E0BA00F05BAC /* gl-bitmap-scaler.c */,
 				0D6DBB091E40E0BA00F05BAC /* gl-bitmap-scaler.h */,
+				0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */,
+				0D74EEDE1E4DF15C00A4CE92 /* loadimage-jpg.h */,
+				0D74EEE11E4DF34A00A4CE92 /* loadimage-png.c */,
+				0D74EEE21E4DF34A00A4CE92 /* loadimage-png.h */,
 			);
 			path = images;
 			sourceTree = "<group>";
@@ -1102,6 +1123,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				0D74EEDB1E4DF08E00A4CE92 /* PBXTargetDependency */,
 			);
 			name = "image-cocoa";
 			productName = "image-cocoa";
@@ -1234,6 +1256,7 @@
 				0D13C2081E47E55C00FB9F43 /* gl-label-scroller-segment.c in Sources */,
 				0D13C2091E47E55C00FB9F43 /* gl-label-renderer.c in Sources */,
 				0D13C20A1E47E55C00FB9F43 /* gl-label-scroller.c in Sources */,
+				0D74EEE01E4DF17B00A4CE92 /* loadimage-jpg.c in Sources */,
 				0D13C20B1E47E55C00FB9F43 /* image.c in Sources */,
 				0D13C20C1E47E55C00FB9F43 /* gl-bitmap.c in Sources */,
 				0D13C20D1E47E55C00FB9F43 /* gl-texture.c in Sources */,
@@ -1241,6 +1264,7 @@
 				0D13C20F1E47E55C00FB9F43 /* gl-rectangle.c in Sources */,
 				0D13C2101E47E55C00FB9F43 /* gl-tile.c in Sources */,
 				0D13C2111E47E55C00FB9F43 /* gl-stage.c in Sources */,
+				0D74EEE41E4DF34A00A4CE92 /* loadimage-png.c in Sources */,
 				0D13C2121E47E55C00FB9F43 /* gl-container.c in Sources */,
 				0D13C2131E47E55C00FB9F43 /* gl-container-2d.c in Sources */,
 				0D13C2141E47E55C00FB9F43 /* gl-tiled-image.c in Sources */,
@@ -1282,6 +1306,7 @@
 				0DAFDA6D1E477E5C00C5100E /* gl-tiled-image.c in Sources */,
 				0DAFDA6E1E477E5C00C5100E /* gl-renderloop.c in Sources */,
 				0DAFDA6F1E477E5C00C5100E /* gl-renderloop-member.c in Sources */,
+				0D74EEDF1E4DF15C00A4CE92 /* loadimage-jpg.c in Sources */,
 				0DAFDA711E477E5C00C5100E /* gl-value-animation.c in Sources */,
 				0D893B791E47A14E000DD5BF /* GLWindowController.m in Sources */,
 				0DAFDA721E477E5C00C5100E /* gl-value-animation-easing.c in Sources */,
@@ -1289,6 +1314,7 @@
 				0DAFDA741E477E5C00C5100E /* gl-framed-shape.c in Sources */,
 				0DAFDA591E477E3900C5100E /* gl-slide-image.c in Sources */,
 				0DAFDA5A1E477E3900C5100E /* gl-slide.c in Sources */,
+				0D74EEE31E4DF34A00A4CE92 /* loadimage-png.c in Sources */,
 				0D893B7E1E47A9E6000DD5BF /* common-driver.c in Sources */,
 				0DAFDA5B1E477E3900C5100E /* gl-slideshow.c in Sources */,
 				0DAFDA5C1E477E3900C5100E /* gl-object.c in Sources */,
@@ -1306,6 +1332,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0D74EEDB1E4DF08E00A4CE92 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D18060E1E4D2C5500449219 /* qdbmp */;
+			targetProxy = 0D74EEDA1E4DF08E00A4CE92 /* PBXContainerItemProxy */;
+		};
 		0DAFDA511E477D2900C5100E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0DAFDA4C1E47784100C5100E /* libexif */;
@@ -1766,6 +1797,7 @@
 				0D1806121E4D2C5500449219 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0D73770C1E478CDC00FA9EC7 /* Build configuration list for PBXLegacyTarget "harfbuzz" */ = {
 			isa = XCConfigurationList;

@@ -11,7 +11,8 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  infrastructure/gl-workqueue.o infrastructure/gl-workqueue-job.o \
 	  gl-image.o gl-framed-shape.o slideshow/gl-slide.o slideshow/gl-slide-image.o \
 	  slideshow/gl-slideshow.o common-driver.o \
-	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o
+	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o \
+	  images/loadimage-jpg.o images/loadimage-png.o
 
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	  -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
@@ -258,6 +259,18 @@ images/loadimage.o: images/loadimage.c images/loadimage.h
 	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ \
 	-c images/loadimage.c -o images/loadimage.o \
+	-Wno-deprecated-declarations $(OPTFLAGS)
+
+images/loadimage-jpg.o: images/loadimage-jpg.c images/loadimage.h images/loadimage-jpg.h images/loadexif.h
+	cc -g $(CFLAGS_ALL) \
+	-I/opt/vc/include/ \
+	-c images/loadimage-jpg.c -o images/loadimage-jpg.o \
+	-Wno-deprecated-declarations $(OPTFLAGS)
+
+images/loadimage-png.o: images/loadimage-png.c images/loadimage.h images/loadimage-png.h
+	cc -g $(CFLAGS_ALL) $(LIBPNG_CFLAGS)\
+	-I/opt/vc/include/ \
+	-c images/loadimage-png.c -o images/loadimage-png.o \
 	-Wno-deprecated-declarations $(OPTFLAGS)
 
 images/loadexif.o: images/loadexif.c images/loadexif.h images/loadimage.h

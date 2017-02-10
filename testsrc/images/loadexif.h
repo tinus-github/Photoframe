@@ -35,7 +35,7 @@ struct loadexif_org_functions {
 
 typedef struct loadexif_client_data {
 	unsigned char inputdata[LOADEXIF_BUFFER_SIZE];
-	size_t inputsize;
+	unsigned int inputsize;
 	struct loadexif_org_functions orgf;
 	unsigned int orientation;
 } loadexif_client_data;

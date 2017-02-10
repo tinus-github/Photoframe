@@ -14,6 +14,8 @@
 #include "infrastructure/gl-workqueue.h"
 #include "gl-stage.h"
 #include "images/loadimage.h"
+#include "images/loadimage-jpg.h"
+#include "images/loadimage-png.h"
 #include "infrastructure/gl-notice-subscription.h"
 #include "infrastructure/gl-notice.h"
 

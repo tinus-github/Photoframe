@@ -8,6 +8,7 @@
 
 #include "images/loadexif.h"
 #include "images/loadimage.h"
+#include "images/loadimage-jpg.h"
 
 #include <jpeglib.h>
 #include "../lib/libexif/libexif/exif-data.h"

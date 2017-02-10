@@ -28,6 +28,7 @@ LIBPNG_CFLAGS = `pkg-config libpng --cflags`
 LIBPNG_LIBS = `pkg-config libpng --libs`
 PTHREAD_LIBS = -pthread
 PTHREAD_CFLAGS = $(PTHREAD_LIBS)
+QDBMP_CFLAGS = -I../lib/qdbmp
 
 image: $(OBJECTS) $(LIBEXIF_A)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
@@ -256,7 +257,7 @@ slideshow/gl-slideshow.o: slideshow/gl-slideshow.c slideshow/gl-slideshow.h \
 	-c slideshow/gl-slideshow.c -o slideshow/gl-slideshow.o $(OPTFLAGS)
 
 images/loadimage.o: images/loadimage.c images/loadimage.h
-	cc -g $(CFLAGS_ALL) \
+	cc -g $(CFLAGS_ALL) $(QDBMP_CFLAGS) \
 	-I/opt/vc/include/ \
 	-c images/loadimage.c -o images/loadimage.o \
 	-Wno-deprecated-declarations $(OPTFLAGS)

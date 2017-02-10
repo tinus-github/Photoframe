@@ -93,6 +93,19 @@ typedef struct _BMP BMP;
 BMP*			BMP_Create					( UINT width, UINT height, USHORT depth );
 void			BMP_Free					( BMP* bmp );
 
+/* Incremental loading */
+BMP*			BMP_CreateReadStruct			();
+BMP_STATUS		BMP_OpenFile				( BMP* bmp, const char* filename );
+BMP_STATUS		BMP_ReadHeader				( BMP* bmp );
+ssize_t			BMP_GetBytesPerRow			( BMP* bmp );
+BMP_STATUS		BMP_ReadRow				( BMP* bmp, UCHAR* row);
+void			BMP_CloseFile				( BMP* bmp );
+/* TODO:
+ * Error function instead of return values
+ * Custom I/O
+ * Expose MaxDimensions
+ */
+
 
 /* I/O */
 BMP*			BMP_ReadFile				( const char* filename );

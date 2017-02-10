@@ -24,6 +24,10 @@ typedef struct _BMP_Header
 	UINT		ColorsRequired;		/* Number of color indexes that are required for displaying the bitmap */
 } BMP_Header;
 
+typedef enum {
+	BMP_Purpose_Read,
+	BMP_Purpose_Write
+} BMP_Purpose;
 
 /* Private data structure */
 struct _BMP
@@ -31,6 +35,12 @@ struct _BMP
 	BMP_Header	Header;
 	UCHAR*		Palette;
 	UCHAR*		Data;
+	BMP_Purpose	Purpose;
+	
+	FILE*		file;
+	UINT		CurrentRow;
+	UINT		MaxDimensions;
+	UCHAR*		RowBuf;
 };
 
 
@@ -106,7 +116,7 @@ BMP* BMP_Create( UINT width, UINT height, USHORT depth )
 		BMP_LAST_ERROR_CODE = BMP_OUT_OF_MEMORY;
 		return NULL;
 	}
-
+	bmp->Purpose = BMP_Purpose_Write;
 
 	/* Set header' default values */
 	bmp->Header.Magic				= 0x4D42;
@@ -188,6 +198,15 @@ void BMP_Free( BMP* bmp )
 	if ( bmp->Data != NULL )
 	{
 		free( bmp->Data );
+	}
+	
+	if ( bmp->file != NULL )
+	{
+		fclose(bmp->file);
+	}
+	
+	if (bmp->RowBuf) {
+		free(bmp->RowBuf);
 	}
 
 	free( bmp );
@@ -618,6 +637,147 @@ void BMP_SetPaletteColor( BMP* bmp, UCHAR index, UCHAR r, UCHAR g, UCHAR b )
 	}
 }
 
+/********************* Incremental loading ******************/
+BMP* BMP_CreateReadStruct()
+{
+	BMP *bmp;
+	
+	/* Allocate */
+	bmp = calloc( 1, sizeof( BMP ) );
+	if ( bmp == NULL )
+	{
+		BMP_LAST_ERROR_CODE = BMP_OUT_OF_MEMORY;
+		return NULL;
+	}
+	bmp->Purpose = BMP_Purpose_Read;
+	
+	bmp->MaxDimensions = 10000; // Don't read insane files (by default)
+	
+	BMP_LAST_ERROR_CODE = BMP_OK;
+	return bmp;
+}
+
+BMP_STATUS BMP_OpenFile(BMP *bmp, const char *filename)
+{
+	if (bmp->Purpose != BMP_Purpose_Read) {
+		return BMP_LAST_ERROR_CODE = BMP_INVALID_ARGUMENT;
+	}
+	
+	/* Open file */
+	bmp->file = fopen( filename, "rb" );
+	if ( bmp->file == NULL ) {
+		BMP_LAST_ERROR_CODE = BMP_FILE_NOT_FOUND;
+	} else {
+		BMP_LAST_ERROR_CODE = BMP_OK;
+	}
+	
+	return BMP_LAST_ERROR_CODE;
+}
+
+static ssize_t BMP_GetBytesPerRowInFile(BMP *bmp)
+{
+	return bmp->Header.ImageDataSize / bmp->Header.Height;
+}
+
+BMP_STATUS BMP_ReadHeader(BMP *bmp)
+{
+	/* Read header */
+	if ( ReadHeader( bmp, bmp->file ) != BMP_OK || bmp->Header.Magic != 0x4D42 ) {
+		return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
+	}
+	
+	/* Verify that the bitmap variant is supported */
+	if ( ( bmp->Header.BitsPerPixel != 32 && bmp->Header.BitsPerPixel != 24 && bmp->Header.BitsPerPixel != 8 )
+	    || bmp->Header.CompressionType != 0 || bmp->Header.HeaderSize != 40 ) {
+		return BMP_LAST_ERROR_CODE = BMP_FILE_NOT_SUPPORTED;
+	}
+	
+	/* Sanity checks */
+	if ( (!bmp->Header.Height) || (!bmp->Header.Width) ||
+	    (bmp->Header.Height > bmp->MaxDimensions) ||
+	    (bmp->Header.Width > bmp->MaxDimensions)) {
+		return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
+	}
+	
+	/* Allocate and read palette */
+	if ( bmp->Header.BitsPerPixel == 8 ) {
+		bmp->Palette = (UCHAR*) malloc( BMP_PALETTE_SIZE * sizeof( UCHAR ) );
+		if ( bmp->Palette == NULL ) {
+			return BMP_LAST_ERROR_CODE = BMP_OUT_OF_MEMORY;
+		}
+		
+		if ( fread( bmp->Palette, sizeof( UCHAR ), BMP_PALETTE_SIZE, bmp->file ) != BMP_PALETTE_SIZE )
+		{
+			return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
+		}
+	}
+	else	/* Not an indexed image */
+	{
+		bmp->Palette = NULL;
+	}
+	
+	bmp->RowBuf = malloc(BMP_GetBytesPerRowInFile(bmp));
+	if (!bmp->RowBuf) {
+		return BMP_LAST_ERROR_CODE = BMP_OUT_OF_MEMORY;
+	}
+	
+	bmp->CurrentRow = 0;
+	
+	return BMP_LAST_ERROR_CODE = BMP_OK;
+}
+
+ssize_t BMP_GetBytesPerRow(BMP *bmp)
+{
+	return bmp->Header.Width * 3 * sizeof(UCHAR);
+}
+
+static void BMP_Row_GetPixelRGB( BMP* bmp, UINT x, UCHAR* r, UCHAR* g, UCHAR* b )
+{
+	UCHAR*	pixel;
+	UCHAR	bytes_per_pixel;
+	
+	bytes_per_pixel = bmp->Header.BitsPerPixel >> 3;
+	
+	/* Calculate the location of the relevant pixel (rows are flipped) */
+	pixel = bmp->RowBuf + ( x * bytes_per_pixel );
+	
+	/* In indexed color mode the pixel's value is an index within the palette */
+	if ( bmp->Header.BitsPerPixel == 8 )
+	{
+		pixel = bmp->Palette + *pixel * 4;
+	}
+	
+	/* Note: colors are stored in BGR order */
+	*r = *( pixel + 2 );
+	*g = *( pixel + 1 );
+	*b = *( pixel + 0 );
+}
+
+BMP_STATUS BMP_ReadRow(BMP *bmp, UCHAR *row)
+{
+	ssize_t bytesToRead = BMP_GetBytesPerRowInFile(bmp);
+	
+	if (fread(bmp->RowBuf, bytesToRead, 1, bmp->file) != bytesToRead) {
+		return BMP_LAST_ERROR_CODE = BMP_IO_ERROR;
+	}
+	
+	UINT counter;
+	UINT offset;
+	
+	for (counter = 0, offset = 0; counter < bmp->Header.Width; counter++, offset += 3) {
+		BMP_Row_GetPixelRGB(bmp, counter, &row[offset], &row[offset + 1], &row[offset + 2]);
+	}
+	
+	return BMP_LAST_ERROR_CODE = BMP_OK;
+}
+
+// Mostly to mirror OpenFile
+// You need to BMP_Free() anyway so this is kind of useless
+void BMP_CloseFile(BMP *bmp)
+{
+	fclose(bmp->file);
+	bmp->file = NULL;
+}
 
 /**************************************************************
 	Returns the last error code.

@@ -29,7 +29,7 @@ LIBPNG_LIBS = `pkg-config libpng --libs`
 PTHREAD_LIBS = -pthread
 PTHREAD_CFLAGS = $(PTHREAD_LIBS)
 QDBMP_CFLAGS = -I../lib/qdbmp
-QDBMP_LIBS = -l../lib/qdbmp/qdbmp.o
+QDBMP_LIBS = ../lib/qdbmp/qdbmp.o
 
 image: $(OBJECTS) $(LIBEXIF_A)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
@@ -276,7 +276,7 @@ images/loadimage-png.o: images/loadimage-png.c images/loadimage.h images/loadima
 	-Wno-deprecated-declarations $(OPTFLAGS)
 
 images/loadimage-bmp.o: images/loadimage-bmp.c images/loadimage.h images/loadimage-bmp.h ../lib/qdbmp/qdbmp.h
-	cc -g $(CFLAGS_ALL) $(QDBMP_CFLAGS)\
+	cc -g $(CFLAGS_ALL) $(QDBMP_CFLAGS) \
 	-I/opt/vc/include/ \
 	-c images/loadimage-bmp.c -o images/loadimage-bmp.o \
 	-Wno-deprecated-declarations $(OPTFLAGS)

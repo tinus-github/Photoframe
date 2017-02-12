@@ -20,8 +20,13 @@ typedef struct _BMP_Header
 	UINT		ImageDataSize;		/* Size of uncompressed image's data */
 	UINT		HPixelsPerMeter;	/* Horizontal resolution (pixels per meter) */
 	UINT		VPixelsPerMeter;	/* Vertical resolution (pixels per meter) */
-	UINT		ColorsUsed;			/* Number of color indexes in the color table that are actually used by the bitmap */
+	UINT		ColorsUsed;			/* Number of color indexes in the color table that are actually
+							 used by the bitmap */
 	UINT		ColorsRequired;		/* Number of color indexes that are required for displaying the bitmap */
+	
+	UINT		RedBitmask;
+	UINT		GreenBitmask;
+	UINT		BlueBitmask;
 } BMP_Header;
 
 typedef enum {
@@ -42,10 +47,29 @@ struct _BMP
 	UINT		MaxDimensions;
 	UCHAR*		RowBuf;
 	UINT		Cursor;
+	
+	USHORT		RedBitmaskStart;
+	USHORT		RedBitmaskEnd;
+	USHORT		GreenBitmaskStart;
+	USHORT		GreenBitmaskEnd;
+	USHORT		BlueBitmaskStart;
+	USHORT		BlueBitmaskEnd;
+
+	UINT		HasBitfields;
 };
+
+typedef enum {
+	BI_RGB = 0,
+	BI_RLE8 = 1,
+	BI_RLA4 = 2,
+	BI_BITFIELDS = 3,
+	BI_JPEG = 4,
+	BI_PNG = 5
+} BMP_CompressionTypes;
 
 
 /* Holds the last error code */
+// TODO: Thread safety
 static BMP_STATUS BMP_LAST_ERROR_CODE = 0;
 
 
@@ -78,6 +102,9 @@ static int	ReadUSHORT	( USHORT *x, FILE* f );
 
 static int	WriteUINT	( UINT x, FILE* f );
 static int	WriteUSHORT	( USHORT x, FILE* f );
+
+static int	InterpretBitmask( UINT mask, USHORT* start, USHORT* count);
+static UINT	ApplyBitmask	( UINT value, USHORT start, USHORT count);
 
 
 
@@ -684,15 +711,24 @@ static ssize_t BMP_GetBytesPerRowInFile(BMP *bmp)
 
 BMP_STATUS BMP_ReadHeader(BMP *bmp)
 {
+	bmp->HasBitfields = 0;
 	/* Read header */
 	if ( ReadHeader( bmp, bmp->file ) != BMP_OK || bmp->Header.Magic != 0x4D42 ) {
 		return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
 	}
-	
+
 	/* Verify that the bitmap variant is supported */
-	if ( ( bmp->Header.BitsPerPixel != 32 && bmp->Header.BitsPerPixel != 24 && bmp->Header.BitsPerPixel != 8 )
-	    || bmp->Header.CompressionType != 0 || bmp->Header.HeaderSize != 40 ) {
-		return BMP_LAST_ERROR_CODE = BMP_FILE_NOT_SUPPORTED;
+	if (((bmp->Header.BitsPerPixel == 32) || (bmp->Header.BitsPerPixel == 16)) &&
+	    (bmp->Header.CompressionType == BI_BITFIELDS)) {
+		bmp->HasBitfields = 1;
+	} else if ((bmp->Header.BitsPerPixel == 16) &&
+		   (bmp->Header.CompressionType == BI_RGB)) {
+		bmp->HasBitfields = 2;
+	} else {
+		if ( ( bmp->Header.BitsPerPixel != 32 && bmp->Header.BitsPerPixel != 24 && bmp->Header.BitsPerPixel != 8 )
+		    || bmp->Header.CompressionType != BI_RGB || bmp->Header.HeaderSize != 40 ) {
+			return BMP_LAST_ERROR_CODE = BMP_FILE_NOT_SUPPORTED;
+		}
 	}
 	
 	/* Sanity checks */
@@ -713,14 +749,52 @@ BMP_STATUS BMP_ReadHeader(BMP *bmp)
 		{
 			return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
 		}
+		bmp->Cursor += BMP_PALETTE_SIZE * sizeof( UCHAR );
 	}
 	else	/* Not an indexed image */
 	{
 		bmp->Palette = NULL;
 	}
 	
-	// Skip bytes if neccessary
 	ssize_t bytesToSkip;
+	
+	if (bmp->HasBitfields == 1) {
+		if ((bmp->Header.HeaderSize + 14) > bmp->Cursor) {
+			bytesToSkip = bmp->Header.HeaderSize + 14 - bmp->Cursor;
+			
+			if (fseek(bmp->file, bytesToSkip, SEEK_CUR)) {
+				return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
+			}
+			bmp->Cursor += bytesToSkip;
+		}
+		if ( !ReadUINT( &( bmp->Header.RedBitmask), bmp->file ) )	return BMP_IO_ERROR;
+		if ( !ReadUINT( &( bmp->Header.GreenBitmask), bmp->file ) )	return BMP_IO_ERROR;
+		if ( !ReadUINT( &( bmp->Header.BlueBitmask), bmp->file ) )	return BMP_IO_ERROR;
+		bmp->Cursor += 3 * 4;
+	} else if (bmp->HasBitfields == 2) {
+		bmp->Header.RedBitmask = 0x7c00;
+		bmp->Header.GreenBitmask = 0x03e0;
+		bmp->Header.BlueBitmask = 0x001f;
+	}
+	
+	if (bmp->HasBitfields) {
+		BMP_LAST_ERROR_CODE = InterpretBitmask(bmp->Header.RedBitmask,
+						       &bmp->RedBitmaskStart,
+						       &bmp->RedBitmaskEnd);
+		if (BMP_LAST_ERROR_CODE != BMP_OK) return BMP_LAST_ERROR_CODE;
+		
+		BMP_LAST_ERROR_CODE = InterpretBitmask(bmp->Header.GreenBitmask,
+						       &bmp->GreenBitmaskStart,
+						       &bmp->GreenBitmaskEnd);
+		if (BMP_LAST_ERROR_CODE != BMP_OK) return BMP_LAST_ERROR_CODE;
+		
+		BMP_LAST_ERROR_CODE = InterpretBitmask(bmp->Header.BlueBitmask,
+						       &bmp->BlueBitmaskStart,
+						       &bmp->BlueBitmaskEnd);
+		if (BMP_LAST_ERROR_CODE != BMP_OK) return BMP_LAST_ERROR_CODE;
+	}
+	
+	// Skip bytes if neccessary
 	if (bmp->Header.DataOffset > bmp->Cursor) {
 		// otherwise it's probably just not set
 		
@@ -728,6 +802,7 @@ BMP_STATUS BMP_ReadHeader(BMP *bmp)
 		if (fseek(bmp->file, bytesToSkip, SEEK_CUR)) {
 			return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
 		}
+		bmp->Cursor += bytesToSkip;
 	}
 	
 	bmp->RowBuf = malloc(BMP_GetBytesPerRowInFile(bmp));
@@ -767,12 +842,42 @@ static void BMP_Row_GetPixelRGB( BMP* bmp, UINT x, UCHAR* r, UCHAR* g, UCHAR* b 
 	*b = *( pixel + 0 );
 }
 
+static void BMP_Row_GetPixel_Bitfields( BMP* bmp, UINT x, UCHAR* r, UCHAR* g, UCHAR* b )
+{
+	UCHAR*	pixel;
+	UCHAR	bytes_per_pixel;
+	
+	bytes_per_pixel = bmp->Header.BitsPerPixel >> 3;
+	
+	/* Calculate the location of the relevant pixel (rows are flipped) */
+	pixel = bmp->RowBuf + ( x * bytes_per_pixel );
+	
+	UINT value;
+	if (bmp->Header.BitsPerPixel == 16) {
+		value = (((USHORT)pixel[1]) << 8) | pixel[0];
+	} else if (bmp->Header.BitsPerPixel == 32) {
+		value = (((UINT)pixel[3]) << 24) |
+		(((UINT)pixel[2]) << 16) |
+		(((UINT)pixel[1]) << 8) |
+		pixel[0];
+		
+	} else {
+		// Not valid, has been checked against while reading the header
+		return;
+	}
+	
+	*r = (UCHAR)ApplyBitmask(value, bmp->RedBitmaskStart, bmp->RedBitmaskEnd);
+	*g = (UCHAR)ApplyBitmask(value, bmp->GreenBitmaskStart, bmp->GreenBitmaskEnd);
+	*b = (UCHAR)ApplyBitmask(value, bmp->BlueBitmaskStart, bmp->BlueBitmaskEnd);
+}
+
 BMP_STATUS BMP_ReadRow(BMP *bmp, UCHAR *row)
 {
 	ssize_t bytesToRead = BMP_GetBytesPerRowInFile(bmp);
 	ssize_t bytesRead;
 	
 	bytesRead = fread(bmp->RowBuf, 1, bytesToRead, bmp->file);
+	bmp->Cursor += bytesRead;
  	if (bytesRead != bytesToRead) {
 		return BMP_LAST_ERROR_CODE = BMP_IO_ERROR;
 	}
@@ -780,8 +885,14 @@ BMP_STATUS BMP_ReadRow(BMP *bmp, UCHAR *row)
 	UINT counter;
 	UINT offset;
 	
-	for (counter = 0, offset = 0; counter < bmp->Header.Width; counter++, offset += 3) {
-		BMP_Row_GetPixelRGB(bmp, counter, &row[offset], &row[offset + 1], &row[offset + 2]);
+	if (bmp->HasBitfields) {
+		for (counter = 0, offset = 0; counter < bmp->Header.Width; counter++, offset += 3) {
+			BMP_Row_GetPixel_Bitfields(bmp, counter, &row[offset], &row[offset + 1], &row[offset + 2]);
+		}
+	} else {
+		for (counter = 0, offset = 0; counter < bmp->Header.Width; counter++, offset += 3) {
+			BMP_Row_GetPixelRGB(bmp, counter, &row[offset], &row[offset + 1], &row[offset + 2]);
+		}
 	}
 	
 	return BMP_LAST_ERROR_CODE = BMP_OK;
@@ -975,3 +1086,87 @@ static int	WriteUSHORT( USHORT x, FILE* f )
 	return ( f && fwrite( little, 2, 1, f ) == 1 );
 }
 
+/**************************************************************
+ 	Interpret a bitmask
+ 	The bitmasks are used to indicate which bits map
+ 	to which color.
+ *************************************************************/
+static int	InterpretBitmask( UINT mask, USHORT* start, USHORT* count)
+{
+	UINT counter = 0;
+	
+	while (counter < 32) {
+		if (!(mask & 1)) {
+			counter++;
+			mask = mask >> 1;
+		} else {
+			break;
+		}
+	}
+	if (counter == 32) {
+		return BMP_FILE_INVALID;
+	}
+	*start = counter;
+	while (counter < 33) {
+		if (mask & 1) {
+			counter++;
+			mask = mask >> 1;
+		} else {
+			break;
+		}
+	}
+	*count = counter - *start;
+	
+	return BMP_OK;
+}
+
+static UINT	ApplyBitmask	( UINT value, USHORT start, USHORT count)
+{
+	static USHORT allOneMasks[17] = {
+		0x0,
+		0x1,
+		0x3,
+		0x7,
+		0xF,
+		0x1F,
+		0x3F,
+		0x7F,
+		0xFF,
+		0x1FF,
+		0x3FF,
+		0x7FF,
+		0xFFF,
+		0x1FFF,
+		0x3FFF,
+		0x7FFF,
+		0xFFFF,
+	};
+	
+	int expandToOnes = 0;
+	
+	if (start) {
+		value = value >> start;
+	}
+	
+	if (value & 0x1) {
+		expandToOnes = 1;
+	}
+	
+	value &= allOneMasks[count];
+	
+	int toShift = 8-count;
+	if (toShift > 0) {
+		value = value << toShift;
+	}
+	
+	if (expandToOnes && (toShift > 0))
+	{
+		if (toShift < 8) {
+			value |= allOneMasks[toShift];
+		} else {
+			value |= allOneMasks[8];
+		}
+	}
+	
+	return value;
+}

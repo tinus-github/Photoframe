@@ -15,3 +15,6 @@ qdbmp.so: qdbmp.o
 qdbmp.o: qdbmp.c qdbmp.h
 	cc ${CFLAGS_ALL} -c \
 	qdbmp.c -o qdbmp.o
+
+clean:
+	rm -f qdbmp.so ${OBJECTS}

@@ -57,6 +57,8 @@
 		0D74EEE01E4DF17B00A4CE92 /* loadimage-jpg.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */; };
 		0D74EEE31E4DF34A00A4CE92 /* loadimage-png.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEE11E4DF34A00A4CE92 /* loadimage-png.c */; };
 		0D74EEE41E4DF34A00A4CE92 /* loadimage-png.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEE11E4DF34A00A4CE92 /* loadimage-png.c */; };
+		0D74EEE71E4DFA5C00A4CE92 /* loadimage-bmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEE51E4DFA5C00A4CE92 /* loadimage-bmp.c */; };
+		0D74EEE81E4DFA5C00A4CE92 /* loadimage-bmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEE51E4DFA5C00A4CE92 /* loadimage-bmp.c */; };
 		0D893B791E47A14E000DD5BF /* GLWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D893B781E47A14E000DD5BF /* GLWindowController.m */; };
 		0D893B7E1E47A9E6000DD5BF /* common-driver.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D893B7C1E47A9E6000DD5BF /* common-driver.c */; };
 		0DAFDA541E477D6100C5100E /* libexif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA531E477D6100C5100E /* libexif.a */; };
@@ -393,6 +395,9 @@
 		0D74EEDE1E4DF15C00A4CE92 /* loadimage-jpg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "loadimage-jpg.h"; sourceTree = "<group>"; };
 		0D74EEE11E4DF34A00A4CE92 /* loadimage-png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "loadimage-png.c"; sourceTree = "<group>"; };
 		0D74EEE21E4DF34A00A4CE92 /* loadimage-png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "loadimage-png.h"; sourceTree = "<group>"; };
+		0D74EEE51E4DFA5C00A4CE92 /* loadimage-bmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "loadimage-bmp.c"; sourceTree = "<group>"; };
+		0D74EEE61E4DFA5C00A4CE92 /* loadimage-bmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "loadimage-bmp.h"; sourceTree = "<group>"; };
+		0D74EEE91E511BF700A4CE92 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		0D80FE081E251939008827AA /* gl-rectangle.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "gl-rectangle.c"; path = "testsrc/gl-rectangle.c"; sourceTree = SOURCE_ROOT; };
 		0D80FE091E251939008827AA /* gl-rectangle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "gl-rectangle.h"; path = "testsrc/gl-rectangle.h"; sourceTree = SOURCE_ROOT; };
 		0D80FE0A1E255179008827AA /* gl-bitmap.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-bitmap.c"; sourceTree = "<group>"; };
@@ -855,6 +860,7 @@
 				0D1805FE1E4D2BC800449219 /* qdbmp.h */,
 				0D1805FF1E4D2BC800449219 /* readme */,
 				0D1806001E4D2BC800449219 /* samples */,
+				0D74EEE91E511BF700A4CE92 /* Makefile */,
 			);
 			path = qdbmp;
 			sourceTree = "<group>";
@@ -881,6 +887,8 @@
 				0D74EEDE1E4DF15C00A4CE92 /* loadimage-jpg.h */,
 				0D74EEE11E4DF34A00A4CE92 /* loadimage-png.c */,
 				0D74EEE21E4DF34A00A4CE92 /* loadimage-png.h */,
+				0D74EEE51E4DFA5C00A4CE92 /* loadimage-bmp.c */,
+				0D74EEE61E4DFA5C00A4CE92 /* loadimage-bmp.h */,
 			);
 			path = images;
 			sourceTree = "<group>";
@@ -1248,6 +1256,7 @@
 				0D13C2001E47E55C00FB9F43 /* gl-slide.c in Sources */,
 				0D13C2011E47E55C00FB9F43 /* gl-slideshow.c in Sources */,
 				0D13C2021E47E55C00FB9F43 /* gl-object.c in Sources */,
+				0D74EEE81E4DFA5C00A4CE92 /* loadimage-bmp.c in Sources */,
 				0D13C2031E47E55C00FB9F43 /* gl-notice.c in Sources */,
 				0D13C2041E47E55C00FB9F43 /* gl-notice-subscription.c in Sources */,
 				0D13C2051E47E55C00FB9F43 /* gl-workqueue.c in Sources */,
@@ -1298,6 +1307,7 @@
 				0DAFDA651E477E5C00C5100E /* gl-bitmap.c in Sources */,
 				0DAFDA661E477E5C00C5100E /* gl-texture.c in Sources */,
 				0DAFDA671E477E5C00C5100E /* gl-shape.c in Sources */,
+				0D74EEE71E4DFA5C00A4CE92 /* loadimage-bmp.c in Sources */,
 				0DAFDA681E477E5C00C5100E /* gl-rectangle.c in Sources */,
 				0DAFDA691E477E5C00C5100E /* gl-tile.c in Sources */,
 				0DAFDA6A1E477E5C00C5100E /* gl-stage.c in Sources */,

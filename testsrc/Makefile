@@ -12,7 +12,7 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  gl-image.o gl-framed-shape.o slideshow/gl-slide.o slideshow/gl-slide-image.o \
 	  slideshow/gl-slideshow.o common-driver.o \
 	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o \
-	  images/loadimage-jpg.o images/loadimage-png.o
+	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o
 
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	  -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
@@ -29,6 +29,7 @@ LIBPNG_LIBS = `pkg-config libpng --libs`
 PTHREAD_LIBS = -pthread
 PTHREAD_CFLAGS = $(PTHREAD_LIBS)
 QDBMP_CFLAGS = -I../lib/qdbmp
+QDBMP_LIBS = -l../lib/qdbmp/qdbmp.o
 
 image: $(OBJECTS) $(LIBEXIF_A)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
@@ -36,7 +37,7 @@ image: $(OBJECTS) $(LIBEXIF_A)
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
 	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS) \
 	$(LIBFREETYPE_LIBS) $(LIBHARFBUZZ_LIBS) $(PTHREAD_LIBS) \
-	$(LIBPNG_LIBS)
+	$(LIBPNG_LIBS) $(QDBMP_LIBS)
 
 image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
@@ -272,6 +273,12 @@ images/loadimage-png.o: images/loadimage-png.c images/loadimage.h images/loadima
 	cc -g $(CFLAGS_ALL) $(LIBPNG_CFLAGS)\
 	-I/opt/vc/include/ \
 	-c images/loadimage-png.c -o images/loadimage-png.o \
+	-Wno-deprecated-declarations $(OPTFLAGS)
+
+images/loadimage-bmp.o: images/loadimage-bmp.c images/loadimage.h images/loadimage-bmp.h ../lib/qdbmp/qdbmp.h
+	cc -g $(CFLAGS_ALL) $(QDBMP_CFLAGS)\
+	-I/opt/vc/include/ \
+	-c images/loadimage-bmp.c -o images/loadimage-bmp.o \
 	-Wno-deprecated-declarations $(OPTFLAGS)
 
 images/loadexif.o: images/loadexif.c images/loadexif.h images/loadimage.h

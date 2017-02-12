@@ -16,6 +16,7 @@
 #include "images/loadimage.h"
 #include "images/loadimage-jpg.h"
 #include "images/loadimage-png.h"
+#include "images/loadimage-bmp.h"
 #include "infrastructure/gl-notice-subscription.h"
 #include "infrastructure/gl-notice.h"
 
@@ -97,7 +98,7 @@ static void *gl_image_render_job(void *target, void *extra_data)
 {
 	gl_image *obj = (gl_image *)target;
 	
-	return loadJPEG(obj->data._filename,
+	return loadBMP(obj->data._filename,
 			obj->data.desiredWidth,
 			obj->data.desiredHeight,
 			&obj->data._width,

@@ -70,7 +70,7 @@ unsigned char* loadBMP(char *fileName, int wantedwidth, int wantedheight,
 	
 	scaler->data.inputWidth = imageWidth;
 	scaler->data.inputHeight = imageHeight;
-	scaler->data.outputWidth = imageHeight * scalefactor;
+	scaler->data.outputWidth = imageWidth * scalefactor;
 	scaler->data.outputHeight = imageHeight * scalefactor;
 	scaler->data.inputType = gl_bitmap_scaler_input_type_rgb;
 	

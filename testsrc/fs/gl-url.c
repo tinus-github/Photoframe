@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "gl-url.h"
-#include "gl-object.h"
+#include "fs/gl-url.h"
+#include "infrastructure/gl-object.h"
 
 static int gl_url_decode(gl_url *obj, const char *urlString);
 static void gl_url_free(gl_object *obj);

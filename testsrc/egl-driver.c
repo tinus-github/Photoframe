@@ -7,6 +7,9 @@
 //
 
 #include "egl-driver.h"
+#include "gl-stage.h"
+#include "gl-renderloop.h"
+#include "gl-renderloop-member.h"
 
 #include <bcm_host.h>
 

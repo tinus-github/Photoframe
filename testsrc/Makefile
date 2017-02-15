@@ -12,7 +12,8 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  gl-image.o gl-framed-shape.o slideshow/gl-slide.o slideshow/gl-slide-image.o \
 	  slideshow/gl-slideshow.o common-driver.o \
 	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o \
-	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o
+	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o \
+	  fs/gl-url.o
 
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	  -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
@@ -291,6 +292,11 @@ images/loadexif.o: images/loadexif.c images/loadexif.h images/loadimage.h
 images/gl-bitmap-scaler.o: images/gl-bitmap-scaler.c images/gl-bitmap-scaler.h infrastructure/gl-object.h
 	cc -g $(CFLAGS_ALL) \
 	-c images/gl-bitmap-scaler.c -o images/gl-bitmap-scaler.o \
+	$(OPTFLAGS)
+
+fs/gl-url.o: fs/gl-url.c fs/gl-url.h infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-c fs/gl-url.c -o fs/gl-url.o \
 	$(OPTFLAGS)
 
 decodejpeg2rgb: decodejpeg2rgb.o

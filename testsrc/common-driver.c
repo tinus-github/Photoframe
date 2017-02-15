@@ -34,6 +34,7 @@
 #include "slideshow/gl-slide-image.h"
 #include "slideshow/gl-slideshow.h"
 #include "images/gl-bitmap-scaler.h"
+#include "fs/gl-url.h"
 
 #ifdef __APPLE__
 #include "macosx/GLWindow-C.h"
@@ -70,6 +71,7 @@ void gl_objects_setup()
 	gl_slide_image_setup();
 	gl_slideshow_setup();
 	gl_bitmap_scaler_setup();
+	gl_url_setup();
 }
 
 GLuint driver_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )

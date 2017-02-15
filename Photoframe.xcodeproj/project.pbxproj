@@ -95,6 +95,10 @@
 		0DAFDA741E477E5C00C5100E /* gl-framed-shape.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9FD15C1E2D995000B82200 /* gl-framed-shape.c */; };
 		0DAFDA761E47811300C5100E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA751E47811300C5100E /* OpenGL.framework */; };
 		0DAFDA791E47857100C5100E /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA781E47857100C5100E /* libfreetype.6.dylib */; };
+		0DE5123A1E5361C000CB0DA1 /* gl-stream.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE512381E5361C000CB0DA1 /* gl-stream.c */; };
+		0DE5123B1E537B7400CB0DA1 /* gl-stream.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE512381E5361C000CB0DA1 /* gl-stream.c */; };
+		0DE5123E1E537F7700CB0DA1 /* gl-url.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE5123C1E537F7700CB0DA1 /* gl-url.c */; };
+		0DE5123F1E539B8000CB0DA1 /* gl-url.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE5123C1E537F7700CB0DA1 /* gl-url.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -431,6 +435,10 @@
 		0DAFDA751E47811300C5100E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		0DAFDA771E47817600C5100E /* gl-includes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-includes.h"; sourceTree = "<group>"; };
 		0DAFDA781E47857100C5100E /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = ../../../../../opt/X11/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
+		0DE512381E5361C000CB0DA1 /* gl-stream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-stream.c"; sourceTree = "<group>"; };
+		0DE512391E5361C000CB0DA1 /* gl-stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-stream.h"; sourceTree = "<group>"; };
+		0DE5123C1E537F7700CB0DA1 /* gl-url.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-url.c"; sourceTree = "<group>"; };
+		0DE5123D1E537F7700CB0DA1 /* gl-url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-url.h"; sourceTree = "<group>"; };
 		0DEED0791E15746600C00550 /* egl-driver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "egl-driver.c"; sourceTree = "<group>"; };
 		0DEED07A1E15746600C00550 /* egl-driver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "egl-driver.h"; sourceTree = "<group>"; };
 		0DEED07B1E15E10900C00550 /* gl-value-animation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-value-animation.c"; sourceTree = "<group>"; };
@@ -936,6 +944,7 @@
 		0D69BD731C4EA16500A10282 /* testsrc */ = {
 			isa = PBXGroup;
 			children = (
+				0DE512371E53619700CB0DA1 /* fs */,
 				0D893B741E47A08D000DD5BF /* macosx */,
 				0D2199361E40D9E9004877C3 /* images */,
 				0D9FD15E1E2E58F600B82200 /* slideshow */,
@@ -1058,6 +1067,17 @@
 				0DAFDA531E477D6100C5100E /* libexif.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0DE512371E53619700CB0DA1 /* fs */ = {
+			isa = PBXGroup;
+			children = (
+				0DE512381E5361C000CB0DA1 /* gl-stream.c */,
+				0DE512391E5361C000CB0DA1 /* gl-stream.h */,
+				0DE5123C1E537F7700CB0DA1 /* gl-url.c */,
+				0DE5123D1E537F7700CB0DA1 /* gl-url.h */,
+			);
+			path = fs;
 			sourceTree = "<group>";
 		};
 		0DFBB1C91E204BF200E50758 /* labels */ = {
@@ -1252,6 +1272,7 @@
 				0D13C1FC1E47E55C00FB9F43 /* loadimage.c in Sources */,
 				0D13C1FD1E47E55C00FB9F43 /* loadexif.c in Sources */,
 				0D13C1FE1E47E55C00FB9F43 /* gl-bitmap-scaler.c in Sources */,
+				0DE5123B1E537B7400CB0DA1 /* gl-stream.c in Sources */,
 				0D13C1FF1E47E55C00FB9F43 /* gl-slide-image.c in Sources */,
 				0D13C2001E47E55C00FB9F43 /* gl-slide.c in Sources */,
 				0D13C2011E47E55C00FB9F43 /* gl-slideshow.c in Sources */,
@@ -1260,6 +1281,7 @@
 				0D13C2031E47E55C00FB9F43 /* gl-notice.c in Sources */,
 				0D13C2041E47E55C00FB9F43 /* gl-notice-subscription.c in Sources */,
 				0D13C2051E47E55C00FB9F43 /* gl-workqueue.c in Sources */,
+				0DE5123F1E539B8000CB0DA1 /* gl-url.c in Sources */,
 				0D13C2061E47E55C00FB9F43 /* gl-workqueue-job.c in Sources */,
 				0D13C2071E47E55C00FB9F43 /* gl-label.c in Sources */,
 				0D13C2081E47E55C00FB9F43 /* gl-label-scroller-segment.c in Sources */,
@@ -1303,6 +1325,7 @@
 				0DAFDA611E477E5C00C5100E /* gl-label.c in Sources */,
 				0DAFDA621E477E5C00C5100E /* gl-label-scroller-segment.c in Sources */,
 				0DAFDA631E477E5C00C5100E /* gl-label-renderer.c in Sources */,
+				0DE5123A1E5361C000CB0DA1 /* gl-stream.c in Sources */,
 				0DAFDA641E477E5C00C5100E /* gl-label-scroller.c in Sources */,
 				0DAFDA651E477E5C00C5100E /* gl-bitmap.c in Sources */,
 				0DAFDA661E477E5C00C5100E /* gl-texture.c in Sources */,
@@ -1311,6 +1334,7 @@
 				0DAFDA681E477E5C00C5100E /* gl-rectangle.c in Sources */,
 				0DAFDA691E477E5C00C5100E /* gl-tile.c in Sources */,
 				0DAFDA6A1E477E5C00C5100E /* gl-stage.c in Sources */,
+				0DE5123E1E537F7700CB0DA1 /* gl-url.c in Sources */,
 				0DAFDA6B1E477E5C00C5100E /* gl-container.c in Sources */,
 				0DAFDA6C1E477E5C00C5100E /* gl-container-2d.c in Sources */,
 				0DAFDA6D1E477E5C00C5100E /* gl-tiled-image.c in Sources */,

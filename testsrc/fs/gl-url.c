@@ -14,11 +14,13 @@
 #include "infrastructure/gl-object.h"
 
 static int gl_url_decode(gl_url *obj, const char *urlString);
+static int gl_url_decode_scheme(gl_url *obj, const char *urlString);
 static void gl_url_free(gl_object *obj);
 static void gl_url_free_results(gl_url *obj);
 
 static struct gl_url_funcs gl_url_funcs_global = {
-	.decode = &gl_url_decode
+	.decode = &gl_url_decode,
+	.decode_scheme = &gl_url_decode_scheme
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
@@ -37,6 +39,9 @@ void gl_url_setup()
 static int decode_scheme(gl_url *obj, const char *urlString, size_t *cursor)
 {
 	size_t part_start = *cursor;
+	
+	free(obj->data.scheme);
+	obj->data.scheme = NULL;
 	
 	while (urlString[*cursor] != ':') {
 		if (urlString[*cursor] == '\0') {
@@ -428,6 +433,16 @@ static int gl_url_decode(gl_url *obj, const char *urlString)
 	
 handle_err:
 	gl_url_free_results(obj);
+	return ret;
+}
+
+static int gl_url_decode_scheme(gl_url *obj, const char *urlString)
+{
+	int ret;
+	size_t cursor = 0;
+	
+	ret = decode_scheme(obj, urlString, &cursor);
+	
 	return ret;
 }
 

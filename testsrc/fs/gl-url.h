@@ -18,6 +18,7 @@ typedef struct gl_url gl_url;
 typedef struct gl_url_funcs {
 	gl_object_funcs p;
 	int (*decode) (gl_url *obj, const char *urlString);
+	int (*decode_scheme) (gl_url *obj, const char *urlString);
 } gl_url_funcs;
 
 typedef struct gl_url_data {

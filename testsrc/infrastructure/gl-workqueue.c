@@ -107,6 +107,7 @@ static void gl_workqueue_complete_jobs(void *obj_void, gl_renderloop_member *ren
 		notice->f->fire(notice);
 		
 		((gl_object *)job)->f->unref((gl_object *)job);
+		pthread_mutex_lock(&obj->data.queueMutex);
 	}
 	pthread_mutex_unlock(&obj->data.queueMutex);
 }

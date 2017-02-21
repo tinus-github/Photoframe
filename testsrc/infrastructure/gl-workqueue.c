@@ -125,9 +125,15 @@ gl_workqueue *gl_workqueue_init(gl_workqueue *obj)
 	
 	obj->f = &gl_workqueue_funcs_global;
 	
+	pthread_mutexattr_t attributes;
+	pthread_mutexattr_init(&attributes);
 	
-	pthread_mutex_init(&obj->data.queueMutex, NULL);
+	pthread_mutexattr_settype(&attributes, PTHREAD_MUTEX_ERRORCHECK);
+	
+	pthread_mutex_init(&obj->data.queueMutex, &attributes);
 	pthread_cond_init(&obj->data.workAvailable, NULL);
+	
+	pthread_mutexattr_destroy(&attributes);
 	
 	gl_workqueue_job *head = gl_workqueue_job_new();
 	head->data.siblingL = head;

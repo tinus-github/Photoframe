@@ -17,10 +17,14 @@ static int gl_url_decode(gl_url *obj, const char *urlString);
 static int gl_url_decode_scheme(gl_url *obj, const char *urlString);
 static void gl_url_free(gl_object *obj);
 static void gl_url_free_results(gl_url *obj);
+static int url_escape(gl_url *obj, const char *input, char **output);
+static int url_unescape(gl_url *obj, const char *input, char **output);
 
 static struct gl_url_funcs gl_url_funcs_global = {
 	.decode = &gl_url_decode,
-	.decode_scheme = &gl_url_decode_scheme
+	.decode_scheme = &gl_url_decode_scheme,
+	.url_escape = &url_escape,
+	.url_unescape = &url_unescape
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
@@ -144,6 +148,80 @@ static int url_unescape(gl_url *obj, const char* input, char** output)
 	}
 	
 	*output = ret;
+	return 0;
+}
+
+static int character_is_unsafe(char character)
+{
+	if ((character >= '0') && (character <= '9')) {
+		return 0;
+	}
+	if ((character >= 'a') && (character <= 'z')) {
+		return 0;
+	}
+	if ((character >= 'A') && (character <= 'Z')) {
+		return 0;
+	}
+	switch (character) {
+		case '$':
+		case '-':
+		case '_':
+		case '@':
+		case '.':
+		case '!':
+		case '*':
+		case '"':
+		case '\'':
+		case '(':
+		case ')':
+		case ',':
+		case '/':
+			return 0;
+		default:
+			return 1;
+	}
+}
+
+static char hex_char(unsigned int value)
+{
+	static char *characters = "0123456789abcdef";
+	
+	if (value < 16) {
+		return characters[value];
+	}
+	return '*';
+}
+
+static int url_escape(gl_url *obj, const char *input, char **output)
+{
+	size_t outputLength = 0;
+	size_t cursor = 0;
+	size_t outputCursor = 0;
+	
+	while (input[cursor]) {
+		if (character_is_unsafe(input[cursor])) {
+			outputLength+=2;
+		}
+		outputLength++;
+	}
+	
+	*output = calloc(1, outputLength);
+	if (!*output) {
+		return ENOMEM;
+	}
+	
+	cursor = 0;
+	while (input[cursor]) {
+		if (character_is_unsafe(input[cursor])) {
+			*output[outputCursor++] = '%';
+			*output[outputCursor++] = hex_char(input[cursor] >> 4);
+			*output[outputCursor++] = hex_char(input[cursor] & 15);
+		} else {
+			*output[outputCursor++] = input[cursor];
+		}
+		cursor++;
+	}
+	
 	return 0;
 }
 
@@ -407,8 +485,6 @@ static int gl_url_decode(gl_url *obj, const char *urlString)
 	if ((ret = decode_hostpart(obj, urlString, &cursor))) {
 		goto handle_err;
 	}
-	
-	ignore_character(obj, urlString, &cursor, '/');
 	
 	ret = decode_path (obj, urlString, &cursor);
 	if ((ret != 0) && (ret != ENOENT)) {

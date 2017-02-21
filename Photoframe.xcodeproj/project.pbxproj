@@ -95,6 +95,8 @@
 		0DAFDA741E477E5C00C5100E /* gl-framed-shape.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9FD15C1E2D995000B82200 /* gl-framed-shape.c */; };
 		0DAFDA761E47811300C5100E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA751E47811300C5100E /* OpenGL.framework */; };
 		0DAFDA791E47857100C5100E /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA781E47857100C5100E /* libfreetype.6.dylib */; };
+		0DD9DCAE1E573EAE00CB187D /* gl-stream-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DD9DCAC1E573EAE00CB187D /* gl-stream-file.c */; };
+		0DD9DCAF1E573EAE00CB187D /* gl-stream-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DD9DCAC1E573EAE00CB187D /* gl-stream-file.c */; };
 		0DE5123A1E5361C000CB0DA1 /* gl-stream.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE512381E5361C000CB0DA1 /* gl-stream.c */; };
 		0DE5123B1E537B7400CB0DA1 /* gl-stream.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE512381E5361C000CB0DA1 /* gl-stream.c */; };
 		0DE5123E1E537F7700CB0DA1 /* gl-url.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE5123C1E537F7700CB0DA1 /* gl-url.c */; };
@@ -435,6 +437,8 @@
 		0DAFDA751E47811300C5100E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		0DAFDA771E47817600C5100E /* gl-includes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-includes.h"; sourceTree = "<group>"; };
 		0DAFDA781E47857100C5100E /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = ../../../../../opt/X11/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
+		0DD9DCAC1E573EAE00CB187D /* gl-stream-file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-stream-file.c"; sourceTree = "<group>"; };
+		0DD9DCAD1E573EAE00CB187D /* gl-stream-file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-stream-file.h"; sourceTree = "<group>"; };
 		0DE512381E5361C000CB0DA1 /* gl-stream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-stream.c"; sourceTree = "<group>"; };
 		0DE512391E5361C000CB0DA1 /* gl-stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-stream.h"; sourceTree = "<group>"; };
 		0DE5123C1E537F7700CB0DA1 /* gl-url.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-url.c"; sourceTree = "<group>"; };
@@ -1076,6 +1080,8 @@
 				0DE512391E5361C000CB0DA1 /* gl-stream.h */,
 				0DE5123C1E537F7700CB0DA1 /* gl-url.c */,
 				0DE5123D1E537F7700CB0DA1 /* gl-url.h */,
+				0DD9DCAC1E573EAE00CB187D /* gl-stream-file.c */,
+				0DD9DCAD1E573EAE00CB187D /* gl-stream-file.h */,
 			);
 			path = fs;
 			sourceTree = "<group>";
@@ -1282,6 +1288,7 @@
 				0D13C2041E47E55C00FB9F43 /* gl-notice-subscription.c in Sources */,
 				0D13C2051E47E55C00FB9F43 /* gl-workqueue.c in Sources */,
 				0DE5123F1E539B8000CB0DA1 /* gl-url.c in Sources */,
+				0DD9DCAF1E573EAE00CB187D /* gl-stream-file.c in Sources */,
 				0D13C2061E47E55C00FB9F43 /* gl-workqueue-job.c in Sources */,
 				0D13C2071E47E55C00FB9F43 /* gl-label.c in Sources */,
 				0D13C2081E47E55C00FB9F43 /* gl-label-scroller-segment.c in Sources */,
@@ -1335,6 +1342,7 @@
 				0DAFDA691E477E5C00C5100E /* gl-tile.c in Sources */,
 				0DAFDA6A1E477E5C00C5100E /* gl-stage.c in Sources */,
 				0DE5123E1E537F7700CB0DA1 /* gl-url.c in Sources */,
+				0DD9DCAE1E573EAE00CB187D /* gl-stream-file.c in Sources */,
 				0DAFDA6B1E477E5C00C5100E /* gl-container.c in Sources */,
 				0DAFDA6C1E477E5C00C5100E /* gl-container-2d.c in Sources */,
 				0DAFDA6D1E477E5C00C5100E /* gl-tiled-image.c in Sources */,

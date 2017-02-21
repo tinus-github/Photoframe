@@ -13,7 +13,7 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  slideshow/gl-slideshow.o common-driver.o \
 	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o \
 	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o \
-	  fs/gl-url.o
+	  fs/gl-url.o fs/gl-stream.o fs/gl-stream-file.o
 
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	  -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
@@ -297,6 +297,16 @@ images/gl-bitmap-scaler.o: images/gl-bitmap-scaler.c images/gl-bitmap-scaler.h i
 fs/gl-url.o: fs/gl-url.c fs/gl-url.h infrastructure/gl-object.h
 	cc -g $(CFLAGS_ALL) \
 	-c fs/gl-url.c -o fs/gl-url.o \
+	$(OPTFLAGS)
+
+fs/gl-stream.o: fs/gl-stream.c fs/gl-stream.h fs/gl-url.h fs/infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-c fs/gl-stream.c -o fs/gl-stream.o \
+	$(OPTFLAGS)
+
+fs/gl-stream-file.o: fs/gl-stream-file.c fs/gl-stream-file.h fs/gl-stream.h fs/gl-url.h fs/infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-c fs/gl-stream-file.c -o fs/gl-stream-file.o \
 	$(OPTFLAGS)
 
 decodejpeg2rgb: decodejpeg2rgb.o

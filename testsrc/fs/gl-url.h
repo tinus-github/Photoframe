@@ -31,7 +31,7 @@ typedef struct gl_url_data {
 	char *username;
 	char *password;
 	char *host;
-	uint port;
+	unsigned int port;
 	char *path;
 	char *arguments;
 	char *fragment;

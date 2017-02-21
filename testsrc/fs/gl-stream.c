@@ -15,6 +15,7 @@ static gl_stream_error gl_stream_open(gl_stream *stream);
 static gl_stream_error gl_stream_close(gl_stream *stream);
 static gl_stream_error gl_stream_return_error(gl_stream *obj, gl_stream_error error);
 static size_t gl_stream_read(gl_stream *stream, void *buffer, size_t size);
+static size_t gl_stream_skip(gl_stream *obj, size_t size);
 static gl_stream_error gl_stream_set_url(gl_stream *obj, const char *URLstring);
 static void gl_stream_free(gl_object *obj);
 
@@ -22,6 +23,7 @@ static struct gl_stream_funcs gl_stream_funcs_global = {
 	.open = &gl_stream_open,
 	.close = &gl_stream_close,
 	.read = &gl_stream_read,
+	.skip = &gl_stream_skip,
 	.set_url = &gl_stream_set_url,
 	.return_error = &gl_stream_return_error
 };
@@ -44,6 +46,32 @@ static size_t gl_stream_read(gl_stream *obj, void *buffer, size_t size)
 {
 	printf("%s\n", "gl_stream_read is an abstract function");
 	abort();
+}
+
+static size_t gl_stream_skip(gl_stream *obj, size_t size)
+{
+	unsigned char buf[1024];
+	
+	size_t num_read;
+	size_t to_read;
+	size_t num_skipped = 0;
+	
+	while (size) {
+		if (size > 1024) {
+			to_read = 1024;
+		} else {
+			to_read = size;
+		}
+		
+		num_read = obj->f->read(obj, buf, to_read);
+		num_skipped += num_read;
+		if (!num_read) {
+			return num_skipped;
+		}
+		size -= num_read;
+	}
+	
+	return num_skipped;
 }
 
 static gl_stream_error gl_stream_set_url(gl_stream *obj, const char *URLstring)

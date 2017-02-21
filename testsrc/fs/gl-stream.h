@@ -32,7 +32,9 @@ typedef struct gl_stream_funcs {
 	gl_stream_error (*close) (gl_stream *obj);
 	gl_stream_error (*set_url) (gl_stream *obj, const char* URLstring);
 
+	// if buffer is NULL, skip bytes instead
 	size_t (*read) (gl_stream *obj, void *buffer, size_t size);
+	size_t (*skip) (gl_stream *obj, size_t size);
 	
 	gl_stream_error (*return_error) (gl_stream *obj, gl_stream_error error);
 } gl_stream_funcs;

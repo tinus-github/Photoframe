@@ -79,6 +79,11 @@ static size_t gl_stream_file_read (gl_stream *obj_stream, void *buffer, size_t s
 {
 	gl_stream_file *obj = (gl_stream_file *)obj_stream;
 	
+	if (!buffer) {
+		// the intention is to skip bytes
+		return obj_stream->f->skip(obj_stream, size);
+	}
+	
 	size_t cursor = 0;
 	size_t num_read;
 	

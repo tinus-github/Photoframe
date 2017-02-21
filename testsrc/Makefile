@@ -299,12 +299,12 @@ fs/gl-url.o: fs/gl-url.c fs/gl-url.h infrastructure/gl-object.h
 	-c fs/gl-url.c -o fs/gl-url.o \
 	$(OPTFLAGS)
 
-fs/gl-stream.o: fs/gl-stream.c fs/gl-stream.h fs/gl-url.h fs/infrastructure/gl-object.h
+fs/gl-stream.o: fs/gl-stream.c fs/gl-stream.h fs/gl-url.h infrastructure/gl-object.h
 	cc -g $(CFLAGS_ALL) \
 	-c fs/gl-stream.c -o fs/gl-stream.o \
 	$(OPTFLAGS)
 
-fs/gl-stream-file.o: fs/gl-stream-file.c fs/gl-stream-file.h fs/gl-stream.h fs/gl-url.h fs/infrastructure/gl-object.h
+fs/gl-stream-file.o: fs/gl-stream-file.c fs/gl-stream-file.h fs/gl-stream.h fs/gl-url.h infrastructure/gl-object.h
 	cc -g $(CFLAGS_ALL) \
 	-c fs/gl-stream-file.c -o fs/gl-stream-file.o \
 	$(OPTFLAGS)

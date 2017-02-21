@@ -169,6 +169,9 @@ static void io_cleanup_stream_src(j_decompress_ptr cinfo)
 	free (src->buffer);
 	src->buffer = NULL;
 	src->stream = NULL;
+	
+	free(src);
+	cinfo->src = NULL;
 }
 
 unsigned char *loadJPEG (gl_stream *stream,
@@ -205,6 +208,8 @@ unsigned char *loadJPEG (gl_stream *stream,
 	jerr.org.error_exit = handle_decode_error;
 	if (setjmp(jerr.setjmp_buffer)) {
 		/* Something went wrong, abort! */
+		cinfo.src->term_source(&cinfo);
+		
 		jpeg_destroy_decompress(&cinfo);
 		
 		io_cleanup_stream_src(&cinfo);

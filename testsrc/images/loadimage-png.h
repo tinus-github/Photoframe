@@ -11,7 +11,9 @@
 
 #include <stdio.h>
 
-unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
+#include "fs/gl-stream.h"
+
+unsigned char* loadPNG(gl_stream *stream, int wantedwidth, int wantedheight,
 		       int *width, int *height, unsigned int *orientation );
 
 #endif /* loadimage_png_h */

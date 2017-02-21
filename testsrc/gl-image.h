@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include "gl-tiled-image.h"
+#include "fs/gl-url.h"
 
 typedef struct gl_image gl_image;
 
@@ -31,7 +32,7 @@ typedef struct gl_image_data {
 	gl_notice *readyNotice;
 	gl_notice *failedNotice;
 	
-	char *_filename;
+	char *_urlString;
 	int _width;
 	int _height;
 	unsigned int _orientation;

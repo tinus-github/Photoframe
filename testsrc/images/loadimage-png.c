@@ -19,10 +19,28 @@
 
 #define PNG_HEADER_SIZE 8
 
-unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
+static void custom_user_read_data(png_structp png_ptr,
+				  png_bytep data,
+				  png_size_t length)
+{
+	gl_stream *stream = (gl_stream *)png_get_io_ptr(png_ptr);
+	
+	gl_stream_error oRet;
+	size_t num_read;
+	
+	num_read = stream->f->read(stream, data, length);
+	
+	if (num_read != length) {
+		oRet = stream->data.lastError;
+		
+		png_error(png_ptr, "Read error");
+	}
+}
+
+unsigned char* loadPNG(gl_stream *stream, int wantedwidth, int wantedheight,
 		       int *width, int *height, unsigned int *orientation )
 {
-	FILE *f;
+	
 	unsigned char header[PNG_HEADER_SIZE];
 	ssize_t num_read;
 	png_structp png_ptr = NULL;
@@ -38,12 +56,15 @@ unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
 	unsigned char* row = NULL;
 	unsigned char* buffer = NULL;
 	
-	f = fopen(fileName, "rb");
-	if (!f) {
+	gl_stream_error oRet;
+	
+	oRet = stream->f->open(stream);
+	
+	if (oRet != gl_stream_error_ok) {
 		return NULL;
 	}
 	
-	num_read = fread(header, 1, PNG_HEADER_SIZE, f);
+	num_read = stream->f->read(stream, header, PNG_HEADER_SIZE);
 	if (num_read != PNG_HEADER_SIZE) {
 		// file is too short to be a PNG
 		goto loadPNGCancel0;
@@ -74,7 +95,8 @@ unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
 	}
 	
 	// TODO: Custom io
-	png_init_io(png_ptr, f);
+	
+	png_set_read_fn(png_ptr, stream, &custom_user_read_data);
 	
 	png_set_sig_bytes(png_ptr, PNG_HEADER_SIZE);
 	
@@ -156,6 +178,8 @@ unsigned char* loadPNG(char *fileName, int wantedwidth, int wantedheight,
 	*height = scaler->data.outputHeight;
 	*orientation = 0;
 	
+	stream->f->close(stream);
+	
 	return buffer;
 	
 loadPNGCancel2:
@@ -175,6 +199,6 @@ loadPNGCancel1:
 	}
 	
 loadPNGCancel0:
-	fclose(f);
+	stream->f->close(stream);
 	return NULL;
 }

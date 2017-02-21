@@ -9,6 +9,7 @@
 #include <math.h>
 #include <sys/time.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "gl-includes.h"
 
@@ -47,18 +48,27 @@ static unsigned int slide_counter = 1;
 static unsigned int num_files;
 static char** filenames;
 
+char *url_from_path(const char* path)
+{
+	char *ret = malloc(strlen(path) + 7);
+	strcpy(ret, "file://");
+	strcat(ret, path);
+	return ret;
+}
+
 gl_slide *get_next_slide(void *target, void *extra_data)
 {
 	gl_slide_image *slide_image = gl_slide_image_new();
 	char **argv = (char**) extra_data;
 	
 	char *filename = argv[slide_counter];
+	char *url = url_from_path(filename);
 	slide_counter++;
 	if (slide_counter >= (num_files + 1)) {
 		slide_counter = 1;
 	}
 	
-	slide_image->data.filename = strdup(filename);
+	slide_image->data.filename = strdup(url); free(url);
 	return (gl_slide *)slide_image;
 }
 

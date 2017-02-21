@@ -10,8 +10,9 @@
 #define loadimage_jpg_h
 
 #include <stdio.h>
+#include "fs/gl-stream.h"
 
-unsigned char *loadJPEG ( char *fileName, int wantedwidth, int wantedheight,
+unsigned char *loadJPEG ( gl_stream *stream, int wantedwidth, int wantedheight,
 		  int *width, int *height, unsigned int *orientation );
 
 // Private, but shared with the exif loading code

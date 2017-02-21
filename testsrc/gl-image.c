@@ -102,7 +102,7 @@ static void *gl_image_render_job(void *target, void *extra_data)
 	gl_stream *stream = (gl_stream *)gl_stream_file_new();
 	stream->f->set_url(stream, obj->data._urlString);
 	
-	void *ret = loadBMP(stream,
+	void *ret = loadJPEG(stream,
 			    obj->data.desiredWidth,
 			    obj->data.desiredHeight,
 			    &obj->data._width,

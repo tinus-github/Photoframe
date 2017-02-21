@@ -50,7 +50,7 @@ static char** filenames;
 
 char *url_from_path(const char* path)
 {
-	char *ret = malloc(strlen(path) + 7);
+	char *ret = malloc(strlen(path) + 8);
 	strcpy(ret, "file://");
 	strcat(ret, path);
 	return ret;

@@ -27,7 +27,16 @@
 #define TRUE 1
 #define FALSE 0
 
-unsigned char* loadBMP(char *fileName, int wantedwidth, int wantedheight,
+static size_t custom_user_read_data(BMP *bmp,
+				  UCHAR *data,
+				  size_t length)
+{
+	gl_stream *stream = (gl_stream *)BMP_Get_IOPtr(bmp);
+	
+	return stream->f->read(stream, data, length);
+}
+
+unsigned char* loadBMP(gl_stream *stream, int wantedwidth, int wantedheight,
 		       int *width, int *height, unsigned int *orientation )
 {
 	BMP *bmp = NULL;
@@ -44,10 +53,8 @@ unsigned char* loadBMP(char *fileName, int wantedwidth, int wantedheight,
 		goto loadBMPCancel0;
 	}
 	
-	BMP_OpenFile(bmp, fileName);
-	if (BMP_GetError() != BMP_OK) {
-		goto loadBMPCancel1;
-	}
+	BMP_SetReadFunc(bmp, &custom_user_read_data, stream);
+	stream->f->open(stream);
 	
 	if (BMP_ReadHeader(bmp) != BMP_OK) {
 		goto loadBMPCancel1;
@@ -95,6 +102,7 @@ unsigned char* loadBMP(char *fileName, int wantedwidth, int wantedheight,
 	((gl_object *)scaler)->f->unref((gl_object *)scaler);
 	
 	BMP_Free(bmp);
+	stream->f->close(stream);
 	
 	*width = scaler->data.outputWidth;
 	*height = scaler->data.outputHeight;
@@ -111,6 +119,7 @@ loadBMPCancel2:
 	
 loadBMPCancel1:
 	BMP_Free(bmp);
+	stream->f->close(stream);
 loadBMPCancel0:
 	return NULL;
 }

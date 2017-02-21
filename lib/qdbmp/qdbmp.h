@@ -93,6 +93,12 @@ typedef struct _BMP BMP;
 BMP*			BMP_Create					( UINT width, UINT height, USHORT depth );
 void			BMP_Free					( BMP* bmp );
 
+/* Custom IO */
+
+void BMP_SetReadFunc(BMP *bmp, size_t (*ReadFunc) (BMP* bmp, UCHAR* buf, size_t size), void* IOptr);
+void* BMP_Get_IOPtr(BMP *bmp);
+
+
 /* Incremental loading */
 BMP*			BMP_CreateReadStruct			();
 BMP_STATUS		BMP_OpenFile				( BMP* bmp, const char* filename );

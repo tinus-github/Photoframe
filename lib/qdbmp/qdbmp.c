@@ -56,6 +56,9 @@ struct _BMP
 	USHORT		BlueBitmaskEnd;
 
 	UINT		HasBitfields;
+	
+	void*		CustomIOPtr;
+	size_t		(*ReadFunc) (BMP* bmp, UCHAR* buf, size_t size);
 };
 
 typedef enum {
@@ -94,11 +97,11 @@ static const char* BMP_ERROR_STRING[] =
 
 
 /*********************************** Forward declarations **********************************/
-static int	ReadHeader	( BMP* bmp, FILE* f );
+static int	ReadHeader	( BMP* bmp );
 static int	WriteHeader	( BMP* bmp, FILE* f );
 
-static int	ReadUINT	( UINT* x, FILE* f );
-static int	ReadUSHORT	( USHORT *x, FILE* f );
+static int	ReadUINT	( BMP* bmp, UINT* x );
+static int	ReadUSHORT	( BMP* bmp, USHORT *x );
 
 static int	WriteUINT	( UINT x, FILE* f );
 static int	WriteUSHORT	( USHORT x, FILE* f );
@@ -242,6 +245,7 @@ void BMP_Free( BMP* bmp )
 	BMP_LAST_ERROR_CODE = BMP_OK;
 }
 
+#if 0
 
 /**************************************************************
 	Reads the specified BMP image file.
@@ -355,7 +359,7 @@ BMP* BMP_ReadFile( const char* filename )
 
 	return bmp;
 }
-
+#endif
 
 /**************************************************************
 	Writes the BMP image to the specified file.
@@ -665,6 +669,24 @@ void BMP_SetPaletteColor( BMP* bmp, UCHAR index, UCHAR r, UCHAR g, UCHAR b )
 	}
 }
 
+/************************ Custom IO *************************/
+
+void* BMP_Get_IOPtr(BMP *bmp)
+{
+	return bmp->CustomIOPtr;
+}
+
+void BMP_SetReadFunc(BMP *bmp, size_t (*ReadFunc) (BMP* bmp, UCHAR* buf, size_t size), void* IOptr)
+{
+	bmp->ReadFunc = ReadFunc;
+	bmp->CustomIOPtr = IOptr;
+}
+
+static size_t defaultReadFunc(BMP *bmp, UCHAR* buf, size_t size)
+{
+	return fread(buf, 1, size, bmp->file);
+}
+
 /********************* Incremental loading ******************/
 BMP* BMP_CreateReadStruct()
 {
@@ -682,6 +704,8 @@ BMP* BMP_CreateReadStruct()
 	bmp->MaxDimensions = 10000; // Don't read insane files (by default)
 	
 	bmp->Cursor = 0;
+	
+	bmp->ReadFunc = &defaultReadFunc;
 	
 	BMP_LAST_ERROR_CODE = BMP_OK;
 	return bmp;
@@ -713,7 +737,7 @@ BMP_STATUS BMP_ReadHeader(BMP *bmp)
 {
 	bmp->HasBitfields = 0;
 	/* Read header */
-	if ( ReadHeader( bmp, bmp->file ) != BMP_OK || bmp->Header.Magic != 0x4D42 ) {
+	if ( ReadHeader( bmp ) != BMP_OK || bmp->Header.Magic != 0x4D42 ) {
 		return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
 	}
 
@@ -745,8 +769,7 @@ BMP_STATUS BMP_ReadHeader(BMP *bmp)
 			return BMP_LAST_ERROR_CODE = BMP_OUT_OF_MEMORY;
 		}
 		
-		if ( fread( bmp->Palette, sizeof( UCHAR ), BMP_PALETTE_SIZE, bmp->file ) != BMP_PALETTE_SIZE )
-		{
+		if ( bmp->ReadFunc(bmp, bmp->Palette, BMP_PALETTE_SIZE * sizeof( UCHAR )) != BMP_PALETTE_SIZE )	{
 			return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
 		}
 		bmp->Cursor += BMP_PALETTE_SIZE * sizeof( UCHAR );
@@ -762,14 +785,14 @@ BMP_STATUS BMP_ReadHeader(BMP *bmp)
 		if ((bmp->Header.HeaderSize + 14) > bmp->Cursor) {
 			bytesToSkip = bmp->Header.HeaderSize + 14 - bmp->Cursor;
 			
-			if (fseek(bmp->file, bytesToSkip, SEEK_CUR)) {
+			if (bmp->ReadFunc(bmp, NULL, bytesToSkip) != bytesToSkip) {
 				return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
 			}
 			bmp->Cursor += bytesToSkip;
 		}
-		if ( !ReadUINT( &( bmp->Header.RedBitmask), bmp->file ) )	return BMP_IO_ERROR;
-		if ( !ReadUINT( &( bmp->Header.GreenBitmask), bmp->file ) )	return BMP_IO_ERROR;
-		if ( !ReadUINT( &( bmp->Header.BlueBitmask), bmp->file ) )	return BMP_IO_ERROR;
+		if ( !ReadUINT( bmp, &( bmp->Header.RedBitmask) ) )	return BMP_IO_ERROR;
+		if ( !ReadUINT( bmp, &( bmp->Header.GreenBitmask) ) )	return BMP_IO_ERROR;
+		if ( !ReadUINT( bmp, &( bmp->Header.BlueBitmask) ) )	return BMP_IO_ERROR;
 		bmp->Cursor += 3 * 4;
 	} else if (bmp->HasBitfields == 2) {
 		bmp->Header.RedBitmask = 0x7c00;
@@ -799,9 +822,11 @@ BMP_STATUS BMP_ReadHeader(BMP *bmp)
 		// otherwise it's probably just not set
 		
 		bytesToSkip = bmp->Header.DataOffset - bmp->Cursor;
-		if (fseek(bmp->file, bytesToSkip, SEEK_CUR)) {
+		
+		if (bmp->ReadFunc(bmp, NULL, bytesToSkip) != bytesToSkip) {
 			return BMP_LAST_ERROR_CODE = BMP_FILE_INVALID;
 		}
+		
 		bmp->Cursor += bytesToSkip;
 	}
 	
@@ -876,7 +901,7 @@ BMP_STATUS BMP_ReadRow(BMP *bmp, UCHAR *row)
 	ssize_t bytesToRead = BMP_GetBytesPerRowInFile(bmp);
 	ssize_t bytesRead;
 	
-	bytesRead = fread(bmp->RowBuf, 1, bytesToRead, bmp->file);
+	bytesRead = bmp->ReadFunc(bmp, bmp->RowBuf, bytesToRead);
 	bmp->Cursor += bytesRead;
  	if (bytesRead != bytesToRead) {
 		return BMP_LAST_ERROR_CODE = BMP_IO_ERROR;
@@ -941,31 +966,31 @@ const char* BMP_GetErrorDescription()
 	Reads the BMP file's header into the data structure.
 	Returns BMP_OK on success.
 **************************************************************/
-static int	ReadHeader( BMP* bmp, FILE* f )
+static int	ReadHeader( BMP* bmp )
 {
-	if ( bmp == NULL || f == NULL )
+	if ( bmp == NULL )
 	{
 		return BMP_INVALID_ARGUMENT;
 	}
 
 	/* The header's fields are read one by one, and converted from the format's
 	little endian to the system's native representation. */
-	if ( !ReadUSHORT( &( bmp->Header.Magic ), f ) )			return BMP_IO_ERROR;
-	if ( !ReadUINT( &( bmp->Header.FileSize ), f ) )		return BMP_IO_ERROR;
-	if ( !ReadUSHORT( &( bmp->Header.Reserved1 ), f ) )		return BMP_IO_ERROR;
-	if ( !ReadUSHORT( &( bmp->Header.Reserved2 ), f ) )		return BMP_IO_ERROR;
-	if ( !ReadUINT( &( bmp->Header.DataOffset ), f ) )		return BMP_IO_ERROR;
-	if ( !ReadUINT( &( bmp->Header.HeaderSize ), f ) )		return BMP_IO_ERROR;
-	if ( !ReadUINT( &( bmp->Header.Width ), f ) )			return BMP_IO_ERROR;
-	if ( !ReadUINT( &( bmp->Header.Height ), f ) )			return BMP_IO_ERROR;
-	if ( !ReadUSHORT( &( bmp->Header.Planes ), f ) )		return BMP_IO_ERROR;
-	if ( !ReadUSHORT( &( bmp->Header.BitsPerPixel ), f ) )	return BMP_IO_ERROR;
-	if ( !ReadUINT( &( bmp->Header.CompressionType ), f ) )	return BMP_IO_ERROR;
-	if ( !ReadUINT( &( bmp->Header.ImageDataSize ), f ) )	return BMP_IO_ERROR;
-	if ( !ReadUINT( &( bmp->Header.HPixelsPerMeter ), f ) )	return BMP_IO_ERROR;
-	if ( !ReadUINT( &( bmp->Header.VPixelsPerMeter ), f ) )	return BMP_IO_ERROR;
-	if ( !ReadUINT( &( bmp->Header.ColorsUsed ), f ) )		return BMP_IO_ERROR;
-	if ( !ReadUINT( &( bmp->Header.ColorsRequired ), f ) )	return BMP_IO_ERROR;
+	if ( !ReadUSHORT( bmp, &( bmp->Header.Magic ) ) )		return BMP_IO_ERROR;
+	if ( !ReadUINT( bmp, &( bmp->Header.FileSize ) ) )		return BMP_IO_ERROR;
+	if ( !ReadUSHORT( bmp, &( bmp->Header.Reserved1 ) ) )		return BMP_IO_ERROR;
+	if ( !ReadUSHORT( bmp, &( bmp->Header.Reserved2 ) ) )		return BMP_IO_ERROR;
+	if ( !ReadUINT( bmp, &( bmp->Header.DataOffset ) ) )		return BMP_IO_ERROR;
+	if ( !ReadUINT( bmp, &( bmp->Header.HeaderSize ) ) )		return BMP_IO_ERROR;
+	if ( !ReadUINT( bmp, &( bmp->Header.Width ) ) )			return BMP_IO_ERROR;
+	if ( !ReadUINT( bmp, &( bmp->Header.Height ) ) )		return BMP_IO_ERROR;
+	if ( !ReadUSHORT( bmp, &( bmp->Header.Planes ) ) )		return BMP_IO_ERROR;
+	if ( !ReadUSHORT( bmp, &( bmp->Header.BitsPerPixel ) ) )	return BMP_IO_ERROR;
+	if ( !ReadUINT( bmp, &( bmp->Header.CompressionType ) ) )	return BMP_IO_ERROR;
+	if ( !ReadUINT( bmp, &( bmp->Header.ImageDataSize ) ) )		return BMP_IO_ERROR;
+	if ( !ReadUINT( bmp, &( bmp->Header.HPixelsPerMeter ) ) )	return BMP_IO_ERROR;
+	if ( !ReadUINT( bmp, &( bmp->Header.VPixelsPerMeter ) ) )	return BMP_IO_ERROR;
+	if ( !ReadUINT( bmp, &( bmp->Header.ColorsUsed ) ) )		return BMP_IO_ERROR;
+	if ( !ReadUINT( bmp, &( bmp->Header.ColorsRequired ) ) )	return BMP_IO_ERROR;
 	
 	bmp->Cursor += 54;
 
@@ -1011,16 +1036,16 @@ static int	WriteHeader( BMP* bmp, FILE* f )
 	Reads a little-endian unsigned int from the file.
 	Returns non-zero on success.
 **************************************************************/
-static int	ReadUINT( UINT* x, FILE* f )
+static int	ReadUINT( BMP* bmp, UINT* x )
 {
 	UCHAR little[ 4 ];	/* BMPs use 32 bit ints */
 
-	if ( x == NULL || f == NULL )
+	if ( x == NULL )
 	{
 		return 0;
 	}
 
-	if ( fread( little, 4, 1, f ) != 1 )
+	if ( bmp->ReadFunc( bmp, little, 4 ) != 4 )
 	{
 		return 0;
 	}
@@ -1035,16 +1060,16 @@ static int	ReadUINT( UINT* x, FILE* f )
 	Reads a little-endian unsigned short int from the file.
 	Returns non-zero on success.
 **************************************************************/
-static int	ReadUSHORT( USHORT *x, FILE* f )
+static int	ReadUSHORT( BMP* bmp, USHORT *x )
 {
 	UCHAR little[ 2 ];	/* BMPs use 16 bit shorts */
 
-	if ( x == NULL || f == NULL )
+	if ( x == NULL )
 	{
 		return 0;
 	}
 
-	if ( fread( little, 2, 1, f ) != 1 )
+	if ( bmp->ReadFunc( bmp, little, 2 ) != 2 )
 	{
 		return 0;
 	}

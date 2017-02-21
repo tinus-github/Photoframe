@@ -11,7 +11,10 @@
 
 #include <stdio.h>
 
-unsigned char* loadBMP(char *fileName, int wantedwidth, int wantedheight,
+#include "fs/gl-url.h"
+#include "fs/gl-stream.h"
+
+unsigned char* loadBMP(gl_stream *stream, int wantedwidth, int wantedheight,
 		       int *width, int *height, unsigned int *orientation );
 
 #endif /* loadimage_bmp_h */

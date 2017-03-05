@@ -37,6 +37,7 @@
 #include "fs/gl-url.h"
 #include "fs/gl-stream.h"
 #include "fs/gl-stream-file.h"
+#include "fs/gl-stream-rewindable.h"
 
 #ifdef __APPLE__
 #include "macosx/GLWindow-C.h"
@@ -76,6 +77,7 @@ void gl_objects_setup()
 	gl_url_setup();
 	gl_stream_setup();
 	gl_stream_file_setup();
+	gl_stream_rewindable_setup();
 }
 
 GLuint driver_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )

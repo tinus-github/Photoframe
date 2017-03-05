@@ -50,6 +50,8 @@
 		0D13C2221E47E75D00FB9F43 /* GLWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D893B781E47A14E000DD5BF /* GLWindowController.m */; };
 		0D1806131E4D2C6200449219 /* qdbmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D1805FD1E4D2BC800449219 /* qdbmp.c */; };
 		0D1806141E4D2CA300449219 /* qdbmp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D1805FE1E4D2BC800449219 /* qdbmp.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0D3B098B1E5E20F700C4E97E /* gl-stream-rewindable.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */; };
+		0D3B098C1E5E20F700C4E97E /* gl-stream-rewindable.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */; };
 		0D7377101E478E1100FA9EC7 /* libharfbuzz.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D73770F1E478E1100FA9EC7 /* libharfbuzz.0.dylib */; };
 		0D7377151E47941A00FA9EC7 /* libjpeg.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7377141E47941A00FA9EC7 /* libjpeg.8.dylib */; };
 		0D74EEDC1E4DF09600A4CE92 /* libqdbmp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D18060F1E4D2C5500449219 /* libqdbmp.dylib */; };
@@ -377,6 +379,8 @@
 		0D3ADC741E01F041009A40B1 /* gl-objects.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "gl-objects.rtf"; sourceTree = "<group>"; };
 		0D3ADC751E0B1C5D009A40B1 /* gl-container-2d.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-container-2d.c"; sourceTree = "<group>"; };
 		0D3ADC761E0B1C5D009A40B1 /* gl-container-2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-container-2d.h"; sourceTree = "<group>"; };
+		0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-stream-rewindable.c"; sourceTree = "<group>"; };
+		0D3B098A1E5E20F700C4E97E /* gl-stream-rewindable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-stream-rewindable.h"; sourceTree = "<group>"; };
 		0D6515341CD8E314007A3C9E /* gl-object.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-object.c"; sourceTree = "<group>"; };
 		0D6515351CD8E314007A3C9E /* gl-object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-object.h"; sourceTree = "<group>"; };
 		0D67E7F31DDB5C2400A2B16C /* gl-tile.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-tile.c"; sourceTree = "<group>"; };
@@ -1082,6 +1086,8 @@
 				0DE5123D1E537F7700CB0DA1 /* gl-url.h */,
 				0DD9DCAC1E573EAE00CB187D /* gl-stream-file.c */,
 				0DD9DCAD1E573EAE00CB187D /* gl-stream-file.h */,
+				0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */,
+				0D3B098A1E5E20F700C4E97E /* gl-stream-rewindable.h */,
 			);
 			path = fs;
 			sourceTree = "<group>";
@@ -1296,6 +1302,7 @@
 				0D13C20A1E47E55C00FB9F43 /* gl-label-scroller.c in Sources */,
 				0D74EEE01E4DF17B00A4CE92 /* loadimage-jpg.c in Sources */,
 				0D13C20B1E47E55C00FB9F43 /* image.c in Sources */,
+				0D3B098C1E5E20F700C4E97E /* gl-stream-rewindable.c in Sources */,
 				0D13C20C1E47E55C00FB9F43 /* gl-bitmap.c in Sources */,
 				0D13C20D1E47E55C00FB9F43 /* gl-texture.c in Sources */,
 				0D13C20E1E47E55C00FB9F43 /* gl-shape.c in Sources */,
@@ -1350,6 +1357,7 @@
 				0DAFDA6F1E477E5C00C5100E /* gl-renderloop-member.c in Sources */,
 				0D74EEDF1E4DF15C00A4CE92 /* loadimage-jpg.c in Sources */,
 				0DAFDA711E477E5C00C5100E /* gl-value-animation.c in Sources */,
+				0D3B098B1E5E20F700C4E97E /* gl-stream-rewindable.c in Sources */,
 				0D893B791E47A14E000DD5BF /* GLWindowController.m in Sources */,
 				0DAFDA721E477E5C00C5100E /* gl-value-animation-easing.c in Sources */,
 				0DAFDA731E477E5C00C5100E /* gl-image.c in Sources */,

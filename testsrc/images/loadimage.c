@@ -7,8 +7,9 @@
 //
 
 #include "images/loadimage.h"
-#include "images/loadexif.h"
-#include "images/gl-bitmap-scaler.h"
+#include "images/loadimage-jpg.h"
+#include "images/loadimage-png.h"
+#include "images/loadimage-bmp.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -21,6 +22,40 @@
 #include <setjmp.h>
 
 #include "qdbmp.h"
+
+loadImageFunction functionForLoadingImage(unsigned char* signature)
+{
+	if ((signature[0] == 0xff) &&
+	    (signature[1] == 0xd8) &&
+	    (signature[2] == 0xff) &&
+	    (signature[3] == 0xe0) &&
+	    (signature[6] == 0x4a) &&
+	    (signature[7] == 0x46) &&
+	    (signature[8] == 0x49) &&
+	    (signature[9] == 0x46) &&
+	    (signature[10] == 0x00)) {
+		return &loadJPEG;
+	}
+	
+	if ((signature[0] == 0x89) &&
+	    (signature[1] == 0x50) &&
+	    (signature[2] == 0x4e) &&
+	    (signature[3] == 0x47) &&
+	    (signature[4] == 0x0d) &&
+	    (signature[5] == 0x0a) &&
+	    (signature[6] == 0x1a) &&
+	    (signature[7] == 0x0a)) {
+		return &loadPNG;
+	}
+	
+	if ((signature[0] == 0x42) &&
+	    (signature[1] == 0x4d)) {
+		// A long signature is smart. This is a Microsoft format.
+		return &loadBMP;
+	}
+	
+	return NULL;
+}
 
 // from esUtil.h
 

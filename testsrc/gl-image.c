@@ -19,6 +19,7 @@
 #include "images/loadimage-bmp.h"
 #include "fs/gl-stream.h"
 #include "fs/gl-stream-file.h"
+#include "fs/gl-stream-rewindable.h"
 #include "infrastructure/gl-notice-subscription.h"
 #include "infrastructure/gl-notice.h"
 
@@ -95,6 +96,8 @@ static void gl_image_load_file(gl_image *obj, const char* urlString)
 	loading_workqueue->f->append_job(loading_workqueue, job);
 }
 
+#define SIGNATURE_SIZE 11
+
 static void *gl_image_render_job(void *target, void *extra_data)
 {
 	gl_image *obj = (gl_image *)target;
@@ -102,7 +105,29 @@ static void *gl_image_render_job(void *target, void *extra_data)
 	gl_stream *stream = (gl_stream *)gl_stream_file_new();
 	stream->f->set_url(stream, obj->data._urlString);
 	
-	void *ret = loadJPEG(stream,
+	gl_stream_rewindable *stream_rewindable = gl_stream_rewindable_new();
+	stream_rewindable->f->set_stream(stream_rewindable, stream);
+	((gl_stream *)stream_rewindable)->f->open((gl_stream *)stream_rewindable);
+	
+	unsigned char signature[SIGNATURE_SIZE];
+	size_t num_read = ((gl_stream *)stream_rewindable)->f->read((gl_stream *)stream_rewindable, signature, SIGNATURE_SIZE);
+	
+	printf("Loading file %s\n", obj->data._urlString);
+	
+	if (num_read != SIGNATURE_SIZE) {
+		((gl_object *)stream_rewindable)->f->unref((gl_object *)stream_rewindable);
+		return NULL;
+	}
+	
+	loadImageFunction f = functionForLoadingImage(signature);
+	if (!f) {
+		((gl_object *)stream_rewindable)->f->unref((gl_object *)stream_rewindable);
+		return NULL;
+	}
+	
+	stream_rewindable->f->rewind(stream_rewindable, signature, SIGNATURE_SIZE);
+	
+	void *ret = f((gl_stream *)stream_rewindable,
 			    obj->data.desiredWidth,
 			    obj->data.desiredHeight,
 			    &obj->data._width,
@@ -110,7 +135,7 @@ static void *gl_image_render_job(void *target, void *extra_data)
 			    &obj->data._orientation
 			    );
 	
-	((gl_object *)stream)->f->unref((gl_object *)stream);
+	((gl_object *)stream_rewindable)->f->unref((gl_object *)stream_rewindable);
 	return ret;
 }
 

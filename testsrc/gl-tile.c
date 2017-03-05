@@ -209,7 +209,6 @@ gl_tile *gl_tile_new()
 static void gl_tile_flip(gl_tile *self)
 {
 	gl_texture *texture = self->data.texture;
-	gl_stage *stage = gl_stage_get_global_stage();
 	
 	if (!gl_tile_program_loaded) {
 		gl_tile_load_program();

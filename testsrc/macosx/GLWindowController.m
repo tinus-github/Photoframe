@@ -355,6 +355,7 @@ CVReturn displayCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
 	CVDisplayLinkStop(displayLink);
 	CVDisplayLinkRelease(displayLink);
 	[view release];
+	[window release];
 	
 	[super dealloc];
 }

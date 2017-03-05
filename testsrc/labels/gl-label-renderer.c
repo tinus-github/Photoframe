@@ -212,7 +212,6 @@ static void gl_label_renderer_layout(gl_label_renderer *obj)
 	ssize_t text_length = strlen(obj->data.text);
 	int text_length_int; // Harfbuzz chose the wrong type :(
 	if (text_length > INT_MAX) {
-		text_length = INT_MAX;
 		text_length_int = INT_MAX;
 	} else {
 		text_length_int = (int)text_length;

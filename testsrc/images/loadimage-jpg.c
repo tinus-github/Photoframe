@@ -144,7 +144,8 @@ static void io_setup_stream_src(j_decompress_ptr cinfo, gl_stream *stream)
 	io_source_mgr *src;
 	
 	if (!cinfo->src) {
-		cinfo->src = calloc(1, sizeof(io_source_mgr));
+		src = calloc(1, sizeof(io_source_mgr));
+		cinfo->src = (struct jpeg_source_mgr *)src;
 		src = (io_source_mgr *)cinfo->src;
 		src->buffer = malloc(INPUT_BUF_SIZE * sizeof(JOCTET));
 	}
@@ -196,9 +197,6 @@ unsigned char *loadJPEG (gl_stream *stream,
 	JSAMPROW *row_pointers = NULL;
 	
 	unsigned int counter;
-	unsigned int inputoffset;
-	unsigned int outputoffset;
-	unsigned char *outputcurrentline;
 	
 	float scalefactor, scalefactortmp;
 	
@@ -297,18 +295,7 @@ unsigned char *loadJPEG (gl_stream *stream,
 							       &cinfo, row_pointers, scanbufheight);
 			scanbufcurrentline = scanbuf;
 		}
-		if (scalefactor != 1.0f) {
-			scaler->f->process_line(scaler, buffer, scanbufcurrentline);
-		} else {
-			inputoffset = outputoffset = 0;
-			outputcurrentline = buffer + 4  * (lines_in_buf * cinfo.output_width);
-			for (counter = 0; counter < cinfo.output_width; counter++) {
-				outputcurrentline[outputoffset++] = scanbufcurrentline[inputoffset++];
-				outputcurrentline[outputoffset++] = scanbufcurrentline[inputoffset++];
-				outputcurrentline[outputoffset++] = scanbufcurrentline[inputoffset++];
-				outputcurrentline[outputoffset++] = 255;
-			}
-		}
+		scaler->f->process_line(scaler, buffer, scanbufcurrentline);
 		
 		scanbufcurrentline += 3 * cinfo.output_width;
 		lines_in_scanbuf--;

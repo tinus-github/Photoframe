@@ -25,14 +25,11 @@ static void custom_user_read_data(png_structp png_ptr,
 {
 	gl_stream *stream = (gl_stream *)png_get_io_ptr(png_ptr);
 	
-	gl_stream_error oRet;
 	size_t num_read;
 	
 	num_read = stream->f->read(stream, data, length);
 	
 	if (num_read != length) {
-		oRet = stream->data.lastError;
-		
 		png_error(png_ptr, "Read error");
 	}
 }

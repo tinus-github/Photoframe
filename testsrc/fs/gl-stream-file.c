@@ -93,6 +93,7 @@ static size_t gl_stream_file_read (gl_stream *obj_stream, void *buffer, size_t s
 	}
 	
 	while (cursor < size) {
+		errno = 0;
 		num_read = fread(buffer + cursor, 1, size - cursor, obj->data.f);
 
 		if (num_read < (size - cursor)) {
@@ -101,9 +102,12 @@ static size_t gl_stream_file_read (gl_stream *obj_stream, void *buffer, size_t s
 					break;
 				case 0:
 					if (feof(obj->data.f)) {
-						obj_stream->f->return_error(obj_stream, gl_stream_error_end_of_file);
+						if (!num_read && !cursor) {
+							obj_stream->f->return_error(obj_stream, gl_stream_error_end_of_file);
+						}
 						return cursor + num_read;
 					}
+					break;
 				case EBADF:
 				case EISDIR:
 				case EINVAL:
@@ -111,6 +115,7 @@ static size_t gl_stream_file_read (gl_stream *obj_stream, void *buffer, size_t s
 					return 0;
 				case ENXIO:
 				case EIO:
+				default:
 					obj_stream->f->return_error(obj_stream, gl_stream_error_unspecified_error);
 					return 0;
 			}

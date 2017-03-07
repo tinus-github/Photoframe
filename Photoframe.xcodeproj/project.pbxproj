@@ -103,6 +103,18 @@
 		0DE5123B1E537B7400CB0DA1 /* gl-stream.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE512381E5361C000CB0DA1 /* gl-stream.c */; };
 		0DE5123E1E537F7700CB0DA1 /* gl-url.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE5123C1E537F7700CB0DA1 /* gl-url.c */; };
 		0DE5123F1E539B8000CB0DA1 /* gl-url.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE5123C1E537F7700CB0DA1 /* gl-url.c */; };
+		0DE75B261E6F21CA0051D3B5 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE75B1B1E6F21CA0051D3B5 /* test.c */; };
+		0DE75B271E6F21CA0051D3B5 /* test.ini in Resources */ = {isa = PBXBuildFile; fileRef = 0DE75B1C1E6F21CA0051D3B5 /* test.ini */; };
+		0DE75B281E6F21CA0051D3B5 /* test2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 0DE75B1D1E6F21CA0051D3B5 /* test2.cc */; };
+		0DE75B291E6F21CA0051D3B5 /* testplain.ini in Resources */ = {isa = PBXBuildFile; fileRef = 0DE75B1E1E6F21CA0051D3B5 /* testplain.ini */; };
+		0DE75B2A1E6F21CA0051D3B5 /* minIni.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 0DE75B211E6F21CA0051D3B5 /* minIni.pdf */; };
+		0DE75B2B1E6F21CA0051D3B5 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 0DE75B221E6F21CA0051D3B5 /* LICENSE */; };
+		0DE75B2C1E6F21CA0051D3B5 /* NOTICE in Resources */ = {isa = PBXBuildFile; fileRef = 0DE75B231E6F21CA0051D3B5 /* NOTICE */; };
+		0DE75B2D1E6F21CA0051D3B5 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 0DE75B241E6F21CA0051D3B5 /* README.md */; };
+		0DE75B361E6F22740051D3B5 /* minIni.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE75B191E6F21CA0051D3B5 /* minIni.c */; };
+		0DE75B371E6F22C20051D3B5 /* minIni.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DE75B1A1E6F21CA0051D3B5 /* minIni.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0DE75B381E6F22CE0051D3B5 /* minGlue.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DE75B181E6F21CA0051D3B5 /* minGlue.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		0DE77D801E6F75940051D3B5 /* libsmbclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE77D7F1E6F75940051D3B5 /* libsmbclient.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -447,6 +459,27 @@
 		0DE512391E5361C000CB0DA1 /* gl-stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-stream.h"; sourceTree = "<group>"; };
 		0DE5123C1E537F7700CB0DA1 /* gl-url.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-url.c"; sourceTree = "<group>"; };
 		0DE5123D1E537F7700CB0DA1 /* gl-url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-url.h"; sourceTree = "<group>"; };
+		0DE75B121E6F21CA0051D3B5 /* minGlue-ccs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "minGlue-ccs.h"; sourceTree = "<group>"; };
+		0DE75B131E6F21CA0051D3B5 /* minGlue-efsl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "minGlue-efsl.h"; sourceTree = "<group>"; };
+		0DE75B141E6F21CA0051D3B5 /* minGlue-FatFs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "minGlue-FatFs.h"; sourceTree = "<group>"; };
+		0DE75B151E6F21CA0051D3B5 /* minGlue-ffs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "minGlue-ffs.h"; sourceTree = "<group>"; };
+		0DE75B161E6F21CA0051D3B5 /* minGlue-mdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "minGlue-mdd.h"; sourceTree = "<group>"; };
+		0DE75B171E6F21CA0051D3B5 /* minGlue-stdio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "minGlue-stdio.h"; sourceTree = "<group>"; };
+		0DE75B181E6F21CA0051D3B5 /* minGlue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minGlue.h; sourceTree = "<group>"; };
+		0DE75B191E6F21CA0051D3B5 /* minIni.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minIni.c; sourceTree = "<group>"; };
+		0DE75B1A1E6F21CA0051D3B5 /* minIni.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minIni.h; sourceTree = "<group>"; };
+		0DE75B1B1E6F21CA0051D3B5 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
+		0DE75B1C1E6F21CA0051D3B5 /* test.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.ini; sourceTree = "<group>"; };
+		0DE75B1D1E6F21CA0051D3B5 /* test2.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test2.cc; sourceTree = "<group>"; };
+		0DE75B1E1E6F21CA0051D3B5 /* testplain.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = testplain.ini; sourceTree = "<group>"; };
+		0DE75B1F1E6F21CA0051D3B5 /* wxMinIni.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wxMinIni.h; sourceTree = "<group>"; };
+		0DE75B211E6F21CA0051D3B5 /* minIni.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = minIni.pdf; sourceTree = "<group>"; };
+		0DE75B221E6F21CA0051D3B5 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		0DE75B231E6F21CA0051D3B5 /* NOTICE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NOTICE; sourceTree = "<group>"; };
+		0DE75B241E6F21CA0051D3B5 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0DE75B321E6F22570051D3B5 /* libminIni.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libminIni.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DE75B3A1E6F2F270051D3B5 /* Config.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Config.rtf; sourceTree = "<group>"; };
+		0DE77D7F1E6F75940051D3B5 /* libsmbclient.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsmbclient.dylib; path = "../../Samba/Samba/samba-4.6.0/bin/default/source3/libsmb/libsmbclient.dylib"; sourceTree = "<group>"; };
 		0DEED0791E15746600C00550 /* egl-driver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "egl-driver.c"; sourceTree = "<group>"; };
 		0DEED07A1E15746600C00550 /* egl-driver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "egl-driver.h"; sourceTree = "<group>"; };
 		0DEED07B1E15E10900C00550 /* gl-value-animation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-value-animation.c"; sourceTree = "<group>"; };
@@ -468,6 +501,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DE77D801E6F75940051D3B5 /* libsmbclient.dylib in Frameworks */,
 				0D74EEDC1E4DF09600A4CE92 /* libqdbmp.dylib in Frameworks */,
 				0D13C21C1E47E6AD00FB9F43 /* libjpeg.8.dylib in Frameworks */,
 				0D13C21D1E47E6C000FB9F43 /* libharfbuzz.0.dylib in Frameworks */,
@@ -494,6 +528,13 @@
 				0DAFDA791E47857100C5100E /* libfreetype.6.dylib in Frameworks */,
 				0DAFDA761E47811300C5100E /* OpenGL.framework in Frameworks */,
 				0DAFDA541E477D6100C5100E /* libexif.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0DE75B2F1E6F22570051D3B5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -912,6 +953,7 @@
 		0D2B2FF31CB443510063393E /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				0DE75B101E6F21CA0051D3B5 /* minIni */,
 				0D1805FB1E4D2B7D00449219 /* qdbmp */,
 				0D893B731E479AFA000DD5BF /* harfbuzz */,
 				0D071D701E12C27600145717 /* libexif */,
@@ -952,6 +994,7 @@
 		0D69BD731C4EA16500A10282 /* testsrc */ = {
 			isa = PBXGroup;
 			children = (
+				0DE75B391E6F2EE60051D3B5 /* Doc */,
 				0DE512371E53619700CB0DA1 /* fs */,
 				0D893B741E47A08D000DD5BF /* macosx */,
 				0D2199361E40D9E9004877C3 /* images */,
@@ -1058,6 +1101,7 @@
 				0DAFDA3C1E4773A000C5100E /* image */,
 				0D13C1EB1E47E51B00FB9F43 /* image-cocoa.app */,
 				0D18060F1E4D2C5500449219 /* libqdbmp.dylib */,
+				0DE75B321E6F22570051D3B5 /* libminIni.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1065,6 +1109,7 @@
 		0DAFDA521E477D6100C5100E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0DE77D7F1E6F75940051D3B5 /* libsmbclient.dylib */,
 				0D0A8F931E4A220A00C9C0F0 /* libpng.dylib */,
 				0D13C21F1E47E6E300FB9F43 /* OpenGL.framework */,
 				0D7377141E47941A00FA9EC7 /* libjpeg.8.dylib */,
@@ -1092,6 +1137,55 @@
 			path = fs;
 			sourceTree = "<group>";
 		};
+		0DE75B101E6F21CA0051D3B5 /* minIni */ = {
+			isa = PBXGroup;
+			children = (
+				0DE75B111E6F21CA0051D3B5 /* dev */,
+				0DE75B201E6F21CA0051D3B5 /* doc */,
+				0DE75B221E6F21CA0051D3B5 /* LICENSE */,
+				0DE75B231E6F21CA0051D3B5 /* NOTICE */,
+				0DE75B241E6F21CA0051D3B5 /* README.md */,
+			);
+			path = minIni;
+			sourceTree = "<group>";
+		};
+		0DE75B111E6F21CA0051D3B5 /* dev */ = {
+			isa = PBXGroup;
+			children = (
+				0DE75B121E6F21CA0051D3B5 /* minGlue-ccs.h */,
+				0DE75B131E6F21CA0051D3B5 /* minGlue-efsl.h */,
+				0DE75B141E6F21CA0051D3B5 /* minGlue-FatFs.h */,
+				0DE75B151E6F21CA0051D3B5 /* minGlue-ffs.h */,
+				0DE75B161E6F21CA0051D3B5 /* minGlue-mdd.h */,
+				0DE75B171E6F21CA0051D3B5 /* minGlue-stdio.h */,
+				0DE75B181E6F21CA0051D3B5 /* minGlue.h */,
+				0DE75B191E6F21CA0051D3B5 /* minIni.c */,
+				0DE75B1A1E6F21CA0051D3B5 /* minIni.h */,
+				0DE75B1B1E6F21CA0051D3B5 /* test.c */,
+				0DE75B1C1E6F21CA0051D3B5 /* test.ini */,
+				0DE75B1D1E6F21CA0051D3B5 /* test2.cc */,
+				0DE75B1E1E6F21CA0051D3B5 /* testplain.ini */,
+				0DE75B1F1E6F21CA0051D3B5 /* wxMinIni.h */,
+			);
+			path = dev;
+			sourceTree = "<group>";
+		};
+		0DE75B201E6F21CA0051D3B5 /* doc */ = {
+			isa = PBXGroup;
+			children = (
+				0DE75B211E6F21CA0051D3B5 /* minIni.pdf */,
+			);
+			path = doc;
+			sourceTree = "<group>";
+		};
+		0DE75B391E6F2EE60051D3B5 /* Doc */ = {
+			isa = PBXGroup;
+			children = (
+				0DE75B3A1E6F2F270051D3B5 /* Config.rtf */,
+			);
+			path = Doc;
+			sourceTree = "<group>";
+		};
 		0DFBB1C91E204BF200E50758 /* labels */ = {
 			isa = PBXGroup;
 			children = (
@@ -1115,6 +1209,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D1806141E4D2CA300449219 /* qdbmp.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0DE75B301E6F22570051D3B5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0DE75B381E6F22CE0051D3B5 /* minGlue.h in Headers */,
+				0DE75B371E6F22C20051D3B5 /* minIni.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1206,6 +1309,23 @@
 			productReference = 0DAFDA3C1E4773A000C5100E /* image */;
 			productType = "com.apple.product-type.tool";
 		};
+		0DE75B311E6F22570051D3B5 /* minIni */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0DE75B331E6F22570051D3B5 /* Build configuration list for PBXNativeTarget "minIni" */;
+			buildPhases = (
+				0DE75B2E1E6F22570051D3B5 /* Sources */,
+				0DE75B2F1E6F22570051D3B5 /* Frameworks */,
+				0DE75B301E6F22570051D3B5 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = minIni;
+			productName = minIni;
+			productReference = 0DE75B321E6F22570051D3B5 /* libminIni.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1233,6 +1353,10 @@
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
 					};
+					0DE75B311E6F22570051D3B5 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 0D07D26F1C4E974B00E42556 /* Build configuration list for PBXProject "Photoframe" */;
@@ -1253,6 +1377,7 @@
 				0D73770B1E478CDC00FA9EC7 /* harfbuzz */,
 				0D13C1EA1E47E51B00FB9F43 /* image-cocoa */,
 				0D18060E1E4D2C5500449219 /* qdbmp */,
+				0DE75B311E6F22570051D3B5 /* minIni */,
 			);
 		};
 /* End PBXProject section */
@@ -1262,6 +1387,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DE75B2C1E6F21CA0051D3B5 /* NOTICE in Resources */,
+				0DE75B2A1E6F21CA0051D3B5 /* minIni.pdf in Resources */,
+				0DE75B271E6F21CA0051D3B5 /* test.ini in Resources */,
+				0DE75B2B1E6F21CA0051D3B5 /* LICENSE in Resources */,
+				0DE75B291E6F21CA0051D3B5 /* testplain.ini in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1351,8 +1481,10 @@
 				0DE5123E1E537F7700CB0DA1 /* gl-url.c in Sources */,
 				0DD9DCAE1E573EAE00CB187D /* gl-stream-file.c in Sources */,
 				0DAFDA6B1E477E5C00C5100E /* gl-container.c in Sources */,
+				0DE75B261E6F21CA0051D3B5 /* test.c in Sources */,
 				0DAFDA6C1E477E5C00C5100E /* gl-container-2d.c in Sources */,
 				0DAFDA6D1E477E5C00C5100E /* gl-tiled-image.c in Sources */,
+				0DE75B281E6F21CA0051D3B5 /* test2.cc in Sources */,
 				0DAFDA6E1E477E5C00C5100E /* gl-renderloop.c in Sources */,
 				0DAFDA6F1E477E5C00C5100E /* gl-renderloop-member.c in Sources */,
 				0D74EEDF1E4DF15C00A4CE92 /* loadimage-jpg.c in Sources */,
@@ -1375,7 +1507,16 @@
 				0DAFDA561E477E2B00C5100E /* loadimage.c in Sources */,
 				0DAFDA571E477E2B00C5100E /* loadexif.c in Sources */,
 				0DAFDA581E477E2B00C5100E /* gl-bitmap-scaler.c in Sources */,
+				0DE75B2D1E6F21CA0051D3B5 /* README.md in Sources */,
 				0DAFDA551E477E1D00C5100E /* image.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0DE75B2E1E6F22570051D3B5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0DE75B361E6F22740051D3B5 /* minIni.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1496,6 +1637,7 @@
 					"$(PROJECT_DIR)/lib/harfbuzz/build/lib",
 					/opt/X11/lib,
 					"$(PROJECT_DIR)/lib/libexif/build/lib",
+					"/Users/tinus/dev/Samba/Samba/samba-4.6.0/bin/default/source3/libsmb",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1542,6 +1684,7 @@
 					"$(PROJECT_DIR)/lib/harfbuzz/build/lib",
 					/opt/X11/lib,
 					"$(PROJECT_DIR)/lib/libexif/build/lib",
+					"/Users/tinus/dev/Samba/Samba/samba-4.6.0/bin/default/source3/libsmb",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1819,6 +1962,69 @@
 			};
 			name = Release;
 		};
+		0DE75B341E6F22570051D3B5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0DE75B351E6F22570051D3B5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_NS_ASSERTIONS = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1875,6 +2081,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		0DE75B331E6F22570051D3B5 /* Build configuration list for PBXNativeTarget "minIni" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0DE75B341E6F22570051D3B5 /* Debug */,
+				0DE75B351E6F22570051D3B5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

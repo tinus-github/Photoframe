@@ -91,7 +91,7 @@ static void gl_framed_shape_update_frame(gl_framed_shape *obj)
 	GLfloat leftBorder = floorf(((ownWidth - shapeWidth) / 2.0));
 	GLfloat topBorder = floorf(((ownHeight - shapeHeight) / 2.0));
 	GLfloat rightBorder = ownWidth - (leftBorder + shapeWidth);
-	GLfloat bottomBorder = ownHeight - (leftBorder + shapeHeight);
+	GLfloat bottomBorder = ownHeight - (topBorder + shapeHeight);
 	
 	contained_shape->data.objectX = leftBorder;
 	contained_shape->data.objectY = topBorder;

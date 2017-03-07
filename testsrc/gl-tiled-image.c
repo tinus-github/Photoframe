@@ -8,6 +8,9 @@
 
 #include "gl-tiled-image.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "gl-texture.h"
 #include "gl-tile.h"
 #include "../lib/linmath/linmath.h"
@@ -53,6 +56,13 @@ static void gl_tiled_image_free(gl_object *obj_obj)
 
 	((gl_container *)obj)->f->remove_child((gl_container *)obj,
 					       (gl_shape *)obj->data.orientation_container);
+	
+	gl_notice *loadedNotice = obj->data.loadedNotice;
+	if (loadedNotice) {
+		((gl_object *)loadedNotice)->f->unref((gl_object *)loadedNotice);
+		obj->data.loadedNotice = NULL;
+	}
+	
 	gl_object_free_org_global(obj_obj);
 }
 

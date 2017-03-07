@@ -6,6 +6,8 @@
 //
 //
 
+#include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include "gl-container.h"
 #include "../lib/linmath/linmath.h"

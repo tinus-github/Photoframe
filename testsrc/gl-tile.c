@@ -6,8 +6,11 @@
 //
 //
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "gl-tile.h"
-#include "egl-driver.h"
+#include "driver.h"
 #include "gl-stage.h"
 #include "../lib/linmath/linmath.h"
 
@@ -115,19 +118,19 @@ static int gl_tile_load_program() {
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object
-	gl_rgba_program.program = egl_driver_load_program ( vShaderStr, fShaderStr );
+	gl_rgba_program.program = driver_load_program ( vShaderStr, fShaderStr );
 	gl_tile_load_program_attribute_locations(&gl_rgba_program);
 	
 	// Monochrome
-	gl_mono_program.program = egl_driver_load_program ( vShaderStr, fShaderBWStr );
+	gl_mono_program.program = driver_load_program ( vShaderStr, fShaderBWStr );
 	gl_tile_load_program_attribute_locations(&gl_mono_program);
 
 	// Alpha
-	gl_alpha_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaStr );
+	gl_alpha_program.program = driver_load_program ( vShaderStr, fShaderAlphaStr );
 	gl_tile_load_program_attribute_locations(&gl_alpha_program);
 
 	// Flip (testing)
-	gl_flip_program.program = egl_driver_load_program ( vShaderStr, fShaderFlipAlphaStr );
+	gl_flip_program.program = driver_load_program ( vShaderStr, fShaderFlipAlphaStr );
 	gl_tile_load_program_attribute_locations(&gl_flip_program);
 	
 	gl_tile_program_loaded = 1;
@@ -206,7 +209,6 @@ gl_tile *gl_tile_new()
 static void gl_tile_flip(gl_tile *self)
 {
 	gl_texture *texture = self->data.texture;
-	gl_stage *stage = gl_stage_get_global_stage();
 	
 	if (!gl_tile_program_loaded) {
 		gl_tile_load_program();
@@ -316,6 +318,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 		default:
 		case gl_texture_data_type_rgba:
 			program = &gl_rgba_program;
+			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			break;
 		case gl_texture_data_type_monochrome:
@@ -323,6 +326,7 @@ static void gl_tile_draw(gl_shape *shape_self)
 			break;
 		case gl_texture_data_type_alpha:
 			program = &gl_alpha_program;
+			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			break;
 	}
@@ -367,6 +371,6 @@ static void gl_tile_draw(gl_shape *shape_self)
 	shape_self->f->compute_alpha(shape_self);
 	
 	glUniform1f(program->alphaLoc, shape_self->data.computedAlpha);
-
+	
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 }

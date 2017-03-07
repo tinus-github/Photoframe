@@ -9,6 +9,9 @@
 #include "gl-value-animation-easing.h"
 #include "math.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 static GLfloat gl_value_animation_easing_calculate_value_normalized(gl_value_animation *obj, GLfloat normalized_time_elapsed);
 static void gl_value_animation_easing_copy(gl_value_animation *source, gl_value_animation *target);
 static gl_value_animation *gl_value_animation_easing_dup(gl_value_animation *source);

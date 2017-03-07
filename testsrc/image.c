@@ -9,21 +9,18 @@
 #include <math.h>
 #include <sys/time.h>
 #include <string.h>
+#include <stdlib.h>
 
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-#include <GLES2/gl2.h>
+#include "gl-includes.h"
 
-#include <bcm_host.h>
-
-#include "loadimage.h"
+#include "images/loadimage.h"
 #include "gl-texture.h"
 #include "gl-tile.h"
 #include "gl-container-2d.h"
 #include "gl-stage.h"
 #include "gl-tiled-image.h"
 #include "gl-renderloop.h"
-#include "egl-driver.h"
+#include "driver.h"
 #include "gl-value-animation.h"
 #include "gl-value-animation-easing.h"
 #include "labels/gl-label-scroller.h"
@@ -37,6 +34,8 @@
 #define TRUE 1
 #define FALSE 0
 
+void slideshow_init();
+
 void image_set_alpha(void *target, void *extra_data, GLfloat value)
 {
 	gl_shape *image_shape = (gl_shape *)extra_data;
@@ -47,6 +46,15 @@ void image_set_alpha(void *target, void *extra_data, GLfloat value)
 
 static unsigned int slide_counter = 1;
 static unsigned int num_files;
+static char** filenames;
+
+char *url_from_path(const char* path)
+{
+	char *ret = malloc(strlen(path) + 8);
+	strcpy(ret, "file://");
+	strcat(ret, path);
+	return ret;
+}
 
 gl_slide *get_next_slide(void *target, void *extra_data)
 {
@@ -54,12 +62,13 @@ gl_slide *get_next_slide(void *target, void *extra_data)
 	char **argv = (char**) extra_data;
 	
 	char *filename = argv[slide_counter];
+	char *url = url_from_path(filename);
 	slide_counter++;
 	if (slide_counter >= (num_files + 1)) {
 		slide_counter = 1;
 	}
 	
-	slide_image->data.filename = strdup(filename);
+	slide_image->data.filename = strdup(url); free(url);
 	return (gl_slide *)slide_image;
 }
 
@@ -71,13 +80,24 @@ int main(int argc, char *argv[])
 	}
 	
 	num_files = argc-1;
+	filenames = argv;
+
+	gl_objects_setup();
 	
-	egl_driver_setup();
-	egl_driver_init();
-	
+#ifdef __APPLE__
+	startCocoa(argc, (const char**)argv, &slideshow_init);
+#else
+	egl_driver_init(&slideshow_init);
+	gl_renderloop_loop();
+#endif
+}
+
+void slideshow_init()
+{
+
 	gl_slideshow *slideshow = gl_slideshow_new();
 	slideshow->data.getNextSlideCallback = &get_next_slide;
-	slideshow->data.callbackExtraData = argv;
+	slideshow->data.callbackExtraData = filenames;
 	
 	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
 	animation_e->data.easingType = gl_value_animation_ease_linear;
@@ -124,7 +144,5 @@ int main(int argc, char *argv[])
 	
 	((gl_slide *)slideshow)->f->enter((gl_slide *)slideshow);
 	
-	gl_renderloop_loop();
-	
-	return 0; // not reached
+	return; // not reached
 }

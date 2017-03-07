@@ -7,8 +7,11 @@
 //
 
 #include "gl-rectangle.h"
-#include "egl-driver.h"
+#include "driver.h"
 #include "gl-stage.h"
+
+#include <string.h>
+#include <stdlib.h>
 
 static void gl_rectangle_draw(gl_shape *self);
 static void gl_rectangle_set_color(gl_rectangle *obj, GLfloat r, GLfloat g, GLfloat b, GLfloat alpha);
@@ -61,7 +64,7 @@ static int gl_rectangle_load_program() {
 	"}                                                   \n";
 	
 	// Load the shaders and get a linked program object
-	gl_rgba_program.program = egl_driver_load_program ( vShaderStr, fShaderStr );
+	gl_rgba_program.program = driver_load_program ( vShaderStr, fShaderStr );
 	gl_rectangle_load_program_attribute_locations(&gl_rgba_program);
 	
 	gl_rectangle_program_loaded = 1;
@@ -76,6 +79,8 @@ void gl_rectangle_setup()
 	
 	gl_shape_funcs *shapef = (gl_shape_funcs *)&gl_rectangle_funcs_global;
 	shapef->draw = &gl_rectangle_draw;
+	
+	((gl_object *)parent)->f->free((gl_object *)parent);
 }
 
 gl_rectangle *gl_rectangle_init(gl_rectangle *obj)

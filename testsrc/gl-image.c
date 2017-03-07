@@ -13,7 +13,13 @@
 #include "infrastructure/gl-workqueue-job.h"
 #include "infrastructure/gl-workqueue.h"
 #include "gl-stage.h"
-#include "loadimage.h"
+#include "images/loadimage.h"
+#include "images/loadimage-jpg.h"
+#include "images/loadimage-png.h"
+#include "images/loadimage-bmp.h"
+#include "fs/gl-stream.h"
+#include "fs/gl-stream-file.h"
+#include "fs/gl-stream-rewindable.h"
 #include "infrastructure/gl-notice-subscription.h"
 #include "infrastructure/gl-notice.h"
 
@@ -70,11 +76,10 @@ void gl_image_setup()
 	gl_image_setup_done = 1;
 }
 
-static void gl_image_load_file(gl_image *obj, const char* filename)
+static void gl_image_load_file(gl_image *obj, const char* urlString)
 {
 	((gl_object *)obj)->f->ref((gl_object *)obj);
-	
-	obj->data._filename = strdup(filename);
+	obj->data._urlString = strdup(urlString);
 	
 	gl_workqueue_job *job = gl_workqueue_job_new();
 	job->data.target = obj;
@@ -91,17 +96,47 @@ static void gl_image_load_file(gl_image *obj, const char* filename)
 	loading_workqueue->f->append_job(loading_workqueue, job);
 }
 
+#define SIGNATURE_SIZE 11
+
 static void *gl_image_render_job(void *target, void *extra_data)
 {
 	gl_image *obj = (gl_image *)target;
 	
-	return loadJPEG(obj->data._filename,
-			obj->data.desiredWidth,
-			obj->data.desiredHeight,
-			&obj->data._width,
-			&obj->data._height,
-			&obj->data._orientation
-			);
+	gl_stream *stream = (gl_stream *)gl_stream_file_new();
+	stream->f->set_url(stream, obj->data._urlString);
+	
+	gl_stream_rewindable *stream_rewindable = gl_stream_rewindable_new();
+	stream_rewindable->f->set_stream(stream_rewindable, stream);
+	((gl_stream *)stream_rewindable)->f->open((gl_stream *)stream_rewindable);
+	
+	unsigned char signature[SIGNATURE_SIZE];
+	size_t num_read = ((gl_stream *)stream_rewindable)->f->read((gl_stream *)stream_rewindable, signature, SIGNATURE_SIZE);
+	
+	printf("Loading file %s\n", obj->data._urlString);
+	
+	if (num_read != SIGNATURE_SIZE) {
+		((gl_object *)stream_rewindable)->f->unref((gl_object *)stream_rewindable);
+		return NULL;
+	}
+	
+	loadImageFunction f = functionForLoadingImage(signature);
+	if (!f) {
+		((gl_object *)stream_rewindable)->f->unref((gl_object *)stream_rewindable);
+		return NULL;
+	}
+	
+	stream_rewindable->f->rewind(stream_rewindable, signature, SIGNATURE_SIZE);
+	
+	void *ret = f((gl_stream *)stream_rewindable,
+			    obj->data.desiredWidth,
+			    obj->data.desiredHeight,
+			    &obj->data._width,
+			    &obj->data._height,
+			    &obj->data._orientation
+			    );
+	
+	((gl_object *)stream_rewindable)->f->unref((gl_object *)stream_rewindable);
+	return ret;
 }
 
 static void gl_image_loading_completed(void *target, gl_notice_subscription *subscription, void *extra_data)
@@ -110,8 +145,8 @@ static void gl_image_loading_completed(void *target, gl_notice_subscription *sub
 	gl_tiled_image *obj_tiled = (gl_tiled_image *)obj;
 	gl_workqueue_job *job = (gl_workqueue_job *)extra_data;
 	
-	free (obj->data._filename);
-	obj->data._filename = NULL;
+	free(obj->data._urlString);
+	obj->data._urlString = NULL;
 	
 	unsigned char* bitmap = job->data.jobReturn;
 	((gl_object *)job)->f->unref((gl_object *)job);
@@ -167,7 +202,9 @@ static void gl_image_free(gl_object *obj_obj)
 {
 	gl_image *obj = (gl_image *)obj_obj;
 	
-	free(obj->data._filename);
+	free(obj->data._urlString);
+	obj->data._urlString = NULL;
+	
 	((gl_object *)obj->data.readyNotice)->f->unref((gl_object *)obj->data.readyNotice);
 	((gl_object *)obj->data.failedNotice)->f->unref((gl_object *)obj->data.failedNotice);
 	

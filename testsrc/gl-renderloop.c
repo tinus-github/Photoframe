@@ -182,6 +182,11 @@ gl_renderloop *gl_renderloop_get_global_renderloop()
 	return global_renderloop;
 }
 
+void gl_renderloop_loop_once()
+{
+	gl_renderloop_run(global_renderloop);
+}
+
 void gl_renderloop_loop()
 {
 	struct timeval t1, t2;

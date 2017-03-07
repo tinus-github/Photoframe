@@ -7,6 +7,8 @@
 //
 
 #include "gl-value-animation.h"
+#include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include "math.h"
 

@@ -9,6 +9,10 @@
 // TODO: separate out slide functionality
 
 #include "slideshow/gl-slide-image.h"
+
+#include <stdlib.h>
+#include <string.h>
+
 #include "gl-image.h"
 #include "infrastructure/gl-notice-subscription.h"
 

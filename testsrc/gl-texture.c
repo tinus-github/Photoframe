@@ -9,10 +9,11 @@
 #include "gl-texture.h"
 #include "gl-renderloop-member.h"
 #include "gl-renderloop.h"
-#include "egl-driver.h"
+#include "driver.h"
 
 #include <string.h>
 #include <assert.h>
+#include <stdlib.h>
 
 static void load_image(gl_texture *obj, gl_bitmap *bitmap, unsigned int width, unsigned int height);
 static void load_image_r(gl_texture *obj, gl_bitmap *bitmap, unsigned char *rgba_data, unsigned int width, unsigned int height);
@@ -107,6 +108,12 @@ static void gl_texture_load_program_attribute_locations(gl_texture_program_data 
 }
 
 static int gl_texture_load_program() {
+#ifdef __APPLE__
+#define MONO_CHANNEL "r"
+#else
+#define MONO_CHANNEL "a"
+#endif
+	
 	// The simplest do nothing vertex shader possible
 	GLchar vShaderStr[] =
 	"attribute vec4 a_position;            \n"
@@ -125,7 +132,7 @@ static int gl_texture_load_program() {
 	"void main()                                         \n"
 	"{                                                   \n"
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
-	"  float luminance = 1.0 - texelColor.a;             \n"
+	"  float luminance = 1.0 - texelColor." MONO_CHANNEL ";             \n"
 	"  gl_FragColor = vec4(1.0, 1.0, 1.0, luminance);    \n"
 	"}                                                   \n";
 	
@@ -138,7 +145,7 @@ static int gl_texture_load_program() {
 	"{                                                   \n"
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
 	"  gl_FragColor = u_color;                           \n"
-	"  gl_FragColor.a = texelColor.a;                    \n"
+	"  gl_FragColor.a = texelColor." MONO_CHANNEL ";                    \n"
 	"}                                                   \n";
 
 	GLchar fShaderAlphaBlurHStr[] =
@@ -155,17 +162,17 @@ static int gl_texture_load_program() {
 	"void main()                                         \n"
 	"{                                                   \n"
 	"  vec4 texelColor = texture2D( s_texture, v_texCoord );\n"
-	"  float luminance = texelColor.a * weight0;         \n"
+	"  float luminance = texelColor." MONO_CHANNEL " * weight0;         \n"
 	
 	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(1.0 / u_width, 0.0));\n"
-	"   luminance += texelColor.a * weight1;             \n"
+	"   luminance += texelColor." MONO_CHANNEL " * weight1;             \n"
 	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(-1.0 / u_width, 0.0));\n"
-	"   luminance += texelColor.a * weight1;             \n"
+	"   luminance += texelColor." MONO_CHANNEL " * weight1;             \n"
 	
 	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(2.0 / u_width, 0.0));\n"
-	"   luminance += texelColor.a * weight2;             \n"
+	"   luminance += texelColor." MONO_CHANNEL " * weight2;             \n"
 	"   texelColor = texture2D( s_texture, vec2(v_texCoord) + vec2(-2.0 / u_width, 0.0));\n"
-	"   luminance += texelColor.a * weight2;             \n"
+	"   luminance += texelColor." MONO_CHANNEL " * weight2;             \n"
 	
 	"   gl_FragColor = vec4(0.0, 0.0, 0.0, luminance);   \n"
 	"}                                                   \n";
@@ -202,19 +209,19 @@ static int gl_texture_load_program() {
 	
 	// Load the shaders and get a linked program object
 	// Flip (testing)
-	gl_flip_program.program = egl_driver_load_program ( vShaderStr, fShaderFlipAlphaStr );
+	gl_flip_program.program = driver_load_program ( vShaderStr, fShaderFlipAlphaStr );
 	gl_texture_load_program_attribute_locations(&gl_flip_program);
 
 	// Blur horizontally
-	gl_blur_h_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaBlurHStr );
+	gl_blur_h_program.program = driver_load_program ( vShaderStr, fShaderAlphaBlurHStr );
 	gl_texture_load_program_attribute_locations(&gl_blur_h_program);
 	
 	// Blur vertically
-	gl_blur_v_program.program = egl_driver_load_program ( vShaderStr, fShaderAlphaBlurVStr );
+	gl_blur_v_program.program = driver_load_program ( vShaderStr, fShaderAlphaBlurVStr );
 	gl_texture_load_program_attribute_locations(&gl_blur_v_program);
 	
 	// Stencil
-	gl_stencil_alpha_program.program = egl_driver_load_program ( vShaderStr, fShaderStencilAlphaStr );
+	gl_stencil_alpha_program.program = driver_load_program ( vShaderStr, fShaderStencilAlphaStr );
 	gl_texture_load_program_attribute_locations(&gl_stencil_alpha_program);
 	
 	gl_texture_program_loaded = 1;
@@ -242,9 +249,15 @@ static void load_image_gen_r_work(void *target, gl_renderloop_member *renderloop
 	
 	// Load the texture
 	if (obj->data.dataType != gl_texture_data_type_rgba) {
+#ifdef __APPLE__
+		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RED,
+			      obj->data.width, obj->data.height,
+			      0, GL_RED, GL_UNSIGNED_BYTE, obj->data.imageDataBitmap );
+#else
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_ALPHA,
 			      obj->data.width, obj->data.height,
 			      0, GL_ALPHA, GL_UNSIGNED_BYTE, obj->data.imageDataBitmap );
+#endif
 	} else {
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA,
 			      obj->data.width, obj->data.height,
@@ -379,6 +392,8 @@ static void gl_texture_apply_shader_draw(gl_texture *obj, gl_texture_manipulatio
 		case gl_texture_program_stencil_alpha:
 			program = &gl_stencil_alpha_program;
 			break;
+		default:
+			program = NULL;
 	}
 	
 	GLfloat vVertices[] = { -1.0f, -1.0f, 0.0f,  // Position 0
@@ -436,6 +451,8 @@ static void gl_texture_apply_outline(gl_texture *obj)
 	glGenTextures(1, &blurHTexture);
 	GLuint fbo;
 	glGenFramebuffers(1, &fbo);
+	
+	glDisable(GL_BLEND);
 	
 	gl_texture_setup_rendering_texture(obj, blurHTexture);
 	gl_texture_setup_rendering_fbo(obj, fbo, blurHTexture);

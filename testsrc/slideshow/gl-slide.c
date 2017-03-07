@@ -11,6 +11,8 @@
 #include "gl-stage.h"
 #include "infrastructure/gl-notice.h"
 #include "infrastructure/gl-notice-subscription.h"
+#include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 
 static void (*gl_object_free_org_global) (gl_object *obj);

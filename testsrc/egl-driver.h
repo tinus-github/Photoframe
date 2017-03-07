@@ -10,9 +10,7 @@
 #define egl_driver_h
 
 #include <stdio.h>
-#include <GLES2/gl2.h>
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
+#include "gl-includes.h"
 
 typedef struct egl_driver_data {
 	EGLDisplay display;
@@ -23,7 +21,7 @@ typedef struct egl_driver_data {
 } egl_driver_data;
 
 void egl_driver_setup();
-egl_driver_data *egl_driver_init();
+egl_driver_data *egl_driver_init(void(*initFunc)());
 
 GLuint egl_driver_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc );
 

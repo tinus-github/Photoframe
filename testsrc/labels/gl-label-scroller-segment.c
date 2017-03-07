@@ -13,6 +13,9 @@
 #include "infrastructure/gl-notice.h"
 #include "infrastructure/gl-notice-subscription.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 #define SEGMENT_WIDTH 512
 
 static void gl_label_scroller_segment_free(gl_object *obj);

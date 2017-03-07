@@ -8,6 +8,8 @@
 
 #include "gl-slideshow.h"
 #include "infrastructure/gl-notice-subscription.h"
+#include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 
 static void gl_slideshow_set_entrance_animation(gl_slideshow *obj, gl_value_animation *animation);
@@ -90,7 +92,7 @@ static void gl_slideshow_engine(gl_slideshow *obj)
 	if (obj->data._incomingSlide &&
 	    (obj->data._incomingSlide->data.loadstate == gl_slide_loadstate_failed)) {
 		gl_slide *incomingSlide = obj->data._incomingSlide;
-		((gl_object *)incomingSlide)->f->unref((gl_object *)incomingSlide);
+		((gl_container *)obj)->f->remove_child((gl_container *)obj, (gl_shape *)incomingSlide);
 		obj->data._incomingSlide = NULL;
 		
 		// fallthrough: try again

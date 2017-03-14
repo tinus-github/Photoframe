@@ -30,6 +30,8 @@ LIBPNG_CFLAGS = `pkg-config libpng --cflags`
 LIBPNG_LIBS = `pkg-config libpng --libs`
 PTHREAD_LIBS = -pthread
 PTHREAD_CFLAGS = $(PTHREAD_LIBS)
+MININI_LIBS = -L../lib/minIni/dev -lminIni
+MININI_CFLAGS = -I../lib/minIni
 QDBMP_CFLAGS = -I../lib/qdbmp
 QDBMP_LIBS = ../lib/qdbmp/qdbmp.o
 
@@ -39,7 +41,7 @@ image: $(OBJECTS) $(LIBEXIF_A)
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
 	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS) \
 	$(LIBFREETYPE_LIBS) $(LIBHARFBUZZ_LIBS) $(PTHREAD_LIBS) \
-	$(LIBPNG_LIBS) $(QDBMP_LIBS)
+	$(LIBPNG_LIBS) $(QDBMP_LIBS) $(MININI_LIBS)
 
 image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
@@ -316,7 +318,7 @@ fs/gl-stream-rewindable.o: fs/gl-stream-rewindable.c fs/gl-stream-rewindable.h f
 	$(OPTFLAGS)
 
 config/gl-configuration.o: config/gl-configuration.c config/gl-configuration.h config/gl-config-section.h config/gl-config-value.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
+	cc -g $(CFLAGS_ALL) $(MININI_CFLAGS) \
 	-c config/gl-configuration.c -o config/gl-configuration.o \
 	$(OPTFLAGS)
 

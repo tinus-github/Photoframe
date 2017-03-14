@@ -12,7 +12,9 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <errno.h>
+#include <assert.h>
 #include "minIni.h"
+
 
 static gl_configuration *global_configuration;
 
@@ -171,4 +173,34 @@ static void gl_configuration_free(gl_object *obj_obj)
 gl_configuration *gl_configuration_get_global_configuration()
 {
 	return global_configuration;
+}
+
+gl_config_value *gl_configuration_get_value_for_path(const char* path)
+{
+	gl_configuration *cf = gl_configuration_get_global_configuration();
+	gl_config_value *value = NULL;
+	char *sectionTitle = NULL;
+	
+	assert (path);
+	
+	char *sectionTitleEnd = strchr(path, '/');
+	const char *valueTitleStart = NULL;
+	if (sectionTitleEnd) {
+		sectionTitle = strndup(path, sectionTitleEnd-path);
+		valueTitleStart = sectionTitleEnd + 1;
+	} else {
+		sectionTitle = strdup("");
+		valueTitleStart = path;
+	}
+	
+	if (cf) {
+		gl_config_section *section = cf->f->get_section(cf, sectionTitle);
+		if (section) {
+			value = section->f->get_value(section, valueTitleStart);
+		}
+	}
+	
+	free (sectionTitle);
+
+	return value;
 }

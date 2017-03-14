@@ -262,21 +262,15 @@ static void gl_label_renderer_setup_freetype()
 	
 	assert (!(errorret = FT_Init_FreeType(&global_rendering_data.library)));
 	
-	gl_configuration *cf = gl_configuration_get_global_configuration();
-	if (cf) {
-		gl_config_section *section = cf->f->get_section(cf, "Labels");
-		if (section) {
-			gl_config_value *fontFileValue = section->f->get_value(section, "fontFile");
-			if (fontFileValue) {
-				fontFileName = fontFileValue->f->get_value_string(fontFileValue);
-			}
-			gl_config_value *fontSizeValue = section->f->get_value(section, "fontSize");
-			if (fontSizeValue) {
-				fontSize = fontSizeValue->f->get_value_int(fontSizeValue);
-			}
-			
-		}
+	gl_config_value *fontFileValue = gl_configuration_get_value_for_path("Labels/fontFile");
+	if (fontFileValue) {
+		fontFileName = fontFileValue->f->get_value_string(fontFileValue);
 	}
+	gl_config_value *fontSizeValue = gl_configuration_get_value_for_path("Labels/fontSize");
+	if (fontSizeValue) {
+		fontSize = fontSizeValue->f->get_value_int(fontSizeValue);
+	}
+		
 	if (!fontFileName) {
 		fontFileName = FONT_FILE;
 	}

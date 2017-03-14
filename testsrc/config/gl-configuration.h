@@ -40,6 +40,7 @@ gl_configuration *gl_configuration_init(gl_configuration *obj);
 gl_configuration *gl_configuration_new();
 gl_configuration *gl_configuration_new_from_file(const char *filename);
 gl_configuration *gl_configuration_get_global_configuration();
+gl_config_value *gl_configuration_get_value_for_path(const char* path);
 
 
 #endif /* gl_configuration_h */

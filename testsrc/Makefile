@@ -13,7 +13,8 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  slideshow/gl-slideshow.o common-driver.o \
 	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o \
 	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o \
-	  fs/gl-url.o fs/gl-stream.o fs/gl-stream-file.o fs/gl-stream-rewindable.o
+	  fs/gl-url.o fs/gl-stream.o fs/gl-stream-file.o fs/gl-stream-rewindable.o \
+	  config/gl-configuration.o config/gl-config-section.o config/gl-config-value.o
 
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	  -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
@@ -313,6 +314,22 @@ fs/gl-stream-rewindable.o: fs/gl-stream-rewindable.c fs/gl-stream-rewindable.h f
 	cc -g $(CFLAGS_ALL) \
 	-c fs/gl-stream-rewindable.c -o fs/gl-stream-rewindable.o \
 	$(OPTFLAGS)
+
+config/gl-configuration.o: config/gl-configuration.c config/gl-configuration.h config/gl-config-section.h config/gl-config-value.h infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-c config/gl-configurable.c -o config/gl-configurable.o \
+	$(OPTFLAGS)
+
+config/gl-config-section.o: config/gl-config-section.c config/gl-config-section.h config/gl-config-value.h infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-c config/gl-config-section.c -o config/gl-config-section.o \
+	$(OPTFLAGS)
+
+config/gl-config-value.o: config/gl-config-value.c config/gl-config-value.h infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-c config/gl-config-value.c -o config/gl-config-value.o \
+	$(OPTFLAGS)
+
 
 decodejpeg2rgb: decodejpeg2rgb.o
 	cc -o decodejpeg2rgb -Wl,--whole-archive decodejpeg2rgb.o -L/opt/vc/lib/ \

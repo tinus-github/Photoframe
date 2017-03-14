@@ -10,6 +10,7 @@
 #define gl_config_value_h
 
 #include <stdio.h>
+#include <stdint.h>
 
 #include "infrastructure/gl-object.h"
 

@@ -317,7 +317,7 @@ fs/gl-stream-rewindable.o: fs/gl-stream-rewindable.c fs/gl-stream-rewindable.h f
 
 config/gl-configuration.o: config/gl-configuration.c config/gl-configuration.h config/gl-config-section.h config/gl-config-value.h infrastructure/gl-object.h
 	cc -g $(CFLAGS_ALL) \
-	-c config/gl-configurable.c -o config/gl-configurable.o \
+	-c config/gl-configuration.c -o config/gl-configuration.o \
 	$(OPTFLAGS)
 
 config/gl-config-section.o: config/gl-config-section.c config/gl-config-section.h config/gl-config-value.h infrastructure/gl-object.h

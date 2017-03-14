@@ -192,7 +192,7 @@ labels/gl-label-scroller.o: labels/gl-label-scroller.c labels/gl-label-scroller.
 
 labels/gl-label-renderer.o: labels/gl-label-renderer.c labels/gl-label-renderer.h \
 		infrastructure/gl-object.h gl-texture.h gl-tile.h
-	cc $(CFLAGS_ALL) \
+	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	$(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \

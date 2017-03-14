@@ -65,7 +65,7 @@ static void gl_framed_shape_add_border(gl_framed_shape *obj, unsigned int index,
 	obj->data._borders[index] = rectangle;
 	((gl_container *)obj)->f->append_child((gl_container *)obj, rectangle_shape);
 	
-	rectangle->f->set_color(rectangle, 0.0, 0.0, 1.0, 1.0);
+	rectangle->f->set_color(rectangle, 0.0, 0.0, 0.0, 1.0);
 }
 
 static void gl_framed_shape_update_frame(gl_framed_shape *obj)

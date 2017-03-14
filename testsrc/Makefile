@@ -31,7 +31,7 @@ LIBPNG_LIBS = `pkg-config libpng --libs`
 PTHREAD_LIBS = -pthread
 PTHREAD_CFLAGS = $(PTHREAD_LIBS)
 MININI_LIBS = -L../lib/minIni/dev -lminIni
-MININI_CFLAGS = -I../lib/minIni
+MININI_CFLAGS = -I../lib/minIni/dev
 QDBMP_CFLAGS = -I../lib/qdbmp
 QDBMP_LIBS = ../lib/qdbmp/qdbmp.o
 

@@ -27,6 +27,7 @@
 #include "infrastructure/gl-notice-subscription.h"
 #include "slideshow/gl-slide-image.h"
 #include "slideshow/gl-slideshow.h"
+#include "config/gl-configuration.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -83,6 +84,9 @@ int main(int argc, char *argv[])
 	filenames = argv;
 
 	gl_objects_setup();
+
+	gl_configuration *config = gl_configuration_new_from_file(argv[1]);
+	config->f->load(config);
 	
 #ifdef __APPLE__
 	startCocoa(argc, (const char**)argv, &slideshow_init);

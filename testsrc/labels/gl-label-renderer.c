@@ -12,11 +12,12 @@
 #include FT_FREETYPE_H
 #include <assert.h>
 #include <string.h>
-#include <hb-ft.h>
+#include "hb-ft.h"
 #include <limits.h>
 
 #include "infrastructure/gl-object.h"
 #include "gl-tile.h"
+#include "config/gl-configuration.h"
 
 #ifdef __APPLE__
 #define FONT_FILE "/Library/Fonts/Arial Unicode.ttf"
@@ -256,7 +257,32 @@ static void gl_label_renderer_layout(gl_label_renderer *obj)
 static void gl_label_renderer_setup_freetype()
 {
 	FT_Error errorret;
+	const char *fontFileName = NULL;
+	int fontSize = 0;
+	
 	assert (!(errorret = FT_Init_FreeType(&global_rendering_data.library)));
+	
+	gl_configuration *cf = gl_configuration_get_global_configuration();
+	if (cf) {
+		gl_config_section *section = cf->f->get_section(cf, "Labels");
+		if (section) {
+			gl_config_value *fontFileValue = section->f->get_value(section, "fontFile");
+			if (fontFileValue) {
+				fontFileName = fontFileValue->f->get_value_string(fontFileValue);
+			}
+			gl_config_value *fontSizeValue = section->f->get_value(section, "fontSize");
+			if (fontSizeValue) {
+				fontSize = fontSizeValue->f->get_value_int(fontSizeValue);
+			}
+			
+		}
+	}
+	if (!fontFileName) {
+		fontFileName = FONT_FILE;
+	}
+	if (!fontSize) {
+		fontSize = LABEL_HEIGHT;
+	}
 	
 	assert (!(errorret = FT_New_Face(global_rendering_data.library, FONT_FILE, 0, &global_rendering_data.face)));
 	
@@ -290,9 +316,6 @@ void gl_label_renderer_setup()
 	obj_funcs_global->free = &gl_label_renderer_free;
 	
 	parent->f->free(parent);
-	
-	gl_label_renderer_setup_freetype();
-	gl_label_renderer_setup_harfbuzz();
 }
 
 gl_label_renderer *gl_label_renderer_init(gl_label_renderer *obj)
@@ -300,6 +323,11 @@ gl_label_renderer *gl_label_renderer_init(gl_label_renderer *obj)
 	gl_object_init((gl_object *)obj);
 	
 	obj->f = &gl_label_renderer_funcs_global;
+	
+	if (!global_rendering_data.library) {
+		gl_label_renderer_setup_freetype();
+		gl_label_renderer_setup_harfbuzz();
+	}
 	
 	return obj;
 }

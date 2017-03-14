@@ -284,9 +284,9 @@ static void gl_label_renderer_setup_freetype()
 		fontSize = LABEL_HEIGHT;
 	}
 	
-	assert (!(errorret = FT_New_Face(global_rendering_data.library, FONT_FILE, 0, &global_rendering_data.face)));
+	assert (!(errorret = FT_New_Face(global_rendering_data.library, fontFileName, 0, &global_rendering_data.face)));
 	
-	assert (!(errorret = FT_Set_Char_Size(global_rendering_data.face, 0, LABEL_HEIGHT*64, 72,72)));
+	assert (!(errorret = FT_Set_Char_Size(global_rendering_data.face, 0, fontSize*64, 72,72)));
 	
 	int counter;
 	for(counter = 0; counter < global_rendering_data.face->num_charmaps; counter++) {

@@ -1,0 +1,99 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red114\green139\blue24;\red82\green103\blue112;\red88\green86\blue186;
+\red223\green7\blue0;\red204\green37\blue111;}
+{\*\expandedcolortbl;\csgray\c100000;\csgenericrgb\c44567\c54570\c9230;\csgenericrgb\c32082\c40233\c44031;\csgenericrgb\c34418\c33739\c72749;
+\csgenericrgb\c87500\c2700\c0;\csgenericrgb\c79819\c14681\c43488;}
+\margl1440\margr1440\vieww9000\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 This is a container object that derives from gl-shape.\
+\
+Empty object .c:\
+\
+\pard\tx1087\pardeftab1087\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf2 \CocoaLigature0 //\cf3 \
+\cf2 //  gl-container.c\cf3 \
+\cf2 //  Photoframe\cf3 \
+\cf2 //\cf3 \
+\cf2 //  Created by Martijn Vernooij on 14/12/2016.\cf3 \
+\cf2 //\cf3 \
+\cf2 //\cf3 \
+\
+\cf4 #include \cf5 "gl-container.h"\cf4 \
+\cf3 \
+\cf6 static\cf3  \cf6 struct\cf3  gl_container_funcs gl_container_funcs_global = \{\
+	.append_child = &gl_container_append_child\
+\};\
+\
+\cf6 static\cf3  \cf6 void\cf3  (*gl_object_free_org_global) (gl_object *obj);\
+\
+\cf6 void\cf3  gl_container_setup()\
+\{\
+	gl_shape *parent = gl_shape_new();\
+	memcpy(&gl_container_funcs_global.p, parent->f, \cf6 sizeof\cf3 (gl_shape_funcs));\
+	((gl_object *)parent)->f->free((gl_object *)parent);\
+\
+	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_container_funcs_global;\
+	gl_object_free_org_global = obj_funcs_global->free;\
+	obj_funcs_global->free = &gl_container_free;\
+\}\
+\
+gl_container *gl_container_init(gl_container *obj)\
+\{\
+	gl_shape_init((gl_shape *)obj);\
+	\
+	obj->f = &gl_container_funcs_global;\
+	\
+	\cf6 return\cf3  obj;\
+\}\
+\
+gl_container *gl_container_new()\
+\{\
+	gl_container *ret = calloc(1, \cf6 sizeof\cf3 (gl_container));\
+	\
+	\cf6 return\cf3  gl_container_init(ret);\
+\}\
+\
+\
+Empty object.h:\
+\cf2 //\cf3 \
+\cf2 //  gl-container.h\cf3 \
+\cf2 //  Photoframe\cf3 \
+\cf2 //\cf3 \
+\cf2 //  Created by Martijn Vernooij on 14/12/2016.\cf3 \
+\cf2 //\cf3 \
+\cf2 //\cf3 \
+\
+\cf4 #ifndef gl_container_h\
+#define gl_container_h\
+\cf3 \
+\cf4 #include \cf5 <stdio.h>\cf4 \
+\cf3 \
+\cf4 #include \cf5 "gl-shape.h"\cf4 \
+\cf3 \
+\cf6 typedef\cf3  \cf6 struct\cf3  gl_container gl_container;\
+\
+\cf6 typedef\cf3  \cf6 struct\cf3  gl_container_funcs \{\
+	gl_shape_funcs p;\
+	\cf6 void\cf3  (*append_child) (gl_container *obj, gl_shape *child);\
+\} gl_container_funcs;\
+\
+\cf6 typedef\cf3  \cf6 struct\cf3  gl_container_data \{\
+	gl_shape_data p;\
+	\
+	gl_shape *first_child;\
+\} gl_container_data;\
+\
+\cf6 struct\cf3  gl_container \{\
+	gl_container_funcs *f;\
+	gl_container_data data;\
+\};\
+\
+\cf6 void\cf3  gl_container_setup();\
+gl_container *gl_container_init(gl_container *obj);\
+gl_container *gl_container_new();\
+\
+\cf4 #endif \cf2 /* gl_container_h */\cf4 \
+}

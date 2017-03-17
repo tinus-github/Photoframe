@@ -1094,6 +1094,10 @@
 		0DE786331E775B310051D3B5 /* Makefile.vc in Resources */ = {isa = PBXBuildFile; fileRef = 0DE782681E775B300051D3B5 /* Makefile.vc */; };
 		0DE786341E775B310051D3B5 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0DE782691E775B300051D3B5 /* README.txt */; };
 		0DE786351E775C190051D3B5 /* libharfbuzz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE77DB61E775B2D0051D3B5 /* libharfbuzz.dylib */; };
+		0DE7863B1E79E6AF0051D3B5 /* gl-directory.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786391E79E6AF0051D3B5 /* gl-directory.c */; };
+		0DE7863C1E79E6AF0051D3B5 /* gl-directory.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786391E79E6AF0051D3B5 /* gl-directory.c */; };
+		0DE7863F1E7C31830051D3B5 /* gl-directory-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE7863D1E7C31830051D3B5 /* gl-directory-file.c */; };
+		0DE786401E7C31830051D3B5 /* gl-directory-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE7863D1E7C31830051D3B5 /* gl-directory-file.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -2558,6 +2562,11 @@
 		0DE782671E775B300051D3B5 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		0DE782681E775B300051D3B5 /* Makefile.vc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.vc; sourceTree = "<group>"; };
 		0DE782691E775B300051D3B5 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		0DE786381E785DFC0051D3B5 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		0DE786391E79E6AF0051D3B5 /* gl-directory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-directory.c"; sourceTree = "<group>"; };
+		0DE7863A1E79E6AF0051D3B5 /* gl-directory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-directory.h"; sourceTree = "<group>"; };
+		0DE7863D1E7C31830051D3B5 /* gl-directory-file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-directory-file.c"; sourceTree = "<group>"; };
+		0DE7863E1E7C31830051D3B5 /* gl-directory-file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-directory-file.h"; sourceTree = "<group>"; };
 		0DEED0791E15746600C00550 /* egl-driver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "egl-driver.c"; sourceTree = "<group>"; };
 		0DEED07A1E15746600C00550 /* egl-driver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "egl-driver.h"; sourceTree = "<group>"; };
 		0DEED07B1E15E10900C00550 /* gl-value-animation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-value-animation.c"; sourceTree = "<group>"; };
@@ -3166,7 +3175,6 @@
 				0D3ADC711E0089A4009A40B1 /* gl-stage.h */,
 				0D3ADC721E01EE8A009A40B1 /* gl-container.c */,
 				0D3ADC731E01EE8A009A40B1 /* gl-container.h */,
-				0D3ADC741E01F041009A40B1 /* gl-objects.rtf */,
 				0D3ADC751E0B1C5D009A40B1 /* gl-container-2d.c */,
 				0D3ADC761E0B1C5D009A40B1 /* gl-container-2d.h */,
 				0D071D6E1E10157400145717 /* gl-tiled-image.c */,
@@ -3283,6 +3291,10 @@
 				0DD9DCAD1E573EAE00CB187D /* gl-stream-file.h */,
 				0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */,
 				0D3B098A1E5E20F700C4E97E /* gl-stream-rewindable.h */,
+				0DE786391E79E6AF0051D3B5 /* gl-directory.c */,
+				0DE7863A1E79E6AF0051D3B5 /* gl-directory.h */,
+				0DE7863D1E7C31830051D3B5 /* gl-directory-file.c */,
+				0DE7863E1E7C31830051D3B5 /* gl-directory-file.h */,
 			);
 			path = fs;
 			sourceTree = "<group>";
@@ -3316,6 +3328,7 @@
 				0DE75B1D1E6F21CA0051D3B5 /* test2.cc */,
 				0DE75B1E1E6F21CA0051D3B5 /* testplain.ini */,
 				0DE75B1F1E6F21CA0051D3B5 /* wxMinIni.h */,
+				0DE786381E785DFC0051D3B5 /* Makefile */,
 			);
 			path = dev;
 			sourceTree = "<group>";
@@ -3332,6 +3345,7 @@
 			isa = PBXGroup;
 			children = (
 				0DE75B3A1E6F2F270051D3B5 /* Config.rtf */,
+				0D3ADC741E01F041009A40B1 /* gl-objects.rtf */,
 			);
 			path = Doc;
 			sourceTree = "<group>";
@@ -6746,6 +6760,7 @@
 				0D13C2061E47E55C00FB9F43 /* gl-workqueue-job.c in Sources */,
 				0D13C2071E47E55C00FB9F43 /* gl-label.c in Sources */,
 				0D13C2081E47E55C00FB9F43 /* gl-label-scroller-segment.c in Sources */,
+				0DE786401E7C31830051D3B5 /* gl-directory-file.c in Sources */,
 				0D13C2091E47E55C00FB9F43 /* gl-label-renderer.c in Sources */,
 				0D13C20A1E47E55C00FB9F43 /* gl-label-scroller.c in Sources */,
 				0D74EEE01E4DF17B00A4CE92 /* loadimage-jpg.c in Sources */,
@@ -6755,6 +6770,7 @@
 				0D13C20D1E47E55C00FB9F43 /* gl-texture.c in Sources */,
 				0D13C20E1E47E55C00FB9F43 /* gl-shape.c in Sources */,
 				0D13C20F1E47E55C00FB9F43 /* gl-rectangle.c in Sources */,
+				0DE7863C1E79E6AF0051D3B5 /* gl-directory.c in Sources */,
 				0D13C2101E47E55C00FB9F43 /* gl-tile.c in Sources */,
 				0D13C2111E47E55C00FB9F43 /* gl-stage.c in Sources */,
 				0D74EEE41E4DF34A00A4CE92 /* loadimage-png.c in Sources */,
@@ -6879,6 +6895,8 @@
 				0DE784FF1E775B310051D3B5 /* Makefile in Sources */,
 				0DAFDA5A1E477E3900C5100E /* gl-slide.c in Sources */,
 				0DE784231E775B300051D3B5 /* hb-uniscribe.cc in Sources */,
+				0DE7863F1E7C31830051D3B5 /* gl-directory-file.c in Sources */,
+				0DE7863B1E79E6AF0051D3B5 /* gl-directory.c in Sources */,
 				0DE784251E775B300051D3B5 /* hb-warning.cc in Sources */,
 				0D74EEE31E4DF34A00A4CE92 /* loadimage-png.c in Sources */,
 				0DE783FE1E775B300051D3B5 /* hb-ot-shape-complex-default.cc in Sources */,

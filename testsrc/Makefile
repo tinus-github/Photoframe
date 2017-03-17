@@ -14,6 +14,7 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o \
 	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o \
 	  fs/gl-url.o fs/gl-stream.o fs/gl-stream-file.o fs/gl-stream-rewindable.o \
+	  fs/gl-directory.o fl/gl-directory-file.o \
 	  config/gl-configuration.o config/gl-config-section.o config/gl-config-value.o
 
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
@@ -315,6 +316,16 @@ fs/gl-stream-file.o: fs/gl-stream-file.c fs/gl-stream-file.h fs/gl-stream.h fs/g
 fs/gl-stream-rewindable.o: fs/gl-stream-rewindable.c fs/gl-stream-rewindable.h fs/gl-stream.h fs/gl-url.h infrastructure/gl-object.h
 	cc -g $(CFLAGS_ALL) \
 	-c fs/gl-stream-rewindable.c -o fs/gl-stream-rewindable.o \
+	$(OPTFLAGS)
+
+fs/gl-directory.o: fs/gl-directory.c fs/gl-directory.h fs/gl-stream.h infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-c fs/gl-directory.c -o fs/gl-directory.o \
+	$(OPTFLAGS)
+
+fs/gl-directory-file.o: fs/gl-directory-file.c fl/gl-directory-file.h fs/gl-directory.h fs/gl-stream.h infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-c fs/gl-directory-file.c -o fs/gl-directory-file.o \
 	$(OPTFLAGS)
 
 config/gl-configuration.o: config/gl-configuration.c config/gl-configuration.h config/gl-config-section.h config/gl-config-value.h infrastructure/gl-object.h

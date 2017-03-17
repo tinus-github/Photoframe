@@ -6,7 +6,8 @@
 //
 //
 
-#include "gl-directory.h"
+#include "fs/gl-directory.h"
+#include "fs/gl-directory-file.h"
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
@@ -110,4 +111,28 @@ static void gl_directory_free(gl_object *obj_obj)
 		((gl_object *)obj->data._URL)->f->unref((gl_object *)obj->data._URL);
 		obj->data._URL = NULL;
 	}
+}
+
+gl_directory *gl_directory_new_for_url(const char *URLstring)
+{
+	gl_url *url = gl_url_new();
+	gl_directory *ret = NULL;
+	
+	int decodeRet = url->f->decode(url, URLstring);
+	if (decodeRet) {
+		((gl_object *)url)->f->unref((gl_object *)url);
+		return NULL;
+	}
+	
+	if (!strcmp(url->data.scheme, "file")) {
+		ret = (gl_directory *)gl_directory_file_new();
+	}
+	
+	if (!ret) {
+		return ret;
+	}
+	
+	ret->data._URL = url;
+	
+	return ret;
 }

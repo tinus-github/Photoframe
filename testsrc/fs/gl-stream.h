@@ -54,7 +54,7 @@ struct gl_stream {
 void gl_stream_setup();
 gl_stream *gl_stream_init(gl_stream *obj);
 gl_stream *gl_stream_new();
-
+gl_stream *gl_stream_new_for_url(const char *URLstring);
 
 
 #endif /* gl_stream_h */

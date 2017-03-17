@@ -18,7 +18,6 @@
 #include "images/loadimage-png.h"
 #include "images/loadimage-bmp.h"
 #include "fs/gl-stream.h"
-#include "fs/gl-stream-file.h"
 #include "fs/gl-stream-rewindable.h"
 #include "infrastructure/gl-notice-subscription.h"
 #include "infrastructure/gl-notice.h"
@@ -102,8 +101,10 @@ static void *gl_image_render_job(void *target, void *extra_data)
 {
 	gl_image *obj = (gl_image *)target;
 	
-	gl_stream *stream = (gl_stream *)gl_stream_file_new();
-	stream->f->set_url(stream, obj->data._urlString);
+	gl_stream *stream = (gl_stream *)gl_stream_new_for_url(obj->data._urlString);
+	if (!stream) {
+		return NULL;
+	}
 	
 	gl_stream_rewindable *stream_rewindable = gl_stream_rewindable_new();
 	stream_rewindable->f->set_stream(stream_rewindable, stream);

@@ -52,7 +52,7 @@ struct gl_directory {
 void gl_directory_setup();
 gl_directory *gl_directory_init(gl_directory *obj);
 gl_directory *gl_directory_new();
-
+gl_directory *gl_directory_new_for_url(const char *URLstring);
 
 
 #endif /* gl_directory_h */

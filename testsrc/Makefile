@@ -323,7 +323,7 @@ fs/gl-directory.o: fs/gl-directory.c fs/gl-directory.h fs/gl-stream.h infrastruc
 	-c fs/gl-directory.c -o fs/gl-directory.o \
 	$(OPTFLAGS)
 
-fs/gl-directory-file.o: fs/gl-directory-file.c fl/gl-directory-file.h fs/gl-directory.h fs/gl-stream.h infrastructure/gl-object.h
+fs/gl-directory-file.o: fs/gl-directory-file.c fs/gl-directory-file.h fs/gl-directory.h fs/gl-stream.h infrastructure/gl-object.h
 	cc -g $(CFLAGS_ALL) \
 	-c fs/gl-directory-file.c -o fs/gl-directory-file.o \
 	$(OPTFLAGS)

@@ -66,7 +66,6 @@ static const gl_directory_entry *gl_directory_file_read(gl_directory *obj_dir)
 	char *filename;
 	struct stat statbuf;
 	mode_t statmode;
-	int printfret;
 	
 	errno = 0;
 	
@@ -98,7 +97,7 @@ static const gl_directory_entry *gl_directory_file_read(gl_directory *obj_dir)
 			break;
 		case DT_LNK:
 		case DT_UNKNOWN:
-			printfret = asprintf(&filename, "%s/%s", obj_dir->data._URL->data.path, dirent->d_name);
+			asprintf(&filename, "%s/%s", obj_dir->data._URL->data.path, dirent->d_name);
 			if (!filename) {
 				obj_dir->f->return_error(obj_dir, gl_stream_error_unspecified_error);
 				return NULL;
@@ -111,7 +110,7 @@ static const gl_directory_entry *gl_directory_file_read(gl_directory *obj_dir)
 			}
 			free(filename);
 			statmode = statbuf.st_mode & S_IFMT;
-			switch (statbuf.st_mode) {
+			switch (statmode) {
 				case S_IFDIR:
 					obj->data._current_entry.type = gl_directory_entry_type_directory;
 					break;

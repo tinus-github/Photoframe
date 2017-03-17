@@ -5,6 +5,8 @@
 //  Created by Martijn Vernooij on 17/03/2017.
 //
 //
+#define _GNU_SOURCE
+// for asprintf
 
 #include "gl-directory-file.h"
 #include <string.h>
@@ -14,7 +16,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#define _GNU_SOURCE
 #include <stdio.h>
 
 static void gl_directory_file_free(gl_object *obj_obj);

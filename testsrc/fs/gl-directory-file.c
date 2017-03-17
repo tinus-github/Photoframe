@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#define _GNU_SOURCE
 #include <stdio.h>
 
 static void gl_directory_file_free(gl_object *obj_obj);

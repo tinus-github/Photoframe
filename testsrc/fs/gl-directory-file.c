@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <stdio.h>
 
 static void gl_directory_file_free(gl_object *obj_obj);
 static gl_stream_error gl_directory_file_open(gl_directory *obj_dir);

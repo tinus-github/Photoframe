@@ -203,6 +203,7 @@ static int url_escape(gl_url *obj, const char *input, char **output)
 			outputLength+=2;
 		}
 		outputLength++;
+		cursor++;
 	}
 	
 	if (!outputLength) {

@@ -147,7 +147,7 @@ static gl_stream_error gl_directory_file_close(gl_directory *obj_dir)
 void gl_directory_file_setup()
 {
 	gl_directory *parent = gl_directory_new();
-	memcpy(&gl_directory_file_funcs_global.p, parent->f, sizeof(gl_object_funcs));
+	memcpy(&gl_directory_file_funcs_global.p, parent->f, sizeof(gl_directory_funcs));
 	((gl_object *)parent)->f->free((gl_object *)parent);
 	
 	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_directory_file_funcs_global;
@@ -184,8 +184,6 @@ static void gl_directory_file_free(gl_object *obj_obj)
 	}
 	
 	if (obj->data._current_entry.name) {
-		char *name = (char *)obj->data._current_entry.name;
-		free (name);
 		obj->data._current_entry.name = NULL;
 	}
 	

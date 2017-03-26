@@ -197,6 +197,7 @@ static int url_escape(gl_url *obj, const char *input, char **output)
 	size_t outputLength = 0;
 	size_t cursor = 0;
 	size_t outputCursor = 0;
+	char *outputStr;
 	
 	while (input[cursor]) {
 		if (character_is_unsafe(input[cursor])) {
@@ -214,15 +215,16 @@ static int url_escape(gl_url *obj, const char *input, char **output)
 	if (!*output) {
 		return ENOMEM;
 	}
+	outputStr = *output;
 	
 	cursor = 0;
 	while (input[cursor]) {
 		if (character_is_unsafe(input[cursor])) {
-			*output[outputCursor++] = '%';
-			*output[outputCursor++] = hex_char(input[cursor] >> 4);
-			*output[outputCursor++] = hex_char(input[cursor] & 15);
+			outputStr[outputCursor++] = '%';
+			outputStr[outputCursor++] = hex_char(input[cursor] >> 4);
+			outputStr[outputCursor++] = hex_char(input[cursor] & 15);
 		} else {
-			*output[outputCursor++] = input[cursor];
+			outputStr[outputCursor++] = input[cursor];
 		}
 		cursor++;
 	}

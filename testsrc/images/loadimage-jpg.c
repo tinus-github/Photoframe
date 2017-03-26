@@ -266,8 +266,8 @@ unsigned char *loadJPEG (gl_stream *stream,
 	
 	scaler = gl_bitmap_scaler_new();
 	
-	scaler->data.inputWidth = cinfo.image_width;
-	scaler->data.inputHeight = cinfo.image_height;
+	scaler->data.inputWidth = cinfo.output_width;
+	scaler->data.inputHeight = cinfo.output_height;
 	scaler->data.outputWidth = cinfo.output_width * scalefactor;
 	scaler->data.outputHeight = cinfo.output_height * scalefactor;
 	scaler->data.inputType = gl_bitmap_scaler_input_type_rgb;

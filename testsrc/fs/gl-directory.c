@@ -111,6 +111,8 @@ static void gl_directory_free(gl_object *obj_obj)
 		((gl_object *)obj->data._URL)->f->unref((gl_object *)obj->data._URL);
 		obj->data._URL = NULL;
 	}
+	
+	gl_object_free_org_global(obj_obj);
 }
 
 gl_directory *gl_directory_new_for_url(const char *URLstring)

@@ -32,6 +32,10 @@
 
 #include "../lib/linmath/linmath.h"
 
+#ifndef __APPLE__
+#include "arc4random.h"
+#endif
+
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0

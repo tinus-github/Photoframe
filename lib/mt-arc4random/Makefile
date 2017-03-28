@@ -8,6 +8,9 @@ CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 
 OBJECTS = arc4random.o getentropy.o
 
+arc4random.a: ${OBJECTS}
+	ar cr arc4random.a ${OBJECTS}
+
 arc4random.so: ${OBJECTS}
 	cc ${OBJECTS} -shared \
 	-o arc4random.so

@@ -1100,6 +1100,10 @@
 		0DE786401E7C31830051D3B5 /* gl-directory-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE7863D1E7C31830051D3B5 /* gl-directory-file.c */; };
 		0DE786431E8081F30051D3B5 /* gl-tree-cache-directory.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786411E8081F30051D3B5 /* gl-tree-cache-directory.c */; };
 		0DE786441E8081F30051D3B5 /* gl-tree-cache-directory.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786411E8081F30051D3B5 /* gl-tree-cache-directory.c */; };
+		0DE7864E1E8AC4920051D3B5 /* gl-sequence.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE7864C1E8AC4920051D3B5 /* gl-sequence.c */; };
+		0DE7864F1E8AC4920051D3B5 /* gl-sequence.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE7864C1E8AC4920051D3B5 /* gl-sequence.c */; };
+		0DE786521E8ACF4B0051D3B5 /* gl-sequence-ordered.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786501E8ACF4B0051D3B5 /* gl-sequence-ordered.c */; };
+		0DE786531E8ACF4B0051D3B5 /* gl-sequence-ordered.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786501E8ACF4B0051D3B5 /* gl-sequence-ordered.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -2571,6 +2575,16 @@
 		0DE7863E1E7C31830051D3B5 /* gl-directory-file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-directory-file.h"; sourceTree = "<group>"; };
 		0DE786411E8081F30051D3B5 /* gl-tree-cache-directory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-tree-cache-directory.c"; sourceTree = "<group>"; };
 		0DE786421E8081F30051D3B5 /* gl-tree-cache-directory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-tree-cache-directory.h"; sourceTree = "<group>"; };
+		0DE786461E8AA7820051D3B5 /* arc4random.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = arc4random.c; sourceTree = "<group>"; };
+		0DE786471E8AA7820051D3B5 /* arc4random.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = arc4random.h; sourceTree = "<group>"; };
+		0DE786481E8AA7820051D3B5 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		0DE786491E8AA8DA0051D3B5 /* chacha_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = chacha_private.h; sourceTree = "<group>"; };
+		0DE7864A1E8AA96E0051D3B5 /* getentropy.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = getentropy.c; sourceTree = "<group>"; };
+		0DE7864B1E8AAC4E0051D3B5 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		0DE7864C1E8AC4920051D3B5 /* gl-sequence.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-sequence.c"; sourceTree = "<group>"; };
+		0DE7864D1E8AC4920051D3B5 /* gl-sequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-sequence.h"; sourceTree = "<group>"; };
+		0DE786501E8ACF4B0051D3B5 /* gl-sequence-ordered.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-sequence-ordered.c"; sourceTree = "<group>"; };
+		0DE786511E8ACF4B0051D3B5 /* gl-sequence-ordered.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-sequence-ordered.h"; sourceTree = "<group>"; };
 		0DEED0791E15746600C00550 /* egl-driver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "egl-driver.c"; sourceTree = "<group>"; };
 		0DEED07A1E15746600C00550 /* egl-driver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "egl-driver.h"; sourceTree = "<group>"; };
 		0DEED07B1E15E10900C00550 /* gl-value-animation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-value-animation.c"; sourceTree = "<group>"; };
@@ -3114,6 +3128,7 @@
 		0D2B2FF31CB443510063393E /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				0DE786451E8AA7390051D3B5 /* mt-arc4random */,
 				0DE75B101E6F21CA0051D3B5 /* minIni */,
 				0D1805FB1E4D2B7D00449219 /* qdbmp */,
 				0D893B731E479AFA000DD5BF /* harfbuzz */,
@@ -3253,6 +3268,10 @@
 				0D9FD1621E2E6DF400B82200 /* gl-slide.h */,
 				0D9FD1631E2EC0D200B82200 /* gl-slideshow.c */,
 				0D9FD1641E2EC0D200B82200 /* gl-slideshow.h */,
+				0DE7864C1E8AC4920051D3B5 /* gl-sequence.c */,
+				0DE7864D1E8AC4920051D3B5 /* gl-sequence.h */,
+				0DE786501E8ACF4B0051D3B5 /* gl-sequence-ordered.c */,
+				0DE786511E8ACF4B0051D3B5 /* gl-sequence-ordered.h */,
 			);
 			path = slideshow;
 			sourceTree = "<group>";
@@ -5710,6 +5729,19 @@
 			path = win32;
 			sourceTree = "<group>";
 		};
+		0DE786451E8AA7390051D3B5 /* mt-arc4random */ = {
+			isa = PBXGroup;
+			children = (
+				0DE786491E8AA8DA0051D3B5 /* chacha_private.h */,
+				0DE786461E8AA7820051D3B5 /* arc4random.c */,
+				0DE786471E8AA7820051D3B5 /* arc4random.h */,
+				0DE786481E8AA7820051D3B5 /* LICENSE */,
+				0DE7864A1E8AA96E0051D3B5 /* getentropy.c */,
+				0DE7864B1E8AAC4E0051D3B5 /* Makefile */,
+			);
+			path = "mt-arc4random";
+			sourceTree = "<group>";
+		};
 		0DFBB1C91E204BF200E50758 /* labels */ = {
 			isa = PBXGroup;
 			children = (
@@ -6752,6 +6784,7 @@
 				0D13C1FE1E47E55C00FB9F43 /* gl-bitmap-scaler.c in Sources */,
 				0DE5123B1E537B7400CB0DA1 /* gl-stream.c in Sources */,
 				0D13C1FF1E47E55C00FB9F43 /* gl-slide-image.c in Sources */,
+				0DE786531E8ACF4B0051D3B5 /* gl-sequence-ordered.c in Sources */,
 				0D13C2001E47E55C00FB9F43 /* gl-slide.c in Sources */,
 				0D13C2011E47E55C00FB9F43 /* gl-slideshow.c in Sources */,
 				0D13C2021E47E55C00FB9F43 /* gl-object.c in Sources */,
@@ -6789,6 +6822,7 @@
 				0D13C2221E47E75D00FB9F43 /* GLWindowController.m in Sources */,
 				0D13C2181E47E55C00FB9F43 /* gl-value-animation-easing.c in Sources */,
 				0D13C2191E47E55C00FB9F43 /* gl-image.c in Sources */,
+				0DE7864F1E8AC4920051D3B5 /* gl-sequence.c in Sources */,
 				0DE77D851E74B41C0051D3B5 /* gl-configuration.c in Sources */,
 				0D13C21A1E47E55C00FB9F43 /* gl-framed-shape.c in Sources */,
 				0D13C21B1E47E55C00FB9F43 /* common-driver.c in Sources */,
@@ -6823,6 +6857,7 @@
 				0DE7862F1E775B310051D3B5 /* introspection-msvc.mak in Sources */,
 				0DE784221E775B300051D3B5 /* hb-unicode.cc in Sources */,
 				0DE5123A1E5361C000CB0DA1 /* gl-stream.c in Sources */,
+				0DE7864E1E8AC4920051D3B5 /* gl-sequence.c in Sources */,
 				0DE782CB1E775B300051D3B5 /* BUILD.md in Sources */,
 				0DE7834A1E775B300051D3B5 /* Makefile in Sources */,
 				0DE783F61E775B300051D3B5 /* hb-gobject-structs.cc in Sources */,
@@ -6896,6 +6931,7 @@
 				0DE783F31E775B300051D3B5 /* hb-glib.cc in Sources */,
 				0DAFDA731E477E5C00C5100E /* gl-image.c in Sources */,
 				0DAFDA741E477E5C00C5100E /* gl-framed-shape.c in Sources */,
+				0DE786521E8ACF4B0051D3B5 /* gl-sequence-ordered.c in Sources */,
 				0DE786201E775B310051D3B5 /* options.cc in Sources */,
 				0DAFDA591E477E3900C5100E /* gl-slide-image.c in Sources */,
 				0DE784AD1E775B300051D3B5 /* main.cc in Sources */,

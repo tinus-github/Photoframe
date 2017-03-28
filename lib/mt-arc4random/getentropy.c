@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <errno.h>
+#include <stdlib.h>
 
 /*
  * Get count number of random bytes

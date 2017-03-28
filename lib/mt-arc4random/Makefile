@@ -10,7 +10,7 @@ OBJECTS = arc4random.o getentropy.o
 
 arc4random.so: ${OBJECTS}
 	cc ${OBJECTS} -shared \
-	-o qdbmp.so
+	-o arc4random.so
 
 arc4random.o: arc4random.c arc4random.h chacha_private.h
 	cc ${CFLAGS_ALL} -c \

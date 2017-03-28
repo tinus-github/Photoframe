@@ -60,7 +60,7 @@ typedef struct rand_state rand_state;
 
 
 /* kernel entropy */
-extern int getentropy(void* buf, size_t n);
+extern int arc4random_getentropy(void* buf, size_t n);
 
 
 #define KEYSTREAM_ONLY

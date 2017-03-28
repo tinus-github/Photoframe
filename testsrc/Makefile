@@ -10,7 +10,8 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  infrastructure/gl-notice.o infrastructure/gl-notice-subscription.o \
 	  infrastructure/gl-workqueue.o infrastructure/gl-workqueue-job.o \
 	  gl-image.o gl-framed-shape.o slideshow/gl-slide.o slideshow/gl-slide-image.o \
-	  slideshow/gl-slideshow.o common-driver.o \
+	  slideshow/gl-slideshow.o slideshow/gl-sequence.o slideshow/gl-sequence-ordered.o \
+	  common-driver.o \
 	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o \
 	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o \
 	  fs/gl-url.o fs/gl-stream.o fs/gl-stream-file.o fs/gl-stream-rewindable.o \
@@ -259,11 +260,26 @@ slideshow/gl-slide.o: slideshow/gl-slide.c slideshow/gl-slide.h \
 slideshow/gl-slideshow.o: slideshow/gl-slideshow.c slideshow/gl-slideshow.h \
 		slideshow/gl-slide.h gl-container-2d.h gl-value-animation.h \
 		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h \
-		infrastructure/gl-object.h gl-container.h gl-shape.h
+		infrastructure/gl-object.h gl-container.h gl-shape.h gl-renderloop.h \
+		gl-renderloop-member.h
 	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c slideshow/gl-slideshow.c -o slideshow/gl-slideshow.o $(OPTFLAGS)
+
+slideshow/gl-sequence.o: slideshow/gl-sequence.c slideshow/gl-sequence.h \
+		infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-c slideshow/gl-sequence.c -o slideshow/gl-sequence.o $(OPTFLAGS)
+
+slideshow/gl-sequence-ordered.o: slideshow/gl-sequence-ordered.c slideshow/gl-sequence-ordered.h \
+		slideshow/gl-sequence.h infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-c slideshow/gl-sequence-ordered.c -o slideshow/gl-sequence-ordered.o $(OPTFLAGS)
 
 images/loadimage.o: images/loadimage.c images/loadimage.h
 	cc -g $(CFLAGS_ALL) $(QDBMP_CFLAGS) \

@@ -27,6 +27,7 @@
 #include "infrastructure/gl-notice-subscription.h"
 #include "slideshow/gl-slide-image.h"
 #include "slideshow/gl-slideshow.h"
+#include "slideshow/gl-sequence-ordered.h"
 #include "config/gl-configuration.h"
 #include "fs/gl-tree-cache-directory.h"
 
@@ -40,6 +41,11 @@
 #define TRUE 1
 #define FALSE 0
 
+typedef struct slideshowdata {
+	gl_tree_cache_directory *dir;
+	gl_sequence *sequence;
+} slideshowdata;
+
 void slideshow_init();
 
 void image_set_alpha(void *target, void *extra_data, GLfloat value)
@@ -50,7 +56,6 @@ void image_set_alpha(void *target, void *extra_data, GLfloat value)
 	image_shape->f->set_computed_alpha_dirty(image_shape);
 }
 
-static unsigned int slide_counter = 1;
 static unsigned int num_files;
 static char** filenames;
 
@@ -64,24 +69,23 @@ char *url_from_path(const char* path)
 
 gl_slide *get_next_slide(void *target, void *extra_data)
 {
+	slideshowdata *d = (slideshowdata *)extra_data;
 	gl_slide_image *slide_image = gl_slide_image_new();
-	gl_tree_cache_directory *dirCache = (gl_tree_cache_directory *)extra_data;
+	gl_tree_cache_directory *dirCache = d->dir;
 	
-	unsigned int fileCount = dirCache->f->get_num_child_leafs(dirCache, 1);
-	if (!fileCount) {
+	size_t fileCount;
+	
+	int ret = d->sequence->f->get_entry(d->sequence, &fileCount);
+	if (ret) {
+		d->sequence->f->start(d->sequence);
+		((gl_object *)slide_image)->f->unref((gl_object *)slide_image);
 		return NULL;
 	}
 	
-	fileCount = arc4random_uniform(fileCount);
-	
-	char *url = dirCache->f->get_nth_child_url(dirCache, fileCount);
-	slide_counter++;
-	if (slide_counter >= (num_files + 1)) {
-		slide_counter = 1;
-	}
+	char *url = dirCache->f->get_nth_child_url(dirCache, (int)fileCount);
 	
 	if (!url) {
-		
+		((gl_object *)slide_image)->f->unref((gl_object *)slide_image);
 		return NULL;
 	}
 	
@@ -114,6 +118,8 @@ int main(int argc, char *argv[])
 
 void slideshow_init()
 {
+	slideshowdata *d = calloc(1, sizeof(slideshowdata));
+	
 	gl_config_value *cf_value = gl_configuration_get_value_for_path("Source1/url");
 	if (!cf_value || (cf_value->f->get_type(cf_value) != gl_config_value_type_string)) {
 		printf("Source1/url incorrectly set\n");
@@ -122,12 +128,18 @@ void slideshow_init()
 	const char *sourceUrl = cf_value->f->get_value_string(cf_value);
 	
 	gl_tree_cache_directory *dirCache = gl_tree_cache_directory_new();
+	d->dir = dirCache;
 	dirCache->f->load(dirCache, sourceUrl);
 	dirCache->data._url = strdup(sourceUrl);
 	
 	gl_slideshow *slideshow = gl_slideshow_new();
 	slideshow->data.getNextSlideCallback = &get_next_slide;
-	slideshow->data.callbackExtraData = dirCache;
+	slideshow->data.callbackExtraData = d;
+	
+	gl_sequence_ordered *seq = gl_sequence_ordered_new();
+	((gl_sequence *)seq)->f->set_count((gl_sequence *)seq, dirCache->f->get_num_child_leafs(dirCache, 1));
+	((gl_sequence *)seq)->f->start((gl_sequence *)seq);
+	d->sequence = (gl_sequence *)seq;
 	
 	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
 	animation_e->data.easingType = gl_value_animation_ease_linear;

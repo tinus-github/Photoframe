@@ -33,6 +33,8 @@
 #include "slideshow/gl-slide.h"
 #include "slideshow/gl-slide-image.h"
 #include "slideshow/gl-slideshow.h"
+#include "slideshow/gl-sequence.h"
+#include "slideshow/gl-sequence-ordered.h"
 #include "images/gl-bitmap-scaler.h"
 #include "fs/gl-url.h"
 #include "fs/gl-stream.h"
@@ -77,6 +79,8 @@ void gl_objects_setup()
 	gl_slide_setup();
 	gl_slide_image_setup();
 	gl_slideshow_setup();
+	gl_sequence_setup();
+	gl_sequence_ordered_setup();
 	gl_bitmap_scaler_setup();
 	gl_url_setup();
 	gl_stream_setup();

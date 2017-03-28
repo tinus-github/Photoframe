@@ -21,4 +21,4 @@ getentropy.o: getentropy.c
 	getentropy.c -o getentropy.o
 
 clean:
-rm -f arc4random.so ${OBJECTS}
+	rm -f arc4random.so ${OBJECTS}

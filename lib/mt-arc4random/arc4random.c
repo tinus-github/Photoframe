@@ -112,7 +112,7 @@ _rs_stir(rand_state* st)
     u8 rnd[ARC4R_KEYSZ + ARC4R_IVSZ];
 
 
-    int r = getentropy(rnd, sizeof rnd);
+    int r = arc4random_getentropy(rnd, sizeof rnd);
     assert(r == 0);
 
     _rs_rekey(st, rnd, sizeof(rnd));

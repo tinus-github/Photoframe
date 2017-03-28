@@ -30,6 +30,7 @@ static void gl_tree_cache_directory_prepend_leaf(gl_tree_cache_directory *obj, c
 static void gl_tree_cache_directory_update_count(gl_tree_cache_directory *obj, int isBranch, int difference);
 static unsigned int gl_tree_cache_directory_get_num_child_leafs(gl_tree_cache_directory *obj, int isRecursive);
 static unsigned int gl_tree_cache_directory_get_num_branches(gl_tree_cache_directory *obj);
+static gl_tree_cache_directory *gl_tree_cache_directory_new_branch(gl_tree_cache_directory *obj);
 static char * gl_tree_cache_directory_get_url(gl_tree_cache_directory *obj);
 static gl_tree_cache_directory *gl_tree_cache_directory_get_nth_branch(gl_tree_cache_directory *obj, unsigned int offset);
 static char *gl_tree_cache_directory_get_nth_child_url(gl_tree_cache_directory *obj, unsigned int offset);
@@ -40,6 +41,7 @@ static struct gl_tree_cache_directory_funcs gl_tree_cache_directory_funcs_global
 	.load = &gl_tree_cache_directory_load,
 	.prepend_branch = &gl_tree_cache_directory_prepend_branch,
 	.prepend_leaf = &gl_tree_cache_directory_prepend_leaf,
+	.new_branch = &gl_tree_cache_directory_new_branch,
 	.update_count = &gl_tree_cache_directory_update_count,
 	.get_num_child_leafs = &gl_tree_cache_directory_get_num_child_leafs,
 	.get_num_branches = &gl_tree_cache_directory_get_num_branches,
@@ -159,6 +161,11 @@ static char * gl_tree_cache_directory_get_url(gl_tree_cache_directory *obj)
 	return my_url;
 }
 
+static gl_tree_cache_directory *gl_tree_cache_directory_new_branch(gl_tree_cache_directory *obj)
+{
+	return gl_tree_cache_directory_new();
+}
+
 static void gl_tree_cache_directory_prepend_branch(gl_tree_cache_directory *obj, gl_tree_cache_directory *branch)
 {
 	branch->data.nextSibling = obj->data.firstBranch;
@@ -245,7 +252,7 @@ static void gl_tree_cache_directory_load(gl_tree_cache_directory *obj, const cha
 						return;
 					}
 					
-					branch = gl_tree_cache_directory_new();
+					branch = obj->f->new_branch(obj);
 					branch->data.level = obj->data.level + 1;
 					branch->data.name = strdup(entry->name);
 					branch->f->load(branch, nameCopy);

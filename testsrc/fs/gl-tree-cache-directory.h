@@ -31,6 +31,7 @@ typedef struct gl_tree_cache_directory_funcs {
 	unsigned int (*get_num_child_leafs) (gl_tree_cache_directory *obj, int isRecursive);
 	unsigned int (*get_num_branches) (gl_tree_cache_directory *obj);
 	char * (*get_url) (gl_tree_cache_directory *obj);
+	gl_tree_cache_directory *(*new_branch) (gl_tree_cache_directory *obj);
 	
 	gl_tree_cache_directory *(*get_nth_branch) (gl_tree_cache_directory *obj, unsigned int offset);
 	char *(*get_nth_child_url) (gl_tree_cache_directory *obj, unsigned int offset);

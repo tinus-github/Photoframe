@@ -8,6 +8,8 @@
 
 #include "gl-slideshow.h"
 #include "infrastructure/gl-notice-subscription.h"
+#include "gl-renderloop-member.h"
+#include "gl-renderloop.h"
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -54,12 +56,30 @@ static void gl_slideshow_engine_notice(void *target, gl_notice_subscription *sub
 	gl_slideshow_engine(obj);
 }
 
+static void gl_slideshow_engine_get_new_slide(gl_slideshow *obj);
+
+static void gl_slideshow_engine_retry_action(void *obj_obj, gl_renderloop_member *member, void *action_data)
+{
+	gl_slideshow *obj = (gl_slideshow *)obj_obj;
+	gl_slideshow_engine_get_new_slide(obj);
+}
+
 static void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
 {
 	assert (!obj->data._incomingSlide);
 	
 	gl_slide *newSlide = obj->data.getNextSlideCallback(obj->data.callbackTarget,
 							    obj->data.callbackExtraData);
+	if (!newSlide) {
+		gl_renderloop_member *m = gl_renderloop_member_new();
+		m->data.action = &gl_slideshow_engine_retry_action;
+		m->data.target = obj;
+		
+		gl_renderloop *global_renderloop = gl_renderloop_get_global_renderloop();
+		global_renderloop->f->append_child(global_renderloop, gl_renderloop_phase_load, m);
+		return;
+	}
+	
 	obj->data._incomingSlide = newSlide;
 	((gl_container *)obj)->f->append_child((gl_container *)obj, (gl_shape *)newSlide);
 	

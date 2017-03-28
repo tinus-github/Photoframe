@@ -211,7 +211,7 @@ static int url_escape(gl_url *obj, const char *input, char **output)
 		return EINVAL;
 	}
 	
-	*output = calloc(1, outputLength);
+	*output = calloc(1, outputLength + 1);
 	if (!*output) {
 		return ENOMEM;
 	}

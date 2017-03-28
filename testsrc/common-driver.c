@@ -40,6 +40,7 @@
 #include "fs/gl-stream-rewindable.h"
 #include "fs/gl-directory.h"
 #include "fs/gl-directory-file.h"
+#include "fs/gl-tree-cache-directory.h"
 #include "config/gl-configuration.h"
 
 #ifdef __APPLE__
@@ -83,6 +84,7 @@ void gl_objects_setup()
 	gl_stream_rewindable_setup();
 	gl_directory_setup();
 	gl_directory_file_setup();
+	gl_tree_cache_directory_setup();
 	gl_configuration_setup();
 	gl_config_section_setup();
 	gl_config_value_setup();

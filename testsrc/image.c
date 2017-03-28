@@ -28,6 +28,7 @@
 #include "slideshow/gl-slide-image.h"
 #include "slideshow/gl-slideshow.h"
 #include "config/gl-configuration.h"
+#include "fs/gl-tree-cache-directory.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -60,16 +61,27 @@ char *url_from_path(const char* path)
 gl_slide *get_next_slide(void *target, void *extra_data)
 {
 	gl_slide_image *slide_image = gl_slide_image_new();
-	char **argv = (char**) extra_data;
+	gl_tree_cache_directory *dirCache = (gl_tree_cache_directory *)extra_data;
 	
-	char *filename = argv[slide_counter];
-	char *url = url_from_path(filename);
+	unsigned int fileCount = dirCache->f->get_num_child_leafs(dirCache, 1);
+	if (!fileCount) {
+		return NULL;
+	}
+	
+	fileCount = arc4random_uniform(fileCount);
+	
+	char *url = dirCache->f->get_nth_child_url(dirCache, fileCount);
 	slide_counter++;
 	if (slide_counter >= (num_files + 1)) {
 		slide_counter = 1;
 	}
 	
-	slide_image->data.filename = strdup(url); free(url);
+	if (!url) {
+		
+		return NULL;
+	}
+	
+	slide_image->data.filename = url;
 	return (gl_slide *)slide_image;
 }
 
@@ -98,10 +110,20 @@ int main(int argc, char *argv[])
 
 void slideshow_init()
 {
-
+	gl_config_value *cf_value = gl_configuration_get_value_for_path("Source1/url");
+	if (!cf_value || (cf_value->f->get_type(cf_value) != gl_config_value_type_string)) {
+		printf("Source1/url incorrectly set\n");
+		exit(-1);
+	}
+	const char *sourceUrl = cf_value->f->get_value_string(cf_value);
+	
+	gl_tree_cache_directory *dirCache = gl_tree_cache_directory_new();
+	dirCache->f->load(dirCache, sourceUrl);
+	dirCache->data._url = strdup(sourceUrl);
+	
 	gl_slideshow *slideshow = gl_slideshow_new();
 	slideshow->data.getNextSlideCallback = &get_next_slide;
-	slideshow->data.callbackExtraData = filenames;
+	slideshow->data.callbackExtraData = dirCache;
 	
 	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
 	animation_e->data.easingType = gl_value_animation_ease_linear;

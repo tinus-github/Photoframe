@@ -35,6 +35,9 @@ MININI_LIBS = ../lib/minIni/dev/minIni.o
 MININI_CFLAGS = -I../lib/minIni/dev
 QDBMP_CFLAGS = -I../lib/qdbmp
 QDBMP_LIBS = ../lib/qdbmp/qdbmp.o
+ARC4RANDOM_CFLAGS = -I../lib/mt-arc4random
+ARC4RANDOM_LIBS = ../lib/mt-arc4random/arc4random.a
+
 
 image: $(OBJECTS) $(LIBEXIF_A)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
@@ -42,7 +45,7 @@ image: $(OBJECTS) $(LIBEXIF_A)
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
 	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS) \
 	$(LIBFREETYPE_LIBS) $(LIBHARFBUZZ_LIBS) $(PTHREAD_LIBS) \
-	$(LIBPNG_LIBS) $(QDBMP_LIBS) $(MININI_LIBS)
+	$(LIBPNG_LIBS) $(QDBMP_LIBS) $(MININI_LIBS) $(ARC4RANDOM_LIBS)
 
 image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
@@ -56,7 +59,7 @@ image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	 -I/opt/vc/include/interface/vmcs_host/linux -I./ \
 	 -I/opt/vc/src/hello_pi/libs/ilclient \
 	 -I/opt/vc/src/hello_pi/libs/vgfont -g -c image.c -o image.o \
-	 -Wno-deprecated-declarations $(OPTFLAGS)
+	 -Wno-deprecated-declarations $(OPTFLAGS) $(ARC4RANDOM_CFLAGS)
 
 egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h \
 		gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h egl-driver.h gl-value-animation.h labels/gl-label.h \

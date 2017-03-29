@@ -29,7 +29,7 @@ static void gl_tree_cache_directory_prepend_branch(gl_tree_cache_directory *obj,
 static void gl_tree_cache_directory_prepend_leaf(gl_tree_cache_directory *obj, char *name);
 static void gl_tree_cache_directory_update_count(gl_tree_cache_directory *obj, int isBranch, int difference);
 static unsigned int gl_tree_cache_directory_get_num_child_leafs(gl_tree_cache_directory *obj, int isRecursive);
-static unsigned int gl_tree_cache_directory_get_num_branches(gl_tree_cache_directory *obj);
+static unsigned int gl_tree_cache_directory_get_num_branches(gl_tree_cache_directory *obj, int isRecursive);
 static gl_tree_cache_directory *gl_tree_cache_directory_new_branch(gl_tree_cache_directory *obj);
 static char * gl_tree_cache_directory_get_url(gl_tree_cache_directory *obj);
 static gl_tree_cache_directory *gl_tree_cache_directory_get_nth_branch(gl_tree_cache_directory *obj, unsigned int offset);
@@ -173,6 +173,7 @@ static void gl_tree_cache_directory_prepend_branch(gl_tree_cache_directory *obj,
 	obj->data.firstBranch = branch;
 	obj->f->update_count(obj, TRUE, 1 + branch->data._numChildBranchesRecursive);
 	obj->f->update_count(obj, FALSE, branch->data._numChildLeafsRecursive);
+	obj->data._numChildBranches++;
 }
 
 static void gl_tree_cache_directory_prepend_leaf(gl_tree_cache_directory *obj, char *name)
@@ -279,11 +280,14 @@ static unsigned int gl_tree_cache_directory_get_num_child_leafs(gl_tree_cache_di
 	return obj->data._numChildLeafs;
 }
 
-static unsigned int gl_tree_cache_directory_get_num_branches(gl_tree_cache_directory *obj)
+static unsigned int gl_tree_cache_directory_get_num_branches(gl_tree_cache_directory *obj, int isRecursive)
 {
-	return obj->data._numChildBranchesRecursive;
+	if (isRecursive) {
+		return obj->data._numChildBranchesRecursive;
+	} else {
+		return obj->data._numChildBranches;
+	}
 }
-
 
 void gl_tree_cache_directory_setup()
 {

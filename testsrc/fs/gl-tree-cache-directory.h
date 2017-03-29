@@ -29,7 +29,7 @@ typedef struct gl_tree_cache_directory_funcs {
 	void (*prepend_leaf) (gl_tree_cache_directory *obj, char *name);
 	void (*update_count) (gl_tree_cache_directory *obj, int isBranch, int difference);
 	unsigned int (*get_num_child_leafs) (gl_tree_cache_directory *obj, int isRecursive);
-	unsigned int (*get_num_branches) (gl_tree_cache_directory *obj);
+	unsigned int (*get_num_branches) (gl_tree_cache_directory *obj, int isRecursive);
 	char * (*get_url) (gl_tree_cache_directory *obj);
 	gl_tree_cache_directory *(*new_branch) (gl_tree_cache_directory *obj);
 	
@@ -50,6 +50,7 @@ typedef struct gl_tree_cache_directory_data {
 	unsigned int _numChildLeafsRecursive;
 	unsigned int _numChildLeafs;
 	unsigned int _numChildBranchesRecursive;
+	unsigned int _numChildBranches;
 	char *_url;
 } gl_tree_cache_directory_data;
 

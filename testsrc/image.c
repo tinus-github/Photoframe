@@ -29,7 +29,7 @@
 #include "slideshow/gl-slideshow.h"
 #include "slideshow/gl-sequence-ordered.h"
 #include "config/gl-configuration.h"
-#include "fs/gl-tree-cache-directory.h"
+#include "fs/gl-tree-cache-directory-ordered.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -127,7 +127,7 @@ void slideshow_init()
 	}
 	const char *sourceUrl = cf_value->f->get_value_string(cf_value);
 	
-	gl_tree_cache_directory *dirCache = gl_tree_cache_directory_new();
+	gl_tree_cache_directory *dirCache = (gl_tree_cache_directory *)gl_tree_cache_directory_ordered_new();
 	d->dir = dirCache;
 	dirCache->f->load(dirCache, sourceUrl);
 	dirCache->data._url = strdup(sourceUrl);

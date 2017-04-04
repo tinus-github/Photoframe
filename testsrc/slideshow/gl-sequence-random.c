@@ -88,7 +88,7 @@ static int gl_sequence_random_get_entry(gl_sequence *obj_obj, size_t *entry)
 			}
 		}
 		tryCount++;
-	} while ((!found) && (tryCount < GL_SEQUENCE_RANDOM_MAX_TRIES));
+	} while (found && (tryCount < GL_SEQUENCE_RANDOM_MAX_TRIES));
 	
 	obj->data._previous_entries[obj->data._previous_entry_cursor++] = ret;
 

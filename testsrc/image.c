@@ -27,7 +27,7 @@
 #include "infrastructure/gl-notice-subscription.h"
 #include "slideshow/gl-slide-image.h"
 #include "slideshow/gl-slideshow.h"
-#include "slideshow/gl-sequence-ordered.h"
+#include "slideshow/gl-sequence-random.h"
 #include "config/gl-configuration.h"
 #include "fs/gl-tree-cache-directory-ordered.h"
 
@@ -136,7 +136,7 @@ void slideshow_init()
 	slideshow->data.getNextSlideCallback = &get_next_slide;
 	slideshow->data.callbackExtraData = d;
 	
-	gl_sequence_ordered *seq = gl_sequence_ordered_new();
+	gl_sequence_random *seq = gl_sequence_random_new();
 	((gl_sequence *)seq)->f->set_count((gl_sequence *)seq, dirCache->f->get_num_child_leafs(dirCache, 1));
 	((gl_sequence *)seq)->f->start((gl_sequence *)seq);
 	d->sequence = (gl_sequence *)seq;

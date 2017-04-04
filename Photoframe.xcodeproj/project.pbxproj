@@ -97,6 +97,10 @@
 		0DAFDA741E477E5C00C5100E /* gl-framed-shape.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9FD15C1E2D995000B82200 /* gl-framed-shape.c */; };
 		0DAFDA761E47811300C5100E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA751E47811300C5100E /* OpenGL.framework */; };
 		0DAFDA791E47857100C5100E /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA781E47857100C5100E /* libfreetype.6.dylib */; };
+		0DC36DC51E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DC36DC31E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.c */; };
+		0DC36DC61E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DC36DC31E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.c */; };
+		0DC36DC91E8E7981003DF7D2 /* gl-sequence-random.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DC36DC71E8E7981003DF7D2 /* gl-sequence-random.c */; };
+		0DC36DCA1E8E7981003DF7D2 /* gl-sequence-random.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DC36DC71E8E7981003DF7D2 /* gl-sequence-random.c */; };
 		0DD9DCAE1E573EAE00CB187D /* gl-stream-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DD9DCAC1E573EAE00CB187D /* gl-stream-file.c */; };
 		0DD9DCAF1E573EAE00CB187D /* gl-stream-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DD9DCAC1E573EAE00CB187D /* gl-stream-file.c */; };
 		0DE5123A1E5361C000CB0DA1 /* gl-stream.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE512381E5361C000CB0DA1 /* gl-stream.c */; };
@@ -1449,6 +1453,10 @@
 		0DAFDA751E47811300C5100E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		0DAFDA771E47817600C5100E /* gl-includes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-includes.h"; sourceTree = "<group>"; };
 		0DAFDA781E47857100C5100E /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = ../../../../../opt/X11/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
+		0DC36DC31E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-tree-cache-directory-ordered.c"; sourceTree = "<group>"; };
+		0DC36DC41E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-tree-cache-directory-ordered.h"; sourceTree = "<group>"; };
+		0DC36DC71E8E7981003DF7D2 /* gl-sequence-random.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-sequence-random.c"; sourceTree = "<group>"; };
+		0DC36DC81E8E7981003DF7D2 /* gl-sequence-random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-sequence-random.h"; sourceTree = "<group>"; };
 		0DD9DCAC1E573EAE00CB187D /* gl-stream-file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-stream-file.c"; sourceTree = "<group>"; };
 		0DD9DCAD1E573EAE00CB187D /* gl-stream-file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-stream-file.h"; sourceTree = "<group>"; };
 		0DE512381E5361C000CB0DA1 /* gl-stream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-stream.c"; sourceTree = "<group>"; };
@@ -3272,6 +3280,8 @@
 				0DE7864D1E8AC4920051D3B5 /* gl-sequence.h */,
 				0DE786501E8ACF4B0051D3B5 /* gl-sequence-ordered.c */,
 				0DE786511E8ACF4B0051D3B5 /* gl-sequence-ordered.h */,
+				0DC36DC71E8E7981003DF7D2 /* gl-sequence-random.c */,
+				0DC36DC81E8E7981003DF7D2 /* gl-sequence-random.h */,
 			);
 			path = slideshow;
 			sourceTree = "<group>";
@@ -3320,6 +3330,8 @@
 				0DE7863E1E7C31830051D3B5 /* gl-directory-file.h */,
 				0DE786411E8081F30051D3B5 /* gl-tree-cache-directory.c */,
 				0DE786421E8081F30051D3B5 /* gl-tree-cache-directory.h */,
+				0DC36DC31E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.c */,
+				0DC36DC41E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.h */,
 			);
 			path = fs;
 			sourceTree = "<group>";
@@ -6783,6 +6795,7 @@
 				0D13C1FD1E47E55C00FB9F43 /* loadexif.c in Sources */,
 				0D13C1FE1E47E55C00FB9F43 /* gl-bitmap-scaler.c in Sources */,
 				0DE5123B1E537B7400CB0DA1 /* gl-stream.c in Sources */,
+				0DC36DCA1E8E7981003DF7D2 /* gl-sequence-random.c in Sources */,
 				0D13C1FF1E47E55C00FB9F43 /* gl-slide-image.c in Sources */,
 				0DE786531E8ACF4B0051D3B5 /* gl-sequence-ordered.c in Sources */,
 				0D13C2001E47E55C00FB9F43 /* gl-slide.c in Sources */,
@@ -6822,6 +6835,7 @@
 				0D13C2221E47E75D00FB9F43 /* GLWindowController.m in Sources */,
 				0D13C2181E47E55C00FB9F43 /* gl-value-animation-easing.c in Sources */,
 				0D13C2191E47E55C00FB9F43 /* gl-image.c in Sources */,
+				0DC36DC61E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.c in Sources */,
 				0DE7864F1E8AC4920051D3B5 /* gl-sequence.c in Sources */,
 				0DE77D851E74B41C0051D3B5 /* gl-configuration.c in Sources */,
 				0D13C21A1E47E55C00FB9F43 /* gl-framed-shape.c in Sources */,
@@ -6879,6 +6893,7 @@
 				0DAFDA691E477E5C00C5100E /* gl-tile.c in Sources */,
 				0DE7862D1E775B310051D3B5 /* info-msvc.mak in Sources */,
 				0DE7861A1E775B310051D3B5 /* helper-cairo.cc in Sources */,
+				0DC36DC51E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.c in Sources */,
 				0DE784A41E775B300051D3B5 /* test-version.c in Sources */,
 				0DE7862A1E775B310051D3B5 /* detectenv-msvc.mak in Sources */,
 				0DE7848A1E775B300051D3B5 /* test-c.c in Sources */,
@@ -6965,6 +6980,7 @@
 				0DE7862E1E775B310051D3B5 /* install.mak in Sources */,
 				0DE7844E1E775B300051D3B5 /* Makefile in Sources */,
 				0DE7844D1E775B300051D3B5 /* main.cc in Sources */,
+				0DC36DC91E8E7981003DF7D2 /* gl-sequence-random.c in Sources */,
 				0DAFDA601E477E3900C5100E /* gl-workqueue-job.c in Sources */,
 				0DAFDA561E477E2B00C5100E /* loadimage.c in Sources */,
 				0DE7862B1E775B310051D3B5 /* generate-msvc.mak in Sources */,

@@ -12,6 +12,7 @@
 #define GL_SEQUENCE_RANDOM_MEMORY_SIZE 32
 
 #include <stdio.h>
+#include <inttypes.h>
 
 #include "slideshow/gl-sequence.h"
 

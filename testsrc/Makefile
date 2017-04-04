@@ -11,7 +11,7 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  infrastructure/gl-workqueue.o infrastructure/gl-workqueue-job.o \
 	  gl-image.o gl-framed-shape.o slideshow/gl-slide.o slideshow/gl-slide-image.o \
 	  slideshow/gl-slideshow.o slideshow/gl-sequence.o slideshow/gl-sequence-ordered.o \
-	  gl-sequence-random.o common-driver.o \
+	  slideshow/gl-sequence-random.o common-driver.o \
 	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o \
 	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o \
 	  fs/gl-url.o fs/gl-stream.o fs/gl-stream-file.o fs/gl-stream-rewindable.o \

@@ -15,7 +15,7 @@
 #include "arc4random.h"
 #endif
 
-#define GL_SEQUENCE_RANDOM_MAX_TRIES 8
+#define GL_SEQUENCE_RANDOM_MAX_TRIES 32
 
 static void gl_sequence_random_start(gl_sequence *obj_obj);
 static int gl_sequence_random_get_entry(gl_sequence *obj_obj, size_t *entry);

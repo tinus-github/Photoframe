@@ -27,7 +27,7 @@
 #include "infrastructure/gl-notice-subscription.h"
 #include "slideshow/gl-slide-image.h"
 #include "slideshow/gl-slideshow.h"
-#include "slideshow/gl-sequence-random.h"
+#include "slideshow/gl-sequence-selection.h"
 #include "config/gl-configuration.h"
 #include "fs/gl-tree-cache-directory-ordered.h"
 
@@ -43,6 +43,7 @@
 
 typedef struct slideshowdata {
 	gl_tree_cache_directory *dir;
+	gl_tree_cache_directory *branch;
 	gl_sequence *sequence;
 } slideshowdata;
 
@@ -70,24 +71,47 @@ char *url_from_path(const char* path)
 gl_slide *get_next_slide(void *target, void *extra_data)
 {
 	slideshowdata *d = (slideshowdata *)extra_data;
-	gl_slide_image *slide_image = gl_slide_image_new();
+	gl_slide_image *slide_image;
 	gl_tree_cache_directory *dirCache = d->dir;
 	
-	size_t fileCount;
-	
-	int ret = d->sequence->f->get_entry(d->sequence, &fileCount);
-	if (ret) {
+	if (!d->branch) {
+		size_t branchIndex = arc4random_uniform(dirCache->f->get_num_branches(dirCache, 1));
+		d->branch = dirCache->f->get_nth_branch(dirCache, (unsigned int)branchIndex);
+		
+		if (!d->branch) {
+			return NULL;
+		}
+		size_t fileCount = d->branch->f->get_num_child_leafs(d->branch, 0);
+		if (d->sequence) {
+			((gl_object *)d->sequence)->f->unref((gl_object *)d->sequence);
+			d->sequence = NULL;
+		}
+		if (!fileCount) {
+			d->branch = NULL;
+			return NULL;
+		}
+		d->sequence = (gl_sequence *)gl_sequence_selection_new();
+		((gl_sequence_selection *)d->sequence)->data._selection_size = 10;
+		
+		d->sequence->f->set_count(d->sequence, fileCount);
 		d->sequence->f->start(d->sequence);
-		((gl_object *)slide_image)->f->unref((gl_object *)slide_image);
+	}
+	
+	size_t fileIndex;
+	
+	int ret = d->sequence->f->get_entry(d->sequence, &fileIndex);
+	if (ret) {
+		d->branch = NULL;
 		return NULL;
 	}
 	
-	char *url = dirCache->f->get_nth_child_url(dirCache, (int)fileCount);
+	char *url = d->branch->f->get_nth_child_url(d->branch, (int)fileIndex);
 	
 	if (!url) {
-		((gl_object *)slide_image)->f->unref((gl_object *)slide_image);
 		return NULL;
 	}
+	
+	slide_image = gl_slide_image_new();
 	
 	slide_image->data.filename = url;
 	return (gl_slide *)slide_image;
@@ -135,11 +159,6 @@ void slideshow_init()
 	gl_slideshow *slideshow = gl_slideshow_new();
 	slideshow->data.getNextSlideCallback = &get_next_slide;
 	slideshow->data.callbackExtraData = d;
-	
-	gl_sequence_random *seq = gl_sequence_random_new();
-	((gl_sequence *)seq)->f->set_count((gl_sequence *)seq, dirCache->f->get_num_child_leafs(dirCache, 1));
-	((gl_sequence *)seq)->f->start((gl_sequence *)seq);
-	d->sequence = (gl_sequence *)seq;
 	
 	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
 	animation_e->data.easingType = gl_value_animation_ease_linear;

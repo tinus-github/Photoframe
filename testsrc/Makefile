@@ -11,7 +11,7 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  infrastructure/gl-workqueue.o infrastructure/gl-workqueue-job.o \
 	  gl-image.o gl-framed-shape.o slideshow/gl-slide.o slideshow/gl-slide-image.o \
 	  slideshow/gl-slideshow.o slideshow/gl-sequence.o slideshow/gl-sequence-ordered.o \
-	  slideshow/gl-sequence-random.o common-driver.o \
+	  slideshow/gl-sequence-random.o slideshow/gl-sequence-selection.o common-driver.o \
 	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o \
 	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o \
 	  fs/gl-url.o fs/gl-stream.o fs/gl-stream-file.o fs/gl-stream-rewindable.o \
@@ -287,6 +287,13 @@ slideshow/gl-sequence-random.o: slideshow/gl-sequence-random.c slideshow/gl-sequ
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c slideshow/gl-sequence-random.c -o slideshow/gl-sequence-random.o $(OPTFLAGS) $(ARC4RANDOM_CFLAGS)
+
+slideshow/gl-sequence-selection.o: slideshow/gl-sequence-selection.c slideshow/gl-sequence-selection.h \
+		slideshow/gl-sequence.h infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-c slideshow/gl-sequence-selection.c -o slideshow/gl-sequence-selection.o $(OPTFLAGS) $(ARC4RANDOM_CFLAGS)
 
 images/loadimage.o: images/loadimage.c images/loadimage.h
 	cc -g $(CFLAGS_ALL) $(QDBMP_CFLAGS) \

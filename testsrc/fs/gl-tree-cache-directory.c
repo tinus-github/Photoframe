@@ -68,33 +68,33 @@ static char *combine_url_name(const char *url, const char *name)
 
 static gl_tree_cache_directory *gl_tree_cache_directory_get_nth_branch(gl_tree_cache_directory *obj, unsigned int offset)
 {
-	if (!obj->data.firstBranch) {
-		return NULL;
-	}
-	
-	while (offset > obj->data._numChildBranchesRecursive) {
-		offset -= obj->data._numChildBranchesRecursive;
+	while (offset > (obj->data._numChildBranchesRecursive + 1)) {
+		offset -= (obj->data._numChildBranchesRecursive + 1);
 	}
 	
 	if (!offset) {
 		return obj;
 	}
 	
+	if (!obj->data.firstBranch) {
+		return NULL;
+	}
+	
 	gl_tree_cache_directory *current_branch = obj->data.firstBranch;
 	
 	while (offset > 0) {
-		if (current_branch->data._numChildBranchesRecursive <= offset) {
-			return current_branch->f->get_nth_branch(current_branch, offset);
+		size_t current_branch_count_inc = current_branch->data._numChildBranchesRecursive + 1;
+		if (current_branch_count_inc >= offset) {
+			return current_branch->f->get_nth_branch(current_branch, offset - 1);
 		}
-		offset -= current_branch->data._numChildBranchesRecursive;
-		offset--; // for the branch itself
+		offset -= current_branch_count_inc;
 		current_branch = current_branch->data.nextSibling;
 		
 		if (!current_branch) { // Shouldn't happen
 			return obj;
 		}
 	}
-	return obj;
+	return current_branch;
 }
 
 // the children in this directory come first so if you don't want to recurse, just use an offset < num_children

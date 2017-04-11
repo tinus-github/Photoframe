@@ -16,7 +16,8 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o \
 	  fs/gl-url.o fs/gl-stream.o fs/gl-stream-file.o fs/gl-stream-rewindable.o \
 	  fs/gl-directory.o fs/gl-directory-file.o fs/gl-tree-cache-directory.o fs/gl-tree-cache-directory-ordered.o \
-	  config/gl-configuration.o config/gl-config-section.o config/gl-config-value.o
+	  config/gl-configuration.o config/gl-config-section.o config/gl-config-value.o \
+	  qrcode/gl-qrcode-data.o qrcode/gl-qrcode-image.o
 
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	  -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
@@ -38,6 +39,8 @@ QDBMP_CFLAGS = -I../lib/qdbmp
 QDBMP_LIBS = ../lib/qdbmp/qdbmp.o
 ARC4RANDOM_CFLAGS = -I../lib/mt-arc4random
 ARC4RANDOM_LIBS = ../lib/mt-arc4random/arc4random.a
+QRENCODE_LIBS = ../lib/libqrencode/install/lib/libqrencode.a
+QRENCODE_CFLAGS = `PKG_CONFIG_PATH=../lib/libqrencode/install/lib/pkgconfig pkg-config --cflags`
 
 
 image: $(OBJECTS) $(LIBEXIF_A)
@@ -46,7 +49,7 @@ image: $(OBJECTS) $(LIBEXIF_A)
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
 	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS) \
 	$(LIBFREETYPE_LIBS) $(LIBHARFBUZZ_LIBS) $(PTHREAD_LIBS) \
-	$(LIBPNG_LIBS) $(QDBMP_LIBS) $(MININI_LIBS) $(ARC4RANDOM_LIBS)
+	$(LIBPNG_LIBS) $(QDBMP_LIBS) $(MININI_LIBS) $(ARC4RANDOM_LIBS) $(QRENCODE_LIBS)
 
 image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
@@ -386,6 +389,15 @@ config/gl-config-value.o: config/gl-config-value.c config/gl-config-value.h infr
 	-c config/gl-config-value.c -o config/gl-config-value.o \
 	$(OPTFLAGS)
 
+qrcode/gl-qrcode-data.o: qrcode/gl-qrcode-data.c qrcode/gl-qrcode-data.h infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-c qrcode/gl-qrcode-data.c -o qrcode/gl-qrcode-data.o \
+	$(QRENCODE_CFLAGS)
+
+qrcode/gl-qrcode-image.o: qrcode/gl-qrcode-image.c qrcode/gl-qrcode-image.h qrcode/gl-qrcode-data.h gl-tile.h gl-container-2d.h gl-container.h gl-shape.h gl-bitmap.h gl-texture.h infrastructure/gl-object.h
+	cc -g $(CFLAGS_ALL) \
+	-c qrcode/gl-qrcode-data.c -o qrcode/gl-qrcode-data.o \
+	$(QRENCODE_CFLAGS)
 
 decodejpeg2rgb: decodejpeg2rgb.o
 	cc -o decodejpeg2rgb -Wl,--whole-archive decodejpeg2rgb.o -L/opt/vc/lib/ \

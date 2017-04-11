@@ -46,6 +46,8 @@
 #include "fs/gl-directory-file.h"
 #include "fs/gl-tree-cache-directory.h"
 #include "fs/gl-tree-cache-directory-ordered.h"
+#include "qrcode/gl-qrcode-data.h"
+#include "qrcode/gl-qrcode-image.h"
 #include "config/gl-configuration.h"
 
 #ifdef __APPLE__
@@ -98,6 +100,8 @@ void gl_objects_setup()
 	gl_configuration_setup();
 	gl_config_section_setup();
 	gl_config_value_setup();
+	gl_qrcode_data_setup();
+	gl_qrcode_image_setup();
 }
 
 GLuint driver_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )

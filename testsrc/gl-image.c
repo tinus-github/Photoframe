@@ -24,16 +24,6 @@
 
 #define GL_IMAGE_TILE_HEIGHT 128
 
-static const char *file_formats[] = {
-	"jpg",
-	"png",
-	"gif"
-};
-
-#define FORMAT_JPG 0
-#define FORMAT_PNG 1
-#define FORMAT_GIF 2
-
 static void gl_image_free(gl_object *obj_obj);
 static void gl_image_load_file(gl_image *obj, const char* filename);
 

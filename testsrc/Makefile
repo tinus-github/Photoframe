@@ -40,7 +40,7 @@ QDBMP_LIBS = ../lib/qdbmp/qdbmp.o
 ARC4RANDOM_CFLAGS = -I../lib/mt-arc4random
 ARC4RANDOM_LIBS = ../lib/mt-arc4random/arc4random.a
 QRENCODE_LIBS = ../lib/libqrencode/install/lib/libqrencode.a
-QRENCODE_CFLAGS = `PKG_CONFIG_PATH=../lib/libqrencode/install/lib/pkgconfig pkg-config --cflags`
+QRENCODE_CFLAGS = `PKG_CONFIG_PATH=../lib/libqrencode/install/lib/pkgconfig pkg-config --cflags libqrencode`
 
 
 image: $(OBJECTS) $(LIBEXIF_A)

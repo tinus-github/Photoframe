@@ -396,7 +396,7 @@ qrcode/gl-qrcode-data.o: qrcode/gl-qrcode-data.c qrcode/gl-qrcode-data.h infrast
 
 qrcode/gl-qrcode-image.o: qrcode/gl-qrcode-image.c qrcode/gl-qrcode-image.h qrcode/gl-qrcode-data.h gl-tile.h gl-container-2d.h gl-container.h gl-shape.h gl-bitmap.h gl-texture.h infrastructure/gl-object.h
 	cc -g $(CFLAGS_ALL) \
-	-c qrcode/gl-qrcode-data.c -o qrcode/gl-qrcode-data.o \
+	-c qrcode/gl-qrcode-image.c -o qrcode/gl-qrcode-image.o \
 	$(QRENCODE_CFLAGS) $(OPTFLAGS)
 
 

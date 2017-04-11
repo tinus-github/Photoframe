@@ -152,5 +152,6 @@ void gl_sequence_selection_free(gl_object *obj_obj)
 		obj->data._entries = NULL;
 	}
 	
+	gl_object_free_org_global(obj_obj);
 	
 }

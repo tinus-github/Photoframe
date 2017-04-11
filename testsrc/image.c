@@ -30,6 +30,7 @@
 #include "slideshow/gl-sequence-selection.h"
 #include "config/gl-configuration.h"
 #include "fs/gl-tree-cache-directory-ordered.h"
+#include "qrcode/gl-qrcode-image.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -45,6 +46,7 @@ typedef struct slideshowdata {
 	gl_tree_cache_directory *dir;
 	gl_tree_cache_directory *branch;
 	gl_sequence *sequence;
+	gl_qrcode_image *qrcode;
 } slideshowdata;
 
 void slideshow_init();
@@ -95,6 +97,9 @@ gl_slide *get_next_slide(void *target, void *extra_data)
 		
 		d->sequence->f->set_count(d->sequence, fileCount);
 		d->sequence->f->start(d->sequence);
+		char *branchUrl = d->branch->f->get_url(d->branch);
+		d->qrcode->f->set_string(d->qrcode, branchUrl);
+		free (branchUrl);
 	}
 	
 	size_t fileIndex;
@@ -195,12 +200,24 @@ void slideshow_init()
 	scroller->data.text = "AVAVAVABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	scroller->f->start(scroller);
 	main_container_2d_container->f->append_child(main_container_2d_container, scroller_shape);
+	
+	gl_qrcode_image *qrcode = gl_qrcode_image_new();
+	qrcode->f->set_string(qrcode, "Starting...");
+	gl_stage *global_stage = gl_stage_get_global_stage();
+
+	float scale = (0.333333 * global_stage->data.height) / qrcode->data.size;
+	((gl_container_2d *)qrcode)->data.scaleH = scale;
+	((gl_container_2d *)qrcode)->data.scaleV = scale;
+	((gl_shape *)qrcode)->f->set_computed_projection_dirty((gl_shape *)qrcode);
+	
+	main_container_2d_container->f->append_child(main_container_2d_container, (gl_shape *)qrcode);
+	
+	d->qrcode = qrcode;
 
 	main_container_2d_shape->data.objectX = 0.0;
 	main_container_2d->data.scaleH = 1.0;
 	main_container_2d->data.scaleV = 1.0;
 	
-	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
 	
 	((gl_slide *)slideshow)->f->enter((gl_slide *)slideshow);

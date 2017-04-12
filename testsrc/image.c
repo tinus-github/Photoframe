@@ -121,8 +121,17 @@ gl_slide *get_next_slide(void *target, void *extra_data)
 	return (gl_slide *)slide_image;
 }
 
+void cf_fail_init()
+{
+	gl_stage *global_stage = gl_stage_get_global_stage();
+	global_stage->f->show_message(global_stage, "Can't open configuration file");
+	return;
+}
+
 int main(int argc, char *argv[])
 {
+	void (*initFunc)() = &slideshow_init;
+	
 	if (argc < 2) {
 		printf("Usage: %s <filename>\n", argv[0]);
 		return -1;
@@ -134,24 +143,30 @@ int main(int argc, char *argv[])
 	gl_objects_setup();
 
 	gl_configuration *config = gl_configuration_new_from_file(argv[1]);
-	config->f->load(config);
+	if (config->f->load(config)) {
+		initFunc = &cf_fail_init;
+	}
 	
 #ifdef __APPLE__
-	startCocoa(argc, (const char**)argv, &slideshow_init);
+	startCocoa(argc, (const char**)argv, initFunc);
 #else
-	egl_driver_init(&slideshow_init);
+	egl_driver_init(&initFunc);
 	gl_renderloop_loop();
 #endif
 }
 
 void slideshow_init()
 {
+	gl_stage *global_stage = gl_stage_get_global_stage();
+
 	slideshowdata *d = calloc(1, sizeof(slideshowdata));
 	
 	gl_config_value *cf_value = gl_configuration_get_value_for_path("Source1/url");
+	
 	if (!cf_value || (cf_value->f->get_type(cf_value) != gl_config_value_type_string)) {
-		printf("Source1/url incorrectly set\n");
-		exit(-1);
+		global_stage->f->show_message(global_stage, "Configuration issue: Source1/url set incorrectly");
+		
+		return;
 	}
 	const char *sourceUrl = cf_value->f->get_value_string(cf_value);
 	
@@ -200,7 +215,6 @@ void slideshow_init()
 	scroller->f->start(scroller);
 	main_container_2d_container->f->append_child(main_container_2d_container, scroller_shape);
 	
-	gl_stage *global_stage = gl_stage_get_global_stage();
 	global_stage->f->show_message(global_stage, "Hello!");
 	
 	main_container_2d_shape->data.objectX = 0.0;

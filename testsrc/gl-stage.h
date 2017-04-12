@@ -13,6 +13,7 @@
 #include <stdint.h>
 #include "infrastructure/gl-object.h"
 #include "gl-shape.h"
+#include "qrcode/gl-qrcode-image.h"
 
 typedef float vec4[4];
 typedef vec4 mat4x4[4];
@@ -24,6 +25,7 @@ typedef struct gl_stage_funcs {
 	void (*set_dimensions) (gl_stage *obj, uint32_t width, uint32_t height);
 	void (*set_shape) (gl_stage *obj, gl_shape *shape);
 	gl_shape *(*get_shape) (gl_stage *obj);
+	void (*show_message) (gl_stage *obj, const char *message);
 } gl_stage_funcs;
 
 typedef struct gl_stage_data {
@@ -35,6 +37,7 @@ typedef struct gl_stage_data {
 	mat4x4 projection;
 	
 	gl_shape *shape;
+	gl_qrcode_image *_qrcode;
 } gl_stage_data;
 
 struct gl_stage {

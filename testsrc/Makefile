@@ -123,7 +123,7 @@ gl-rectangle.o: gl-rectangle.c gl-rectangle.h gl-shape.h
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c gl-rectangle.c -o gl-rectangle.o $(OPTFLAGS)
 
-gl-stage.o: gl-stage.c gl-stage.h infrastructure/gl-object.h
+gl-stage.o: gl-stage.c gl-stage.h infrastructure/gl-object.h qrcode/gl-qrcode-image.h gl-container-2d.h gl-container.h gl-shape.h
 	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \

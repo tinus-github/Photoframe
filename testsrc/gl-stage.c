@@ -95,7 +95,9 @@ static void gl_stage_draw(void *global_stage_void, gl_renderloop_member *obj, vo
 {
 	gl_stage *global_stage = (gl_stage *)global_stage_void;
 	gl_shape *main_container_shape = global_stage->f->get_shape(global_stage);
-	main_container_shape->f->draw(main_container_shape);
+	if (main_container_shape) {
+		main_container_shape->f->draw(main_container_shape);
+	}
 	
 	if (global_stage->data._qrcode) {
 		((gl_shape *)global_stage->data._qrcode)->f->draw((gl_shape *)global_stage->data._qrcode);

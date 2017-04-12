@@ -56,6 +56,8 @@ int gl_qrcode_image_set_string(gl_qrcode_image *obj, const char* string)
 		goto EXIT_1;
 	}
 	
+	new_texture->f->set_immediate(new_texture, 1);
+	
 	gl_bitmap *new_bitmap = gl_bitmap_new();
 	if (!new_bitmap) {
 		goto EXIT_2;

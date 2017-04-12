@@ -42,6 +42,7 @@ typedef struct gl_texture_funcs {
 	void (*flip_alpha) (gl_texture *obj);
 	void (*apply_outline) (gl_texture *obj);
 	void (*cancel_loading) (gl_texture *obj);
+	void (*set_immediate) (gl_texture *obj, int new_setting);
 } gl_texture_funcs;
 
 typedef struct gl_texture_data {
@@ -58,6 +59,8 @@ typedef struct gl_texture_data {
 	gl_renderloop_member *uploadRenderloopMember;
 	gl_bitmap *imageDataStore;
 	unsigned char *imageDataBitmap;
+	
+	int _immediate;
 } gl_texture_data;
 
 struct gl_texture {

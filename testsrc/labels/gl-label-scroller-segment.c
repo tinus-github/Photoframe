@@ -81,6 +81,11 @@ static gl_tile *gl_label_scroller_segment_render_tile(gl_label_scroller_segment 
 				   tile_index * SEGMENT_WIDTH, 0,
 				   SEGMENT_WIDTH,
 				   obj->data.height);
+	
+	if (!tile) {
+		return NULL;
+	}
+	
 	tile_shape = (gl_shape *)tile;
 	tile_shape->data.objectX = tile_index * SEGMENT_WIDTH;
 	
@@ -137,7 +142,9 @@ static void gl_label_scroller_segment_render(gl_label_scroller_segment *obj)
 		}
 		if (!found) {
 			tile = gl_label_scroller_segment_render_tile(obj, counter);
-			gl_label_scroller_segment_append_child(obj, tile, counter);
+			if (tile) {
+				gl_label_scroller_segment_append_child(obj, tile, counter);
+			}
 		}
 	}
 }

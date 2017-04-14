@@ -97,7 +97,7 @@ gl_slide *get_next_slide(void *target, void *extra_data)
 		d->sequence->f->start(d->sequence);
 		char *branchUrl = d->branch->f->get_url(d->branch);
 		gl_stage *global_stage = gl_stage_get_global_stage();
-		global_stage->f->show_message(global_stage, branchUrl);
+		global_stage->f->show_message(global_stage, branchUrl, 0);
 		free (branchUrl);
 	}
 	
@@ -124,7 +124,7 @@ gl_slide *get_next_slide(void *target, void *extra_data)
 void cf_fail_init()
 {
 	gl_stage *global_stage = gl_stage_get_global_stage();
-	global_stage->f->show_message(global_stage, "Can't open configuration file");
+	global_stage->f->show_message(global_stage, "Can't open configuration file", 1);
 	return;
 }
 
@@ -158,13 +158,17 @@ int main(int argc, char *argv[])
 void slideshow_init()
 {
 	gl_stage *global_stage = gl_stage_get_global_stage();
+	
+	if (global_stage->data.fatal_error_occurred) {
+		return;
+	}
 
 	slideshowdata *d = calloc(1, sizeof(slideshowdata));
 	
 	gl_config_value *cf_value = gl_configuration_get_value_for_path("Source1/url");
 	
 	if (!cf_value || (cf_value->f->get_type(cf_value) != gl_config_value_type_string)) {
-		global_stage->f->show_message(global_stage, "Configuration issue: Source1/url set incorrectly");
+		global_stage->f->show_message(global_stage, "Configuration issue: Source1/url set incorrectly", 0);
 		
 		return;
 	}
@@ -215,11 +219,13 @@ void slideshow_init()
 	scroller->f->start(scroller);
 	main_container_2d_container->f->append_child(main_container_2d_container, scroller_shape);
 	
-	global_stage->f->show_message(global_stage, "Hello!");
-	
 	main_container_2d_shape->data.objectX = 0.0;
 	main_container_2d->data.scaleH = 1.0;
 	main_container_2d->data.scaleV = 1.0;
+	
+	if (global_stage->data.fatal_error_occurred) {
+		return;
+	}
 	
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
 	

@@ -20,7 +20,7 @@ static gl_stage *global_stage = NULL;
 static void gl_stage_set_dimensions(gl_stage *obj, uint32_t width, uint32_t height);
 static void gl_stage_set_shape(gl_stage *obj, gl_shape *shape);
 static gl_shape *gl_stage_get_shape(gl_stage *obj);
-static void gl_stage_show_message(gl_stage *obj, const char *message);
+static void gl_stage_show_message(gl_stage *obj, const char *message, int is_fatal);
 
 static struct gl_stage_funcs gl_stage_funcs_global = {
 	.set_dimensions = &gl_stage_set_dimensions,
@@ -61,8 +61,16 @@ static gl_shape *gl_stage_get_shape(gl_stage *obj)
 	return obj->data.shape;
 }
 
-static void gl_stage_show_message(gl_stage *obj, const char *message)
+static void gl_stage_show_message(gl_stage *obj, const char *message, int is_fatal)
 {
+	if (obj->data.fatal_error_occurred && !is_fatal) {
+		return;
+	}
+	
+	if (is_fatal && !message) {
+		message = "A fatal error occurred";
+	}
+	
 	if (obj->data._qrcode) {
 		((gl_object *)obj->data._qrcode)->f->unref((gl_object *)obj->data._qrcode);
 		obj->data._qrcode = NULL;
@@ -81,7 +89,11 @@ static void gl_stage_show_message(gl_stage *obj, const char *message)
 		((gl_container_2d *)q)->data.scaleV = scale;
 		((gl_shape *)q)->f->set_computed_projection_dirty((gl_shape *)q);
 	}
+	
+	obj->data.fatal_error_occurred = is_fatal;
 }
+
+
 
 static void gl_stage_set_dimensions(gl_stage *obj, uint32_t width, uint32_t height)
 {

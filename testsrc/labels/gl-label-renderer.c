@@ -17,6 +17,7 @@
 
 #include "infrastructure/gl-object.h"
 #include "gl-tile.h"
+#include "gl-stage.h"
 #include "config/gl-configuration.h"
 
 #ifdef __APPLE__
@@ -173,6 +174,10 @@ static gl_tile *gl_label_renderer_render(gl_label_renderer *obj,
 	
 	FT_Face face = global_rendering_data.face;
 	
+	if (!face) {
+		return NULL; // initialisation went wrong
+	}
+	
 	uint32_t counter;
 	uint32_t x_ppem = face->size->metrics.x_ppem;
 	long maxwidth_l = ((face->bbox.xMax - face->bbox.xMin) * x_ppem) / face->units_per_EM;
@@ -212,6 +217,11 @@ static void gl_label_renderer_layout(gl_label_renderer *obj)
 	hb_buffer_t *buf = hb_buffer_create();
 	ssize_t text_length = strlen(obj->data.text);
 	int text_length_int; // Harfbuzz chose the wrong type :(
+	
+	if (!global_rendering_data.hb_font) {
+		return; // setup failed
+	}
+	
 	if (text_length > INT_MAX) {
 		text_length_int = INT_MAX;
 	} else {
@@ -270,17 +280,29 @@ static void gl_label_renderer_setup_freetype()
 	if (fontSizeValue) {
 		fontSize = fontSizeValue->f->get_value_int(fontSizeValue);
 	}
-		
+	
+	gl_stage *global_stage = gl_stage_get_global_stage();
+
 	if (!fontFileName) {
-		fontFileName = FONT_FILE;
+		global_stage->f->show_message(global_stage, "Font name not configured", 1);
+		return;
 	}
 	if (!fontSize) {
-		fontSize = LABEL_HEIGHT;
+		global_stage->f->show_message(global_stage, "Font size not configured", 1);
+		return;
 	}
 	
-	assert (!(errorret = FT_New_Face(global_rendering_data.library, fontFileName, 0, &global_rendering_data.face)));
+	errorret = FT_New_Face(global_rendering_data.library, fontFileName, 0, &global_rendering_data.face);
+	if (errorret) {
+		global_stage->f->show_message(global_stage, "Can't load font", 1);
+		return;
+	}
 	
-	assert (!(errorret = FT_Set_Char_Size(global_rendering_data.face, 0, fontSize*64, 72,72)));
+	errorret = FT_Set_Char_Size(global_rendering_data.face, 0, fontSize*64, 72,72);
+	if (errorret) {
+		global_stage->f->show_message(global_stage, "Can't setup font", 1);
+		return;
+	}
 	
 	int counter;
 	for(counter = 0; counter < global_rendering_data.face->num_charmaps; counter++) {
@@ -296,6 +318,9 @@ static void gl_label_renderer_setup_freetype()
 
 static void gl_label_renderer_setup_harfbuzz()
 {
+	if (!global_rendering_data.face) {
+		return; // setup failed somehow; a message has already been presented
+	}
 	global_rendering_data.hb_language = hb_language_from_string("en", strlen("en"));
 	global_rendering_data.hb_font = hb_ft_font_create(global_rendering_data.face, NULL);
 }

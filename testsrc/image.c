@@ -214,7 +214,7 @@ void slideshow_init()
 	gl_label_scroller *scroller = gl_label_scroller_new();
 	gl_shape *scroller_shape = (gl_shape *)scroller;
 	scroller_shape->data.objectHeight = 160;
-	scroller_shape->data.objectWidth = 1920;
+	scroller_shape->data.objectWidth = global_stage->data.width;
 	scroller->data.text = "AVAVAVABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	scroller->f->start(scroller);
 	main_container_2d_container->f->append_child(main_container_2d_container, scroller_shape);

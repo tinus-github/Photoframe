@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
 #ifdef __APPLE__
 	startCocoa(argc, (const char**)argv, initFunc);
 #else
-	egl_driver_init(&initFunc);
+	egl_driver_init(initFunc);
 	gl_renderloop_loop();
 #endif
 }

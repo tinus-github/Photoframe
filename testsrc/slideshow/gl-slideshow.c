@@ -72,7 +72,7 @@ static void set_transition_animations_for_type(gl_slideshow *obj, gl_slideshow_t
 			if (value) {
 				int durationMS = value->f->get_value_int(value);
 				
-				if (durationMS) {
+				if (durationMS != GL_CONFIG_VALUE_NOT_FOUND) {
 					duration = 0.001 * durationMS;
 				}
 			}
@@ -156,7 +156,7 @@ static void gl_slideshow_set_configuration(gl_slideshow *obj, gl_config_section 
 	gl_config_value *value = config->f->get_value(config, "duration");
 	if (value) {
 		int durationMS = value->f->get_value_int(value);
-		if (durationMS) {
+		if (durationMS != GL_CONFIG_VALUE_NOT_FOUND) {
 			obj->data.slideDuration = .001 * durationMS;
 		}
 		value = NULL;

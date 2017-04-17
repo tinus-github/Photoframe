@@ -279,6 +279,9 @@ static void gl_label_renderer_setup_freetype()
 	gl_config_value *fontSizeValue = gl_configuration_get_value_for_path("Labels/fontSize");
 	if (fontSizeValue) {
 		fontSize = fontSizeValue->f->get_value_int(fontSizeValue);
+		if (fontSize == GL_CONFIG_VALUE_NOT_FOUND) {
+			fontSize = 50;
+		}
 	}
 	
 	gl_stage *global_stage = gl_stage_get_global_stage();

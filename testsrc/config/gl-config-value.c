@@ -48,7 +48,7 @@ static const char *gl_config_value_get_value_string(gl_config_value *obj)
 static int32_t gl_config_value_get_value_int(gl_config_value *obj)
 {
 	if (obj->data._type != gl_config_value_type_int) {
-		return 0;
+		return GL_CONFIG_VALUE_NOT_FOUND;
 	}
 	return obj->data._value_int;
 }

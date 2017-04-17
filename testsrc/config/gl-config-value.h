@@ -16,6 +16,7 @@
 #include "infrastructure/gl-object.h"
 
 #define GL_CONFIG_VALUE_SELECTION_NOT_FOUND INT_MAX
+#define GL_CONFIG_VALUE_NOT_FOUND INT_MAX
 
 typedef enum {
 	gl_config_value_type_none = 0,

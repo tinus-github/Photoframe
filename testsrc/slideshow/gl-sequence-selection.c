@@ -19,10 +19,11 @@
 
 static void gl_sequence_selection_start(gl_sequence *obj_obj);
 static int gl_sequence_selection_get_entry(gl_sequence *obj_obj, size_t *entry);
+static void gl_sequence_selection_set_selection_size(gl_sequence_selection *obj, unsigned int newSize);
 void gl_sequence_selection_free(gl_object *obj_obj);
 
 static struct gl_sequence_selection_funcs gl_sequence_selection_funcs_global = {
-	
+	.set_selection_size = &gl_sequence_selection_set_selection_size,
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
@@ -39,6 +40,11 @@ void gl_sequence_selection_setup()
 	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_sequence_selection_funcs_global;
 	gl_object_free_org_global = obj_funcs_global->free;
 	obj_funcs_global->free = &gl_sequence_selection_free;
+}
+
+static void gl_sequence_selection_set_selection_size(gl_sequence_selection *obj, unsigned int newSize)
+{
+	obj->data._requested_selection_size = newSize;
 }
 
 static int compare_selection(const void *l, const void *r)
@@ -64,8 +70,10 @@ static void gl_sequence_selection_start(gl_sequence *obj_obj)
 	size_t count = obj_obj->f->get_count(obj_obj);
 	
 	unsigned int proposed_selection_size = count * 0.6;
-	if (proposed_selection_size < obj->data._selection_size) {
+	if (proposed_selection_size < obj->data._requested_selection_size) {
 		obj->data._selection_size = proposed_selection_size;
+	} else {
+		obj->data._selection_size = obj->data._requested_selection_size;
 	}
 	
 	if (obj->data._entries) {

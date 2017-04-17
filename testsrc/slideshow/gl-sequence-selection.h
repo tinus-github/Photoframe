@@ -18,6 +18,7 @@ typedef struct gl_sequence_selection gl_sequence_selection;
 
 typedef struct gl_sequence_selection_funcs {
 	gl_sequence_funcs p;
+	void (*set_selection_size) (gl_sequence_selection *obj, unsigned int selection_size);
 } gl_sequence_selection_funcs;
 
 typedef struct gl_sequence_selection_data {
@@ -25,6 +26,7 @@ typedef struct gl_sequence_selection_data {
 	
 	uint32_t *_entries;
 	unsigned int _entry_cursor;
+	unsigned int _requested_selection_size;
 	unsigned int _selection_size;
 } gl_sequence_selection_data;
 

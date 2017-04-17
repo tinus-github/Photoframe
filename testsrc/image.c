@@ -91,7 +91,7 @@ gl_slide *get_next_slide(void *target, void *extra_data)
 			return NULL;
 		}
 		d->sequence = (gl_sequence *)gl_sequence_selection_new();
-		((gl_sequence_selection *)d->sequence)->data._selection_size = 10;
+		((gl_sequence_selection *)d->sequence)->f->set_selection_size((gl_sequence_selection *)d->sequence, 10);
 		
 		d->sequence->f->set_count(d->sequence, fileCount);
 		d->sequence->f->start(d->sequence);

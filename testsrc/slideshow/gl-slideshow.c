@@ -189,18 +189,18 @@ static void gl_slideshow_set_configuration(gl_slideshow *obj, gl_config_section 
 
 static void gl_slideshow_set_entrance_animation(gl_slideshow *obj, gl_value_animation *animation)
 {
-	if (obj->data._entranceAnimation) {
-		((gl_object *)obj->data._entranceAnimation)->f->unref((gl_object *)obj->data._entranceAnimation);
+	if (obj->data._slideEntranceAnimation) {
+		((gl_object *)obj->data._slideEntranceAnimation)->f->unref((gl_object *)obj->data._slideEntranceAnimation);
 	}
-	obj->data._entranceAnimation = animation;
+	obj->data._slideEntranceAnimation = animation;
 }
 
 static void gl_slideshow_set_exit_animation(gl_slideshow *obj, gl_value_animation *animation)
 {
-	if (obj->data._exitAnimation) {
-		((gl_object *)obj->data._exitAnimation)->f->unref((gl_object *)obj->data._exitAnimation);
+	if (obj->data._slideExitAnimation) {
+		((gl_object *)obj->data._slideExitAnimation)->f->unref((gl_object *)obj->data._slideExitAnimation);
 	}
-	obj->data._exitAnimation = animation;
+	obj->data._slideExitAnimation = animation;
 }
 
 static void gl_slideshow_engine_notice(void *target, gl_notice_subscription *sub, void *extra_data)
@@ -245,14 +245,14 @@ static void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
 	
 	// add animations
 	gl_value_animation *new_animation;
-	if (obj->data._entranceAnimation) {
- 		new_animation = obj->data._entranceAnimation->f->dup(obj->data._entranceAnimation);
+	if (obj->data._slideEntranceAnimation) {
+ 		new_animation = obj->data._slideEntranceAnimation->f->dup(obj->data._slideEntranceAnimation);
 		new_animation->data.extraData = newSlide;
 		newSlide->f->set_entrance_animation(newSlide, new_animation);
 	}
 	
-	if (obj->data._exitAnimation) {
-		new_animation = obj->data._exitAnimation->f->dup(obj->data._exitAnimation);
+	if (obj->data._slideExitAnimation) {
+		new_animation = obj->data._slideExitAnimation->f->dup(obj->data._slideExitAnimation);
 		new_animation->data.extraData = newSlide;
 		newSlide->f->set_exit_animation(newSlide, new_animation);
 	}
@@ -440,13 +440,13 @@ static void gl_slideshow_free(gl_object *obj_obj)
 {
 	gl_slideshow *obj = (gl_slideshow *)obj_obj;
 	
-	if (obj->data._entranceAnimation) {
-		((gl_object *)obj->data._entranceAnimation)->f->unref((gl_object *)obj->data._entranceAnimation);
-		obj->data._entranceAnimation = NULL;
+	if (obj->data._slideEntranceAnimation) {
+		((gl_object *)obj->data._slideEntranceAnimation)->f->unref((gl_object *)obj->data._slideEntranceAnimation);
+		obj->data._slideEntranceAnimation = NULL;
 	}
-	if (obj->data._exitAnimation) {
-		((gl_object *)obj->data._exitAnimation)->f->unref((gl_object *)obj->data._exitAnimation);
-		obj->data._exitAnimation = NULL;
+	if (obj->data._slideExitAnimation) {
+		((gl_object *)obj->data._slideExitAnimation)->f->unref((gl_object *)obj->data._slideExitAnimation);
+		obj->data._slideExitAnimation = NULL;
 	}
 	
 	gl_slide *slide = obj->data._currentSlide;

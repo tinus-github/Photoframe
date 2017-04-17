@@ -38,8 +38,8 @@ typedef struct gl_slideshow_data {
 	void *callbackTarget;
 	void *callbackExtraData;
 	
-	gl_value_animation *_entranceAnimation;
-	gl_value_animation *_exitAnimation;
+	gl_value_animation *_slideEntranceAnimation;
+	gl_value_animation *_slideExitAnimation;
 	gl_value_animation *_onScreenTimer;
 	
 	gl_slideshow_timer_status _timerStatus;

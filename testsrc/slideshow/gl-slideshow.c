@@ -82,7 +82,7 @@ static void set_transition_animations_for_type(gl_slideshow *obj, gl_slideshow_t
 		case gl_slideshow_transition_fade:
 		case gl_slideshow_transition_fade_through_black:
 		case gl_slideshow_transition_swipe:
-			value = obj->data._configuration->f->get_value(obj->data._configuration, "transition_duration");
+			value = obj->data._configuration->f->get_value(obj->data._configuration, "transitionDuration");
 			if (value) {
 				int durationMS = value->f->get_value_int(value);
 				

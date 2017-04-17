@@ -11,14 +11,22 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <limits.h>
 
 #include "infrastructure/gl-object.h"
+
+#define GL_CONFIG_VALUE_SELECTION_NOT_FOUND INT_MAX
 
 typedef enum {
 	gl_config_value_type_none = 0,
 	gl_config_value_type_string,
 	gl_config_value_type_int
 } gl_config_value_type;
+
+typedef struct {
+	const char *name;
+	int32_t value;
+} gl_config_value_selection;
 
 typedef struct gl_config_value gl_config_value;
 
@@ -28,6 +36,7 @@ typedef struct gl_config_value_funcs {
 	const char *(*get_value_string) (gl_config_value *obj);
 	int32_t (*get_value_int) (gl_config_value *obj);
 	const char*(*get_title) (gl_config_value *obj);
+	int32_t (*get_value_string_selection) (gl_config_value *obj, gl_config_value_selection *options);
 } gl_config_value_funcs;
 
 typedef struct gl_config_value_data {

@@ -56,20 +56,6 @@ static void animate_nothing(void *target, void *extra_data, GLfloat value)
 	return;
 }
 
-static gl_slideshow_transition_type transition_type_from_string(const char* string)
-{
-	if (!strcasecmp(string, "fade")) {
-		return gl_slideshow_transition_fade;
-	}
-	if (!strcasecmp(string, "fadethrough")) {
-		return gl_slideshow_transition_fade_through_black;
-	}
-	if (!strcasecmp(string, "swipe")) {
-		return gl_slideshow_transition_swipe;
-	}
-	return gl_slideshow_transition_appear;
-}
-
 static void set_transition_animations_for_type(gl_slideshow *obj, gl_slideshow_transition_type type)
 {
 	gl_value_animation *animation;
@@ -177,12 +163,22 @@ static void gl_slideshow_set_configuration(gl_slideshow *obj, gl_config_section 
 	}
 	
 	value = config->f->get_value(config, "transition");
+	
+	static gl_config_value_selection transitions[] = {
+		{"fade",	gl_slideshow_transition_fade},
+		{"fadethrough", gl_slideshow_transition_fade_through_black},
+		{"swipe", 	gl_slideshow_transition_swipe},
+		NULL };
+	
 	if (value) {
-		const char *transition_type_string = value->f->get_value_string(value);
-		if (transition_type_string) {
-			gl_slideshow_transition_type t = transition_type_from_string(transition_type_string);
-			set_transition_animations_for_type(obj, t);
+		uint32_t transition_type_int = value->f->get_value_string_selection(value, transitions);
+		
+		if (transition_type_int == GL_CONFIG_VALUE_SELECTION_NOT_FOUND) {
+			transition_type_int = gl_slideshow_transition_appear;
 		}
+		
+		set_transition_animations_for_type(obj, (gl_slideshow_transition_type) transition_type_int);
+		
 		value = NULL;
 	}
 }

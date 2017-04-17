@@ -13,6 +13,7 @@
 static gl_config_value_type gl_config_value_get_type(gl_config_value *obj);
 static const char *gl_config_value_get_title(gl_config_value *obj);
 static const char *gl_config_value_get_value_string(gl_config_value *obj);
+static int32_t gl_config_get_value_string_selection(gl_config_value *obj, gl_config_value_selection *options);
 static int gl_config_value_get_value_int(gl_config_value *obj);
 static void gl_config_value_free(gl_object *obj_obj);
 
@@ -20,7 +21,8 @@ static struct gl_config_value_funcs gl_config_value_funcs_global = {
 	.get_type = &gl_config_value_get_type,
 	.get_title = &gl_config_value_get_title,
 	.get_value_string = &gl_config_value_get_value_string,
-	.get_value_int = &gl_config_value_get_value_int
+	.get_value_int = &gl_config_value_get_value_int,
+	.get_value_string_selection = &gl_config_get_value_string_selection,
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
@@ -49,6 +51,24 @@ static int32_t gl_config_value_get_value_int(gl_config_value *obj)
 		return 0;
 	}
 	return obj->data._value_int;
+}
+
+static int32_t gl_config_get_value_string_selection(gl_config_value *obj, gl_config_value_selection *options)
+{
+	if (obj->data._type != gl_config_value_type_string) {
+		return GL_CONFIG_VALUE_SELECTION_NOT_FOUND;
+	}
+	
+	const char *value = obj->data._value_string;
+	
+	while (options) {
+		if (!strcasecmp(value, options->name)) {
+			return options->value;
+		}
+		options++;
+	}
+	
+	return GL_CONFIG_VALUE_SELECTION_NOT_FOUND;
 }
 
 void gl_config_value_setup()

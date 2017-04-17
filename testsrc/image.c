@@ -183,27 +183,36 @@ void slideshow_init()
 	slideshow->data.getNextSlideCallback = &get_next_slide;
 	slideshow->data.callbackExtraData = d;
 	
-	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
-	animation_e->data.easingType = gl_value_animation_ease_linear;
+	gl_configuration *global_config = gl_configuration_get_global_configuration();
+	gl_config_section *cf_section = global_config->f->get_section(global_config, "Slideshow1");
 	
-	gl_value_animation *animation = (gl_value_animation *)animation_e;
-	animation->data.startValue = 0.0;
-	animation->data.endValue = 1.0;
-	animation->f->set_duration(animation, 0.4);
-	animation->data.action = image_set_alpha;
-	
-	slideshow->f->set_entrance_animation(slideshow, animation);
-	
-	animation_e = gl_value_animation_easing_new();
-	animation_e->data.easingType = gl_value_animation_ease_linear;
-	
-	animation = (gl_value_animation *)animation_e;
-	animation->data.startValue = 1.0;
-	animation->data.endValue = 1.0;
-	animation->f->set_duration(animation, 0.4);
-	animation->data.action = image_set_alpha;
-	
-	slideshow->f->set_exit_animation(slideshow, animation);
+	if (cf_section) {
+		slideshow->f->set_configuration(slideshow, cf_section);
+	} else {
+		
+		gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
+		animation_e->data.easingType = gl_value_animation_ease_linear;
+		
+		gl_value_animation *animation = (gl_value_animation *)animation_e;
+		animation->data.startValue = 0.0;
+		animation->data.endValue = 1.0;
+		animation->f->set_duration(animation, 0.4);
+		animation->data.action = image_set_alpha;
+		
+		slideshow->f->set_entrance_animation(slideshow, animation);
+		
+		animation_e = gl_value_animation_easing_new();
+		animation_e->data.easingType = gl_value_animation_ease_linear;
+		
+		animation = (gl_value_animation *)animation_e;
+		animation->data.startValue = 1.0;
+		animation->data.endValue = 1.0;
+		animation->f->set_duration(animation, 0.4);
+		animation->data.action = image_set_alpha;
+		
+		slideshow->f->set_exit_animation(slideshow, animation);
+
+	}
 	
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;

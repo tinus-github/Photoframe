@@ -51,14 +51,14 @@ static int gl_configuration_load_callback(const mTCHAR *Section, const mTCHAR *K
 	char *endInt;
 	gl_config_value *value;
 	
-	errno = 0;
-	intmax_t intValue = strtoimax(Value, &endInt, 10);
-
 	char *keyCopy = strdup(Key);
 	if (!keyCopy) {
 		return 0;
 	}
 	
+	errno = 0;
+	intmax_t intValue = strtoimax(Value, &endInt, 10);
+
 	if (errno || (intValue > INT32_MAX) || (intValue < INT32_MIN) || (*endInt != '\0')) {
 		char *valueCopy = strdup(Value);
 		if (!valueCopy) {

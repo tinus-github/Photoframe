@@ -46,6 +46,7 @@
 #include "fs/gl-directory-file.h"
 #include "fs/gl-tree-cache-directory.h"
 #include "fs/gl-tree-cache-directory-ordered.h"
+#include "fs/gl-source-manager.h"
 #include "qrcode/gl-qrcode-data.h"
 #include "qrcode/gl-qrcode-image.h"
 #include "config/gl-configuration.h"
@@ -97,6 +98,7 @@ void gl_objects_setup()
 	gl_directory_file_setup();
 	gl_tree_cache_directory_setup();
 	gl_tree_cache_directory_ordered_setup();
+	gl_source_manager_setup();
 	gl_configuration_setup();
 	gl_config_section_setup();
 	gl_config_value_setup();

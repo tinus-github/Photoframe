@@ -30,6 +30,7 @@
 #include "slideshow/gl-sequence-selection.h"
 #include "config/gl-configuration.h"
 #include "fs/gl-tree-cache-directory-ordered.h"
+#include "fs/gl-source-manager.h"
 
 #include "../lib/linmath/linmath.h"
 
@@ -165,20 +166,11 @@ void slideshow_init()
 
 	slideshowdata *d = calloc(1, sizeof(slideshowdata));
 	
-	gl_config_value *cf_value = gl_configuration_get_value_for_path("Source1/url");
+	gl_source_manager *global_source_manager = gl_source_manager_get_global_manager();
+	gl_tree_cache_directory *dirCache = global_source_manager->f->get_source(global_source_manager, "Source1");
 	
-	if (!cf_value || (cf_value->f->get_type(cf_value) != gl_config_value_type_string)) {
-		global_stage->f->show_message(global_stage, "Configuration issue: Source1/url set incorrectly", 0);
-		
-		return;
-	}
-	const char *sourceUrl = cf_value->f->get_value_string(cf_value);
-	
-	gl_tree_cache_directory *dirCache = (gl_tree_cache_directory *)gl_tree_cache_directory_ordered_new();
 	d->dir = dirCache;
-	dirCache->f->load(dirCache, sourceUrl);
-	dirCache->data._url = strdup(sourceUrl);
-	
+		
 	gl_slideshow *slideshow = gl_slideshow_new();
 	slideshow->data.getNextSlideCallback = &get_next_slide;
 	slideshow->data.callbackExtraData = d;

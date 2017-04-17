@@ -19,12 +19,14 @@ static void gl_sequence_set_count(gl_sequence *obj, size_t count);
 static size_t gl_sequence_get_count(gl_sequence *obj);
 static void gl_sequence_start(gl_sequence *obj);
 static int gl_sequence_get_entry(gl_sequence *obj, size_t *entry);
+static void gl_sequence_set_configuration(gl_sequence *obj, gl_config_section *config);
 
 static struct gl_sequence_funcs gl_sequence_funcs_global = {
 	.set_count = &gl_sequence_set_count,
 	.get_count = &gl_sequence_get_count,
 	.start = &gl_sequence_start,
 	.get_entry = &gl_sequence_get_entry,
+	.set_configuration = &gl_sequence_set_configuration,
 };
 
 static void gl_sequence_set_count(gl_sequence *obj, size_t count)
@@ -38,6 +40,11 @@ static size_t gl_sequence_get_count(gl_sequence *obj)
 }
 
 static void gl_sequence_start(gl_sequence *obj)
+{
+	;
+}
+
+static void gl_sequence_set_configuration(gl_sequence *obj, gl_config_section *config)
 {
 	;
 }

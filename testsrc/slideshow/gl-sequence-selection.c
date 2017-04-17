@@ -20,6 +20,7 @@
 static void gl_sequence_selection_start(gl_sequence *obj_obj);
 static int gl_sequence_selection_get_entry(gl_sequence *obj_obj, size_t *entry);
 static void gl_sequence_selection_set_selection_size(gl_sequence_selection *obj, unsigned int newSize);
+static void gl_sequence_selection_set_configuration(gl_sequence *obj_sequence, gl_config_section *config);
 void gl_sequence_selection_free(gl_object *obj_obj);
 
 static struct gl_sequence_selection_funcs gl_sequence_selection_funcs_global = {
@@ -27,6 +28,7 @@ static struct gl_sequence_selection_funcs gl_sequence_selection_funcs_global = {
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
+static void (*gl_sequence_set_configuration_org_global) (gl_sequence *obj, gl_config_section *config);
 
 void gl_sequence_selection_setup()
 {
@@ -37,6 +39,8 @@ void gl_sequence_selection_setup()
 	gl_sequence_selection_funcs_global.p.start = &gl_sequence_selection_start;
 	gl_sequence_selection_funcs_global.p.get_entry = &gl_sequence_selection_get_entry;
 	
+	gl_sequence_set_configuration_org_global = gl_sequence_selection_funcs_global.p.set_configuration;
+	gl_sequence_selection_funcs_global.p.set_configuration = &gl_sequence_selection_set_configuration;
 	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_sequence_selection_funcs_global;
 	gl_object_free_org_global = obj_funcs_global->free;
 	obj_funcs_global->free = &gl_sequence_selection_free;
@@ -45,6 +49,22 @@ void gl_sequence_selection_setup()
 static void gl_sequence_selection_set_selection_size(gl_sequence_selection *obj, unsigned int newSize)
 {
 	obj->data._requested_selection_size = newSize;
+}
+
+static void gl_sequence_selection_set_configuration(gl_sequence *obj_sequence, gl_config_section *config)
+{
+	gl_sequence_selection *obj = (gl_sequence_selection *)obj_sequence;
+	
+	gl_sequence_set_configuration_org_global(obj_sequence, config);
+	
+	gl_config_value *value;
+	
+	value = config->f->get_value(config, "sequenceamount");
+	int32_t amount = value->f->get_value_int(value);
+	
+	if (amount != GL_CONFIG_VALUE_NOT_FOUND) {
+		obj->f->set_selection_size(obj, amount);
+	}
 }
 
 static int compare_selection(const void *l, const void *r)

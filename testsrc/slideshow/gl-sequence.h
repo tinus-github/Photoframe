@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include "infrastructure/gl-object.h"
+#include "config/gl-config-section.h"
 
 typedef enum {
 	gl_sequence_type_ordered,
@@ -27,6 +28,8 @@ typedef struct gl_sequence_funcs {
 	size_t (*get_count) (gl_sequence *obj);
 	void (*start) (gl_sequence *obj);
 	int (*get_entry) (gl_sequence *obj, size_t *entry);
+	
+	void (*set_configuration) (gl_sequence *obj, gl_config_section *config);
 } gl_sequence_funcs;
 
 typedef struct gl_sequence_data {

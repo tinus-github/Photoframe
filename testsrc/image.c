@@ -189,7 +189,7 @@ void slideshow_init()
 	gl_value_animation *animation = (gl_value_animation *)animation_e;
 	animation->data.startValue = 0.0;
 	animation->data.endValue = 1.0;
-	animation->data.duration = 0.4;
+	animation->f->set_duration(animation, 0.4);
 	animation->data.action = image_set_alpha;
 	
 	slideshow->f->set_entrance_animation(slideshow, animation);
@@ -200,7 +200,7 @@ void slideshow_init()
 	animation = (gl_value_animation *)animation_e;
 	animation->data.startValue = 1.0;
 	animation->data.endValue = 1.0;
-	animation->data.duration = 0.4;
+	animation->f->set_duration(animation, 0.4);
 	animation->data.action = image_set_alpha;
 	
 	slideshow->f->set_exit_animation(slideshow, animation);

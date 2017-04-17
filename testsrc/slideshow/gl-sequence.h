@@ -13,6 +13,12 @@
 
 #include "infrastructure/gl-object.h"
 
+typedef enum {
+	gl_sequence_type_ordered,
+	gl_sequence_type_random,
+	gl_sequence_type_selection
+} gl_sequence_type;
+
 typedef struct gl_sequence gl_sequence;
 
 typedef struct gl_sequence_funcs {
@@ -37,5 +43,7 @@ struct gl_sequence {
 void gl_sequence_setup();
 gl_sequence *gl_sequence_init(gl_sequence *obj);
 gl_sequence *gl_sequence_new();
+
+gl_sequence *gl_sequence_new_with_type(gl_sequence_type type);
 
 #endif /* gl_sequence_h */

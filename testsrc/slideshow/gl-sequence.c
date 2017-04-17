@@ -6,10 +6,14 @@
 //
 //
 
-#include "gl-sequence.h"
+#include "slideshow/gl-sequence.h"
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+
+#include "slideshow/gl-sequence-ordered.h"
+#include "slideshow/gl-sequence-random.h"
+#include "slideshow/gl-sequence-selection.h"
 
 static void gl_sequence_set_count(gl_sequence *obj, size_t count);
 static size_t gl_sequence_get_count(gl_sequence *obj);
@@ -66,4 +70,17 @@ gl_sequence *gl_sequence_new()
 	gl_sequence *ret = calloc(1, sizeof(gl_sequence));
 	
 	return gl_sequence_init(ret);
+}
+
+gl_sequence *gl_sequence_new_with_type(gl_sequence_type type)
+{
+	switch (type) {
+		case gl_sequence_type_ordered:
+			return (gl_sequence *)gl_sequence_ordered_new();
+		case gl_sequence_type_selection:
+			return (gl_sequence *)gl_sequence_selection_new();
+		case gl_sequence_type_random:
+		default:
+			return (gl_sequence *)gl_sequence_random_new();
+	}
 }

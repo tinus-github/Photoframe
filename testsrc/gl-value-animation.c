@@ -115,13 +115,13 @@ static void gl_value_animation_tick(void *target, gl_renderloop_member *renderlo
 	obj->data._timeElapsed = (GLfloat)(now_time.tv_sec - obj->data._startTime.tv_sec +
 					(now_time.tv_usec - obj->data._startTime.tv_usec) * 1e-6);
 	
-	GLfloat normalized_time_elapsed = obj->data._timeElapsed / obj->data._duration;
+	GLfloat normalized_time_elapsed = (obj->data._timeElapsed - obj->data.startDelay) / obj->data._duration;
 	if (normalized_time_elapsed < 0.0) normalized_time_elapsed = 0.0;
 	if (normalized_time_elapsed > 1.0) normalized_time_elapsed = 1.0;
 	
 	gl_value_animation_animate(obj, normalized_time_elapsed);
 	
-	if (obj->data._timeElapsed > obj->data._duration) {
+	if (obj->data._timeElapsed > (obj->data.startDelay + obj->data._duration)) {
 		obj->f->done(obj);
 	}
 }
@@ -177,6 +177,7 @@ static void gl_value_animation_copy(gl_value_animation *source, gl_value_animati
 	target->data._timeElapsed = source->data._timeElapsed;
 	target->data.startValue = source->data.startValue;
 	target->data.endValue = source->data.endValue;
+	target->data.startDelay = source->data.startDelay;
 	target->data._duration = source->data._duration;
 	target->data.repeats = source->data.repeats;
 	target->data.target = source->data.target;

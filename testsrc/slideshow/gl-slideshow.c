@@ -174,6 +174,7 @@ static void gl_slideshow_slide_load(gl_slide *obj_slide)
 	if (newSlide) {
 		gl_value_animation *slideAnimation = newSlide->f->get_entrance_animation(newSlide);
 		
+		slideAnimation->data.startDelay = 0.0;
 		slideAnimation->f->set_duration(slideAnimation, 0); // So the slide is ready immediately
 		
 		newSlide->f->set_entrance_animation(newSlide, slideAnimation); // this releases our reference to the animation

@@ -40,6 +40,7 @@ typedef struct gl_value_animation_data {
 	GLfloat startValue;
 	GLfloat endValue;
 	GLfloat _duration;
+	GLfloat startDelay;
 	unsigned int repeats;
 	
 	void *target;

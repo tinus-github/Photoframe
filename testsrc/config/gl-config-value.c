@@ -61,7 +61,7 @@ static int32_t gl_config_get_value_string_selection(gl_config_value *obj, gl_con
 	
 	const char *value = obj->data._value_string;
 	
-	while (options) {
+	while (options->name) {
 		if (!strcasecmp(value, options->name)) {
 			return options->value;
 		}

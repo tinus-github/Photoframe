@@ -9,7 +9,7 @@
 #include "fs/gl-source-manager.h"
 #include "fs/gl-tree-cache-directory-ordered.h"
 #include "config/gl-configuration.h"
-#include <strings.h>
+#include <string.h>
 #include <stdlib.h>
 
 static gl_source_manager *global_source_manager;

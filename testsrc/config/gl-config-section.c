@@ -37,7 +37,7 @@ static gl_config_value *gl_config_section_get_value(gl_config_section *obj, cons
 	assert (title);
 	
 	while (child) {
-		if (!strcmp(child->f->get_title(child), title)) {
+		if (!strcasecmp(child->f->get_title(child), title)) {
 			return child;
 		}
 		child = child->data.next_sibling;

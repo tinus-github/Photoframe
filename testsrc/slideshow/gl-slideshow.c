@@ -11,6 +11,7 @@
 #include "gl-renderloop-member.h"
 #include "gl-renderloop.h"
 #include "gl-value-animation-easing.h"
+#include "gl-stage.h"
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -51,6 +52,17 @@ static void animate_alpha(void *target, void *extra_data, GLfloat value)
 	image_shape->f->set_computed_alpha_dirty(image_shape);
 }
 
+static void animate_position(void *target, void *extra_data, GLfloat value)
+{
+	gl_shape *image_shape = (gl_shape *)extra_data;
+	
+	gl_stage *global_stage = gl_stage_get_global_stage();
+	GLfloat screenWidth = global_stage->data.width;
+	
+	image_shape->data.objectX = value * screenWidth;
+	image_shape->f->set_computed_projection_dirty(image_shape);
+}
+
 static void animate_nothing(void *target, void *extra_data, GLfloat value)
 {
 	return;
@@ -59,7 +71,7 @@ static void animate_nothing(void *target, void *extra_data, GLfloat value)
 static void set_transition_animations_for_type(gl_slideshow *obj, gl_slideshow_transition_type type)
 {
 	gl_value_animation *animation;
-//	gl_value_animation_easing *animation_e;
+	gl_value_animation_easing *animation_e;
 	
 	gl_config_value *value;
 	GLfloat duration = 0.4;
@@ -136,7 +148,27 @@ static void set_transition_animations_for_type(gl_slideshow *obj, gl_slideshow_t
 			
 			obj->f->set_entrance_animation(obj, animation);
 			break;
-			//TODO: swipe animation
+		case gl_slideshow_transition_swipe:
+			animation_e = gl_value_animation_easing_new();
+			animation_e->data.easingType = gl_value_animation_ease_FastOutSlowIn;
+			animation = (gl_value_animation *)animation_e;
+			animation->data.startValue = 1.0;
+			animation->data.endValue = 0.0;
+			animation->f->set_duration(animation, duration);
+			animation->data.action = &animate_position;
+			
+			obj->f->set_entrance_animation(obj, animation);
+			
+			animation_e = gl_value_animation_easing_new();
+			animation_e->data.easingType = gl_value_animation_ease_FastOutSlowIn;
+			animation = (gl_value_animation *)animation_e;
+			animation->data.startValue = 0.0;
+			animation->data.endValue = -1.0;
+			animation->f->set_duration(animation, duration);
+			animation->data.action = &animate_position;
+			
+			obj->f->set_exit_animation(obj, animation);
+			break;
 	}
 }
 

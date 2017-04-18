@@ -18,7 +18,8 @@ typedef struct gl_value_animation_easing gl_value_animation_easing;
 typedef enum {
 	gl_value_animation_ease_linear = 0,
 	gl_value_animation_ease_QuinticEaseInOut,
-	gl_value_animation_ease_Sine
+	gl_value_animation_ease_Sine,
+	gl_value_animation_ease_FastOutSlowIn
 } gl_value_animation_easing_type;
 
 typedef struct gl_value_animation_easing_funcs {

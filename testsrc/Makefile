@@ -277,7 +277,8 @@ slideshow/gl-slideshow-images.o: slideshow/gl-slideshow-images.c slideshow/gl-sl
 	cc -g $(CFLAGS_ALL) \
 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c slideshow/gl-slideshow-images.c -o slideshow/gl-slideshow-images.o $(OPTFLAGS)
+	-c slideshow/gl-slideshow-images.c -o slideshow/gl-slideshow-images.o \
+	$(OPTFLAGS) $(ARC4RANDOM_CFLAGS)
 
 slideshow/gl-sequence.o: slideshow/gl-sequence.c slideshow/gl-sequence.h \
 		infrastructure/gl-object.h

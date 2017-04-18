@@ -10,13 +10,13 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  infrastructure/gl-notice.o infrastructure/gl-notice-subscription.o \
 	  infrastructure/gl-workqueue.o infrastructure/gl-workqueue-job.o \
 	  gl-image.o gl-framed-shape.o slideshow/gl-slide.o slideshow/gl-slide-image.o \
-	  slideshow/gl-slideshow.o slideshow/gl-sequence.o slideshow/gl-sequence-ordered.o \
+	  slideshow/gl-slideshow.o slideshow/gl-slideshow-images.o slideshow/gl-sequence.o slideshow/gl-sequence-ordered.o \
 	  slideshow/gl-sequence-random.o slideshow/gl-sequence-selection.o common-driver.o \
 	  images/loadimage.o images/loadexif.o images/gl-bitmap-scaler.o \
 	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o \
 	  fs/gl-url.o fs/gl-stream.o fs/gl-stream-file.o fs/gl-stream-rewindable.o \
 	  fs/gl-directory.o fs/gl-directory-file.o fs/gl-tree-cache-directory.o fs/gl-tree-cache-directory-ordered.o \
-	  config/gl-configuration.o config/gl-config-section.o config/gl-config-value.o \
+	  fs/gl-source-manager.o config/gl-configuration.o config/gl-config-section.o config/gl-config-value.o \
 	  qrcode/gl-qrcode-data.o qrcode/gl-qrcode-image.o
 
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
@@ -270,6 +270,15 @@ slideshow/gl-slideshow.o: slideshow/gl-slideshow.c slideshow/gl-slideshow.h \
 	-I/opt/vc/include/interface/vmcs_host/linux \
 	-c slideshow/gl-slideshow.c -o slideshow/gl-slideshow.o $(OPTFLAGS)
 
+slideshow/gl-slideshow-images.o: slideshow/gl-slideshow-images.c slideshow/gl-slideshow-images.h \
+		slideshow/gl-slideshow.h gl-container-2d.h gl-value-animation.h slideshow/gl-slide.h config/gl-configuration.h \
+		gl-container.h gl-shape.h infrastructure/gl-object.h gl-renderloop-member.h infrastructure/gl-notice.h gl-renderloop.h \
+		config/gl-config-section.h config/gl-config-value.h fs/gl-tree-cache-directory.h slideshow/gl-sequence.h
+	cc -g $(CFLAGS_ALL) \
+	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	-I/opt/vc/include/interface/vmcs_host/linux \
+	-c slideshow/gl-slideshow-images.c -o slideshow/gl-slideshow-images.o $(OPTFLAGS)
+
 slideshow/gl-sequence.o: slideshow/gl-sequence.c slideshow/gl-sequence.h \
 		infrastructure/gl-object.h
 	cc -g $(CFLAGS_ALL) \
@@ -372,6 +381,12 @@ fs/gl-tree-cache-directory.o: fs/gl-tree-cache-directory.c fs/gl-tree-cache-dire
 fs/gl-tree-cache-directory-ordered.o: fs/gl-tree-cache-directory-ordered.c fs/gl-tree-cache-directory-ordered.h fs/gl-tree-cache-directory.h fs/gl-directory.h fs/gl-url.h infrastructure/gl-object.h
 	cc -g $(CFLAGS_ALL) \
 	-c fs/gl-tree-cache-directory-ordered.c -o fs/gl-tree-cache-directory-ordered.o \
+	$(OPTFLAGS)
+
+fs/gl-source-manager.o: fs/gl-source-manager.c fs/gl-source-manager.h fs/gl-tree-cache-directory-ordered.h fs/gl-tree-cache-directory.h \
+		infrastructure/gl-object.h config/gl-configuration.h config/gl-config-section.h config/gl-config-value.h
+	cc -g $(CFLAGS_ALL) \
+	-c fs/gl-source-manager.c -o fs/gl-source-manager.o \
 	$(OPTFLAGS)
 
 config/gl-configuration.o: config/gl-configuration.c config/gl-configuration.h config/gl-config-section.h config/gl-config-value.h infrastructure/gl-object.h

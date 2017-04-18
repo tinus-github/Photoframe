@@ -25,13 +25,9 @@
 #include "gl-value-animation-easing.h"
 #include "labels/gl-label-scroller.h"
 #include "infrastructure/gl-notice-subscription.h"
-#include "slideshow/gl-slide-image.h"
 #include "slideshow/gl-slideshow.h"
-#include "slideshow/gl-sequence-selection.h"
+#include "slideshow/gl-slideshow-images.h"
 #include "config/gl-configuration.h"
-#include "fs/gl-tree-cache-directory-ordered.h"
-#include "fs/gl-source-manager.h"
-
 #include "../lib/linmath/linmath.h"
 
 #ifndef __APPLE__
@@ -41,12 +37,6 @@
 // from esUtil.h
 #define TRUE 1
 #define FALSE 0
-
-typedef struct slideshowdata {
-	gl_tree_cache_directory *dir;
-	gl_tree_cache_directory *branch;
-	gl_sequence *sequence;
-} slideshowdata;
 
 void slideshow_init();
 
@@ -60,67 +50,6 @@ void image_set_alpha(void *target, void *extra_data, GLfloat value)
 
 static unsigned int num_files;
 static char** filenames;
-
-char *url_from_path(const char* path)
-{
-	char *ret = malloc(strlen(path) + 8);
-	strcpy(ret, "file://");
-	strcat(ret, path);
-	return ret;
-}
-
-gl_slide *get_next_slide(void *target, void *extra_data)
-{
-	slideshowdata *d = (slideshowdata *)extra_data;
-	gl_slide_image *slide_image;
-	gl_tree_cache_directory *dirCache = d->dir;
-	
-	if (!d->branch) {
-		size_t branchIndex = arc4random_uniform(dirCache->f->get_num_branches(dirCache, 1));
-		d->branch = dirCache->f->get_nth_branch(dirCache, (unsigned int)branchIndex);
-		
-		if (!d->branch) {
-			return NULL;
-		}
-		size_t fileCount = d->branch->f->get_num_child_leafs(d->branch, 0);
-		if (d->sequence) {
-			((gl_object *)d->sequence)->f->unref((gl_object *)d->sequence);
-			d->sequence = NULL;
-		}
-		if (!fileCount) {
-			d->branch = NULL;
-			return NULL;
-		}
-		d->sequence = (gl_sequence *)gl_sequence_selection_new();
-		((gl_sequence_selection *)d->sequence)->f->set_selection_size((gl_sequence_selection *)d->sequence, 10);
-		
-		d->sequence->f->set_count(d->sequence, fileCount);
-		d->sequence->f->start(d->sequence);
-		char *branchUrl = d->branch->f->get_url(d->branch);
-		gl_stage *global_stage = gl_stage_get_global_stage();
-		global_stage->f->show_message(global_stage, branchUrl, 0);
-		free (branchUrl);
-	}
-	
-	size_t fileIndex;
-	
-	int ret = d->sequence->f->get_entry(d->sequence, &fileIndex);
-	if (ret) {
-		d->branch = NULL;
-		return NULL;
-	}
-	
-	char *url = d->branch->f->get_nth_child_url(d->branch, (int)fileIndex);
-	
-	if (!url) {
-		return NULL;
-	}
-	
-	slide_image = gl_slide_image_new();
-	
-	slide_image->data.filename = url;
-	return (gl_slide *)slide_image;
-}
 
 void cf_fail_init()
 {
@@ -163,48 +92,19 @@ void slideshow_init()
 	if (global_stage->data.fatal_error_occurred) {
 		return;
 	}
-
-	slideshowdata *d = calloc(1, sizeof(slideshowdata));
 	
-	gl_source_manager *global_source_manager = gl_source_manager_get_global_manager();
-	gl_tree_cache_directory *dirCache = global_source_manager->f->get_source(global_source_manager, "Source1");
-	
-	d->dir = dirCache;
-		
-	gl_slideshow *slideshow = gl_slideshow_new();
-	slideshow->data.getNextSlideCallback = &get_next_slide;
-	slideshow->data.callbackExtraData = d;
+	gl_slideshow_images *slideshow_images = gl_slideshow_images_new();
+	gl_slideshow *slideshow = (gl_slideshow *)slideshow_images;
 	
 	gl_configuration *global_config = gl_configuration_get_global_configuration();
 	gl_config_section *cf_section = global_config->f->get_section(global_config, "Slideshow1");
 	
-	if (cf_section) {
-		slideshow->f->set_configuration(slideshow, cf_section);
-	} else {
-		
-		gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
-		animation_e->data.easingType = gl_value_animation_ease_linear;
-		
-		gl_value_animation *animation = (gl_value_animation *)animation_e;
-		animation->data.startValue = 0.0;
-		animation->data.endValue = 1.0;
-		animation->f->set_duration(animation, 0.4);
-		animation->data.action = image_set_alpha;
-		
-		slideshow->f->set_entrance_animation(slideshow, animation);
-		
-		animation_e = gl_value_animation_easing_new();
-		animation_e->data.easingType = gl_value_animation_ease_linear;
-		
-		animation = (gl_value_animation *)animation_e;
-		animation->data.startValue = 1.0;
-		animation->data.endValue = 1.0;
-		animation->f->set_duration(animation, 0.4);
-		animation->data.action = image_set_alpha;
-		
-		slideshow->f->set_exit_animation(slideshow, animation);
-
+	if (!cf_section) {
+		global_stage->f->show_message(global_stage, "Configuration section for main slideshow not found", 1);
+		return;
 	}
+	
+	slideshow->f->set_configuration(slideshow, cf_section);
 	
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;

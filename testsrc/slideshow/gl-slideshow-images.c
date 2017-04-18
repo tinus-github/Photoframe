@@ -70,25 +70,25 @@ static void gl_slideshow_images_set_configuration(gl_slideshow *obj_slideshow, g
 		{ "allRecursive", gl_slideshow_images_selection_type_all_recursive },
 		{ "all", gl_slideshow_images_selection_type_all },
 		{ "onedir", gl_slideshow_images_selection_type_onedir },
-		NULL
+		{ NULL, 0 }
 	};
 	
 	value = config->f->get_value(config, "selectionType");
 	if (value) {
 		int32_t selectionType = value->f->get_value_string_selection(value, selectionTypes);
 		if (selectionType == GL_CONFIG_VALUE_SELECTION_NOT_FOUND) {
-			selectionType = gl_slideshow_images_selection_type_all;
+			selectionType = gl_slideshow_images_selection_type_all_recursive;
 		}
 		obj->data._selection_type = (gl_slideshow_images_selection_type)selectionType;
 	} else {
-		obj->data._selection_type = gl_slideshow_images_selection_type_all;
+		obj->data._selection_type = gl_slideshow_images_selection_type_all_recursive;
 	}
 	
 	static gl_config_value_selection sequenceTypes[] =  {
 		{ "ordered", gl_sequence_type_ordered },
 		{ "random", gl_sequence_type_random },
 		{ "selection", gl_sequence_type_selection },
-		NULL
+		{ NULL, 0 }
 	};
 	
 	gl_sequence_type sequence_type = gl_sequence_type_random;

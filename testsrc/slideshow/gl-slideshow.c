@@ -200,7 +200,7 @@ static void gl_slideshow_set_configuration(gl_slideshow *obj, gl_config_section 
 		{"fade",	gl_slideshow_transition_fade},
 		{"fadethrough", gl_slideshow_transition_fade_through_black},
 		{"swipe", 	gl_slideshow_transition_swipe},
-		NULL };
+		{ NULL, 0 } };
 	
 	if (value) {
 		uint32_t transition_type_int = value->f->get_value_string_selection(value, transitions);

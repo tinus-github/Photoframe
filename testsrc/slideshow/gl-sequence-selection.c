@@ -60,6 +60,10 @@ static void gl_sequence_selection_set_configuration(gl_sequence *obj_sequence, g
 	gl_config_value *value;
 	
 	value = config->f->get_value(config, "sequenceamount");
+	if (!value) {
+		return;
+	}
+	
 	int32_t amount = value->f->get_value_int(value);
 	
 	if (amount != GL_CONFIG_VALUE_NOT_FOUND) {

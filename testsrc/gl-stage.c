@@ -20,11 +20,13 @@ static gl_stage *global_stage = NULL;
 static void gl_stage_set_dimensions(gl_stage *obj, uint32_t width, uint32_t height);
 static void gl_stage_set_shape(gl_stage *obj, gl_shape *shape);
 static gl_shape *gl_stage_get_shape(gl_stage *obj);
+static void gl_stage_show_message(gl_stage *obj, const char *message, int is_fatal);
 
 static struct gl_stage_funcs gl_stage_funcs_global = {
 	.set_dimensions = &gl_stage_set_dimensions,
 	.set_shape = &gl_stage_set_shape,
-	.get_shape = &gl_stage_get_shape
+	.get_shape = &gl_stage_get_shape,
+	.show_message = &gl_stage_show_message
 };
 
 static void gl_stage_set_projection(gl_stage *obj)
@@ -59,6 +61,40 @@ static gl_shape *gl_stage_get_shape(gl_stage *obj)
 	return obj->data.shape;
 }
 
+static void gl_stage_show_message(gl_stage *obj, const char *message, int is_fatal)
+{
+	if (obj->data.fatal_error_occurred && !is_fatal) {
+		return;
+	}
+	
+	if (is_fatal && !message) {
+		message = "A fatal error occurred";
+	}
+	
+	if (obj->data._qrcode) {
+		((gl_object *)obj->data._qrcode)->f->unref((gl_object *)obj->data._qrcode);
+		obj->data._qrcode = NULL;
+	}
+	
+	if (message) {
+		gl_qrcode_image *q = gl_qrcode_image_new();
+		if (!q) {
+			return; // No memory, can't do anything about it
+		}
+		
+		q->f->set_string(q, message);
+		obj->data._qrcode = q;
+		float scale = (0.2 * obj->data.height) / q->data.size;
+		((gl_container_2d *)q)->data.scaleH = scale;
+		((gl_container_2d *)q)->data.scaleV = scale;
+		((gl_shape *)q)->f->set_computed_projection_dirty((gl_shape *)q);
+	}
+	
+	obj->data.fatal_error_occurred = is_fatal;
+}
+
+
+
 static void gl_stage_set_dimensions(gl_stage *obj, uint32_t width, uint32_t height)
 {
 	obj->data.width = width;
@@ -71,7 +107,13 @@ static void gl_stage_draw(void *global_stage_void, gl_renderloop_member *obj, vo
 {
 	gl_stage *global_stage = (gl_stage *)global_stage_void;
 	gl_shape *main_container_shape = global_stage->f->get_shape(global_stage);
-	main_container_shape->f->draw(main_container_shape);
+	if (main_container_shape) {
+		main_container_shape->f->draw(main_container_shape);
+	}
+	
+	if (global_stage->data._qrcode) {
+		((gl_shape *)global_stage->data._qrcode)->f->draw((gl_shape *)global_stage->data._qrcode);
+	}
 }
 
 void gl_stage_setup()

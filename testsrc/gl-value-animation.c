@@ -22,6 +22,7 @@ static void gl_value_animation_start(gl_value_animation *obj);
 static void gl_value_animation_pause(gl_value_animation *obj);
 static void gl_value_animation_done(gl_value_animation *obj);
 static void gl_value_animation_tick(void *target, gl_renderloop_member *renderloop_member, void *action_data);
+static void gl_value_animation_set_duration(gl_value_animation *obj, GLfloat duration);
 static void gl_value_animation_set_speed(gl_value_animation *obj, GLfloat speed);
 static GLfloat gl_value_animation_calculate_value(gl_value_animation *obj,
 						  GLfloat normalized_time_elapsed, GLfloat startValue, GLfloat endValue);
@@ -36,6 +37,7 @@ static struct gl_value_animation_funcs gl_value_animation_funcs_global = {
 	.done = &gl_value_animation_done,
 	.calculate_value = &gl_value_animation_calculate_value,
 	.calculate_value_normalized = &gl_value_animation_calculate_value_normalized,
+	.set_duration = &gl_value_animation_set_duration,
 	.set_speed = &gl_value_animation_set_speed,
 	.dup = &gl_value_animation_dup,
 	.copy = &gl_value_animation_copy
@@ -43,8 +45,8 @@ static struct gl_value_animation_funcs gl_value_animation_funcs_global = {
 
 static void gl_value_animation_start(gl_value_animation *obj)
 {
-	obj->data.renderloopMember = gl_renderloop_member_new();
-	gl_renderloop_member *renderloop_member = obj->data.renderloopMember;
+	obj->data._renderloopMember = gl_renderloop_member_new();
+	gl_renderloop_member *renderloop_member = obj->data._renderloopMember;
 	gl_object *renderloop_member_obj = (gl_object *)renderloop_member;
 	renderloop_member_obj->f->ref(renderloop_member_obj);
 	
@@ -55,17 +57,17 @@ static void gl_value_animation_start(gl_value_animation *obj)
 	float time_elapsed_integral_f;
 	struct timeval time_elapsed_tv;
 	
-	time_elapsed_tv.tv_sec = modff(obj->data.timeElapsed, &time_elapsed_integral_f);
+	time_elapsed_tv.tv_sec = modff(obj->data._timeElapsed, &time_elapsed_integral_f);
 	time_elapsed_tv.tv_usec = time_elapsed_integral_f * 1e6;
 	
-	timersub(&now_time, &time_elapsed_tv, &obj->data.startTime);
+	timersub(&now_time, &time_elapsed_tv, &obj->data._startTime);
 	
 	renderloop_member->data.target = obj;
 	renderloop_member->data.action = &gl_value_animation_tick;
 	
 	gl_renderloop *renderloop = gl_renderloop_get_global_renderloop();
 	renderloop->f->append_child(renderloop, gl_renderloop_phase_animate, renderloop_member);
-	obj->data.isRunning = TRUE;
+	obj->data._isRunning = TRUE;
 	
 	gl_value_animation_animate(obj, 0.0);
 }
@@ -75,13 +77,13 @@ static void gl_value_animation_pause(gl_value_animation *obj)
 	struct timezone tz;
 	struct timeval now_time;
 	
-	assert (obj->data.isRunning);
+	assert (obj->data._isRunning);
 	
 	gettimeofday(&now_time, &tz);
-	obj->data.timeElapsed = (GLfloat)(now_time.tv_sec - obj->data.startTime.tv_sec +
-					  (now_time.tv_usec - obj->data.startTime.tv_usec) * 1e-6);
+	obj->data._timeElapsed = (GLfloat)(now_time.tv_sec - obj->data._startTime.tv_sec +
+					  (now_time.tv_usec - obj->data._startTime.tv_usec) * 1e-6);
 
-	gl_renderloop_member *renderloop_member = obj->data.renderloopMember;
+	gl_renderloop_member *renderloop_member = obj->data._renderloopMember;
 	assert(renderloop_member);
 	
 	gl_renderloop *renderloop = gl_renderloop_get_global_renderloop();
@@ -90,9 +92,9 @@ static void gl_value_animation_pause(gl_value_animation *obj)
 	
 	gl_object *renderloop_member_obj = (gl_object *)renderloop_member;
 	renderloop_member_obj->f->unref(renderloop_member_obj);
-	obj->data.renderloopMember = NULL;
+	obj->data._renderloopMember = NULL;
 	
-	obj->data.isRunning = FALSE;
+	obj->data._isRunning = FALSE;
 }
 
 static void gl_value_animation_animate(gl_value_animation *obj, GLfloat normalized_time_elapsed)
@@ -110,18 +112,23 @@ static void gl_value_animation_tick(void *target, gl_renderloop_member *renderlo
 	struct timeval now_time;
 	
 	gettimeofday(&now_time, &tz);
-	obj->data.timeElapsed = (GLfloat)(now_time.tv_sec - obj->data.startTime.tv_sec +
-					(now_time.tv_usec - obj->data.startTime.tv_usec) * 1e-6);
+	obj->data._timeElapsed = (GLfloat)(now_time.tv_sec - obj->data._startTime.tv_sec +
+					(now_time.tv_usec - obj->data._startTime.tv_usec) * 1e-6);
 	
-	GLfloat normalized_time_elapsed = obj->data.timeElapsed / obj->data.duration;
+	GLfloat normalized_time_elapsed = (obj->data._timeElapsed - obj->data.startDelay) / obj->data._duration;
 	if (normalized_time_elapsed < 0.0) normalized_time_elapsed = 0.0;
 	if (normalized_time_elapsed > 1.0) normalized_time_elapsed = 1.0;
 	
 	gl_value_animation_animate(obj, normalized_time_elapsed);
 	
-	if (obj->data.timeElapsed > obj->data.duration) {
+	if (obj->data._timeElapsed > (obj->data.startDelay + obj->data._duration)) {
 		obj->f->done(obj);
 	}
+}
+
+static void gl_value_animation_set_duration(gl_value_animation *obj, GLfloat duration)
+{
+	obj->data._duration = duration;
 }
 
 /* Calculates the duration to match this speed (for a linear animation) and set it */
@@ -131,10 +138,10 @@ static void gl_value_animation_set_speed(gl_value_animation *obj, GLfloat speed)
 	if (distance < 0.0) {
 		distance = -distance;
 	} else if (distance == 0.0) {
-		obj->data.duration = 1.0; return;
+		obj->f->set_duration(obj, 1.0); return;
 	}
 	
-	obj->data.duration = distance / speed;
+	obj->f->set_duration(obj, distance / speed);
 }
 
 static GLfloat gl_value_animation_calculate_value(gl_value_animation *obj, GLfloat normalized_time_elapsed, GLfloat startValue, GLfloat endValue)
@@ -154,8 +161,8 @@ static void gl_value_animation_done(gl_value_animation *obj)
 	struct timezone tz;
 
 	if (obj->data.repeats) {
-		obj->data.timeElapsed = 0.0;
-		gettimeofday(&obj->data.startTime, &tz);
+		obj->data._timeElapsed = 0.0;
+		gettimeofday(&obj->data._startTime, &tz);
 	} else {
 		obj->f->pause(obj);
 	}
@@ -165,12 +172,13 @@ static void gl_value_animation_done(gl_value_animation *obj)
 
 static void gl_value_animation_copy(gl_value_animation *source, gl_value_animation *target)
 {
-	assert (!source->data.isRunning);
+	assert (!source->data._isRunning);
 	
-	target->data.timeElapsed = source->data.timeElapsed;
+	target->data._timeElapsed = source->data._timeElapsed;
 	target->data.startValue = source->data.startValue;
 	target->data.endValue = source->data.endValue;
-	target->data.duration = source->data.duration;
+	target->data.startDelay = source->data.startDelay;
+	target->data._duration = source->data._duration;
 	target->data.repeats = source->data.repeats;
 	target->data.target = source->data.target;
 	target->data.extraData = source->data.extraData;
@@ -225,7 +233,7 @@ void gl_value_animation_free(gl_object *obj_obj)
 		obj->data.animationCompleted = NULL;
 	}
 	
-	if (obj->data.isRunning) {
+	if (obj->data._isRunning) {
 		obj->f->pause(obj);
 	}
 	

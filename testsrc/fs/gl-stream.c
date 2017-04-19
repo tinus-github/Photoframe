@@ -7,6 +7,7 @@
 // Abstract class for reading files
 
 #include "fs/gl-stream.h"
+#include "fs/gl-stream-file.h"
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -142,4 +143,28 @@ static void gl_stream_free(gl_object *obj_obj)
 	}
 	
 	gl_object_free_org_global(obj_obj);
+}
+
+gl_stream *gl_stream_new_for_url(const char *URLstring)
+{
+	gl_url *url = gl_url_new();
+	gl_stream *ret = NULL;
+	
+	int decodeRet = url->f->decode(url, URLstring);
+	if (decodeRet) {
+		((gl_object *)url)->f->unref((gl_object *)url);
+		return NULL;
+	}
+	
+	if (!strcmp(url->data.scheme, "file")) {
+		ret = (gl_stream *)gl_stream_file_new();
+	}
+	
+	if (!ret) {
+		return ret;
+	}
+
+	ret->data._URL = url;
+	
+	return ret;
 }

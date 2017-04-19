@@ -28,12 +28,7 @@ loadImageFunction functionForLoadingImage(unsigned char* signature)
 	if ((signature[0] == 0xff) &&
 	    (signature[1] == 0xd8) &&
 	    (signature[2] == 0xff) &&
-	    (signature[3] == 0xe0) &&
-	    (signature[6] == 0x4a) &&
-	    (signature[7] == 0x46) &&
-	    (signature[8] == 0x49) &&
-	    (signature[9] == 0x46) &&
-	    (signature[10] == 0x00)) {
+	    ((signature[3] == 0xe0) || (signature[3] == 0xe1))) {
 		return &loadJPEG;
 	}
 	

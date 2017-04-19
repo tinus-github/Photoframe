@@ -24,6 +24,7 @@ static void load_image_horizontal_tile(gl_texture *obj, gl_bitmap *bitmap,
 static void gl_texture_flip_alpha(gl_texture *obj);
 static void gl_texture_apply_outline(gl_texture *obj);
 static void gl_texture_cancel_loading(gl_texture *obj);
+static void gl_texture_set_immediate(gl_texture *obj, int new_setting);
 static void gl_texture_free(gl_object *obj);
 
 static struct gl_texture_funcs gl_texture_funcs_global = {
@@ -33,7 +34,8 @@ static struct gl_texture_funcs gl_texture_funcs_global = {
 	.load_image_horizontal_tile = &load_image_horizontal_tile,
 	.cancel_loading = &gl_texture_cancel_loading,
 	.flip_alpha = &gl_texture_flip_alpha,
-	.apply_outline = &gl_texture_apply_outline
+	.apply_outline = &gl_texture_apply_outline,
+	.set_immediate = &gl_texture_set_immediate
 };
 
 typedef struct gl_texture_program_data {
@@ -229,10 +231,13 @@ static int gl_texture_load_program() {
 	return GL_TRUE;
 }
 
-
-static void load_image_gen_r_work(void *target, gl_renderloop_member *renderloop_member, void *extra_data)
+static void gl_texture_set_immediate(gl_texture *obj, int new_setting)
 {
-	gl_texture *obj = (gl_texture *)target;
+	obj->data._immediate = new_setting;
+}
+
+static void load_image_action(gl_texture *obj)
+{
 	gl_object *bitmap_obj;
 	
 	// Texture object handle
@@ -278,10 +283,18 @@ static void load_image_gen_r_work(void *target, gl_renderloop_member *renderloop
 	bitmap_obj->f->unref(bitmap_obj);
 	obj->data.imageDataStore = NULL;
 	obj->data.imageDataBitmap = NULL;
+	
+	obj->data.loadedNotice->f->fire(obj->data.loadedNotice);
+}
+
+static void load_image_gen_r_work(void *target, gl_renderloop_member *renderloop_member, void *extra_data)
+{
+	gl_texture *obj = (gl_texture *)target;
+	
 	((gl_object *)obj->data.uploadRenderloopMember)->f->unref((gl_object *)obj->data.uploadRenderloopMember);
 	obj->data.uploadRenderloopMember = NULL;
 	
-	obj->data.loadedNotice->f->fire(obj->data.loadedNotice);
+	load_image_action(obj);
 }
 
 static void load_image_gen_r(gl_texture *obj, gl_bitmap *bitmap, unsigned char *data)
@@ -291,16 +304,20 @@ static void load_image_gen_r(gl_texture *obj, gl_bitmap *bitmap, unsigned char *
 	gl_object *bitmap_obj = (gl_object *)bitmap;
 	bitmap_obj->f->ref(bitmap_obj);
 	obj->data.imageDataBitmap = data;
-
-	gl_renderloop_member *renderloop_member = gl_renderloop_member_new();
-	renderloop_member->data.target = obj;
-	renderloop_member->data.action = &load_image_gen_r_work;
-	renderloop_member->data.loadPriority = obj->data.loadPriority;
 	
-	gl_renderloop *renderloop = gl_renderloop_get_global_renderloop();
-	renderloop->f->append_child(renderloop, gl_renderloop_phase_load, renderloop_member);
-	obj->data.uploadRenderloopMember = renderloop_member;
-	((gl_object *)renderloop_member)->f->ref((gl_object *)renderloop_member);
+	if (!obj->data._immediate) {
+		gl_renderloop_member *renderloop_member = gl_renderloop_member_new();
+		renderloop_member->data.target = obj;
+		renderloop_member->data.action = &load_image_gen_r_work;
+		renderloop_member->data.loadPriority = obj->data.loadPriority;
+		
+		gl_renderloop *renderloop = gl_renderloop_get_global_renderloop();
+		renderloop->f->append_child(renderloop, gl_renderloop_phase_load, renderloop_member);
+		obj->data.uploadRenderloopMember = renderloop_member;
+		((gl_object *)renderloop_member)->f->ref((gl_object *)renderloop_member);
+	} else {
+		load_image_action(obj);
+	}
 }
 
 static void load_image_gen(gl_texture *obj, gl_bitmap *bitmap)

@@ -16,6 +16,7 @@
 #include <assert.h>
 
 static void (*gl_object_free_org_global) (gl_object *obj);
+static void (*gl_shape_draw_org_global) (gl_shape *obj);
 
 static void gl_slide_free(gl_object *obj_obj);
 static void gl_slide_load(gl_slide *obj);
@@ -28,6 +29,7 @@ static void gl_slide_set_entrance_animation(gl_slide *obj, gl_value_animation *a
 static void gl_slide_set_exit_animation(gl_slide *obj, gl_value_animation *animation);
 static gl_value_animation *gl_slide_get_entrance_animation(gl_slide *obj);
 static gl_value_animation *gl_slide_get_exit_animation(gl_slide *obj);
+static void gl_slide_draw(gl_shape *obj_obj);
 
 static struct gl_slide_funcs gl_slide_funcs_global = {
 	.load = &gl_slide_load,
@@ -49,6 +51,10 @@ void gl_slide_setup()
 	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_slide_funcs_global;
 	gl_object_free_org_global = obj_funcs_global->free;
 	obj_funcs_global->free = &gl_slide_free;
+	
+	gl_shape_funcs *shape_funcs_global = (gl_shape_funcs *) &gl_slide_funcs_global;
+	gl_shape_draw_org_global = shape_funcs_global->draw;
+	shape_funcs_global->draw = &gl_slide_draw;
 }
 
 static void gl_slide_set_entrance_animation(gl_slide *obj, gl_value_animation *animation)
@@ -89,6 +95,20 @@ static void gl_slide_set_loadstate(gl_slide *obj, gl_slide_loadstate new_state)
 static void gl_slide_load(gl_slide *obj)
 {
 	assert(!"This is an abstract function");
+}
+
+static void gl_slide_draw(gl_shape *obj_obj)
+{
+	gl_slide *obj = ((gl_slide *)obj_obj);
+	switch (obj->data.loadstate) {
+		case gl_slide_loadstate_onscreen:
+		case gl_slide_loadstate_moving_onscreen:
+		case gl_slide_loadstate_moving_offscreen:
+			gl_shape_draw_org_global(obj_obj);
+			break;
+		default:
+			break;
+	}
 }
 
 static void gl_slide_enter(gl_slide *obj)

@@ -25,10 +25,14 @@
 #include "gl-value-animation-easing.h"
 #include "labels/gl-label-scroller.h"
 #include "infrastructure/gl-notice-subscription.h"
-#include "slideshow/gl-slide-image.h"
 #include "slideshow/gl-slideshow.h"
-
+#include "slideshow/gl-slideshow-images.h"
+#include "config/gl-configuration.h"
 #include "../lib/linmath/linmath.h"
+
+#ifndef __APPLE__
+#include "arc4random.h"
+#endif
 
 // from esUtil.h
 #define TRUE 1
@@ -44,36 +48,20 @@ void image_set_alpha(void *target, void *extra_data, GLfloat value)
 	image_shape->f->set_computed_alpha_dirty(image_shape);
 }
 
-static unsigned int slide_counter = 1;
 static unsigned int num_files;
 static char** filenames;
 
-char *url_from_path(const char* path)
+void cf_fail_init()
 {
-	char *ret = malloc(strlen(path) + 8);
-	strcpy(ret, "file://");
-	strcat(ret, path);
-	return ret;
-}
-
-gl_slide *get_next_slide(void *target, void *extra_data)
-{
-	gl_slide_image *slide_image = gl_slide_image_new();
-	char **argv = (char**) extra_data;
-	
-	char *filename = argv[slide_counter];
-	char *url = url_from_path(filename);
-	slide_counter++;
-	if (slide_counter >= (num_files + 1)) {
-		slide_counter = 1;
-	}
-	
-	slide_image->data.filename = strdup(url); free(url);
-	return (gl_slide *)slide_image;
+	gl_stage *global_stage = gl_stage_get_global_stage();
+	global_stage->f->show_message(global_stage, "Can't open configuration file", 1);
+	return;
 }
 
 int main(int argc, char *argv[])
 {
+	void (*initFunc)() = &slideshow_init;
+	
 	if (argc < 2) {
 		printf("Usage: %s <filename>\n", argv[0]);
 		return -1;
@@ -83,43 +71,40 @@ int main(int argc, char *argv[])
 	filenames = argv;
 
 	gl_objects_setup();
+
+	gl_configuration *config = gl_configuration_new_from_file(argv[1]);
+	if (config->f->load(config)) {
+		initFunc = &cf_fail_init;
+	}
 	
 #ifdef __APPLE__
-	startCocoa(argc, (const char**)argv, &slideshow_init);
+	startCocoa(argc, (const char**)argv, initFunc);
 #else
-	egl_driver_init(&slideshow_init);
+	egl_driver_init(initFunc);
 	gl_renderloop_loop();
 #endif
 }
 
 void slideshow_init()
 {
-
-	gl_slideshow *slideshow = gl_slideshow_new();
-	slideshow->data.getNextSlideCallback = &get_next_slide;
-	slideshow->data.callbackExtraData = filenames;
+	gl_stage *global_stage = gl_stage_get_global_stage();
 	
-	gl_value_animation_easing *animation_e = gl_value_animation_easing_new();
-	animation_e->data.easingType = gl_value_animation_ease_linear;
+	if (global_stage->data.fatal_error_occurred) {
+		return;
+	}
 	
-	gl_value_animation *animation = (gl_value_animation *)animation_e;
-	animation->data.startValue = 0.0;
-	animation->data.endValue = 1.0;
-	animation->data.duration = 0.4;
-	animation->data.action = image_set_alpha;
+	gl_slideshow_images *slideshow_images = gl_slideshow_images_new();
+	gl_slideshow *slideshow = (gl_slideshow *)slideshow_images;
 	
-	slideshow->f->set_entrance_animation(slideshow, animation);
+	gl_configuration *global_config = gl_configuration_get_global_configuration();
+	gl_config_section *cf_section = global_config->f->get_section(global_config, "Slideshow1");
 	
-	animation_e = gl_value_animation_easing_new();
-	animation_e->data.easingType = gl_value_animation_ease_linear;
+	if (!cf_section) {
+		global_stage->f->show_message(global_stage, "Configuration section for main slideshow not found", 1);
+		return;
+	}
 	
-	animation = (gl_value_animation *)animation_e;
-	animation->data.startValue = 1.0;
-	animation->data.endValue = 1.0;
-	animation->data.duration = 0.4;
-	animation->data.action = image_set_alpha;
-	
-	slideshow->f->set_exit_animation(slideshow, animation);
+	slideshow->f->set_configuration(slideshow, cf_section);
 	
 	gl_container_2d *main_container_2d = gl_container_2d_new();
 	gl_container *main_container_2d_container = (gl_container *)main_container_2d;
@@ -130,16 +115,19 @@ void slideshow_init()
 	gl_label_scroller *scroller = gl_label_scroller_new();
 	gl_shape *scroller_shape = (gl_shape *)scroller;
 	scroller_shape->data.objectHeight = 160;
-	scroller_shape->data.objectWidth = 1920;
+	scroller_shape->data.objectWidth = global_stage->data.width;
 	scroller->data.text = "AVAVAVABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	scroller->f->start(scroller);
 	main_container_2d_container->f->append_child(main_container_2d_container, scroller_shape);
-
+	
 	main_container_2d_shape->data.objectX = 0.0;
 	main_container_2d->data.scaleH = 1.0;
 	main_container_2d->data.scaleV = 1.0;
 	
-	gl_stage *global_stage = gl_stage_get_global_stage();
+	if (global_stage->data.fatal_error_occurred) {
+		return;
+	}
+	
 	global_stage->f->set_shape(global_stage, (gl_shape *)main_container_2d);
 	
 	((gl_slide *)slideshow)->f->enter((gl_slide *)slideshow);

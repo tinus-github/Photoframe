@@ -1,5 +1,19 @@
 .PHONY: clean
 
+DEPDIR := .d
+
+$(shell mkdir -p $(DEPDIR) >/dev/null)
+$(shell mkdir -p $(DEPDIR)/qrcode >/dev/null)
+$(shell mkdir -p $(DEPDIR)/config >/dev/null)
+$(shell mkdir -p $(DEPDIR)/fs >/dev/null)
+$(shell mkdir -p $(DEPDIR)/images >/dev/null)
+$(shell mkdir -p $(DEPDIR)/slideshow >/dev/null)
+$(shell mkdir -p $(DEPDIR)/infrastructure >/dev/null)
+$(shell mkdir -p $(DEPDIR)/labels >/dev/null)
+
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
+
 CC = cc
 
 OPTFLAGS = -O3 -I$(CURDIR)
@@ -60,7 +74,7 @@ CFLAGS = $(CFLAGS_ALL) \
 	$(ARC4RANDOM_CFLAGS) \
 	$(QRENCODE_CFLAGS)
 
-COMPILE.c = $(CC) $(CFLAGS) -c
+COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) -c
 
 image: $(OBJECTS) $(LIBEXIF_A)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
@@ -85,7 +99,14 @@ image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	 -Wno-deprecated-declarations $(OPTFLAGS) $(ARC4RANDOM_CFLAGS)
 
 %.o: %.c
+%.o : %.c $(DEPDIR)/%.d
 	 $(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
 
 clean:
 	rm -f image decodejpeg2rgb decodejpeg2rgb.o $(OBJECTS)
+
+$(DEPDIR)/%.d: ;
+.PRECIOUS: $(DEPDIR)/%.d
+
+include $(wildcard $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS))))

@@ -35,6 +35,8 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  fs/gl-source-manager.o config/gl-configuration.o config/gl-config-section.o config/gl-config-value.o \
 	  qrcode/gl-qrcode-data.o qrcode/gl-qrcode-image.o
 
+SRCS = $(OBJECTS:.o=.c)
+
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	  -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	  -ftree-vectorize -pipe -Wno-psabi -Wno-deprecated-declarations
@@ -101,6 +103,34 @@ image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 %.o : %.c
 
 %.o : %.c $(DEPDIR)/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
+
+infrastructure/%.o : infrastructure/%.c $(DEPDIR)/infrastructure/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
+
+labels/%.o : labels/%.c $(DEPDIR)/labels/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
+
+slideshow/%.o : slideshow/%.c $(DEPDIR)/slideshow/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
+
+images/%.o : images/%.c $(DEPDIR)/images/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
+
+fs/%.o : fs/%.c $(DEPDIR)/fs/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
+
+config/%.o : config/%.c $(DEPDIR)/config/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
+
+qrcode/%.o : qrcode/%.c $(DEPDIR)/qrcode/%.d
 	$(COMPILE.c) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)
 

@@ -98,7 +98,6 @@ image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	 -I/opt/vc/src/hello_pi/libs/vgfont -g -c image.c -o image.o \
 	 -Wno-deprecated-declarations $(OPTFLAGS) $(ARC4RANDOM_CFLAGS)
 
-%.o: %.c
 %.o : %.c $(DEPDIR)/%.d
 	 $(COMPILE.c) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)

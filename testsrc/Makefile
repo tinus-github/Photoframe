@@ -99,7 +99,7 @@ image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	 -Wno-deprecated-declarations $(OPTFLAGS) $(ARC4RANDOM_CFLAGS)
 
 %.o : %.c $(DEPDIR)/%.d
-	 $(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)
 
 clean:

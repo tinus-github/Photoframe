@@ -11,8 +11,8 @@ $(shell mkdir -p $(DEPDIR)/slideshow >/dev/null)
 $(shell mkdir -p $(DEPDIR)/infrastructure >/dev/null)
 $(shell mkdir -p $(DEPDIR)/labels >/dev/null)
 
-DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
-POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$(@D)/$*.Td
+POSTCOMPILE = mv -f $(DEPDIR)/$(@D)/$*.Td $(DEPDIR)/$(@D)/$*.d
 
 CC = cc
 

@@ -176,13 +176,6 @@
 			remoteGlobalIDString = 0DC36EA21E9590EB003DF7D2;
 			remoteInfo = "libqrencode-config";
 		};
-		0DE786361E775C270051D3B5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0D07D26C1C4E974B00E42556 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0D73770B1E478CDC00FA9EC7;
-			remoteInfo = harfbuzz;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -5055,7 +5048,6 @@
 			);
 			dependencies = (
 				0D74EEDB1E4DF08E00A4CE92 /* PBXTargetDependency */,
-				0DE786371E775C270051D3B5 /* PBXTargetDependency */,
 			);
 			name = "image-cocoa";
 			productName = "image-cocoa";
@@ -5368,11 +5360,6 @@
 			target = 0DC36EA21E9590EB003DF7D2 /* libqrencode-config */;
 			targetProxy = 0DC36EA81E9596C2003DF7D2 /* PBXContainerItemProxy */;
 		};
-		0DE786371E775C270051D3B5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0D73770B1E478CDC00FA9EC7 /* harfbuzz */;
-			targetProxy = 0DE786361E775C270051D3B5 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -5482,7 +5469,6 @@
 					"/Users/tinus/dev/Samba/Samba/samba-4.6.0/bin/default/source3/libsmb",
 					"$(PROJECT_DIR)/lib/harfbuzz/harfbuzz-1.4.2/build/lib",
 					"$(PROJECT_DIR)/lib/libqrencode/build/.libs",
-					"$(PROJECT_DIR)/lib/libqrencode/install/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -5534,7 +5520,6 @@
 					"/Users/tinus/dev/Samba/Samba/samba-4.6.0/bin/default/source3/libsmb",
 					"$(PROJECT_DIR)/lib/harfbuzz/harfbuzz-1.4.2/build/lib",
 					"$(PROJECT_DIR)/lib/libqrencode/build/.libs",
-					"$(PROJECT_DIR)/lib/libqrencode/install/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;

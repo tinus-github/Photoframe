@@ -24,6 +24,11 @@ typedef struct gl_directory_read_entry {
 	const char *name;
 } gl_directory_read_entry;
 
+typedef struct gl_directory_list_entry {
+	gl_directory_entry_type type;
+	char *name;
+} gl_directory_list_entry;
+
 typedef struct gl_directory gl_directory;
 
 typedef struct gl_directory_funcs {
@@ -32,6 +37,9 @@ typedef struct gl_directory_funcs {
 	gl_stream_error (*open) (gl_directory *obj);
 	const gl_directory_read_entry *(*read) (gl_directory *obj);
 	gl_stream_error (*close) (gl_directory *obj);
+	
+	gl_directory_list_entry *(*get_list) (gl_directory *obj);
+	void (*free_list) (gl_directory *obj, gl_directory_list_entry *list);
 	
 	gl_stream_error (*return_error) (gl_directory *obj, gl_stream_error error);
 } gl_directory_funcs;

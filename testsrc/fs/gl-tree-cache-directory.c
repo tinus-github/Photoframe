@@ -224,7 +224,7 @@ static void gl_tree_cache_directory_load(gl_tree_cache_directory *obj, const cha
 		((gl_object *)dirObj)->f->unref((gl_object *)dirObj);
 		return;
 	}
-	const gl_directory_entry *entry;
+	const gl_directory_read_entry *entry;
 	char *nameCopy;
 	
 	gl_tree_cache_directory *branch = NULL;

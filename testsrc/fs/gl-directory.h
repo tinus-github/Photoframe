@@ -19,11 +19,10 @@ typedef enum {
 	gl_directory_entry_type_directory
 } gl_directory_entry_type;
 
-typedef struct gl_directory_entry {
+typedef struct gl_directory_read_entry {
 	gl_directory_entry_type type;
 	const char *name;
-} gl_directory_entry;
-
+} gl_directory_read_entry;
 
 typedef struct gl_directory gl_directory;
 
@@ -31,7 +30,7 @@ typedef struct gl_directory_funcs {
 	gl_object_funcs p;
 	gl_stream_error (*set_url) (gl_directory *obj, const char *URLstring);
 	gl_stream_error (*open) (gl_directory *obj);
-	const gl_directory_entry *(*read) (gl_directory *obj);
+	const gl_directory_read_entry *(*read) (gl_directory *obj);
 	gl_stream_error (*close) (gl_directory *obj);
 	
 	gl_stream_error (*return_error) (gl_directory *obj, gl_stream_error error);

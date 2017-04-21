@@ -24,7 +24,7 @@ typedef struct gl_directory_file_data {
 	gl_directory_data p;
 	
 	DIR *_dirp;
-	gl_directory_entry _current_entry;
+	gl_directory_read_entry _current_entry;
 } gl_directory_file_data;
 
 struct gl_directory_file {

@@ -1,5 +1,21 @@
 .PHONY: clean
 
+DEPDIR := .d
+
+$(shell mkdir -p $(DEPDIR) >/dev/null)
+$(shell mkdir -p $(DEPDIR)/qrcode >/dev/null)
+$(shell mkdir -p $(DEPDIR)/config >/dev/null)
+$(shell mkdir -p $(DEPDIR)/fs >/dev/null)
+$(shell mkdir -p $(DEPDIR)/images >/dev/null)
+$(shell mkdir -p $(DEPDIR)/slideshow >/dev/null)
+$(shell mkdir -p $(DEPDIR)/infrastructure >/dev/null)
+$(shell mkdir -p $(DEPDIR)/labels >/dev/null)
+
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$(@D)/$*.Td
+POSTCOMPILE = mv -f $(DEPDIR)/$(@D)/$*.Td $(DEPDIR)/$(@D)/$*.d
+
+CC = cc
+
 OPTFLAGS = -O3 -I$(CURDIR)
 
 OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o gl-stage.o \
@@ -19,9 +35,14 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  fs/gl-source-manager.o config/gl-configuration.o config/gl-config-section.o config/gl-config-value.o \
 	  qrcode/gl-qrcode-data.o qrcode/gl-qrcode-image.o
 
+SRCS = $(OBJECTS:.o=.c)
+
 CFLAGS_ALL = -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
 	  -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall \
 	  -ftree-vectorize -pipe -Wno-psabi -Wno-deprecated-declarations
+
+CFLAGS_VC = 	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
+	  -I/opt/vc/include/interface/vmcs_host/linux
 
 LIBEXIF_A = ../lib/libexif/libexif/.libs/libexif.a
 LIBEXIF_INCLUDEDIR = -I../lib/libexif
@@ -42,6 +63,20 @@ ARC4RANDOM_LIBS = ../lib/mt-arc4random/arc4random.a
 QRENCODE_LIBS = ../lib/libqrencode/install/lib/libqrencode.a
 QRENCODE_CFLAGS = `PKG_CONFIG_PATH=../lib/libqrencode/install/lib/pkgconfig pkg-config --cflags libqrencode`
 
+CFLAGS = $(CFLAGS_ALL) \
+	$(OPTFLAGS) \
+	$(CFLAGS_VC) \
+	$(LIBEXIF_INCLUDEDIR) \
+	$(LIBFREETYPE_CFLAGS) \
+	$(LIBHARFBUZZ_CFLAGS) \
+	$(LIBPNG_CFLAGS) \
+	$(PTHREAD_FLAGS) \
+	$(MININI_CFLAGS) \
+	$(QDBMP_CFLAGS) \
+	$(ARC4RANDOM_CFLAGS) \
+	$(QRENCODE_CFLAGS)
+
+COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) -c
 
 image: $(OBJECTS) $(LIBEXIF_A)
 	cc -o image -Wl,--whole-archive $(OBJECTS) \
@@ -65,379 +100,44 @@ image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	 -I/opt/vc/src/hello_pi/libs/vgfont -g -c image.c -o image.o \
 	 -Wno-deprecated-declarations $(OPTFLAGS) $(ARC4RANDOM_CFLAGS)
 
-egl-driver.o: egl-driver.c gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h \
-		gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h egl-driver.h gl-value-animation.h labels/gl-label.h \
-		labels/gl-label-scroller-segment.h gl-rectangle.h gl-bitmap.h \
-		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h \
-		infrastructure/gl-workqueue.h infrastructure/gl-workqueue-job.h \
-		gl-image.h gl-framed-shape.h slideshow/gl-slide.h slideshow/gl-slide-image.h \
-		slideshow/gl-slideshow.h images/gl-bitmap-scaler.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c egl-driver.c -o egl-driver.o \
-	$(OPTFLAGS)
+%.o : %.c
 
-common-driver.o: common-driver.c common-driver.h gl-texture.h gl-tile.h gl-stage.h gl-shape.h gl-renderloop-member.h \
-		gl-renderloop.h gl-container.h gl-container-2d.h gl-tiled-image.h egl-driver.h gl-value-animation.h labels/gl-label.h \
-		labels/gl-label-scroller-segment.h gl-rectangle.h gl-bitmap.h \
-		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h \
-		infrastructure/gl-workqueue.h infrastructure/gl-workqueue-job.h \
-		gl-image.h gl-framed-shape.h slideshow/gl-slide.h slideshow/gl-slide-image.h \
-		slideshow/gl-slideshow.h images/gl-bitmap-scaler.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c common-driver.c -o common-driver.o \
-	$(OPTFLAGS)
+%.o : %.c $(DEPDIR)/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
 
-gl-texture.o: gl-texture.c gl-texture.h infrastructure/gl-object.h gl-bitmap.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-texture.c -o gl-texture.o $(OPTFLAGS)
+infrastructure/%.o : infrastructure/%.c $(DEPDIR)/infrastructure/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
 
-gl-shape.o: gl-shape.c gl-shape.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-shape.c -o gl-shape.o $(OPTFLAGS)
+labels/%.o : labels/%.c $(DEPDIR)/labels/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
 
-infrastructure/gl-object.o: infrastructure/gl-object.c infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c infrastructure/gl-object.c -o infrastructure/gl-object.o $(OPTFLAGS)
+slideshow/%.o : slideshow/%.c $(DEPDIR)/slideshow/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
 
-gl-bitmap.o: gl-bitmap.c gl-bitmap.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c gl-bitmap.c -o gl-bitmap.o $(OPTFLAGS)
+images/%.o : images/%.c $(DEPDIR)/images/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
 
-gl-tile.o: gl-tile.c gl-tile.h gl-shape.h gl-texture.h gl-renderloop.h gl-renderloop-member.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-tile.c -o gl-tile.o $(OPTFLAGS)
+fs/%.o : fs/%.c $(DEPDIR)/fs/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
 
-gl-rectangle.o: gl-rectangle.c gl-rectangle.h gl-shape.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-rectangle.c -o gl-rectangle.o $(OPTFLAGS)
+config/%.o : config/%.c $(DEPDIR)/config/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
 
-gl-stage.o: gl-stage.c gl-stage.h infrastructure/gl-object.h qrcode/gl-qrcode-image.h gl-container-2d.h gl-container.h gl-shape.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-stage.c -o gl-stage.o $(OPTFLAGS)
-
-gl-container.o: gl-container.c gl-shape.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-container.c -o gl-container.o $(OPTFLAGS)
-
-gl-container-2d.o: gl-container.h gl-shape.h infrastructure/gl-object.h gl-container-2d.h gl-container-2d.c
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-container-2d.c -o gl-container-2d.o $(OPTFLAGS)
-
-gl-tiled-image.o: gl-tiled-image.c gl-tiled-image.h gl-container-2d.h \
-		gl-container.h gl-shape.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-tiled-image.c -o gl-tiled-image.o $(OPTFLAGS)
-
-gl-renderloop.o: gl-renderloop.c gl-renderloop.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c gl-renderloop.c -o gl-renderloop.o $(OPTFLAGS)
-
-gl-renderloop-member.o: gl-renderloop-member.c gl-renderloop.h \
-		gl-renderloop-member.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c gl-renderloop-member.c -o gl-renderloop-member.o $(OPTFLAGS)
-
-gl-value-animation.o: gl-value-animation.c gl-value-animation.h \
-		gl-renderloop.h gl-renderloop-member.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-value-animation.c -o gl-value-animation.o $(OPTFLAGS)
-
-gl-value-animation-easing.o: gl-value-animation-easing.c gl-value-animation-easing.h gl-value-animation.h \
-		 gl-renderloop.h gl-renderloop-member.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-value-animation-easing.c -o gl-value-animation-easing.o $(OPTFLAGS)
-
-labels/gl-label.o: labels/gl-label.c labels/gl-label.h gl-container-2d.h \
-		gl-container.h gl-shape.h infrastructure/gl-object.h gl-texture.h gl-tile.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	$(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
-	-c labels/gl-label.c -o labels/gl-label.o $(OPTFLAGS)
-
-labels/gl-label-scroller-segment.o: labels/gl-label-scroller-segment.c labels/gl-label-scroller-segment.h \
-                labels/gl-label.h gl-container-2d.h gl-container.h gl-shape.h \
-		infrastructure/gl-object.h gl-texture.h gl-tile.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	$(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
-	-c labels/gl-label-scroller-segment.c -o labels/gl-label-scroller-segment.o $(OPTFLAGS)
-
-labels/gl-label-scroller.o: labels/gl-label-scroller.c labels/gl-label-scroller.h \
-		labels/gl-label.h gl-container-2d.h gl-container.h gl-shape.h \
-		infrastructure/gl-object.h gl-texture.h gl-tile.h \
-		labels/gl-label-scroller-segment.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	$(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
-	-c labels/gl-label-scroller.c -o labels/gl-label-scroller.o $(OPTFLAGS)
-
-labels/gl-label-renderer.o: labels/gl-label-renderer.c labels/gl-label-renderer.h \
-		infrastructure/gl-object.h gl-texture.h gl-tile.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	$(LIBFREETYPE_CFLAGS) $(LIBHARFBUZZ_CFLAGS) \
-	-c labels/gl-label-renderer.c -o labels/gl-label-renderer.o $(OPTFLAGS)
-
-infrastructure/gl-notice-subscription.o: infrastructure/gl-notice-subscription.c infrastructure/gl-notice-subscription.h \
-		infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c infrastructure/gl-notice-subscription.c -o infrastructure/gl-notice-subscription.o $(OPTFLAGS)
-
-infrastructure/gl-notice.o: infrastructure/gl-notice.c infrastructure/gl-notice.h \
-		infrastructure/gl-object.h infrastructure/gl-notice-subscription.h
-	cc -g $(CFLAGS_ALL) \
-	-c infrastructure/gl-notice.c -o infrastructure/gl-notice.o $(OPTFLAGS)
-
-infrastructure/gl-workqueue-job.o: infrastructure/gl-workqueue-job.c infrastructure/gl-workqueue-job.h \
-		infrastructure/gl-object.h infrastructure/gl-notice.h
-	cc -g $(CFLAGS_ALL) \
-	-c infrastructure/gl-workqueue-job.c -o infrastructure/gl-workqueue-job.o $(OPTFLAGS)
-
-infrastructure/gl-workqueue.o: infrastructure/gl-workqueue.c infrastructure/gl-workqueue.h \
-		infrastructure/gl-object.h infrastructure/gl-workqueue-job.h
-	cc -g $(CFLAGS_ALL) \
-	-c infrastructure/gl-workqueue.c -o infrastructure/gl-workqueue.o $(OPTFLAGS) \
-	$(PTHREAD_LIBS)
-
-gl-image.o: gl-image.c gl-image.h \
-		infrastructure/gl-workqueue.h infrastructure/gl-workqueue-job.h gl-stage.h \
-		images/loadimage.h gl-tiled-image.h gl-container-2d.h \
-		gl-container.h infrastructure/gl-object.h \
-		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-image.c -o gl-image.o $(OPTFLAGS)
-
-gl-framed-shape.o: gl-framed-shape.c gl-framed-shape.h \
-		gl-rectangle.h gl-container.h gl-container-2d.h gl-shape.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c gl-framed-shape.c -o gl-framed-shape.o $(OPTFLAGS)
-
-slideshow/gl-slide-image.o: slideshow/gl-slide-image.c slideshow/gl-slide-image.h slideshow/gl-slide.h \
-		gl-container.h gl-container-2d.h gl-shape.h infrastructure/gl-object.h \
-		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c slideshow/gl-slide-image.c -o slideshow/gl-slide-image.o $(OPTFLAGS)
-
-slideshow/gl-slide.o: slideshow/gl-slide.c slideshow/gl-slide.h \
-		gl-container.h gl-container-2d.h gl-shape.h infrastructure/gl-object.h \
-		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c slideshow/gl-slide.c -o slideshow/gl-slide.o $(OPTFLAGS)
-
-slideshow/gl-slideshow.o: slideshow/gl-slideshow.c slideshow/gl-slideshow.h \
-		slideshow/gl-slide.h gl-container-2d.h gl-value-animation.h \
-		infrastructure/gl-notice-subscription.h infrastructure/gl-notice.h \
-		infrastructure/gl-object.h gl-container.h gl-shape.h gl-renderloop.h \
-		gl-renderloop-member.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c slideshow/gl-slideshow.c -o slideshow/gl-slideshow.o $(OPTFLAGS)
-
-slideshow/gl-slideshow-images.o: slideshow/gl-slideshow-images.c slideshow/gl-slideshow-images.h \
-		slideshow/gl-slideshow.h gl-container-2d.h gl-value-animation.h slideshow/gl-slide.h config/gl-configuration.h \
-		gl-container.h gl-shape.h infrastructure/gl-object.h gl-renderloop-member.h infrastructure/gl-notice.h gl-renderloop.h \
-		config/gl-config-section.h config/gl-config-value.h fs/gl-tree-cache-directory.h slideshow/gl-sequence.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c slideshow/gl-slideshow-images.c -o slideshow/gl-slideshow-images.o \
-	$(OPTFLAGS) $(ARC4RANDOM_CFLAGS)
-
-slideshow/gl-sequence.o: slideshow/gl-sequence.c slideshow/gl-sequence.h \
-		infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c slideshow/gl-sequence.c -o slideshow/gl-sequence.o $(OPTFLAGS)
-
-slideshow/gl-sequence-ordered.o: slideshow/gl-sequence-ordered.c slideshow/gl-sequence-ordered.h \
-		slideshow/gl-sequence.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c slideshow/gl-sequence-ordered.c -o slideshow/gl-sequence-ordered.o $(OPTFLAGS)
-
-slideshow/gl-sequence-random.o: slideshow/gl-sequence-random.c slideshow/gl-sequence-random.h \
-		slideshow/gl-sequence.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c slideshow/gl-sequence-random.c -o slideshow/gl-sequence-random.o $(OPTFLAGS) $(ARC4RANDOM_CFLAGS)
-
-slideshow/gl-sequence-selection.o: slideshow/gl-sequence-selection.c slideshow/gl-sequence-selection.h \
-		slideshow/gl-sequence.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c slideshow/gl-sequence-selection.c -o slideshow/gl-sequence-selection.o $(OPTFLAGS) $(ARC4RANDOM_CFLAGS)
-
-images/loadimage.o: images/loadimage.c images/loadimage.h
-	cc -g $(CFLAGS_ALL) $(QDBMP_CFLAGS) \
-	-I/opt/vc/include/ \
-	-c images/loadimage.c -o images/loadimage.o \
-	-Wno-deprecated-declarations $(OPTFLAGS)
-
-images/loadimage-jpg.o: images/loadimage-jpg.c images/loadimage.h images/loadimage-jpg.h images/loadexif.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ \
-	-c images/loadimage-jpg.c -o images/loadimage-jpg.o \
-	-Wno-deprecated-declarations $(OPTFLAGS)
-
-images/loadimage-png.o: images/loadimage-png.c images/loadimage.h images/loadimage-png.h
-	cc -g $(CFLAGS_ALL) $(LIBPNG_CFLAGS)\
-	-I/opt/vc/include/ \
-	-c images/loadimage-png.c -o images/loadimage-png.o \
-	-Wno-deprecated-declarations $(OPTFLAGS)
-
-images/loadimage-bmp.o: images/loadimage-bmp.c images/loadimage.h images/loadimage-bmp.h ../lib/qdbmp/qdbmp.h
-	cc -g $(CFLAGS_ALL) $(QDBMP_CFLAGS) \
-	-I/opt/vc/include/ \
-	-c images/loadimage-bmp.c -o images/loadimage-bmp.o \
-	-Wno-deprecated-declarations $(OPTFLAGS)
-
-images/loadexif.o: images/loadexif.c images/loadexif.h images/loadimage.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ \
-	$(LIBEXIF_INCLUDEDIR) \
-	-c images/loadexif.c -o images/loadexif.o \
-	-Wno-deprecated-declarations $(OPTFLAGS)
-
-images/gl-bitmap-scaler.o: images/gl-bitmap-scaler.c images/gl-bitmap-scaler.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c images/gl-bitmap-scaler.c -o images/gl-bitmap-scaler.o \
-	$(OPTFLAGS)
-
-fs/gl-url.o: fs/gl-url.c fs/gl-url.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c fs/gl-url.c -o fs/gl-url.o \
-	$(OPTFLAGS)
-
-fs/gl-stream.o: fs/gl-stream.c fs/gl-stream.h fs/gl-url.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c fs/gl-stream.c -o fs/gl-stream.o \
-	$(OPTFLAGS)
-
-fs/gl-stream-file.o: fs/gl-stream-file.c fs/gl-stream-file.h fs/gl-stream.h fs/gl-url.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c fs/gl-stream-file.c -o fs/gl-stream-file.o \
-	$(OPTFLAGS)
-
-fs/gl-stream-rewindable.o: fs/gl-stream-rewindable.c fs/gl-stream-rewindable.h fs/gl-stream.h fs/gl-url.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c fs/gl-stream-rewindable.c -o fs/gl-stream-rewindable.o \
-	$(OPTFLAGS)
-
-fs/gl-directory.o: fs/gl-directory.c fs/gl-directory.h fs/gl-stream.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c fs/gl-directory.c -o fs/gl-directory.o \
-	$(OPTFLAGS)
-
-fs/gl-directory-file.o: fs/gl-directory-file.c fs/gl-directory-file.h fs/gl-directory.h fs/gl-stream.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c fs/gl-directory-file.c -o fs/gl-directory-file.o \
-	$(OPTFLAGS)
-
-fs/gl-tree-cache-directory.o: fs/gl-tree-cache-directory.c fs/gl-tree-cache-directory.h fs/gl-directory.h fs/gl-url.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c fs/gl-tree-cache-directory.c -o fs/gl-tree-cache-directory.o \
-	$(OPTFLAGS)
-
-fs/gl-tree-cache-directory-ordered.o: fs/gl-tree-cache-directory-ordered.c fs/gl-tree-cache-directory-ordered.h fs/gl-tree-cache-directory.h fs/gl-directory.h fs/gl-url.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c fs/gl-tree-cache-directory-ordered.c -o fs/gl-tree-cache-directory-ordered.o \
-	$(OPTFLAGS)
-
-fs/gl-source-manager.o: fs/gl-source-manager.c fs/gl-source-manager.h fs/gl-tree-cache-directory-ordered.h fs/gl-tree-cache-directory.h \
-		infrastructure/gl-object.h config/gl-configuration.h config/gl-config-section.h config/gl-config-value.h
-	cc -g $(CFLAGS_ALL) \
-	-c fs/gl-source-manager.c -o fs/gl-source-manager.o \
-	$(OPTFLAGS)
-
-config/gl-configuration.o: config/gl-configuration.c config/gl-configuration.h config/gl-config-section.h config/gl-config-value.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) $(MININI_CFLAGS) \
-	-c config/gl-configuration.c -o config/gl-configuration.o \
-	$(OPTFLAGS)
-
-config/gl-config-section.o: config/gl-config-section.c config/gl-config-section.h config/gl-config-value.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c config/gl-config-section.c -o config/gl-config-section.o \
-	$(OPTFLAGS)
-
-config/gl-config-value.o: config/gl-config-value.c config/gl-config-value.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c config/gl-config-value.c -o config/gl-config-value.o \
-	$(OPTFLAGS)
-
-qrcode/gl-qrcode-data.o: qrcode/gl-qrcode-data.c qrcode/gl-qrcode-data.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-c qrcode/gl-qrcode-data.c -o qrcode/gl-qrcode-data.o \
-	$(QRENCODE_CFLAGS) $(OPTFLAGS)
-
-qrcode/gl-qrcode-image.o: qrcode/gl-qrcode-image.c qrcode/gl-qrcode-image.h qrcode/gl-qrcode-data.h gl-tile.h gl-container-2d.h gl-container.h gl-shape.h gl-bitmap.h gl-texture.h infrastructure/gl-object.h
-	cc -g $(CFLAGS_ALL) \
-	-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	-I/opt/vc/include/interface/vmcs_host/linux \
-	-c qrcode/gl-qrcode-image.c -o qrcode/gl-qrcode-image.o \
-	$(QRENCODE_CFLAGS) $(OPTFLAGS)
-
-
-decodejpeg2rgb: decodejpeg2rgb.o
-	cc -o decodejpeg2rgb -Wl,--whole-archive decodejpeg2rgb.o -L/opt/vc/lib/ \
-	-lGLESv2 -lEGL -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt \
-	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg -lilclient \
-	-L/opt/vc/src/hello_pi/libs/ilclient -lopenmaxil \
-	-Wl,--no-whole-archive -rdynamic $(OPTFLAGS)
-
-decodejpeg2rgb.o: decodejpeg2rgb.c
-	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \
-	 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DTARGET_POSIX \
-	 -D_LINUX -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE \
-	 -D_FILE_OFFSET_BITS=64 -U_FORTIFY_SOURCE -Wall -g \
-	 -DHAVE_LIBOPENMAX=2 -DOMX -DOMX_SKIP64BIT -ftree-vectorize \
-	 -pipe -DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST \
-	 -DUSE_EXTERNAL_LIBBCM_HOST -DUSE_VCHIQ_ARM -Wno-psabi \
-	 -I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads \
-	 -I/opt/vc/include/interface/vmcs_host/linux -I./ \
-	 -I/opt/vc/src/hello_pi/libs/ilclient \
-	 -I/opt/vc/src/hello_pi/libs/vgfont -g -c decodejpeg2rgb.c -o decodejpeg2rgb.o \
-	 -Wno-deprecated-declarations $(OPTFLAGS)
+qrcode/%.o : qrcode/%.c $(DEPDIR)/qrcode/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
 
 clean:
 	rm -f image decodejpeg2rgb decodejpeg2rgb.o $(OBJECTS)
+
+$(DEPDIR)/%.d: ;
+.PRECIOUS: $(DEPDIR)/%.d
+
+include $(wildcard $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS))))

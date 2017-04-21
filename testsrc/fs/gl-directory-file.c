@@ -63,7 +63,7 @@ static gl_stream_error gl_directory_file_open(gl_directory *obj_dir)
 	return gl_stream_error_ok;
 }
 
-static const gl_directory_entry *gl_directory_file_read(gl_directory *obj_dir)
+static const gl_directory_read_entry *gl_directory_file_read(gl_directory *obj_dir)
 {
 	gl_directory_file *obj = (gl_directory_file *)obj_dir;
 	char *filename;

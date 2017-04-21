@@ -15,7 +15,7 @@
 static gl_stream_error gl_directory_set_url(gl_directory *obj, const char *URLstring);
 static void gl_directory_free(gl_object *obj_obj);
 static gl_stream_error gl_directory_open(gl_directory *obj);
-static const gl_directory_entry *gl_directory_read(gl_directory *obj);
+static const gl_directory_read_entry *gl_directory_read(gl_directory *obj);
 static gl_stream_error gl_directory_close(gl_directory *obj);
 static gl_stream_error gl_directory_return_error(gl_directory *obj, gl_stream_error error);
 
@@ -59,7 +59,7 @@ static gl_stream_error gl_directory_open(gl_directory *obj)
 	abort();
 }
 
-static const gl_directory_entry *gl_directory_read(gl_directory *obj)
+static const gl_directory_read_entry *gl_directory_read(gl_directory *obj)
 {
 	printf("%s\n", "gl_directory_read is an abstract function");
 	abort();

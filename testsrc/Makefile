@@ -32,7 +32,8 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  images/loadimage-jpg.o images/loadimage-png.o images/loadimage-bmp.o \
 	  fs/gl-url.o fs/gl-stream.o fs/gl-stream-file.o fs/gl-stream-rewindable.o \
 	  fs/gl-directory.o fs/gl-directory-file.o fs/gl-tree-cache-directory.o fs/gl-tree-cache-directory-ordered.o \
-	  fs/gl-source-manager.o config/gl-configuration.o config/gl-config-section.o config/gl-config-value.o \
+	  fs/gl-tree-cache-directory-reloading.o fs/gl-source-manager.o \
+	  config/gl-configuration.o config/gl-config-section.o config/gl-config-value.o \
 	  qrcode/gl-qrcode-data.o qrcode/gl-qrcode-image.o
 
 SRCS = $(OBJECTS:.o=.c)

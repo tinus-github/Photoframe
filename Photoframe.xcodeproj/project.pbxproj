@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0D0A8F941E4A220A00C9C0F0 /* libpng.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D0A8F931E4A220A00C9C0F0 /* libpng.dylib */; };
+		0D1149EB1EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D1149E91EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c */; };
+		0D1149EC1EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D1149E91EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c */; };
 		0D13C1F41E47E51B00FB9F43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D13C1F31E47E51B00FB9F43 /* Assets.xcassets */; };
 		0D13C1F71E47E51B00FB9F43 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D13C1F51E47E51B00FB9F43 /* MainMenu.xib */; };
 		0D13C1FC1E47E55C00FB9F43 /* loadimage.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2B2FED1C9073AA0063393E /* loadimage.c */; };
@@ -408,6 +410,8 @@
 		0D071E541E13182D00145717 /* gl-renderloop-member.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-renderloop-member.c"; sourceTree = "<group>"; };
 		0D071E551E13182D00145717 /* gl-renderloop-member.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-renderloop-member.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0D0A8F931E4A220A00C9C0F0 /* libpng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng.dylib; path = ../../../../../opt/local/lib/libpng.dylib; sourceTree = "<group>"; };
+		0D1149E91EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-tree-cache-directory-reloading.c"; sourceTree = "<group>"; };
+		0D1149EA1EACEBA4007488A9 /* gl-tree-cache-directory-reloading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-tree-cache-directory-reloading.h"; sourceTree = "<group>"; };
 		0D13C1EB1E47E51B00FB9F43 /* image-cocoa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "image-cocoa.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D13C1ED1E47E51B00FB9F43 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0D13C1EE1E47E51B00FB9F43 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -2515,6 +2519,8 @@
 				0DC36DC41E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.h */,
 				0D96D9641EA57BC700AE022A /* gl-source-manager.c */,
 				0D96D9651EA57BC700AE022A /* gl-source-manager.h */,
+				0D1149E91EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c */,
+				0D1149EA1EACEBA4007488A9 /* gl-tree-cache-directory-reloading.h */,
 			);
 			path = fs;
 			sourceTree = "<group>";
@@ -5224,6 +5230,7 @@
 				0DD9DCAF1E573EAE00CB187D /* gl-stream-file.c in Sources */,
 				0D13C2061E47E55C00FB9F43 /* gl-workqueue-job.c in Sources */,
 				0D13C2071E47E55C00FB9F43 /* gl-label.c in Sources */,
+				0D1149EC1EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c in Sources */,
 				0D13C2081E47E55C00FB9F43 /* gl-label-scroller-segment.c in Sources */,
 				0DE786401E7C31830051D3B5 /* gl-directory-file.c in Sources */,
 				0D13C2091E47E55C00FB9F43 /* gl-label-renderer.c in Sources */,
@@ -5285,6 +5292,7 @@
 				0DAFDA661E477E5C00C5100E /* gl-texture.c in Sources */,
 				0DAFDA671E477E5C00C5100E /* gl-shape.c in Sources */,
 				0D74EEE71E4DFA5C00A4CE92 /* loadimage-bmp.c in Sources */,
+				0D1149EB1EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c in Sources */,
 				0D96D9621EA4FC8500AE022A /* gl-slideshow-images.c in Sources */,
 				0DAFDA681E477E5C00C5100E /* gl-rectangle.c in Sources */,
 				0DAFDA691E477E5C00C5100E /* gl-tile.c in Sources */,

@@ -8,6 +8,7 @@
 
 #include "fs/gl-source-manager.h"
 #include "fs/gl-tree-cache-directory-ordered.h"
+#include "fs/gl-tree-cache-directory-reloading.h"
 #include "config/gl-configuration.h"
 #include <string.h>
 #include <stdlib.h>
@@ -54,10 +55,9 @@ static gl_tree_cache_directory *gl_source_manager_get_source(gl_source_manager *
 		return NULL;
 	}
 	
-	ret = (gl_tree_cache_directory *)gl_tree_cache_directory_ordered_new();
+	ret = (gl_tree_cache_directory *)gl_tree_cache_directory_reloading_new();
 	ret->f->load(ret, url);
-	ret->data._url = strdup(url);
-
+	
 	gl_source_manager_entry *new_entry = calloc(1, sizeof(gl_source_manager_entry));
 	new_entry->name = strdup(name);
 	new_entry->source = ret;

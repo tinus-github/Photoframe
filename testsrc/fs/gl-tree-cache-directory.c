@@ -147,7 +147,7 @@ static char * gl_tree_cache_directory_get_url(gl_tree_cache_directory *obj)
 {
 	char *my_url;
 	
-	if (!obj->data.parent) {
+	if (obj->data._url || (!obj->data.parent)) {
 		return strdup(obj->data._url);
 	}
 	

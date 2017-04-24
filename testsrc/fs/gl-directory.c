@@ -139,9 +139,11 @@ static gl_directory_list_entry *gl_directory_get_list(gl_directory *obj)
 		num_entries++;
 	}
 	
-	if (obj->data.lastError != gl_stream_error_ok) {
+	if (obj->data.lastError != gl_stream_error_end_of_file) {
+		obj->f->close(obj);
 		goto ERROR_EXIT1;
 	}
+	obj->f->close(obj);
 	
 	if (num_entries == SIZE_MAX) { // who knows...
 		obj->data.lastError = gl_stream_error_unspecified_error;
@@ -159,7 +161,7 @@ static gl_directory_list_entry *gl_directory_get_list(gl_directory *obj)
 	}
 
 	entry_index = entries;
-	current_entry = first_entry;
+	current_entry = first_entry->next;
 	while (current_entry) {
 		entry_index->name = current_entry->name;
 		entry_index->type = current_entry->entry_type;

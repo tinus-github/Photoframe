@@ -191,7 +191,7 @@ static void compare_leafs(void *obj, gl_directory_list_entry *dirList)
 		leafCount++;
 	}
 	((gl_tree_cache_directory *)obj)->data.firstLeaf = NULL;
-	((gl_tree_cache_directory *)obj)->f->update_count((gl_tree_cache_directory *)obj, 0, -leafCount);
+	((gl_tree_cache_directory *)obj)->f->update_count((gl_tree_cache_directory *)obj, 0, (int)-leafCount);
 	((gl_tree_cache_directory *)obj)->data._numChildLeafs -= leafCount;
 	
 	
@@ -225,7 +225,7 @@ static void compare_leafs(void *obj, gl_directory_list_entry *dirList)
 		currentEntry++;
 		leafCount++;
 	}
-	((gl_tree_cache_directory *)obj)->f->update_count((gl_tree_cache_directory *)obj, 0, leafCount);
+	((gl_tree_cache_directory *)obj)->f->update_count((gl_tree_cache_directory *)obj, 0, (int)leafCount);
 	((gl_tree_cache_directory *)obj)->data._numChildLeafs += leafCount;
 }
 

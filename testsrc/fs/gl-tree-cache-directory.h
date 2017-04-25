@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include "infrastructure/gl-object.h"
+#include "infrastructure/gl-timer.h"
 
 typedef struct gl_tree_cache_directory_leaf gl_tree_cache_directory_leaf;
 
@@ -32,6 +33,7 @@ typedef struct gl_tree_cache_directory_funcs {
 	unsigned int (*get_num_branches) (gl_tree_cache_directory *obj, int isRecursive);
 	char * (*get_url) (gl_tree_cache_directory *obj);
 	gl_tree_cache_directory *(*new_branch) (gl_tree_cache_directory *obj);
+	void (*_start_reload_timer) (gl_tree_cache_directory *obj);
 	
 	gl_tree_cache_directory *(*get_nth_branch) (gl_tree_cache_directory *obj, unsigned int offset);
 	char *(*get_nth_child_url) (gl_tree_cache_directory *obj, unsigned int offset);
@@ -51,6 +53,7 @@ typedef struct gl_tree_cache_directory_data {
 	unsigned int _numChildLeafs;
 	unsigned int _numChildBranchesRecursive;
 	unsigned int _numChildBranches;
+	
 	char *_url;
 } gl_tree_cache_directory_data;
 

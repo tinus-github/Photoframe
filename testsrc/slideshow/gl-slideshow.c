@@ -8,6 +8,7 @@
 
 #include "gl-slideshow.h"
 #include "infrastructure/gl-notice-subscription.h"
+#include "infrastructure/gl-timer.h"
 #include "gl-renderloop-member.h"
 #include "gl-renderloop.h"
 #include "gl-value-animation-easing.h"
@@ -240,10 +241,13 @@ static void gl_slideshow_engine_notice(void *target, gl_notice_subscription *sub
 
 static void gl_slideshow_engine_get_new_slide(gl_slideshow *obj);
 
-static void gl_slideshow_engine_retry_action(void *obj_obj, gl_renderloop_member *member, void *action_data)
+static void gl_slideshow_engine_retry_action(void *obj_obj, void *action_data)
 {
 	gl_slideshow *obj = (gl_slideshow *)obj_obj;
-	gl_slideshow_engine_get_new_slide(obj);
+	
+	if (!obj->data._incomingSlide) {
+		gl_slideshow_engine_get_new_slide(obj);
+	}
 }
 
 static void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
@@ -253,12 +257,12 @@ static void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
 	gl_slide *newSlide = obj->data.getNextSlideCallback(obj->data.callbackTarget,
 							    obj->data.callbackExtraData);
 	if (!newSlide) {
-		gl_renderloop_member *m = gl_renderloop_member_new();
-		m->data.action = &gl_slideshow_engine_retry_action;
-		m->data.target = obj;
+		gl_timer *retry_timer = gl_timer_new();
+		retry_timer->data.action = &gl_slideshow_engine_retry_action;
+		retry_timer->data.target = obj;
+		retry_timer->f->set_duration(retry_timer, 0);
+		retry_timer->f->start(retry_timer);
 		
-		gl_renderloop *global_renderloop = gl_renderloop_get_global_renderloop();
-		global_renderloop->f->append_child(global_renderloop, gl_renderloop_phase_load, m);
 		return;
 	}
 	
@@ -288,11 +292,12 @@ static void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)
 	newSlide->f->load(newSlide);
 }
 
-static void gl_slideshow_engine_slide_done(void *target, gl_notice_subscription *sub, void *extra_data)
+static void gl_slideshow_engine_slide_done(void *target, void *extra_data)
 {
 	gl_slideshow *obj = (gl_slideshow *)target;
 	
 	obj->data._timerStatus = gl_slideshow_timer_status_done;
+	obj->data._onScreenTimer = NULL;
 	
 	gl_slideshow_engine(obj);
 }
@@ -350,24 +355,17 @@ static void gl_slideshow_engine(gl_slideshow *obj)
 				gl_slideshow_engine_get_new_slide(obj);
 				
 				if (obj->data._onScreenTimer) {
+					obj->data._onScreenTimer->f->stop(obj->data._onScreenTimer);
 					((gl_object *)obj->data._onScreenTimer)->f->unref((gl_object *)obj->data._onScreenTimer);
 					obj->data._onScreenTimer = NULL;
 				}
 				obj->data._timerStatus = gl_slideshow_timer_status_notstarted;
 				
 				if (obj->data.slideDuration) {
-					
-					gl_value_animation *durationTimer = gl_value_animation_new();
-					durationTimer->data.startValue = 0.0;
-					durationTimer->data.endValue = 1.0;
+					gl_timer *durationTimer = gl_timer_new();
 					durationTimer->f->set_duration(durationTimer, obj->data.slideDuration);
-					durationTimer->data.action = &animate_nothing;
-					
-					gl_notice_subscription *sub = gl_notice_subscription_new();
-					sub->data.target = obj;
-					sub->data.action = &gl_slideshow_engine_slide_done;
-					
-					durationTimer->data.animationCompleted->f->subscribe(durationTimer->data.animationCompleted, sub);
+					durationTimer->data.target = obj;
+					durationTimer->data.action = &gl_slideshow_engine_slide_done;
 					
 					obj->data._onScreenTimer = durationTimer;
 					obj->data._timerStatus = gl_slideshow_timer_status_running;
@@ -496,7 +494,7 @@ static void gl_slideshow_free(gl_object *obj_obj)
 	}
 	
 	if (obj->data._onScreenTimer) {
-		obj->data._onScreenTimer->f->pause(obj->data._onScreenTimer);
+		obj->data._onScreenTimer->f->stop(obj->data._onScreenTimer);
 		((gl_object *)obj->data._onScreenTimer)->f->unref((gl_object *)obj->data._onScreenTimer);
 		
 		obj->data._onScreenTimer = NULL;

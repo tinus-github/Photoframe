@@ -37,7 +37,7 @@ static int gl_configuration_load_callback(const mTCHAR *Section, const mTCHAR *K
 	
 	if ((!firstSection) ||
 	    ((!Section) && (firstSection->f->get_title(firstSection))) ||
-	    (strcmp(Section, firstSection->f->get_title(firstSection)))) {
+	    (Section && strcmp(Section, firstSection->f->get_title(firstSection)))) {
 		if (Section) {
 			char *privSectionTitle = strdup(Section);
 			obj->data.first_section = gl_config_section_new_with_title(privSectionTitle);
@@ -94,11 +94,14 @@ static gl_config_section *gl_configuration_get_section(gl_configuration *obj, co
 	gl_config_section *child = obj->data.first_section;
 	
 	while (child) {
-		if ((!title) && !child->f->get_title(child)) {
-			return child;
-		}
-		if (!strcmp(title, child->f->get_title(child))) {
-			return child;
+		if (!title) {
+			if (!child->f->get_title(child)) {
+				return child;
+			}
+		} else {
+			if (!strcmp(title, child->f->get_title(child))) {
+				return child;
+			}
 		}
 		child = child->data.next_sibling;
 	}

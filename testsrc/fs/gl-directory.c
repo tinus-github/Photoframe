@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <stdint.h>
 
 static gl_stream_error gl_directory_set_url(gl_directory *obj, const char *URLstring);
 static void gl_directory_free(gl_object *obj_obj);

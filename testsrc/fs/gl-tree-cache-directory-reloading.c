@@ -26,13 +26,22 @@ static int gl_tree_cache_directory_reloading_trigger_reload(gl_tree_cache_direct
 static void gl_tree_cache_directory_reloading_set_loadstate(gl_tree_cache_directory_reloading *obj, gl_tree_cache_directory_reloading_loadstate loadstate);
 static gl_tree_cache_directory *gl_tree_cache_directory_reloading_new_branch(gl_tree_cache_directory *obj);
 static void gl_tree_cache_directory_reloading_load(gl_tree_cache_directory *obj_d, const char *url);
+static void gl_tree_cache_directory_reloading_start_reload_timer(gl_tree_cache_directory_reloading *obj);
+static void gl_tree_cache_directory_reloading_set_rescan_interval(gl_tree_cache_directory_reloading *obj, float interval);
 
 static struct gl_tree_cache_directory_reloading_funcs gl_tree_cache_directory_reloading_funcs_global = {
 	.trigger_reload = &gl_tree_cache_directory_reloading_trigger_reload,
 	.set_loadstate = &gl_tree_cache_directory_reloading_set_loadstate,
+	.set_rescan_interval = &gl_tree_cache_directory_reloading_set_rescan_interval,
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
+static void (*gl_object_ref_org_global) (gl_object *obj);
+
+static void gl_tree_cache_directory_reloading_ref(gl_object *obj_obj)
+{
+	gl_object_ref_org_global(obj_obj);
+}
 
 void gl_tree_cache_directory_reloading_setup()
 {
@@ -46,6 +55,9 @@ void gl_tree_cache_directory_reloading_setup()
 	gl_object_funcs *obj_funcs_global = (gl_object_funcs *) &gl_tree_cache_directory_reloading_funcs_global;
 	gl_object_free_org_global = obj_funcs_global->free;
 	obj_funcs_global->free = &gl_tree_cache_directory_reloading_free;
+	
+	gl_object_ref_org_global = obj_funcs_global->ref;
+	obj_funcs_global->ref = &gl_tree_cache_directory_reloading_ref;
 	
 	loading_workqueue = gl_workqueue_new();
 	loading_workqueue->f->start(loading_workqueue);
@@ -67,16 +79,20 @@ struct reload_result_data {
 	gl_directory *dirObj;
 };
 
-static gl_tree_cache_directory *gl_tree_cache_directory_reloading_new_branch(gl_tree_cache_directory *obj)
+static gl_tree_cache_directory *gl_tree_cache_directory_reloading_new_branch(gl_tree_cache_directory *obj_obj)
 {
-	return (gl_tree_cache_directory *)gl_tree_cache_directory_reloading_new();
+	gl_tree_cache_directory *ret = (gl_tree_cache_directory *)gl_tree_cache_directory_reloading_new();
+	ret->data.level = obj_obj->data.level + 1;
+	return ret;
 }
 
 static void gl_tree_cache_directory_reloading_load(gl_tree_cache_directory *obj_d, const char *url)
 {
 	gl_tree_cache_directory_reloading *obj = (gl_tree_cache_directory_reloading *)obj_d;
 	
-	obj_d->data._url = strdup(url);
+	if (!obj_d->data._url) {
+		obj_d->data._url = strdup(url);
+	}
 	obj->f->trigger_reload(obj);
 }
 
@@ -100,9 +116,7 @@ static int gl_tree_cache_directory_reloading_trigger_reload(gl_tree_cache_direct
 	gl_workqueue_job *job = gl_workqueue_job_new();
 	job->data.target = obj;
 	job->data.action = &gl_tree_cache_directory_reloading_reload_work;
-	
-	((gl_object *)obj)->f->ref((gl_object *)obj);
-	
+		
 	gl_notice_subscription *sub = gl_notice_subscription_new();
 	sub->data.target = obj;
 	sub->data.action = gl_tree_cache_directory_reloading_reload_done;
@@ -128,6 +142,10 @@ static void *gl_tree_cache_directory_reloading_reload_work(void *target, void *e
 	}
 	
 	gl_directory_list_entry *dirList = dirObj->f->get_list(dirObj);
+	
+	if (!dirList) {
+		return NULL;
+	}
 	
 	struct reload_result_data *result = calloc(1, sizeof(struct reload_result_data));
 	if (!result) {
@@ -191,7 +209,7 @@ static void compare_leafs(void *obj, gl_directory_list_entry *dirList)
 		leafCount++;
 	}
 	((gl_tree_cache_directory *)obj)->data.firstLeaf = NULL;
-	((gl_tree_cache_directory *)obj)->f->update_count((gl_tree_cache_directory *)obj, 0, -leafCount);
+	((gl_tree_cache_directory *)obj)->f->update_count((gl_tree_cache_directory *)obj, 0, (int)-leafCount);
 	((gl_tree_cache_directory *)obj)->data._numChildLeafs -= leafCount;
 	
 	
@@ -225,7 +243,7 @@ static void compare_leafs(void *obj, gl_directory_list_entry *dirList)
 		currentEntry++;
 		leafCount++;
 	}
-	((gl_tree_cache_directory *)obj)->f->update_count((gl_tree_cache_directory *)obj, 0, leafCount);
+	((gl_tree_cache_directory *)obj)->f->update_count((gl_tree_cache_directory *)obj, 0, (int)leafCount);
 	((gl_tree_cache_directory *)obj)->data._numChildLeafs += leafCount;
 }
 
@@ -242,6 +260,31 @@ static int is_ignored_dirname(const char* name)
 	if (!strcmp(name, ".")) return 1;
 	if (!strcmp(name, "..")) return 1;
 	return 0;
+}
+
+static void prune_branch(gl_tree_cache_directory_reloading *obj, gl_tree_cache_directory *branch, gl_tree_cache_directory *lastBranch)
+{
+	gl_tree_cache_directory *obj_d = (gl_tree_cache_directory *)obj;
+	if (!branch->data._url) {
+		branch->data._url = branch->f->get_url(branch);
+	}
+	branch->data.parent = NULL;
+	
+	if (!lastBranch) {
+		obj_d->data.firstBranch = branch->data.nextSibling;
+	} else {
+		lastBranch->data.nextSibling = branch->data.nextSibling;
+	}
+	
+	obj_d->f->update_count(obj_d,
+			       0, // leafs
+			       -branch->data._numChildLeafsRecursive);
+	obj_d->f->update_count(obj_d,
+			       1, // branches
+			       -branch->data._numChildBranchesRecursive);
+	
+	obj_d->f->update_count(obj_d, 1, -1);
+	obj_d->data._numChildBranches--;
 }
 
 static void gl_tree_cache_directory_reloading_reload_done(void *target, gl_notice_subscription *sub, void *extra_data)
@@ -304,23 +347,13 @@ static void gl_tree_cache_directory_reloading_reload_done(void *target, gl_notic
 					currentBranchR = NULL;
 					break;
 				}
-				if (compare_result > 0) {
+				if (compare_result < 0) {
 					// prune currentBranch
-					if (!currentBranch->data._url) {
-						currentBranch->data._url = currentBranch->f->get_url(currentBranch);
-					}
-					currentBranch->data.parent = NULL;
-					if (!lastBranch) {
-						((gl_tree_cache_directory *)obj)->data.firstBranch = currentBranch->data.nextSibling;
-					} else {
-						lastBranch->data.nextSibling = currentBranch->data.nextSibling;
-					}
+					prune_branch(obj, currentBranch, lastBranch);
+					
 					gl_tree_cache_directory *nextBranch = currentBranch->data.nextSibling;
 					((gl_object *)currentBranch)->f->unref((gl_object *)currentBranch);
 					currentBranch = nextBranch;
-					
-					((gl_tree_cache_directory *)obj)->f->update_count((gl_tree_cache_directory *)obj, 1, -1);
-					((gl_tree_cache_directory *)obj)->data._numChildBranches--;
 					
 					continue;
 				}
@@ -350,6 +383,13 @@ static void gl_tree_cache_directory_reloading_reload_done(void *target, gl_notic
 			((gl_tree_cache_directory *)obj)->data._numChildBranches++;
 			break;
 		} while (1);
+	}
+	while (currentBranch) {
+		prune_branch(obj, currentBranch, lastBranch);
+		
+		gl_tree_cache_directory *nextBranch = currentBranch->data.nextSibling;
+		((gl_object *)currentBranch)->f->unref((gl_object *)currentBranch);
+		currentBranch = nextBranch;
 	}
 	
 	// Now reload the branches
@@ -395,14 +435,57 @@ static void load_branch_completed(void *target, gl_notice_subscription *subscrip
 	if (!obj->data.branchesToReload) {
 		obj->f->set_loadstate(obj, gl_tree_cache_directory_reloading_loadstate_loaded);
 	}
+	((gl_object *)obj)->f->unref((gl_object *)obj);
 }
 
 static void gl_tree_cache_directory_reloading_set_loadstate(gl_tree_cache_directory_reloading *obj, gl_tree_cache_directory_reloading_loadstate loadstate)
 {
 	obj->data._loadstate = loadstate;
 	if (loadstate == gl_tree_cache_directory_reloading_loadstate_loaded) {
+		gl_tree_cache_directory_reloading_start_reload_timer(obj);
 		obj->data.loadedNotice->f->fire(obj->data.loadedNotice);
 	}
+}
+
+static void gl_tree_cache_directory_reloading_set_rescan_interval(gl_tree_cache_directory_reloading *obj, float interval)
+{
+	obj->data._rescanInterval = interval;
+	if (interval) {
+		if (obj->data._rescanTimer) {
+			obj->data._rescanTimer->f->set_duration(obj->data._rescanTimer, interval);
+		}
+	} else {
+		if (obj->data._rescanTimer) {
+			obj->data._rescanTimer->f->stop(obj->data._rescanTimer);
+			((gl_object *)obj->data._rescanTimer)->f->unref((gl_object *)obj->data._rescanTimer);
+			obj->data._rescanTimer = NULL;
+		}
+	}
+}
+
+static void gl_tree_cache_directory_reloading_reload_timer_trigger(void *target, void *extra_data)
+{
+	gl_tree_cache_directory_reloading *obj = (gl_tree_cache_directory_reloading *)target;
+	obj->data._rescanTimer = NULL;
+	char *url = ((gl_tree_cache_directory *)obj)->f->get_url((gl_tree_cache_directory *)obj);
+	((gl_tree_cache_directory *)obj)->f->load((gl_tree_cache_directory *)obj, url);
+	free (url);
+}
+
+static void gl_tree_cache_directory_reloading_start_reload_timer(gl_tree_cache_directory_reloading *obj)
+{
+	if (!obj->data._rescanInterval) {
+		return;
+	}
+	if (!obj->data._rescanTimer) {
+		obj->data._rescanTimer = gl_timer_new();
+		obj->data._rescanTimer->data.target = obj;
+		obj->data._rescanTimer->data.action = &gl_tree_cache_directory_reloading_reload_timer_trigger;
+	} else {
+		obj->data._rescanTimer->f->stop(obj->data._rescanTimer);
+	}
+	obj->data._rescanTimer->f->set_duration(obj->data._rescanTimer, obj->data._rescanInterval);
+	obj->data._rescanTimer->f->start(obj->data._rescanTimer);
 }
 
 
@@ -430,6 +513,12 @@ static void gl_tree_cache_directory_reloading_free(gl_object *obj_obj)
 	
 	((gl_object *)obj->data.loadedNotice)->f->unref((gl_object *)obj->data.loadedNotice);
 	obj->data.loadedNotice = NULL;
+	
+	if (obj->data._rescanTimer) {
+		obj->data._rescanTimer->f->stop(obj->data._rescanTimer);
+		((gl_object *)obj->data._rescanTimer)->f->unref((gl_object *)obj->data._rescanTimer);
+		obj->data._rescanTimer = NULL;
+	}
 	
 	gl_object_free_org_global(obj_obj);
 }

@@ -244,7 +244,10 @@ static void gl_slideshow_engine_get_new_slide(gl_slideshow *obj);
 static void gl_slideshow_engine_retry_action(void *obj_obj, void *action_data)
 {
 	gl_slideshow *obj = (gl_slideshow *)obj_obj;
-	gl_slideshow_engine_get_new_slide(obj);
+	
+	if (!obj->data._incomingSlide) {
+		gl_slideshow_engine_get_new_slide(obj);
+	}
 }
 
 static void gl_slideshow_engine_get_new_slide(gl_slideshow *obj)

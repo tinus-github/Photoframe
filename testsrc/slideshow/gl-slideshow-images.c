@@ -115,7 +115,7 @@ static gl_tree_cache_directory *gl_slideshow_images_resolve_source(gl_slideshow_
 			return obj->data._source_dir;
 		case gl_slideshow_images_selection_type_onedir:
 			branchCount = obj->data._source_dir->f->get_num_branches(obj->data._source_dir, 1);
-			branchIndex = arc4random_uniform((uint32_t)branchCount);
+			branchIndex = arc4random_uniform((uint32_t)branchCount + 1);
 			
 			return obj->data._source_dir->f->get_nth_branch(obj->data._source_dir, (unsigned int)branchIndex);
 	}

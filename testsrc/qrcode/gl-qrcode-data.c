@@ -112,7 +112,7 @@ static int gl_qrcode_render(gl_qrcode_data *obj)
 	result->width += 2*QRCODE_FRAME_SIZE;
 	
 	obj->data._width = result->width;
-	obj->data._output = calloc(sizeof(char), result->width * result->width);
+	obj->data._output = calloc(sizeof(unsigned char), result->width * result->width);
 	if (!obj->data._output) {
 		return -1;
 	}

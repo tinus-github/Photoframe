@@ -203,10 +203,13 @@ unsigned char *loadJPEG (gl_stream *stream,
 	gl_bitmap_scaler *scaler = NULL;
 	
 	cinfo.err = jpeg_std_error(&jerr.org);
+	cinfo.src = NULL;
 	jerr.org.error_exit = handle_decode_error;
 	if (setjmp(jerr.setjmp_buffer)) {
 		/* Something went wrong, abort! */
-		cinfo.src->term_source(&cinfo);
+		if (cinfo.src) {
+			cinfo.src->term_source(&cinfo);
+		}
 		
 		jpeg_destroy_decompress(&cinfo);
 		

@@ -66,7 +66,7 @@ int gl_qrcode_image_set_string(gl_qrcode_image *obj, const char* string)
 	unsigned int width = qr_data->f->get_width(qr_data);
 	new_bitmap->data.width = width;
 	new_bitmap->data.height = width;
-	new_bitmap->data.bitmap = calloc (sizeof(char), width * width * 4);
+	new_bitmap->data.bitmap = calloc (width * width * 4, sizeof(unsigned char));
 	
 	if (!new_bitmap->data.bitmap) {
 		goto EXIT_3;

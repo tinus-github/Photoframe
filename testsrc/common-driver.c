@@ -28,6 +28,8 @@
 #include "infrastructure/gl-notice-subscription.h"
 #include "infrastructure/gl-workqueue.h"
 #include "infrastructure/gl-workqueue-job.h"
+#include "infrastructure/gl-timer-queue.h"
+#include "infrastructure/gl-timer.h"
 #include "gl-image.h"
 #include "gl-framed-shape.h"
 #include "slideshow/gl-slide.h"
@@ -76,6 +78,8 @@ void gl_objects_setup()
 	gl_notice_subscription_setup();
 	gl_value_animation_setup();
 	gl_value_animation_easing_setup();
+	gl_timer_queue_setup();
+	gl_timer_setup();
 	gl_label_setup();
 	gl_label_scroller_segment_setup();
 	gl_label_scroller_setup();

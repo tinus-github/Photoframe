@@ -25,6 +25,7 @@ OBJECTS = image.o infrastructure/gl-object.o gl-texture.o gl-shape.o gl-tile.o g
 	  labels/gl-label-scroller.o gl-rectangle.o gl-bitmap.o \
 	  infrastructure/gl-notice.o infrastructure/gl-notice-subscription.o \
 	  infrastructure/gl-workqueue.o infrastructure/gl-workqueue-job.o \
+	  infrastructure/gl-timer.o infrastructure/gl-timer-queue.o \
 	  gl-image.o gl-framed-shape.o slideshow/gl-slide.o slideshow/gl-slide-image.o \
 	  slideshow/gl-slideshow.o slideshow/gl-slideshow-images.o slideshow/gl-sequence.o slideshow/gl-sequence-ordered.o \
 	  slideshow/gl-sequence-random.o slideshow/gl-sequence-selection.o common-driver.o \

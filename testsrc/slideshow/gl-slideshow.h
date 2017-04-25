@@ -14,6 +14,7 @@
 #include "gl-value-animation.h"
 #include "slideshow/gl-slide.h"
 #include "config/gl-configuration.h"
+#include "infrastructure/gl-timer.h"
 
 typedef enum {
 	gl_slideshow_timer_status_notstarted = 0,
@@ -40,7 +41,7 @@ typedef struct gl_slideshow_data {
 	
 	gl_value_animation *_slideEntranceAnimation;
 	gl_value_animation *_slideExitAnimation;
-	gl_value_animation *_onScreenTimer;
+	gl_timer *_onScreenTimer;
 	
 	gl_slideshow_timer_status _timerStatus;
 	

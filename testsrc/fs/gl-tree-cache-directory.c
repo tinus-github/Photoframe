@@ -161,9 +161,12 @@ static char * gl_tree_cache_directory_get_url(gl_tree_cache_directory *obj)
 	return my_url;
 }
 
+// Note: level needs to be this ones + 1
 static gl_tree_cache_directory *gl_tree_cache_directory_new_branch(gl_tree_cache_directory *obj)
 {
-	return gl_tree_cache_directory_new();
+	gl_tree_cache_directory *ret = gl_tree_cache_directory_new();
+	ret->data.level = obj->data.level + 1;
+	return ret;
 }
 
 static void gl_tree_cache_directory_prepend_branch(gl_tree_cache_directory *obj, gl_tree_cache_directory *branch)
@@ -254,7 +257,6 @@ static void gl_tree_cache_directory_load(gl_tree_cache_directory *obj, const cha
 					}
 					
 					branch = obj->f->new_branch(obj);
-					branch->data.level = obj->data.level + 1;
 					branch->data.name = strdup(entry->name);
 					branch->f->load(branch, nameCopy);
 					free (nameCopy); nameCopy = NULL;

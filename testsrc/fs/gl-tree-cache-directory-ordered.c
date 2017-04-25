@@ -35,7 +35,10 @@ void gl_tree_cache_directory_ordered_setup()
 
 static gl_tree_cache_directory *gl_tree_cache_directory_ordered_new_branch(gl_tree_cache_directory *obj_obj)
 {
-	return (gl_tree_cache_directory *)gl_tree_cache_directory_ordered_new();
+	gl_tree_cache_directory *ret = (gl_tree_cache_directory *)gl_tree_cache_directory_ordered_new();
+	ret->data.level = obj_obj->data.level + 1;
+	
+	return ret;
 }
 
 static int leaf_compare(const void *left_leaf_obj, const void *right_leaf_obj)

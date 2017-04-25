@@ -67,9 +67,11 @@ struct reload_result_data {
 	gl_directory *dirObj;
 };
 
-static gl_tree_cache_directory *gl_tree_cache_directory_reloading_new_branch(gl_tree_cache_directory *obj)
+static gl_tree_cache_directory *gl_tree_cache_directory_reloading_new_branch(gl_tree_cache_directory *obj_obj)
 {
-	return (gl_tree_cache_directory *)gl_tree_cache_directory_reloading_new();
+	gl_tree_cache_directory *ret = (gl_tree_cache_directory *)gl_tree_cache_directory_reloading_new();
+	ret->data.level = obj_obj->data.level + 1;
+	return ret;
 }
 
 static void gl_tree_cache_directory_reloading_load(gl_tree_cache_directory *obj_d, const char *url)

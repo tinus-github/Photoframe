@@ -2529,10 +2529,10 @@
 				0DE786421E8081F30051D3B5 /* gl-tree-cache-directory.h */,
 				0DC36DC31E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.c */,
 				0DC36DC41E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.h */,
-				0D96D9641EA57BC700AE022A /* gl-source-manager.c */,
-				0D96D9651EA57BC700AE022A /* gl-source-manager.h */,
 				0D1149E91EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c */,
 				0D1149EA1EACEBA4007488A9 /* gl-tree-cache-directory-reloading.h */,
+				0D96D9641EA57BC700AE022A /* gl-source-manager.c */,
+				0D96D9651EA57BC700AE022A /* gl-source-manager.h */,
 			);
 			path = fs;
 			sourceTree = "<group>";

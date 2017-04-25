@@ -28,6 +28,7 @@ typedef struct gl_tree_cache_directory_reloading_funcs {
 	gl_tree_cache_directory_ordered_funcs p;
 	int (*trigger_reload) (gl_tree_cache_directory_reloading *obj);
 	void (*set_loadstate) (gl_tree_cache_directory_reloading *obj, gl_tree_cache_directory_reloading_loadstate state);
+	void (*set_rescan_interval) (gl_tree_cache_directory_reloading *obj, float interval);
 } gl_tree_cache_directory_reloading_funcs;
 
 typedef struct gl_tree_cache_directory_reloading_data {
@@ -36,6 +37,10 @@ typedef struct gl_tree_cache_directory_reloading_data {
 	gl_tree_cache_directory_reloading_loadstate _loadstate;
 	size_t branchesToReload;
 	gl_notice *loadedNotice;
+	
+	
+	float _rescanInterval;
+	gl_timer *_rescanTimer;
 } gl_tree_cache_directory_reloading_data;
 
 struct gl_tree_cache_directory_reloading {

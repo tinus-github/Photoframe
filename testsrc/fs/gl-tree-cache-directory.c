@@ -147,7 +147,7 @@ static char * gl_tree_cache_directory_get_url(gl_tree_cache_directory *obj)
 {
 	char *my_url;
 	
-	if (obj->data._url || (!obj->data.parent)) {
+	if (obj->data._url) {
 		return strdup(obj->data._url);
 	}
 	
@@ -346,6 +346,16 @@ static void gl_tree_cache_directory_free(gl_object *obj_obj)
 		leaf = next_leaf;
 	}
 	obj->data.firstLeaf = NULL;
+	
+	if (obj->data._url) {
+		free (obj->data._url);
+		obj->data._url = NULL;
+	}
+	
+	if (obj->data.name) {
+		free (obj->data.name);
+		obj->data.name = NULL;
+	}
 	
 	return gl_object_free_org_global(obj_obj);
 }

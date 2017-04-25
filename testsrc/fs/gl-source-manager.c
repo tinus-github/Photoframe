@@ -55,7 +55,17 @@ static gl_tree_cache_directory *gl_source_manager_get_source(gl_source_manager *
 		return NULL;
 	}
 	
-	ret = (gl_tree_cache_directory *)gl_tree_cache_directory_reloading_new();
+	value = section->f->get_value(section, "rescanInterval");
+	int32_t rescanInterval = 0;
+	if (value) {
+		rescanInterval = value->f->get_value_int(value);
+	}
+	
+	gl_tree_cache_directory_reloading *ret_r = gl_tree_cache_directory_reloading_new();
+	ret = (gl_tree_cache_directory *)ret_r;
+	if (rescanInterval) {
+		ret_r->f->set_rescan_interval(ret_r, rescanInterval);
+	}
 	ret->f->load(ret, url);
 	
 	gl_source_manager_entry *new_entry = calloc(1, sizeof(gl_source_manager_entry));

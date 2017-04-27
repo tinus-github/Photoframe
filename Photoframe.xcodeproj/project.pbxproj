@@ -150,7 +150,6 @@
 		0DE7864F1E8AC4920051D3B5 /* gl-sequence.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE7864C1E8AC4920051D3B5 /* gl-sequence.c */; };
 		0DE786521E8ACF4B0051D3B5 /* gl-sequence-ordered.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786501E8ACF4B0051D3B5 /* gl-sequence-ordered.c */; };
 		0DE786531E8ACF4B0051D3B5 /* gl-sequence-ordered.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786501E8ACF4B0051D3B5 /* gl-sequence-ordered.c */; };
-		0DFCBA651EB2ABA2001FE5EE /* libharfbuzz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA641EB2ABA2001FE5EE /* libharfbuzz.dylib */; };
 		0DFCBA661EB2ABC7001FE5EE /* libjpeg.62.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA5E1EB29EA9001FE5EE /* libjpeg.62.dylib */; };
 		0DFCBA681EB2ABEA001FE5EE /* libfreetype.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA671EB2ABEA001FE5EE /* libfreetype.dylib */; };
 		0DFCBA6A1EB2AC0F001FE5EE /* libpng16.16.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA691EB2AC0F001FE5EE /* libpng16.16.dylib */; };
@@ -1739,7 +1738,6 @@
 		0DFCBA5E1EB29EA9001FE5EE /* libjpeg.62.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libjpeg.62.dylib; path = ../../jpeglib/install/lib/libjpeg.62.dylib; sourceTree = "<group>"; };
 		0DFCBA601EB2A940001FE5EE /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = ../../freetype/install/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
 		0DFCBA621EB2AAC9001FE5EE /* libpng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng.dylib; path = ../../png/install/lib/libpng.dylib; sourceTree = "<group>"; };
-		0DFCBA641EB2ABA2001FE5EE /* libharfbuzz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libharfbuzz.dylib; path = lib/harfbuzz/install/lib/libharfbuzz.dylib; sourceTree = "<group>"; };
 		0DFCBA671EB2ABEA001FE5EE /* libfreetype.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.dylib; path = ../../freetype/install/lib/libfreetype.dylib; sourceTree = "<group>"; };
 		0DFCBA691EB2AC0F001FE5EE /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng16.16.dylib; path = ../../png/install/lib/libpng16.16.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1755,7 +1753,6 @@
 				0D74EEDC1E4DF09600A4CE92 /* libqdbmp.dylib in Frameworks */,
 				0D13C2201E47E6E300FB9F43 /* OpenGL.framework in Frameworks */,
 				0D13C2211E47E6FA00FB9F43 /* libexif.a in Frameworks */,
-				0DFCBA651EB2ABA2001FE5EE /* libharfbuzz.dylib in Frameworks */,
 				0DFCBA661EB2ABC7001FE5EE /* libjpeg.62.dylib in Frameworks */,
 				0DFCBA681EB2ABEA001FE5EE /* libfreetype.dylib in Frameworks */,
 				0DFCBA6A1EB2AC0F001FE5EE /* libpng16.16.dylib in Frameworks */,
@@ -2391,7 +2388,6 @@
 			children = (
 				0DFCBA691EB2AC0F001FE5EE /* libpng16.16.dylib */,
 				0DFCBA671EB2ABEA001FE5EE /* libfreetype.dylib */,
-				0DFCBA641EB2ABA2001FE5EE /* libharfbuzz.dylib */,
 				0DFCBA621EB2AAC9001FE5EE /* libpng.dylib */,
 				0DFCBA601EB2A940001FE5EE /* libfreetype.6.dylib */,
 				0DFCBA5E1EB29EA9001FE5EE /* libjpeg.62.dylib */,

@@ -153,6 +153,7 @@
 		0DFCBA661EB2ABC7001FE5EE /* libjpeg.62.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA5E1EB29EA9001FE5EE /* libjpeg.62.dylib */; };
 		0DFCBA681EB2ABEA001FE5EE /* libfreetype.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA671EB2ABEA001FE5EE /* libfreetype.dylib */; };
 		0DFCBA6A1EB2AC0F001FE5EE /* libpng16.16.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA691EB2AC0F001FE5EE /* libpng16.16.dylib */; };
+		0DFCBA6D1EB2B34B001FE5EE /* libharfbuzz.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA6C1EB2B34B001FE5EE /* libharfbuzz.0.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1740,6 +1741,7 @@
 		0DFCBA621EB2AAC9001FE5EE /* libpng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng.dylib; path = ../../png/install/lib/libpng.dylib; sourceTree = "<group>"; };
 		0DFCBA671EB2ABEA001FE5EE /* libfreetype.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.dylib; path = ../../freetype/install/lib/libfreetype.dylib; sourceTree = "<group>"; };
 		0DFCBA691EB2AC0F001FE5EE /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng16.16.dylib; path = ../../png/install/lib/libpng16.16.dylib; sourceTree = "<group>"; };
+		0DFCBA6C1EB2B34B001FE5EE /* libharfbuzz.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libharfbuzz.0.dylib; path = lib/harfbuzz/install/lib/libharfbuzz.0.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1756,6 +1758,7 @@
 				0DFCBA661EB2ABC7001FE5EE /* libjpeg.62.dylib in Frameworks */,
 				0DFCBA681EB2ABEA001FE5EE /* libfreetype.dylib in Frameworks */,
 				0DFCBA6A1EB2AC0F001FE5EE /* libpng16.16.dylib in Frameworks */,
+				0DFCBA6D1EB2B34B001FE5EE /* libharfbuzz.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2386,6 +2389,7 @@
 		0DAFDA521E477D6100C5100E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0DFCBA6C1EB2B34B001FE5EE /* libharfbuzz.0.dylib */,
 				0DFCBA691EB2AC0F001FE5EE /* libpng16.16.dylib */,
 				0DFCBA671EB2ABEA001FE5EE /* libfreetype.dylib */,
 				0DFCBA621EB2AAC9001FE5EE /* libpng.dylib */,

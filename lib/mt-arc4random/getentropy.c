@@ -17,7 +17,7 @@
 int arc4random_getentropy(void *buf, size_t count)
 {
 	char *bufc = (char *)buf;
-	FILE *fd = fopen("/dev/urandom", "r");
+	FILE *fd = fopen("/dev/urandom", "re");
 	if (!fd) {
 		printf ("Can't open random device\n");
 		exit(1);

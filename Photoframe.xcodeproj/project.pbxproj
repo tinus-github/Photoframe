@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0D0A8F941E4A220A00C9C0F0 /* libpng.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D0A8F931E4A220A00C9C0F0 /* libpng.dylib */; };
 		0D1149EB1EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D1149E91EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c */; };
 		0D1149EC1EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D1149E91EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c */; };
 		0D13C1F41E47E51B00FB9F43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D13C1F31E47E51B00FB9F43 /* Assets.xcassets */; };
@@ -44,9 +43,6 @@
 		0D13C2191E47E55C00FB9F43 /* gl-image.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9FD15A1E2D756300B82200 /* gl-image.c */; };
 		0D13C21A1E47E55C00FB9F43 /* gl-framed-shape.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9FD15C1E2D995000B82200 /* gl-framed-shape.c */; };
 		0D13C21B1E47E55C00FB9F43 /* common-driver.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D893B7C1E47A9E6000DD5BF /* common-driver.c */; };
-		0D13C21C1E47E6AD00FB9F43 /* libjpeg.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7377141E47941A00FA9EC7 /* libjpeg.8.dylib */; };
-		0D13C21D1E47E6C000FB9F43 /* libharfbuzz.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D73770F1E478E1100FA9EC7 /* libharfbuzz.0.dylib */; };
-		0D13C21E1E47E6D300FB9F43 /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA781E47857100C5100E /* libfreetype.6.dylib */; };
 		0D13C2201E47E6E300FB9F43 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D13C21F1E47E6E300FB9F43 /* OpenGL.framework */; };
 		0D13C2211E47E6FA00FB9F43 /* libexif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA531E477D6100C5100E /* libexif.a */; };
 		0D13C2221E47E75D00FB9F43 /* GLWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D893B781E47A14E000DD5BF /* GLWindowController.m */; };
@@ -56,8 +52,6 @@
 		0D382BDB1EA17C1B00506704 /* Todo.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 0D382BDA1EA17C1B00506704 /* Todo.rtf */; };
 		0D3B098B1E5E20F700C4E97E /* gl-stream-rewindable.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */; };
 		0D3B098C1E5E20F700C4E97E /* gl-stream-rewindable.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */; };
-		0D7377101E478E1100FA9EC7 /* libharfbuzz.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D73770F1E478E1100FA9EC7 /* libharfbuzz.0.dylib */; };
-		0D7377151E47941A00FA9EC7 /* libjpeg.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7377141E47941A00FA9EC7 /* libjpeg.8.dylib */; };
 		0D74EEDC1E4DF09600A4CE92 /* libqdbmp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D18060F1E4D2C5500449219 /* libqdbmp.dylib */; };
 		0D74EEDF1E4DF15C00A4CE92 /* loadimage-jpg.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */; };
 		0D74EEE01E4DF17B00A4CE92 /* loadimage-jpg.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */; };
@@ -108,7 +102,6 @@
 		0DAFDA731E477E5C00C5100E /* gl-image.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9FD15A1E2D756300B82200 /* gl-image.c */; };
 		0DAFDA741E477E5C00C5100E /* gl-framed-shape.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9FD15C1E2D995000B82200 /* gl-framed-shape.c */; };
 		0DAFDA761E47811300C5100E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA751E47811300C5100E /* OpenGL.framework */; };
-		0DAFDA791E47857100C5100E /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA781E47857100C5100E /* libfreetype.6.dylib */; };
 		0DC0F05F1EAE95E00029FB1E /* gl-timer.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DC0F05D1EAE95E00029FB1E /* gl-timer.c */; };
 		0DC0F0601EAE95E00029FB1E /* gl-timer.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DC0F05D1EAE95E00029FB1E /* gl-timer.c */; };
 		0DC0F0631EAEB0B50029FB1E /* gl-timer-queue.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DC0F0611EAEB0B50029FB1E /* gl-timer-queue.c */; };
@@ -147,7 +140,6 @@
 		0DE783AC1E775B300051D3B5 /* libharfbuzz.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE77EF91E775B2E0051D3B5 /* libharfbuzz.0.dylib */; };
 		0DE783AD1E775B300051D3B5 /* libharfbuzz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE77EFA1E775B2E0051D3B5 /* libharfbuzz.dylib */; };
 		0DE784151E775B300051D3B5 /* libhb-ucdn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE77FB11E775B2E0051D3B5 /* libhb-ucdn.a */; };
-		0DE786351E775C190051D3B5 /* libharfbuzz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE77DB61E775B2D0051D3B5 /* libharfbuzz.dylib */; };
 		0DE7863B1E79E6AF0051D3B5 /* gl-directory.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786391E79E6AF0051D3B5 /* gl-directory.c */; };
 		0DE7863C1E79E6AF0051D3B5 /* gl-directory.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786391E79E6AF0051D3B5 /* gl-directory.c */; };
 		0DE7863F1E7C31830051D3B5 /* gl-directory-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE7863D1E7C31830051D3B5 /* gl-directory-file.c */; };
@@ -158,6 +150,10 @@
 		0DE7864F1E8AC4920051D3B5 /* gl-sequence.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE7864C1E8AC4920051D3B5 /* gl-sequence.c */; };
 		0DE786521E8ACF4B0051D3B5 /* gl-sequence-ordered.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786501E8ACF4B0051D3B5 /* gl-sequence-ordered.c */; };
 		0DE786531E8ACF4B0051D3B5 /* gl-sequence-ordered.c in Sources */ = {isa = PBXBuildFile; fileRef = 0DE786501E8ACF4B0051D3B5 /* gl-sequence-ordered.c */; };
+		0DFCBA651EB2ABA2001FE5EE /* libharfbuzz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA641EB2ABA2001FE5EE /* libharfbuzz.dylib */; };
+		0DFCBA661EB2ABC7001FE5EE /* libjpeg.62.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA5E1EB29EA9001FE5EE /* libjpeg.62.dylib */; };
+		0DFCBA681EB2ABEA001FE5EE /* libfreetype.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA671EB2ABEA001FE5EE /* libfreetype.dylib */; };
+		0DFCBA6A1EB2AC0F001FE5EE /* libpng16.16.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DFCBA691EB2AC0F001FE5EE /* libpng16.16.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -413,7 +409,6 @@
 		0D071E531E1313EF00145717 /* gl-renderloop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-renderloop.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0D071E541E13182D00145717 /* gl-renderloop-member.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-renderloop-member.c"; sourceTree = "<group>"; };
 		0D071E551E13182D00145717 /* gl-renderloop-member.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-renderloop-member.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		0D0A8F931E4A220A00C9C0F0 /* libpng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng.dylib; path = ../../../../../opt/local/lib/libpng.dylib; sourceTree = "<group>"; };
 		0D1149E91EACEBA4007488A9 /* gl-tree-cache-directory-reloading.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-tree-cache-directory-reloading.c"; sourceTree = "<group>"; };
 		0D1149EA1EACEBA4007488A9 /* gl-tree-cache-directory-reloading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-tree-cache-directory-reloading.h"; sourceTree = "<group>"; };
 		0D13C1EB1E47E51B00FB9F43 /* image-cocoa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "image-cocoa.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -462,10 +457,7 @@
 		0D72ED0B1E291B06001B6839 /* gl-workqueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-workqueue.h"; sourceTree = "<group>"; };
 		0D72ED0C1E2923ED001B6839 /* gl-workqueue-job.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-workqueue-job.c"; sourceTree = "<group>"; };
 		0D72ED0D1E2923ED001B6839 /* gl-workqueue-job.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-workqueue-job.h"; sourceTree = "<group>"; };
-		0D73770F1E478E1100FA9EC7 /* libharfbuzz.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libharfbuzz.0.dylib; path = lib/harfbuzz/build/lib/libharfbuzz.0.dylib; sourceTree = "<group>"; };
 		0D7377111E4790FA00FA9EC7 /* driver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = driver.h; sourceTree = "<group>"; };
-		0D7377121E4793D600FA9EC7 /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = ../../../../../opt/local/lib/libjpeg.a; sourceTree = "<group>"; };
-		0D7377141E47941A00FA9EC7 /* libjpeg.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libjpeg.8.dylib; path = ../../../../../opt/local/lib/libjpeg.8.dylib; sourceTree = "<group>"; };
 		0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "loadimage-jpg.c"; sourceTree = "<group>"; };
 		0D74EEDE1E4DF15C00A4CE92 /* loadimage-jpg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "loadimage-jpg.h"; sourceTree = "<group>"; };
 		0D74EEE11E4DF34A00A4CE92 /* loadimage-png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "loadimage-png.c"; sourceTree = "<group>"; };
@@ -515,7 +507,6 @@
 		0DAFDA531E477D6100C5100E /* libexif.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libexif.a; path = lib/libexif/build/lib/libexif.a; sourceTree = "<group>"; };
 		0DAFDA751E47811300C5100E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		0DAFDA771E47817600C5100E /* gl-includes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-includes.h"; sourceTree = "<group>"; };
-		0DAFDA781E47857100C5100E /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = ../../../../../opt/X11/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
 		0DC0F05D1EAE95E00029FB1E /* gl-timer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-timer.c"; sourceTree = "<group>"; };
 		0DC0F05E1EAE95E00029FB1E /* gl-timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-timer.h"; sourceTree = "<group>"; };
 		0DC0F0611EAEB0B50029FB1E /* gl-timer-queue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-timer-queue.c"; sourceTree = "<group>"; };
@@ -1745,6 +1736,12 @@
 		0DFBB1CA1E204CAE00E50758 /* gl-label-scroller-segment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-label-scroller-segment.h"; sourceTree = "<group>"; };
 		0DFBB1CB1E20590C00E50758 /* gl-label-scroller.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-label-scroller.c"; sourceTree = "<group>"; };
 		0DFBB1CC1E20590C00E50758 /* gl-label-scroller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-label-scroller.h"; sourceTree = "<group>"; };
+		0DFCBA5E1EB29EA9001FE5EE /* libjpeg.62.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libjpeg.62.dylib; path = ../../jpeglib/install/lib/libjpeg.62.dylib; sourceTree = "<group>"; };
+		0DFCBA601EB2A940001FE5EE /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = ../../freetype/install/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
+		0DFCBA621EB2AAC9001FE5EE /* libpng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng.dylib; path = ../../png/install/lib/libpng.dylib; sourceTree = "<group>"; };
+		0DFCBA641EB2ABA2001FE5EE /* libharfbuzz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libharfbuzz.dylib; path = lib/harfbuzz/install/lib/libharfbuzz.dylib; sourceTree = "<group>"; };
+		0DFCBA671EB2ABEA001FE5EE /* libfreetype.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.dylib; path = ../../freetype/install/lib/libfreetype.dylib; sourceTree = "<group>"; };
+		0DFCBA691EB2AC0F001FE5EE /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng16.16.dylib; path = ../../png/install/lib/libpng16.16.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1756,13 +1753,12 @@
 				0DE77D8E1E74DC3B0051D3B5 /* libminIni.dylib in Frameworks */,
 				0DE77D801E6F75940051D3B5 /* libsmbclient.dylib in Frameworks */,
 				0D74EEDC1E4DF09600A4CE92 /* libqdbmp.dylib in Frameworks */,
-				0D13C21C1E47E6AD00FB9F43 /* libjpeg.8.dylib in Frameworks */,
-				0D13C21D1E47E6C000FB9F43 /* libharfbuzz.0.dylib in Frameworks */,
-				0D13C21E1E47E6D300FB9F43 /* libfreetype.6.dylib in Frameworks */,
 				0D13C2201E47E6E300FB9F43 /* OpenGL.framework in Frameworks */,
 				0D13C2211E47E6FA00FB9F43 /* libexif.a in Frameworks */,
-				0D0A8F941E4A220A00C9C0F0 /* libpng.dylib in Frameworks */,
-				0DE786351E775C190051D3B5 /* libharfbuzz.dylib in Frameworks */,
+				0DFCBA651EB2ABA2001FE5EE /* libharfbuzz.dylib in Frameworks */,
+				0DFCBA661EB2ABC7001FE5EE /* libjpeg.62.dylib in Frameworks */,
+				0DFCBA681EB2ABEA001FE5EE /* libfreetype.dylib in Frameworks */,
+				0DFCBA6A1EB2AC0F001FE5EE /* libpng16.16.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1778,9 +1774,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0DE784151E775B300051D3B5 /* libhb-ucdn.a in Frameworks */,
-				0D7377151E47941A00FA9EC7 /* libjpeg.8.dylib in Frameworks */,
-				0D7377101E478E1100FA9EC7 /* libharfbuzz.0.dylib in Frameworks */,
-				0DAFDA791E47857100C5100E /* libfreetype.6.dylib in Frameworks */,
 				0DE783AD1E775B300051D3B5 /* libharfbuzz.dylib in Frameworks */,
 				0DAFDA761E47811300C5100E /* OpenGL.framework in Frameworks */,
 				0DE783AC1E775B300051D3B5 /* libharfbuzz.0.dylib in Frameworks */,
@@ -2210,6 +2203,7 @@
 		0D2B2FF31CB443510063393E /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				0DFCBA6B1EB2AFA5001FE5EE /* smb-rpc-util */,
 				0DC36DD01E958D0A003DF7D2 /* libqrencode */,
 				0DE786451E8AA7390051D3B5 /* mt-arc4random */,
 				0DE75B101E6F21CA0051D3B5 /* minIni */,
@@ -2395,15 +2389,16 @@
 		0DAFDA521E477D6100C5100E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0DFCBA691EB2AC0F001FE5EE /* libpng16.16.dylib */,
+				0DFCBA671EB2ABEA001FE5EE /* libfreetype.dylib */,
+				0DFCBA641EB2ABA2001FE5EE /* libharfbuzz.dylib */,
+				0DFCBA621EB2AAC9001FE5EE /* libpng.dylib */,
+				0DFCBA601EB2A940001FE5EE /* libfreetype.6.dylib */,
+				0DFCBA5E1EB29EA9001FE5EE /* libjpeg.62.dylib */,
 				0D9C655B1E9D0713000222BB /* libqrencode.3.dylib */,
 				0D9C65591E9D0478000222BB /* libqrencode.3.dylib */,
 				0DE77D7F1E6F75940051D3B5 /* libsmbclient.dylib */,
-				0D0A8F931E4A220A00C9C0F0 /* libpng.dylib */,
 				0D13C21F1E47E6E300FB9F43 /* OpenGL.framework */,
-				0D7377141E47941A00FA9EC7 /* libjpeg.8.dylib */,
-				0D7377121E4793D600FA9EC7 /* libjpeg.a */,
-				0D73770F1E478E1100FA9EC7 /* libharfbuzz.0.dylib */,
-				0DAFDA781E47857100C5100E /* libfreetype.6.dylib */,
 				0DAFDA751E47811300C5100E /* OpenGL.framework */,
 				0DAFDA531E477D6100C5100E /* libexif.a */,
 			);
@@ -4971,6 +4966,13 @@
 			path = labels;
 			sourceTree = "<group>";
 		};
+		0DFCBA6B1EB2AFA5001FE5EE /* smb-rpc-util */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "smb-rpc-util";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -4996,12 +4998,12 @@
 /* Begin PBXLegacyTarget section */
 		0D73770B1E478CDC00FA9EC7 /* harfbuzz */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = "$(ACTION)";
+			buildArgumentsString = "$(ACTION) install";
 			buildConfigurationList = 0D73770C1E478CDC00FA9EC7 /* Build configuration list for PBXLegacyTarget "harfbuzz" */;
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = "/Users/tinus/dev/Photoframe/Photoframe/lib/harfbuzz/harfbuzz-1.4.2";
+			buildWorkingDirectory = /Users/tinus/dev/Photoframe/Photoframe/lib/harfbuzz/build;
 			dependencies = (
 			);
 			name = harfbuzz;
@@ -5474,25 +5476,27 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					/Users/tinus/dev/Photoframe/Photoframe/lib/libexif/build/include,
-					"\"$(SRCROOT)/lib/harfbuzz/harfbuzz-1.4.2/build/include/harfbuzz\"",
 					"\"$(SRCROOT)/lib/minIni/dev\"",
 					/Users/tinus/dev/Photoframe/Photoframe/testsrc,
-					/opt/X11/include/freetype2,
 					/opt/local/include,
-					/opt/local/include/libpng14,
 					"\"$(SRCROOT)/lib/libqrencode/install/include\"",
+					/Users/tinus/dev/jpeglib/install/include,
+					/Users/tinus/dev/freetype/install/include/freetype2,
+					"\"$(SRCROOT)/lib/harfbuzz/install/include/harfbuzz\"",
+					/Users/tinus/dev/png/install/include,
 				);
 				INFOPLIST_FILE = "image-cocoa/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib,
-					"$(PROJECT_DIR)/lib/harfbuzz/harfbuzz/build/lib",
-					/opt/X11/lib,
 					"$(PROJECT_DIR)/lib/libexif/build/lib",
 					"/Users/tinus/dev/Samba/Samba/samba-4.6.0/bin/default/source3/libsmb",
-					"$(PROJECT_DIR)/lib/harfbuzz/harfbuzz-1.4.2/build/lib",
 					"$(PROJECT_DIR)/lib/libqrencode/build/.libs",
+					"$(PROJECT_DIR)/lib/harfbuzz/install/lib",
+					"\"$(SRCROOT)/../../png/install/lib\"",
+					"\"$(SRCROOT)/../../jpeglib/install/lib\"",
+					"\"$(SRCROOT)/../../freetype/install/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -5525,25 +5529,27 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					/Users/tinus/dev/Photoframe/Photoframe/lib/libexif/build/include,
-					"\"$(SRCROOT)/lib/harfbuzz/harfbuzz-1.4.2/build/include/harfbuzz\"",
 					"\"$(SRCROOT)/lib/minIni/dev\"",
 					/Users/tinus/dev/Photoframe/Photoframe/testsrc,
-					/opt/X11/include/freetype2,
 					/opt/local/include,
-					/opt/local/include/libpng14,
 					"\"$(SRCROOT)/lib/libqrencode/install/include\"",
+					/Users/tinus/dev/jpeglib/install/include,
+					/Users/tinus/dev/freetype/install/include/freetype2,
+					"\"$(SRCROOT)/lib/harfbuzz/install/include/harfbuzz\"",
+					/Users/tinus/dev/png/install/include,
 				);
 				INFOPLIST_FILE = "image-cocoa/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib,
-					"$(PROJECT_DIR)/lib/harfbuzz/harfbuzz/build/lib",
-					/opt/X11/lib,
 					"$(PROJECT_DIR)/lib/libexif/build/lib",
 					"/Users/tinus/dev/Samba/Samba/samba-4.6.0/bin/default/source3/libsmb",
-					"$(PROJECT_DIR)/lib/harfbuzz/harfbuzz-1.4.2/build/lib",
 					"$(PROJECT_DIR)/lib/libqrencode/build/.libs",
+					"$(PROJECT_DIR)/lib/harfbuzz/install/lib",
+					"\"$(SRCROOT)/../../png/install/lib\"",
+					"\"$(SRCROOT)/../../jpeglib/install/lib\"",
+					"\"$(SRCROOT)/../../freetype/install/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;

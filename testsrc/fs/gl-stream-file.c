@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <fcntl.h>
 
 static void gl_stream_file_free(gl_object *obj_obj);
 
@@ -49,6 +50,8 @@ static gl_stream_error gl_stream_file_open(gl_stream *obj_stream)
 				return obj_stream->f->return_error(obj_stream, gl_stream_error_notfound);
 		}
 	}
+	int flags = fcntl(fileno(obj->data.f), F_GETFD);
+	fcntl(fileno(obj->data.f), F_SETFD, flags | O_CLOEXEC);
 	
 	return gl_stream_error_ok;
 }

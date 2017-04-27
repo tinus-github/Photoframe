@@ -5,6 +5,7 @@
 ## Build generated
 build/
 DerivedData
+*.dylib
 
 ## Various settings
 *.pbxuser

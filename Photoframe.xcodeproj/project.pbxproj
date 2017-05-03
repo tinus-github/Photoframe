@@ -49,9 +49,19 @@
 		0D1806131E4D2C6200449219 /* qdbmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D1805FD1E4D2BC800449219 /* qdbmp.c */; };
 		0D1806141E4D2CA300449219 /* qdbmp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D1805FE1E4D2BC800449219 /* qdbmp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0D2A8EB91E9D3A77004A3B01 /* libqrencode.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D9C655B1E9D0713000222BB /* libqrencode.3.dylib */; };
+		0D2D196B1EB370660049A16E /* smb-rpc-encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D19691EB370660049A16E /* smb-rpc-encode.c */; };
+		0D2D196C1EB370660049A16E /* smb-rpc-encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D19691EB370660049A16E /* smb-rpc-encode.c */; };
+		0D2D197D1EB4B53D0049A16E /* smb-rpc-auth.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D196D1EB4B3810049A16E /* smb-rpc-auth.c */; };
+		0D2D197E1EB4B5410049A16E /* smb-rpc-encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D19691EB370660049A16E /* smb-rpc-encode.c */; };
+		0D2D19811EB4C0EA0049A16E /* smb-rpc-smb.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D197F1EB4C0EA0049A16E /* smb-rpc-smb.c */; };
+		0D2D19831EB4E3E60049A16E /* libsmbclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D2D19821EB4E3E60049A16E /* libsmbclient.dylib */; };
+		0D2D19861EB4FB420049A16E /* smb-rpc-command.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D19841EB4FB420049A16E /* smb-rpc-command.c */; };
+		0D2D19891EB691FF0049A16E /* smb-rpc-buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D19871EB691FF0049A16E /* smb-rpc-buffer.c */; };
 		0D382BDB1EA17C1B00506704 /* Todo.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 0D382BDA1EA17C1B00506704 /* Todo.rtf */; };
 		0D3B098B1E5E20F700C4E97E /* gl-stream-rewindable.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */; };
 		0D3B098C1E5E20F700C4E97E /* gl-stream-rewindable.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */; };
+		0D4767BC1EB92ABD004CF39B /* smb-rpc-encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D19691EB370660049A16E /* smb-rpc-encode.c */; };
+		0D4767BF1EB92AD7004CF39B /* smb-rpc-util-test.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D4767BD1EB92AD7004CF39B /* smb-rpc-util-test.c */; };
 		0D74EEDC1E4DF09600A4CE92 /* libqdbmp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D18060F1E4D2C5500449219 /* libqdbmp.dylib */; };
 		0D74EEDF1E4DF15C00A4CE92 /* loadimage-jpg.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */; };
 		0D74EEE01E4DF17B00A4CE92 /* loadimage-jpg.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */; };
@@ -61,6 +71,7 @@
 		0D74EEE81E4DFA5C00A4CE92 /* loadimage-bmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEE51E4DFA5C00A4CE92 /* loadimage-bmp.c */; };
 		0D893B791E47A14E000DD5BF /* GLWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D893B781E47A14E000DD5BF /* GLWindowController.m */; };
 		0D893B7E1E47A9E6000DD5BF /* common-driver.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D893B7C1E47A9E6000DD5BF /* common-driver.c */; };
+		0D8D74CC1EB7C8810015445E /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D74CA1EB7C8810015445E /* main.c */; };
 		0D96D9621EA4FC8500AE022A /* gl-slideshow-images.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D96D9601EA4FC8500AE022A /* gl-slideshow-images.c */; };
 		0D96D9631EA4FC8500AE022A /* gl-slideshow-images.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D96D9601EA4FC8500AE022A /* gl-slideshow-images.c */; };
 		0D96D9661EA57BC700AE022A /* gl-source-manager.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D96D9641EA57BC700AE022A /* gl-source-manager.c */; };
@@ -181,6 +192,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		0D2D19741EB4B5380049A16E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		0D4767B31EB92A9C004CF39B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		0DAFDA3A1E4773A000C5100E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
@@ -431,6 +460,19 @@
 		0D2B2FEF1C90DE7F0063393E /* loadexif.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = loadexif.c; sourceTree = "<group>"; };
 		0D2B2FF01C90DE7F0063393E /* loadexif.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loadexif.h; sourceTree = "<group>"; };
 		0D2B2FF51CB443900063393E /* linmath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = linmath.h; sourceTree = "<group>"; };
+		0D2D19691EB370660049A16E /* smb-rpc-encode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "smb-rpc-encode.c"; sourceTree = "<group>"; };
+		0D2D196A1EB370660049A16E /* smb-rpc-encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "smb-rpc-encode.h"; sourceTree = "<group>"; };
+		0D2D196D1EB4B3810049A16E /* smb-rpc-auth.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "smb-rpc-auth.c"; sourceTree = "<group>"; };
+		0D2D196E1EB4B3810049A16E /* smb-rpc-auth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "smb-rpc-auth.h"; sourceTree = "<group>"; };
+		0D2D19711EB4B3AC0049A16E /* smb-rpc-auth-int.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "smb-rpc-auth-int.h"; sourceTree = "<group>"; };
+		0D2D19761EB4B5380049A16E /* smb-rpc-util */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "smb-rpc-util"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D2D197F1EB4C0EA0049A16E /* smb-rpc-smb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "smb-rpc-smb.c"; sourceTree = "<group>"; };
+		0D2D19801EB4C0EA0049A16E /* smb-rpc-smb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "smb-rpc-smb.h"; sourceTree = "<group>"; };
+		0D2D19821EB4E3E60049A16E /* libsmbclient.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsmbclient.dylib; path = ../../Samba/install/lib/libsmbclient.dylib; sourceTree = "<group>"; };
+		0D2D19841EB4FB420049A16E /* smb-rpc-command.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "smb-rpc-command.c"; sourceTree = "<group>"; };
+		0D2D19851EB4FB420049A16E /* smb-rpc-command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "smb-rpc-command.h"; sourceTree = "<group>"; };
+		0D2D19871EB691FF0049A16E /* smb-rpc-buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "smb-rpc-buffer.c"; sourceTree = "<group>"; };
+		0D2D19881EB691FF0049A16E /* smb-rpc-buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "smb-rpc-buffer.h"; sourceTree = "<group>"; };
 		0D382BDA1EA17C1B00506704 /* Todo.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Todo.rtf; sourceTree = "<group>"; };
 		0D3ADC701E0089A4009A40B1 /* gl-stage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-stage.c"; sourceTree = "<group>"; };
 		0D3ADC711E0089A4009A40B1 /* gl-stage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "gl-stage.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -441,6 +483,10 @@
 		0D3ADC761E0B1C5D009A40B1 /* gl-container-2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-container-2d.h"; sourceTree = "<group>"; };
 		0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-stream-rewindable.c"; sourceTree = "<group>"; };
 		0D3B098A1E5E20F700C4E97E /* gl-stream-rewindable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-stream-rewindable.h"; sourceTree = "<group>"; };
+		0D4767B51EB92A9D004CF39B /* smb-rpc-util-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "smb-rpc-util-test"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D4767BD1EB92AD7004CF39B /* smb-rpc-util-test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "smb-rpc-util-test.c"; sourceTree = "<group>"; };
+		0D4767BE1EB92AD7004CF39B /* smb-rpc-util-test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "smb-rpc-util-test.h"; sourceTree = "<group>"; };
+		0D5721981EB2B508007A1073 /* comm.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = comm.rtf; sourceTree = "<group>"; };
 		0D6515341CD8E314007A3C9E /* gl-object.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-object.c"; sourceTree = "<group>"; };
 		0D6515351CD8E314007A3C9E /* gl-object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-object.h"; sourceTree = "<group>"; };
 		0D67E7F31DDB5C2400A2B16C /* gl-tile.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-tile.c"; sourceTree = "<group>"; };
@@ -483,6 +529,8 @@
 		0D893B7B1E47A8D3000DD5BF /* GLWindow-C.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GLWindow-C.h"; sourceTree = "<group>"; };
 		0D893B7C1E47A9E6000DD5BF /* common-driver.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "common-driver.c"; sourceTree = "<group>"; };
 		0D893B7D1E47A9E6000DD5BF /* common-driver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "common-driver.h"; sourceTree = "<group>"; };
+		0D8D74CA1EB7C8810015445E /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		0D8D74CB1EB7C8810015445E /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		0D96D9601EA4FC8500AE022A /* gl-slideshow-images.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-slideshow-images.c"; sourceTree = "<group>"; };
 		0D96D9611EA4FC8500AE022A /* gl-slideshow-images.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-slideshow-images.h"; sourceTree = "<group>"; };
 		0D96D9641EA57BC700AE022A /* gl-source-manager.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-source-manager.c"; sourceTree = "<group>"; };
@@ -1769,6 +1817,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0D2D19731EB4B5380049A16E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D2D19831EB4E3E60049A16E /* libsmbclient.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D4767B21EB92A9C004CF39B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0DAFDA391E4773A000C5100E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2223,6 +2286,14 @@
 			path = linmath;
 			sourceTree = "<group>";
 		};
+		0D5721971EB2B4DF007A1073 /* Doc */ = {
+			isa = PBXGroup;
+			children = (
+				0D5721981EB2B508007A1073 /* comm.rtf */,
+			);
+			path = Doc;
+			sourceTree = "<group>";
+		};
 		0D69BD6D1C4E9F7E00A10282 /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -2382,6 +2453,8 @@
 				0D13C1EB1E47E51B00FB9F43 /* image-cocoa.app */,
 				0D18060F1E4D2C5500449219 /* libqdbmp.dylib */,
 				0DE75B321E6F22570051D3B5 /* libminIni.dylib */,
+				0D2D19761EB4B5380049A16E /* smb-rpc-util */,
+				0D4767B51EB92A9D004CF39B /* smb-rpc-util-test */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2389,6 +2462,7 @@
 		0DAFDA521E477D6100C5100E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0D2D19821EB4E3E60049A16E /* libsmbclient.dylib */,
 				0DFCBA6C1EB2B34B001FE5EE /* libharfbuzz.0.dylib */,
 				0DFCBA691EB2AC0F001FE5EE /* libpng16.16.dylib */,
 				0DFCBA671EB2ABEA001FE5EE /* libfreetype.dylib */,
@@ -4969,6 +5043,22 @@
 		0DFCBA6B1EB2AFA5001FE5EE /* smb-rpc-util */ = {
 			isa = PBXGroup;
 			children = (
+				0D5721971EB2B4DF007A1073 /* Doc */,
+				0D2D19691EB370660049A16E /* smb-rpc-encode.c */,
+				0D2D196A1EB370660049A16E /* smb-rpc-encode.h */,
+				0D2D196D1EB4B3810049A16E /* smb-rpc-auth.c */,
+				0D2D196E1EB4B3810049A16E /* smb-rpc-auth.h */,
+				0D2D19711EB4B3AC0049A16E /* smb-rpc-auth-int.h */,
+				0D2D197F1EB4C0EA0049A16E /* smb-rpc-smb.c */,
+				0D2D19801EB4C0EA0049A16E /* smb-rpc-smb.h */,
+				0D2D19841EB4FB420049A16E /* smb-rpc-command.c */,
+				0D2D19851EB4FB420049A16E /* smb-rpc-command.h */,
+				0D2D19871EB691FF0049A16E /* smb-rpc-buffer.c */,
+				0D2D19881EB691FF0049A16E /* smb-rpc-buffer.h */,
+				0D8D74CA1EB7C8810015445E /* main.c */,
+				0D8D74CB1EB7C8810015445E /* main.h */,
+				0D4767BD1EB92AD7004CF39B /* smb-rpc-util-test.c */,
+				0D4767BE1EB92AD7004CF39B /* smb-rpc-util-test.h */,
 			);
 			path = "smb-rpc-util";
 			sourceTree = "<group>";
@@ -5091,6 +5181,40 @@
 			productReference = 0D18060F1E4D2C5500449219 /* libqdbmp.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		0D2D19751EB4B5380049A16E /* smb-rpc-util */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D2D197A1EB4B5380049A16E /* Build configuration list for PBXNativeTarget "smb-rpc-util" */;
+			buildPhases = (
+				0D2D19721EB4B5380049A16E /* Sources */,
+				0D2D19731EB4B5380049A16E /* Frameworks */,
+				0D2D19741EB4B5380049A16E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "smb-rpc-util";
+			productName = "smb-rpc-util";
+			productReference = 0D2D19761EB4B5380049A16E /* smb-rpc-util */;
+			productType = "com.apple.product-type.tool";
+		};
+		0D4767B41EB92A9C004CF39B /* smb-rpc-util-test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D4767BB1EB92A9D004CF39B /* Build configuration list for PBXNativeTarget "smb-rpc-util-test" */;
+			buildPhases = (
+				0D4767B11EB92A9C004CF39B /* Sources */,
+				0D4767B21EB92A9C004CF39B /* Frameworks */,
+				0D4767B31EB92A9C004CF39B /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "smb-rpc-util-test";
+			productName = "smb-rpc-util-test";
+			productReference = 0D4767B51EB92A9D004CF39B /* smb-rpc-util-test */;
+			productType = "com.apple.product-type.tool";
+		};
 		0DAFDA3B1E4773A000C5100E /* image */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0DAFDA411E4773A100C5100E /* Build configuration list for PBXNativeTarget "image" */;
@@ -5146,6 +5270,14 @@
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
 					};
+					0D2D19751EB4B5380049A16E = {
+						CreatedOnToolsVersion = 8.3.2;
+						ProvisioningStyle = Automatic;
+					};
+					0D4767B41EB92A9C004CF39B = {
+						CreatedOnToolsVersion = 8.3.2;
+						ProvisioningStyle = Automatic;
+					};
 					0DAFDA3B1E4773A000C5100E = {
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
@@ -5189,6 +5321,8 @@
 				0DE75B311E6F22570051D3B5 /* minIni */,
 				0DC36E9E1E959025003DF7D2 /* libqrencode */,
 				0DC36EA21E9590EB003DF7D2 /* libqrencode-config */,
+				0D2D19751EB4B5380049A16E /* smb-rpc-util */,
+				0D4767B41EB92A9C004CF39B /* smb-rpc-util-test */,
 			);
 		};
 /* End PBXProject section */
@@ -5232,6 +5366,7 @@
 				0D13C1FF1E47E55C00FB9F43 /* gl-slide-image.c in Sources */,
 				0DE786531E8ACF4B0051D3B5 /* gl-sequence-ordered.c in Sources */,
 				0D13C2001E47E55C00FB9F43 /* gl-slide.c in Sources */,
+				0D2D196C1EB370660049A16E /* smb-rpc-encode.c in Sources */,
 				0D13C2011E47E55C00FB9F43 /* gl-slideshow.c in Sources */,
 				0DC0F0641EAEB0B50029FB1E /* gl-timer-queue.c in Sources */,
 				0D13C2021E47E55C00FB9F43 /* gl-object.c in Sources */,
@@ -5292,6 +5427,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0D2D19721EB4B5380049A16E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D2D197D1EB4B53D0049A16E /* smb-rpc-auth.c in Sources */,
+				0D2D19811EB4C0EA0049A16E /* smb-rpc-smb.c in Sources */,
+				0D2D197E1EB4B5410049A16E /* smb-rpc-encode.c in Sources */,
+				0D2D19861EB4FB420049A16E /* smb-rpc-command.c in Sources */,
+				0D2D19891EB691FF0049A16E /* smb-rpc-buffer.c in Sources */,
+				0D8D74CC1EB7C8810015445E /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D4767B11EB92A9C004CF39B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D4767BF1EB92AD7004CF39B /* smb-rpc-util-test.c in Sources */,
+				0D4767BC1EB92ABD004CF39B /* smb-rpc-encode.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0DAFDA381E4773A000C5100E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5336,6 +5493,7 @@
 				0DAFDA591E477E3900C5100E /* gl-slide-image.c in Sources */,
 				0DAFDA5A1E477E3900C5100E /* gl-slide.c in Sources */,
 				0DE7863F1E7C31830051D3B5 /* gl-directory-file.c in Sources */,
+				0D2D196B1EB370660049A16E /* smb-rpc-encode.c in Sources */,
 				0DE7863B1E79E6AF0051D3B5 /* gl-directory.c in Sources */,
 				0D74EEE31E4DF34A00A4CE92 /* loadimage-png.c in Sources */,
 				0D893B7E1E47A9E6000DD5BF /* common-driver.c in Sources */,
@@ -5612,6 +5770,128 @@
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
 				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		0D2D197B1EB4B5380049A16E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../Samba/install/include\"";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../Samba/install/lib\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0D2D197C1EB4B5380049A16E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../Samba/install/include\"";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../Samba/install/lib\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		0D4767B91EB92A9D004CF39B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0D4767BA1EB92A9D004CF39B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
@@ -6043,6 +6323,23 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		0D2D197A1EB4B5380049A16E /* Build configuration list for PBXNativeTarget "smb-rpc-util" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D2D197B1EB4B5380049A16E /* Debug */,
+				0D2D197C1EB4B5380049A16E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0D4767BB1EB92A9D004CF39B /* Build configuration list for PBXNativeTarget "smb-rpc-util-test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D4767B91EB92A9D004CF39B /* Debug */,
+				0D4767BA1EB92A9D004CF39B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		0D73770C1E478CDC00FA9EC7 /* Build configuration list for PBXLegacyTarget "harfbuzz" */ = {
 			isa = XCConfigurationList;

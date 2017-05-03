@@ -100,6 +100,9 @@ static void handle_input(appdata *appData)
 			case EAGAIN:
 			case EINTR:
 				return;
+			case 0:
+				//done
+				exit(0);
 			default:
 				fprintf(stderr, "Read returned an error: %d\n", errno);
 				abort();
@@ -172,7 +175,7 @@ static int run_commands(appdata *appData) {
 				invocation_id,
 				args, arg_count);
 	
-	smb_rpc_buffer_consume_data(appData->inbuf, packet_length);
+	smb_rpc_buffer_consume_data(appData->inbuf, used_bytes);
 	
 	return 1;
 }

@@ -19,6 +19,11 @@ struct smb_rpc_command {
 	char command[1];
 };
 
+struct smb_rpc_response {
+	uint32_t invocation_id;
+	uint32_t argument_count;
+};
+
 struct smb_rpc_argument {
 	uint32_t argument_type;
 	union {
@@ -147,6 +152,68 @@ smb_rpc_decode_result smb_rpc_decode_packet(char *input, size_t buflen, size_t *
 	*used_bytes = *contents_length + 4;
 	
 	return smb_rpc_decode_result_ok;
+}
+
+
+
+smb_rpc_decode_result smb_rpc_decode_response(char *input, size_t inputlen,
+					      uint32_t *invocation_id,
+					      smb_rpc_command_argument *args, size_t *arg_count)
+{
+	size_t used_bytes = 0;
+	if (inputlen < 8) {
+		return smb_rpc_decode_result_tooshort;
+	}
+	struct smb_rpc_response *response = (struct smb_rpc_response *)input;
+	*invocation_id = response->invocation_id;
+	*arg_count = response->argument_count;
+	if ((*arg_count) > SMB_RPC_COMMAND_MAX_ARGUMENTS) {
+		return smb_rpc_decode_result_invalid;
+	}
+	used_bytes += 8;
+	
+	int counter = 0;
+	struct smb_rpc_argument *decoded_argument;
+	while (counter < *arg_count) {
+		if ((inputlen - used_bytes) < 4) {
+			return smb_rpc_decode_result_tooshort;
+		}
+
+		decoded_argument = (struct smb_rpc_argument*)(&input[used_bytes]);
+		switch(decoded_argument->argument_type) {
+			case SMB_RPC_VALUE_TYPE_INT:
+				if ((inputlen - used_bytes) < 8) {
+					return smb_rpc_decode_result_tooshort;
+				}
+
+				args[counter].type = smb_rpc_command_argument_type_int;
+				args[counter].value.int_value = decoded_argument->value.int_value;
+				used_bytes += 8;
+				break;
+			case SMB_RPC_VALUE_TYPE_STRING:
+				if ((inputlen - used_bytes) < 9) {
+					return smb_rpc_decode_result_tooshort;
+				}
+				args[counter].type = smb_rpc_command_argument_type_string;
+				args[counter].value.string_value.length = decoded_argument->value.string_length;
+				used_bytes += 8;
+				if ((inputlen - used_bytes) < decoded_argument->value.string_length) {
+					return smb_rpc_decode_result_tooshort;
+				}
+				args[counter].value.string_value.string = decoded_argument->string;
+				used_bytes += args[counter].value.string_value.length;
+				break;
+			default:
+				return smb_rpc_decode_result_invalid;
+		}
+		counter++;
+	}
+	
+	if (inputlen == used_bytes) {
+		return smb_rpc_decode_result_ok;
+	} else {
+		return smb_rpc_decode_result_invalid;
+	}
 }
 
 smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,

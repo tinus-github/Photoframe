@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "main.h"
 #include "smb-rpc-buffer.h"
@@ -44,6 +45,11 @@ int main(int argv, char **argc)
 	
 	fcntl(appData->infilefd, F_SETFL, O_NONBLOCK);
 	fcntl(appData->outfilefd, F_SETFL, O_NONBLOCK);
+	
+	memset(appData->fileFds, 0, sizeof(int) * FD_SETSIZE);
+	memset(appData->dirFds, 0, sizeof(int) * FD_SETSIZE);
+	
+	appData->smb_data = smb_rpc_smb_new_data();
 	
 	while (1) {
 		handle_io(appData);

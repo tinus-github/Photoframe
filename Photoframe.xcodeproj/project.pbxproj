@@ -80,6 +80,7 @@
 		0D9C65611E9D07C8000222BB /* gl-qrcode-data.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9C655E1E9D07C8000222BB /* gl-qrcode-data.c */; };
 		0D9C65641E9D2112000222BB /* gl-qrcode-image.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9C65621E9D2112000222BB /* gl-qrcode-image.c */; };
 		0D9C65651E9D2112000222BB /* gl-qrcode-image.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9C65621E9D2112000222BB /* gl-qrcode-image.c */; };
+		0DA1D1001EBCC12B00E2E60E /* libminIni.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE75B321E6F22570051D3B5 /* libminIni.dylib */; };
 		0DAFDA541E477D6100C5100E /* libexif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFDA531E477D6100C5100E /* libexif.a */; };
 		0DAFDA551E477E1D00C5100E /* image.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D69BD751C4EA17900A10282 /* image.c */; };
 		0DAFDA561E477E2B00C5100E /* loadimage.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2B2FED1C9073AA0063393E /* loadimage.c */; };
@@ -175,6 +176,13 @@
 			remoteGlobalIDString = 0D18060E1E4D2C5500449219;
 			remoteInfo = qdbmp;
 		};
+		0DA1D1011EBCC13700E2E60E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D07D26C1C4E974B00E42556 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0DE75B311E6F22570051D3B5;
+			remoteInfo = minIni;
+		};
 		0DAFDA501E477D2900C5100E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0D07D26C1C4E974B00E42556 /* Project object */;
@@ -188,6 +196,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 0DC36EA21E9590EB003DF7D2;
 			remoteInfo = "libqrencode-config";
+		};
+		0DEBA2741EBA7DC700E23E4C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D07D26C1C4E974B00E42556 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D2D19751EB4B5380049A16E;
+			remoteInfo = "smb-rpc-util";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1829,6 +1844,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DA1D1001EBCC12B00E2E60E /* libminIni.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5209,6 +5225,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				0DA1D1021EBCC13700E2E60E /* PBXTargetDependency */,
+				0DEBA2751EBA7DC700E23E4C /* PBXTargetDependency */,
 			);
 			name = "smb-rpc-util-test";
 			productName = "smb-rpc-util-test";
@@ -5534,6 +5552,11 @@
 			target = 0D18060E1E4D2C5500449219 /* qdbmp */;
 			targetProxy = 0D74EEDA1E4DF08E00A4CE92 /* PBXContainerItemProxy */;
 		};
+		0DA1D1021EBCC13700E2E60E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0DE75B311E6F22570051D3B5 /* minIni */;
+			targetProxy = 0DA1D1011EBCC13700E2E60E /* PBXContainerItemProxy */;
+		};
 		0DAFDA511E477D2900C5100E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0DAFDA4C1E47784100C5100E /* libexif */;
@@ -5543,6 +5566,11 @@
 			isa = PBXTargetDependency;
 			target = 0DC36EA21E9590EB003DF7D2 /* libqrencode-config */;
 			targetProxy = 0DC36EA81E9596C2003DF7D2 /* PBXContainerItemProxy */;
+		};
+		0DEBA2751EBA7DC700E23E4C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D2D19751EB4B5380049A16E /* smb-rpc-util */;
+			targetProxy = 0DEBA2741EBA7DC700E23E4C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -5868,6 +5896,7 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/lib/minIni/dev\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5895,6 +5924,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/lib/minIni/dev\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6340,6 +6370,7 @@
 				0D4767BA1EB92A9D004CF39B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0D73770C1E478CDC00FA9EC7 /* Build configuration list for PBXLegacyTarget "harfbuzz" */ = {
 			isa = XCConfigurationList;

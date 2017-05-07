@@ -11,7 +11,10 @@
 
 #include <stdio.h>
 
-void smb_rpc_auth_set_data(char *server, char *workgroup, char *username, char *password);
+void smb_rpc_auth_set_data(const char *server,
+			   const char *workgroup,
+			   const char *username,
+			   const char *password);
 
 void smb_rpc_auth_get_auth_fn(const char *server,
 			      const char *share,

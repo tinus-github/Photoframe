@@ -48,10 +48,13 @@ smb_rpc_smb_data *smb_rpc_smb_new_data()
 		active_smb_data = ret;
 
 		errno = 0;
-		if (!smbc_init(smb_rpc_auth_get_auth_fn, 0)) {
+		if (smbc_init(smb_rpc_auth_get_auth_fn, 0)) {
 			fprintf(stderr, "Failed to init smb, errno=%d\n", errno);
 			abort();
 		}
+		smbc_setFunctionAuthData(ret->smb_context, smb_rpc_auth_get_auth_fn);
+		smbc_setOptionDebugToStderr(ret->smb_context, 1);
+		smbc_setDebug(ret->smb_context, 6);
 		smb_rpc_inited = 1;
 	}
 	

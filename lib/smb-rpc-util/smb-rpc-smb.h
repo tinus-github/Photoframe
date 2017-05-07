@@ -30,5 +30,6 @@ smb_rpc_smb_data *smb_rpc_smb_new_data();
 // Must make sure to close everything associaled with this context,
 // otherwise freeing it will fail
 void smb_rpc_smb_free_data(smb_rpc_smb_data *data);
+int smb_rpc_open_file(smb_rpc_smb_data *data, const char *url);
 
 #endif /* smb_rpc_smb_h */

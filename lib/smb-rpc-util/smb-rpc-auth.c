@@ -12,8 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-static smb_rpc_auth_data *auth_data_default;
-static smb_rpc_auth_data *auth_data;
+static smb_rpc_auth_data *auth_data_default = NULL;
+static smb_rpc_auth_data *auth_data = NULL;
 
 static void free_auth_data(smb_rpc_auth_data *d)
 {
@@ -23,33 +23,36 @@ static void free_auth_data(smb_rpc_auth_data *d)
 	free(d->password);
 }
 
-void smb_rpc_auth_set_data(char *server, char *workgroup, char *username, char *password)
+void smb_rpc_auth_set_data(const char *server,
+			   const char *workgroup,
+			   const char *username,
+			   const char *password)
 {
 	smb_rpc_auth_data *new_entry = calloc(1, sizeof(smb_rpc_auth_data));
 	
-	new_entry->workgroup = workgroup;
-	new_entry->username = username;
-	new_entry->password = password;
-	
-	new_entry->servername = server;
+	new_entry->workgroup = strdup(workgroup);
+	new_entry->username = strdup(username);
+	new_entry->password = strdup(password);
 	
 	if (!server) {
+		new_entry->servername = NULL;
 		if (auth_data_default) {
 			free_auth_data(auth_data_default);
 			free(auth_data_default);
-			auth_data_default = new_entry;
-			return;
 		}
+		auth_data_default = new_entry;
+		return;
 	}
+	new_entry->servername = strdup(server);
 	
 	smb_rpc_auth_data *current_entry = auth_data;
 	while (current_entry) {
 		if (!strcasecmp(server, current_entry->servername)) {
 			free_auth_data(current_entry);
-			current_entry->servername = server;
-			current_entry->workgroup = workgroup;
-			current_entry->username = username;
-			current_entry->password = password;
+			current_entry->servername = new_entry->servername;
+			current_entry->workgroup = new_entry->workgroup;
+			current_entry->username = new_entry->username;
+			current_entry->password = new_entry->password;
 			
 			free(new_entry);
 			

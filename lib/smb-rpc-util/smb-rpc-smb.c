@@ -14,6 +14,8 @@
 #include <errno.h>
 #include <assert.h>
 
+#define SMB_RPC_DEBUG
+
 struct smb_rpc_smb_data {
 	SMBCCTX *smb_context;
 	smb_rpc_dirent dirent;
@@ -48,13 +50,15 @@ smb_rpc_smb_data *smb_rpc_smb_new_data()
 		active_smb_data = ret;
 
 		errno = 0;
-		if (smbc_init(smb_rpc_auth_get_auth_fn, 0)) {
+		if (smbc_init(NULL, 0)) {
 			fprintf(stderr, "Failed to init smb, errno=%d\n", errno);
 			abort();
 		}
 		smbc_setFunctionAuthData(ret->smb_context, smb_rpc_auth_get_auth_fn);
 		smbc_setOptionDebugToStderr(ret->smb_context, 1);
+#ifdef SMB_RPC_DEBUG
 		smbc_setDebug(ret->smb_context, 6);
+#endif
 		smb_rpc_inited = 1;
 	}
 	

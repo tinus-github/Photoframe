@@ -87,6 +87,10 @@ void smb_rpc_auth_get_auth_fn(const char *server,
 		current_entry = auth_data_default;
 	}
 	
+	if (!current_entry) {
+		return;
+	}
+	
 	if (current_entry->workgroup) {
 		strlcpy(workgroup, current_entry->workgroup, workgroupSpace);
 	}

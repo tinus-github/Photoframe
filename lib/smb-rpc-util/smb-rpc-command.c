@@ -72,6 +72,9 @@ static void smb_rpc_send_command_output(appdata *appData,
 			outBufSize = outBufSize ? outBufSize * 2 : 1024;
 			retry = 1;
 		}
+		if (outBufSize > SMB_RPC_MAX_PACKET_SIZE) {
+			smb_rpc_command_error("Command output too large");
+		}
 		if (retry) {
 			outBuf = outBuf ? realloc(outBuf, outBufSize) : malloc(outBufSize);
 		}

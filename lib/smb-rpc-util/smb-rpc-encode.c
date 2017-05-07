@@ -39,7 +39,8 @@ struct smb_rpc_packet {
 };
 
 // Since the server and client are on the same machine, endianness issues aren't
-// really relevant
+// really relevant. There might be issues with packing though.
+
 static size_t output_int(char *output, int value, size_t *space)
 {
 	if (*space < 4) {

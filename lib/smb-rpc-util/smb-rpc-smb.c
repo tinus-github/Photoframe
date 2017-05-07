@@ -89,6 +89,14 @@ int smb_rpc_open_file(smb_rpc_smb_data *data, const char *url)
 	return smbc_open(url, O_RDONLY, 0);
 }
 
+off_t smb_rpc_seek_file(smb_rpc_smb_data *data, int fd, off_t offset, int whence)
+{
+	activate_smb_data(data);
+	
+	errno = 0;
+	return smbc_lseek(fd, offset, whence);
+}
+
 // can only fail due to programming errors
 void smb_rpc_close_file(smb_rpc_smb_data *data, int fd)
 {
@@ -101,7 +109,7 @@ void smb_rpc_close_file(smb_rpc_smb_data *data, int fd)
 	}
 }
 
-size_t smb_rpc_read_file(smb_rpc_smb_data *data, int fd, void *buf, size_t bufsize)
+ssize_t smb_rpc_read_file(smb_rpc_smb_data *data, int fd, void *buf, size_t bufsize)
 {
 	activate_smb_data(data);
 	

@@ -148,7 +148,6 @@ static void smb_rpc_command_fopen(appdata *appData, uint32_t invocation_id, smb_
 	char *url = malloc(args[0].value.string_value.length + 1);
 	strncpy(url, args[0].value.string_value.string, args[0].value.string_value.length + 1);
 	
-	fprintf(stderr, "Going to open %s\n", url);
 	errno = 0;
 	int smb_fd = smb_rpc_open_file(appData->smb_data, url);
 	free (url);
@@ -170,6 +169,131 @@ static void smb_rpc_command_fopen(appdata *appData, uint32_t invocation_id, smb_
 	return;
 }
 
+#define MAX_READ_SIZE 102400
+
+static void smb_rpc_command_fread(appdata *appData, uint32_t invocation_id, smb_rpc_command_argument *args, size_t arg_count)
+{
+	char readBuf[MAX_READ_SIZE];
+	
+	if (arg_count != 2) {
+		smb_rpc_command_error("Invalid number of arguments to FREAD");
+	}
+	if (args[0].type != smb_rpc_command_argument_type_int) {
+		smb_rpc_command_error("Invalid argument 1 type to FREAD");
+	}
+	if (args[1].type != smb_rpc_command_argument_type_int) {
+		smb_rpc_command_error("Invalid argument 2 type to FREAD");
+	}
+	
+	int arg_fd = args[0].value.int_value;
+	if (arg_fd >= FD_SETSIZE) {
+		smb_rpc_command_error("Invalid fd passed to FREAD");
+	}
+	int smb_fd = appData->fileFds[arg_fd];
+	if (!smb_fd) {
+		// Might want to make this non fatal
+		smb_rpc_command_error("Unopened fd passed to FREAD");
+	}
+	size_t bufsize = args[1].value.int_value;
+	if (bufsize > MAX_READ_SIZE) {
+		bufsize = MAX_READ_SIZE;
+	}
+	
+	ssize_t num_read = smb_rpc_read_file(appData->smb_data, smb_fd, readBuf, bufsize);
+	
+	staticReturns[0].type = smb_rpc_command_argument_type_int;
+	staticReturns[0].value.int_value = errno;
+	staticReturns[1].type = smb_rpc_command_argument_type_string;
+	
+	if (num_read < 1) {
+		staticReturns[1].value.string_value.length = 0;
+		staticReturns[1].value.string_value.string = "";
+	} else {
+		staticReturns[1].value.string_value.length = num_read;
+		staticReturns[1].value.string_value.string = readBuf;
+	}
+	
+	smb_rpc_send_command_output(appData, invocation_id, staticReturns, 2);
+}
+
+static void smb_rpc_command_fseek(appdata *appData, uint32_t invocation_id, smb_rpc_command_argument *args, size_t arg_count)
+{
+	if (arg_count != 3) {
+		smb_rpc_command_error("Invalid number of arguments to FSEEK");
+	}
+	if (args[0].type != smb_rpc_command_argument_type_int) {
+		smb_rpc_command_error("Invalid argument 1 type to FSEEK");
+	}
+	if (args[1].type != smb_rpc_command_argument_type_int) {
+		smb_rpc_command_error("Invalid argument 2 type to FSEEK");
+	}
+	if (args[2].type != smb_rpc_command_argument_type_int) {
+		smb_rpc_command_error("Invalid argument 3 type to FSEEK");
+	}
+	
+	int arg_fd = args[0].value.int_value;
+	if (arg_fd >= FD_SETSIZE) {
+		smb_rpc_command_error("Invalid fd passed to FSEEK");
+	}
+	int smb_fd = appData->fileFds[arg_fd];
+	if (!smb_fd) {
+		// Might want to make this non fatal
+		smb_rpc_command_error("Unopened fd passed to FSEEK");
+	}
+	
+	int offset = args[1].value.int_value;
+	int whence = args[2].value.int_value;
+	switch (whence) {
+		case SEEK_SET:
+		case SEEK_CUR:
+		case SEEK_END:
+			break;
+		default:
+			smb_rpc_command_error("Invalid argument 3 passed to FSEEK");
+	}
+	
+	off_t seek_ret = smb_rpc_seek_file(appData->smb_data, smb_fd, offset, whence);
+	
+	staticReturns[0].type = smb_rpc_command_argument_type_int;
+	if (seek_ret == -1) {
+		staticReturns[0].value.int_value = errno;
+	} else {
+		staticReturns[0].value.int_value = 0;
+	}
+	
+	smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
+}
+
+
+static void smb_rpc_command_fclose(appdata *appData, uint32_t invocation_id, smb_rpc_command_argument *args, size_t arg_count)
+{
+	if (arg_count != 1) {
+		smb_rpc_command_error("Invalid number of arguments to FCLOSE");
+	}
+	if (args[0].type != smb_rpc_command_argument_type_int) {
+		smb_rpc_command_error("Invalid argument type to FCLOSE");
+	}
+	
+	int arg_fd = args[0].value.int_value;
+	if (arg_fd >= FD_SETSIZE) {
+		smb_rpc_command_error("Invalid fd passed to FCLOSE");
+	}
+	int smb_fd = appData->fileFds[arg_fd];
+	if (!smb_fd) {
+		// Might want to make this non fatal
+		smb_rpc_command_error("Unopened fd passed to FCLOSE");
+	}
+	
+	errno = 0;
+	
+	smb_rpc_close_file(appData->smb_data, smb_fd);
+	free_fd(appData->fileFds, arg_fd);
+	
+	staticReturns[0].type = smb_rpc_command_argument_type_int;
+	staticReturns[0].value.int_value = errno;
+	smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
+}
+
 static int is_command(char *actual_command, char *sent_command, size_t sent_command_length)
 {
 	size_t actual_command_length = strlen(actual_command);
@@ -183,14 +307,31 @@ int smb_rpc_command_execute(appdata *appData, char *command, size_t command_leng
 			    uint32_t invocation_id,
 			    smb_rpc_command_argument *args, size_t arg_count)
 {
-	if (!is_command("CONNECT", command, command_length)) {
-		smb_rpc_command_connect(appData, invocation_id, args, arg_count);
+	if (!is_command("FREAD", command, command_length)) {
+		smb_rpc_command_fread(appData, invocation_id, args, arg_count);
 		return 0;
 	}
+	
+	if (!is_command("FSEEK", command, command_length)) {
+		smb_rpc_command_fseek(appData, invocation_id, args, arg_count);
+		return 0;
+	}
+	
 	if (!is_command("FOPEN", command, command_length)) {
 		smb_rpc_command_fopen(appData, invocation_id, args, arg_count);
 		return 0;
 	}
+	
+	if (!is_command("FCLOSE", command, command_length)) {
+		smb_rpc_command_fclose(appData, invocation_id, args, arg_count);
+		return 0;
+	}
+
+	if (!is_command("CONNECT", command, command_length)) {
+		smb_rpc_command_connect(appData, invocation_id, args, arg_count);
+		return 0;
+	}
+
 	if (!is_command("SETAUTH", command, command_length)) {
 		smb_rpc_command_setauth(appData, invocation_id, args, arg_count);
 		return 0;

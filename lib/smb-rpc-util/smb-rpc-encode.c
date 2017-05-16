@@ -192,7 +192,7 @@ smb_rpc_decode_result smb_rpc_decode_response(char *input, size_t inputlen,
 				used_bytes += 8;
 				break;
 			case SMB_RPC_VALUE_TYPE_STRING:
-				if ((inputlen - used_bytes) < 9) {
+				if ((inputlen - used_bytes) < 8) {
 					return smb_rpc_decode_result_tooshort;
 				}
 				args[counter].type = smb_rpc_command_argument_type_string;

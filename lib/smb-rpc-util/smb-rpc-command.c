@@ -15,6 +15,8 @@
 #include <assert.h>
 #include <errno.h>
 
+#define FD_OFFSET 100
+
 static smb_rpc_command_argument staticReturns[SMB_RPC_COMMAND_MAX_RETURNS];
 
 static void smb_rpc_command_error(char *msg)
@@ -163,7 +165,7 @@ static void smb_rpc_command_fopen(appdata *appData, uint32_t invocation_id, smb_
 	staticReturns[0].type = smb_rpc_command_argument_type_int;
 	staticReturns[0].value.int_value = 0;
 	staticReturns[1].type = smb_rpc_command_argument_type_int;
-	staticReturns[1].value.int_value = fd;
+	staticReturns[1].value.int_value = fd + FD_OFFSET;
 	smb_rpc_send_command_output(appData, invocation_id, staticReturns, 2);
 	
 	return;
@@ -185,8 +187,8 @@ static void smb_rpc_command_fread(appdata *appData, uint32_t invocation_id, smb_
 		smb_rpc_command_error("Invalid argument 2 type to FREAD");
 	}
 	
-	int arg_fd = args[0].value.int_value;
-	if (arg_fd >= FD_SETSIZE) {
+	int arg_fd = args[0].value.int_value - FD_OFFSET;
+	if ((arg_fd >= FD_SETSIZE) || (arg_fd < 0)) {
 		smb_rpc_command_error("Invalid fd passed to FREAD");
 	}
 	int smb_fd = appData->fileFds[arg_fd];
@@ -231,8 +233,8 @@ static void smb_rpc_command_fseek(appdata *appData, uint32_t invocation_id, smb_
 		smb_rpc_command_error("Invalid argument 3 type to FSEEK");
 	}
 	
-	int arg_fd = args[0].value.int_value;
-	if (arg_fd >= FD_SETSIZE) {
+	int arg_fd = args[0].value.int_value - FD_OFFSET;
+	if ((arg_fd >= FD_SETSIZE) || (arg_fd < 0)) {
 		smb_rpc_command_error("Invalid fd passed to FSEEK");
 	}
 	int smb_fd = appData->fileFds[arg_fd];
@@ -274,8 +276,8 @@ static void smb_rpc_command_fclose(appdata *appData, uint32_t invocation_id, smb
 		smb_rpc_command_error("Invalid argument type to FCLOSE");
 	}
 	
-	int arg_fd = args[0].value.int_value;
-	if (arg_fd >= FD_SETSIZE) {
+	int arg_fd = args[0].value.int_value - FD_OFFSET;
+	if ((arg_fd >= FD_SETSIZE) || (arg_fd < 0)) {
 		smb_rpc_command_error("Invalid fd passed to FCLOSE");
 	}
 	int smb_fd = appData->fileFds[arg_fd];

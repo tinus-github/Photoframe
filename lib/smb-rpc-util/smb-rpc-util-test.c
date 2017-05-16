@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <assert.h>
+#include <fcntl.h>
 #include "minini.h"
 
 #define MAXARGS 5
@@ -20,6 +21,12 @@
 static smb_rpc_command_argument cmd_args[MAXARGS];
 static char packetbuf[1024];
 static size_t packetbufSize = 1024;
+
+uint32_t get_invocationId()
+{
+	static int32_t currentId = 1;
+	return currentId++;
+}
 
 void args_add_string(smb_rpc_command_argument *arglist, int *offset, char *string)
 {
@@ -32,13 +39,87 @@ void args_add_string(smb_rpc_command_argument *arglist, int *offset, char *strin
 	(*offset)++;
 }
 
+void write_completely(int fd, char *buf, size_t buflen)
+{
+	ssize_t num_written;
+	while (buflen) {
+		errno = 0;
+		num_written = write(fd, buf, buflen);
+		if (num_written < 1) {
+			switch (errno) {
+				case 0:
+				case EAGAIN:
+				case EINTR:
+					break;
+				default:
+					fprintf(stderr, "Write error: %d\n", errno);
+					abort();
+			}
+		} else {
+			buf += num_written;
+			buflen -= num_written;
+		}
+	}
+}
+
+void read_packet(int fd, char *buf, size_t buflen, size_t *packetSize)
+{
+	char *packetbufCursor = buf;
+	size_t remaining = buflen;
+	size_t bufUsed = 0;
+	char *packetContents;
+	size_t packetContentsLength;
+	ssize_t numread;
+	
+	do {
+		errno = 0;
+		numread = read(fd, packetbufCursor, remaining);
+		if (numread < 0) {
+			switch (errno) {
+				case EAGAIN:
+				case EINTR:
+				case 0:
+					continue;
+				default:
+					fprintf(stderr, "Read error: %d\n", errno);
+					abort();
+			}
+		}
+		if (!numread) { // If this were acceptable, we would have found out the previous round
+			fprintf(stderr, "EOF while reading.\n");
+			abort();
+		}
+		bufUsed += numread;
+		int parseRet = smb_rpc_decode_packet(buf, bufUsed,
+						     packetSize, &packetContents, &packetContentsLength);
+		switch (parseRet) {
+			case smb_rpc_decode_result_ok:
+				if (*packetSize != bufUsed) {
+					fprintf(stderr, "Extra data after packet: %zu vs %zu\n", bufUsed, *packetSize);
+					// just drop it?
+				}
+				return;
+			case smb_rpc_decode_result_invalid:
+				fprintf(stderr, "Invalid packet.\n");
+				abort();
+			case smb_rpc_decode_result_tooshort:
+				break;
+			default:
+				abort();
+		}
+		
+		packetbufCursor += numread;
+		remaining -= numread;
+	} while (numread);
+}
+
 void auth(int commandFd, int responseFd, const char *iniFilename)
 {
 	char usernamebuf[1024];
 	char passwdbuf[1024];
 	size_t packetSize;
 	
-	uint32_t invocationId = 3;
+	uint32_t invocationId = get_invocationId();
 	
 	char inbuf[1024];
 	ini_gets("auth", "username", "", usernamebuf, 1024, iniFilename);
@@ -53,23 +134,25 @@ void auth(int commandFd, int responseFd, const char *iniFilename)
 	
 	packetSize = smb_rpc_encode_return_packet(packetbuf, packetbufSize, invocationId,
 						  cmd_args, argCounter);
-	size_t numwritten = write(commandFd, packetbuf, packetSize);
-	size_t numread = read(responseFd, inbuf, 1024);
-	char *packetContents;
-	size_t packetContentSize;
+	write_completely(commandFd, packetbuf, packetSize);
 	
-	int ret = smb_rpc_decode_packet(inbuf, numread, &packetSize, &packetContents, &packetContentSize);
-	if (ret != smb_rpc_decode_result_ok) {
-		fprintf(stderr, "Failed to parse auth response: %d\n", ret);
-		abort();
-	}
+	size_t numread;
+	read_packet(responseFd, inbuf, 1024, &numread);
+	size_t packetContentSize;
+	char *packetContents;
+	
+	smb_rpc_decode_packet(inbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
 	uint32_t responseInvocationId;
 	size_t argCount;
 	
-	ret = smb_rpc_decode_response(packetContents, packetContentSize,
+	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
 				      &responseInvocationId,
 				      cmd_args, &argCount);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Can't parse response on SETAUTH\n");
+		abort();
+	}
 	if (responseInvocationId != invocationId) {
 		fprintf(stderr, "Wrong invocationId on SETAUTH\n");
 		abort();
@@ -79,6 +162,188 @@ void auth(int commandFd, int responseFd, const char *iniFilename)
 		abort();
 	}
 	return;
+}
+
+int do_fopen(int commandFd, int responseFd, char *url)
+{
+	char packetbuf[1024];
+	size_t packetSize = 1024;
+	smb_rpc_command_argument cmd_args[2];
+	uint32_t invocationId = get_invocationId();
+	
+	cmd_args[0].type = smb_rpc_command_argument_type_string;
+	cmd_args[0].value.string_value.string = "FOPEN";
+	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
+	cmd_args[1].type = smb_rpc_command_argument_type_string;
+	
+	cmd_args[1].value.string_value.string = url;
+	cmd_args[1].value.string_value.length = strlen(url);
+	
+	packetSize = smb_rpc_encode_return_packet(packetbuf, packetbufSize, invocationId,
+						  cmd_args, 2);
+	write_completely(commandFd, packetbuf, packetSize);
+	
+	size_t numread;
+	read_packet(responseFd, packetbuf, 1024, &numread);
+	size_t packetContentSize;
+	char *packetContents;
+	
+	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
+	
+	uint32_t responseInvocationId;
+	size_t argCount;
+	
+	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
+					  &responseInvocationId,
+					  cmd_args, &argCount);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Can't parse response on FOPEN\n");
+		abort();
+	}
+	if (responseInvocationId != invocationId) {
+		fprintf(stderr, "Wrong invocationId on FOPEN\n");
+		abort();
+	}
+	if (argCount == 1) {
+		if (cmd_args[0].type == smb_rpc_command_argument_type_int) {
+			errno = cmd_args[0].value.int_value;
+			perror("FOPEN");
+			exit(1);
+		}
+	}
+	if (argCount != 2) {
+		fprintf(stderr, "Wrong number of reponses to FOPEN\n");
+		abort();
+	}
+	if ((cmd_args[0].type != smb_rpc_command_argument_type_int) ||
+	    (cmd_args[1].type != smb_rpc_command_argument_type_int)) {
+		fprintf(stderr, "Wrong type of response part to FOPEN\n");
+		abort();
+	}
+	
+	if (cmd_args[0].value.int_value != 0) {
+		errno = cmd_args[0].value.int_value;
+		perror("FOPEN");
+		exit(1);
+	}
+	
+	return cmd_args[1].value.int_value;
+}
+
+#define PACKETSIZE 103424
+ssize_t do_read(int commandFd, int responseFd, int smb_fd, char *buf, size_t bufSize)
+{
+	char packetbuf[PACKETSIZE];
+	size_t packetSize = PACKETSIZE;
+	smb_rpc_command_argument cmd_args[3];
+	uint32_t invocationId = get_invocationId();
+	
+	cmd_args[0].type = smb_rpc_command_argument_type_string;
+	cmd_args[0].value.string_value.string = "FREAD";
+	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
+	
+	cmd_args[1].type = smb_rpc_command_argument_type_int;
+	cmd_args[1].value.int_value = smb_fd;
+	
+	cmd_args[2].type = smb_rpc_command_argument_type_int;
+	cmd_args[2].value.int_value = (int)bufSize;
+	
+	packetSize = smb_rpc_encode_return_packet(packetbuf, packetbufSize, invocationId,
+						  cmd_args, 3);
+	write_completely(commandFd, packetbuf, packetSize);
+
+	size_t numread;
+	read_packet(responseFd, packetbuf, PACKETSIZE, &numread);
+	size_t packetContentSize;
+	char *packetContents;
+
+	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
+	
+	uint32_t responseInvocationId;
+	size_t argCount;
+	
+	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
+					  &responseInvocationId,
+					  cmd_args, &argCount);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Can't parse response on FREAD\n");
+		abort();
+	}
+	if (responseInvocationId != invocationId) {
+		fprintf(stderr, "Wrong invocationId on FREAD\n");
+		abort();
+	}
+	if (argCount != 2) {
+		fprintf(stderr, "Wrong number of reponses to FREAD\n");
+		abort();
+	}
+	if ((cmd_args[0].type != smb_rpc_command_argument_type_int) ||
+	    (cmd_args[1].type != smb_rpc_command_argument_type_string)) {
+		fprintf(stderr, "Wrong type of response part to FREAD\n");
+		abort();
+	}
+	if (cmd_args[0].value.int_value != 0) {
+		errno = cmd_args[0].value.int_value;
+		perror("FREAD");
+		return -1;
+	}
+	memcpy(buf, cmd_args[1].value.string_value.string, cmd_args[1].value.string_value.length);
+	return cmd_args[1].value.string_value.length;
+}
+
+int do_fclose(int commandFd, int responseFd, int smbfd)
+{
+	char packetbuf[1024];
+	size_t packetSize = 1024;
+	smb_rpc_command_argument cmd_args[2];
+	uint32_t invocationId = get_invocationId();
+	
+	cmd_args[0].type = smb_rpc_command_argument_type_string;
+	cmd_args[0].value.string_value.string = "FCLOSE";
+	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
+	cmd_args[1].type = smb_rpc_command_argument_type_int;
+	cmd_args[1].value.int_value = smbfd;
+	
+	packetSize = smb_rpc_encode_return_packet(packetbuf, packetbufSize, invocationId,
+						  cmd_args, 2);
+	write_completely(commandFd, packetbuf, packetSize);
+	
+	size_t numread;
+	read_packet(responseFd, packetbuf, 1024, &numread);
+	size_t packetContentSize;
+	char *packetContents;
+	
+	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
+	
+	uint32_t responseInvocationId;
+	size_t argCount;
+	
+	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
+					  &responseInvocationId,
+					  cmd_args, &argCount);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Can't parse response on FCLOSE\n");
+		abort();
+	}
+	if (responseInvocationId != invocationId) {
+		fprintf(stderr, "Wrong invocationId on FCLOSE\n");
+		abort();
+	}
+	if (argCount != 1) {
+		fprintf(stderr, "Wrong number of reponses to FCLOSE\n");
+		abort();
+	}
+	if (cmd_args[0].type != smb_rpc_command_argument_type_int) {
+		fprintf(stderr, "Wrong type of response part to FCLOSE\n");
+		abort();
+	}
+	if (cmd_args[0].value.int_value) {
+			errno = cmd_args[0].value.int_value;
+			perror("FCLOSE");
+		exit(1);
+	}
+	
+	return cmd_args[1].value.int_value;
 }
 
 int main(int argv, char **argc)
@@ -119,26 +384,30 @@ int main(int argv, char **argc)
 	
 	auth(commandfds[1], responsefds[0], argc[1]);
 	
-	char packetbuf[1024];
-	size_t packetSize = 1024;
-	smb_rpc_command_argument cmd_args[2];
-	cmd_args[0].type = smb_rpc_command_argument_type_string;
-	cmd_args[0].value.string_value.string = "FOPEN";
-	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
-	cmd_args[1].type = smb_rpc_command_argument_type_string;
-
 	char urlbuf[1024];
 	ini_gets("", "url", "", urlbuf, 1024, argc[1]);
 
+	int smbfd = do_fopen(commandfds[1], responsefds[0], urlbuf);
+	char readbuf[102400];
 	
-	cmd_args[1].value.string_value.string = urlbuf;
-	cmd_args[1].value.string_value.length = strlen(cmd_args[1].value.string_value.string);
+	errno = 0;
+	int outputFd = open("./copy.bin",O_RDWR | O_CREAT, 00660);
+	if (outputFd < 0) {
+		perror ("Open output");
+		abort();
+	}
 	
-	packetSize = smb_rpc_encode_return_packet(packetbuf, packetbufSize, 1,
-				     cmd_args, 2);
-	size_t numwritten = write(commandfds[1], packetbuf, packetSize);
-	
-	char inbuf[1024];
-	size_t numread = read(responsefds[0], inbuf, 1024);
+	ssize_t num_read;
+	while ((num_read = do_read(commandfds[1], responsefds[0],
+				   smbfd, readbuf, 102400))) {
+		if (num_read < 0) {
+			perror("Reading file");
+			abort();
+		}
+		
+		write_completely(outputFd, readbuf, num_read);
+	}
+	do_fclose(commandfds[1], responsefds[0], smbfd);
+	close (outputFd);
 	
 }

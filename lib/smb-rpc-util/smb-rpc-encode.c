@@ -217,6 +217,29 @@ smb_rpc_decode_result smb_rpc_decode_response(char *input, size_t inputlen,
 	}
 }
 
+smb_rpc_decode_result smb_rpc_check_response(smb_rpc_command_argument *args, size_t arg_count, size_t expected_arg_count, ...)
+{
+	if (expected_arg_count != arg_count) {
+		return smb_rpc_decode_result_invalid;
+	}
+	
+	va_list ap;
+	
+	va_start(ap, expected_arg_count);
+	size_t counter;
+	for (counter = 0; counter < arg_count; counter++) {
+		smb_rpc_command_argument_type expected_type = va_arg(ap, smb_rpc_command_argument_type);
+		
+		if (expected_type != args[counter].type) {
+			return smb_rpc_decode_result_invalid;
+		}
+	}
+	
+	va_end(ap);
+	
+	return smb_rpc_decode_result_ok;
+}
+
 smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,
 					     char **command, size_t *command_length,
 					     uint32_t *invocation_id,

@@ -10,6 +10,7 @@
 #define smb_rpc_encode_h
 
 #include <stdio.h>
+#include <stdarg.h>
 
 #define SMB_RPC_COMMAND_MAX_ARGUMENTS 5
 #define SMB_RPC_COMMAND_MAX_RETURNS 3
@@ -61,4 +62,6 @@ smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,
 smb_rpc_decode_result smb_rpc_decode_response(char *input, size_t inputlen,
 					      uint32_t *invocation_id,
 					      smb_rpc_command_argument *args, size_t *arg_count);
+smb_rpc_decode_result smb_rpc_check_response(smb_rpc_command_argument *args, size_t arg_count,
+					     size_t expected_arg_count, ...);
 #endif /* smb_rpc_encode_h */

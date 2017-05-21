@@ -157,7 +157,8 @@ void auth(int commandFd, int responseFd, const char *iniFilename)
 		fprintf(stderr, "Wrong invocationId on SETAUTH\n");
 		abort();
 	}
-	if (argCount != 0) {
+	ret = smb_rpc_check_response(cmd_args, argCount, 0);
+	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to SETAUTH\n");
 		abort();
 	}
@@ -204,20 +205,11 @@ int do_fopen(int commandFd, int responseFd, char *url)
 		fprintf(stderr, "Wrong invocationId on FOPEN\n");
 		abort();
 	}
-	if (argCount == 1) {
-		if (cmd_args[0].type == smb_rpc_command_argument_type_int) {
-			errno = cmd_args[0].value.int_value;
-			perror("FOPEN");
-			exit(1);
-		}
-	}
-	if (argCount != 2) {
-		fprintf(stderr, "Wrong number of reponses to FOPEN\n");
-		abort();
-	}
-	if ((cmd_args[0].type != smb_rpc_command_argument_type_int) ||
-	    (cmd_args[1].type != smb_rpc_command_argument_type_int)) {
-		fprintf(stderr, "Wrong type of response part to FOPEN\n");
+	ret = smb_rpc_check_response(cmd_args, argCount, 2,
+				     smb_rpc_command_argument_type_int,
+				     smb_rpc_command_argument_type_int);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Wrong response to FOPEN\n");
 		abort();
 	}
 	
@@ -273,15 +265,14 @@ ssize_t do_read(int commandFd, int responseFd, int smb_fd, char *buf, size_t buf
 		fprintf(stderr, "Wrong invocationId on FREAD\n");
 		abort();
 	}
-	if (argCount != 2) {
-		fprintf(stderr, "Wrong number of reponses to FREAD\n");
+	ret = smb_rpc_check_response(cmd_args, argCount, 2,
+				     smb_rpc_command_argument_type_int,
+				     smb_rpc_command_argument_type_string);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Wrong response to FREAD\n");
 		abort();
 	}
-	if ((cmd_args[0].type != smb_rpc_command_argument_type_int) ||
-	    (cmd_args[1].type != smb_rpc_command_argument_type_string)) {
-		fprintf(stderr, "Wrong type of response part to FREAD\n");
-		abort();
-	}
+	
 	if (cmd_args[0].value.int_value != 0) {
 		errno = cmd_args[0].value.int_value;
 		perror("FREAD");
@@ -329,12 +320,10 @@ int do_fclose(int commandFd, int responseFd, int smbfd)
 		fprintf(stderr, "Wrong invocationId on FCLOSE\n");
 		abort();
 	}
-	if (argCount != 1) {
-		fprintf(stderr, "Wrong number of reponses to FCLOSE\n");
-		abort();
-	}
-	if (cmd_args[0].type != smb_rpc_command_argument_type_int) {
-		fprintf(stderr, "Wrong type of response part to FCLOSE\n");
+	ret = smb_rpc_check_response(cmd_args, argCount, 1,
+				     smb_rpc_command_argument_type_int);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Wrong response to FCLOSE\n");
 		abort();
 	}
 	if (cmd_args[0].value.int_value) {

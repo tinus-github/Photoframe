@@ -155,6 +155,7 @@ static void smb_rpc_command_fopen(appdata *appData, uint32_t invocation_id, smb_
 	
 	char *url = malloc(args[0].value.string_value.length + 1);
 	strncpy(url, args[0].value.string_value.string, args[0].value.string_value.length + 1);
+	url[args[0].value.string_value.length] = '\0';
 	
 	errno = 0;
 	int smb_fd = smb_rpc_open_file(appData->smb_data, url);
@@ -163,7 +164,9 @@ static void smb_rpc_command_fopen(appdata *appData, uint32_t invocation_id, smb_
 	if (smb_fd < 0) {
 		staticReturns[0].type = smb_rpc_command_argument_type_int;
 		staticReturns[0].value.int_value = errno;
-		smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
+		staticReturns[1].type = smb_rpc_command_argument_type_int;
+		staticReturns[1].value.int_value = 0;
+		smb_rpc_send_command_output(appData, invocation_id, staticReturns, 2);
 		return;
 	}
 
@@ -317,6 +320,123 @@ static void smb_rpc_command_fclose(appdata *appData, uint32_t invocation_id, smb
 	smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
 }
 
+static void smb_rpc_command_dopen(appdata *appData, uint32_t invocation_id, smb_rpc_command_argument *args, size_t arg_count)
+{
+	if (arg_count != 1) {
+		smb_rpc_command_error("Invalid number of arguments to DOPEN");
+	}
+	if (args[0].type != smb_rpc_command_argument_type_string) {
+		smb_rpc_command_error("Invalid argument type to DOPEN");
+	}
+	
+	char *url = malloc(args[0].value.string_value.length + 1);
+	strncpy(url, args[0].value.string_value.string, args[0].value.string_value.length + 1);
+	url[args[0].value.string_value.length] = '\0';
+	
+	errno = 0;
+	int smb_fd = smb_rpc_open_dir(appData->smb_data, url);
+	free (url);
+	
+	if (smb_fd < 0) {
+		staticReturns[0].type = smb_rpc_command_argument_type_int;
+		staticReturns[0].value.int_value = errno;
+		staticReturns[1].type = smb_rpc_command_argument_type_int;
+		staticReturns[1].value.int_value = 0;
+		smb_rpc_send_command_output(appData, invocation_id, staticReturns, 2);
+		return;
+	}
+	
+	int fd = alloc_fd(appData->dirFds, smb_fd);
+	staticReturns[0].type = smb_rpc_command_argument_type_int;
+	staticReturns[0].value.int_value = 0;
+	staticReturns[1].type = smb_rpc_command_argument_type_int;
+	staticReturns[1].value.int_value = fd + FD_OFFSET;
+	smb_rpc_send_command_output(appData, invocation_id, staticReturns, 2);
+	
+	return;
+}
+
+static void smb_rpc_command_dread(appdata *appData, uint32_t invocation_id,
+				  smb_rpc_command_argument *args, size_t arg_count)
+{
+	if (arg_count != 1) {
+		smb_rpc_command_error("Invalid number of arguments to DREAD");
+	}
+	if (args[0].type != smb_rpc_command_argument_type_int) {
+		smb_rpc_command_error("Invalid argument type to DREAD");
+	}
+	
+	int arg_fd = args[0].value.int_value - FD_OFFSET;
+
+	staticReturns[0].type = smb_rpc_command_argument_type_int;
+	staticReturns[1].type = smb_rpc_command_argument_type_int;
+	staticReturns[1].value.int_value = smb_rpc_dirent_type_none;
+	staticReturns[2].type = smb_rpc_command_argument_type_string;
+	staticReturns[2].value.string_value.length = 0;
+	staticReturns[2].value.string_value.string = "";
+	
+	if ((arg_fd >= FD_SETSIZE) || (arg_fd < 0)) {
+		smb_rpc_command_error_nonfatal("Invalid fd passed to DREAD");
+		staticReturns[0].value.int_value = EBADF;
+		return smb_rpc_send_command_output(appData, invocation_id, staticReturns, 3);
+	}
+	int smb_fd = appData->dirFds[arg_fd];
+	if (!smb_fd) {
+		smb_rpc_command_error_nonfatal("Unopened fd passed to DREAD");
+		staticReturns[0].value.int_value = EBADF;
+		return smb_rpc_send_command_output(appData, invocation_id, staticReturns, 3);
+	}
+
+	errno = 0;
+	const smb_rpc_dirent *dirent = smb_rpc_read_dir(appData->smb_data, smb_fd);
+	staticReturns[0].value.int_value = errno;
+	
+	if (!dirent) {
+		staticReturns[1].value.int_value = smb_rpc_dirent_type_none;
+		staticReturns[2].value.string_value.length = 0;
+		staticReturns[2].value.string_value.string = "";
+	} else {
+		staticReturns[1].value.int_value = dirent->type;
+		staticReturns[2].value.string_value.length = dirent->namelen;
+		staticReturns[2].value.string_value.string = dirent->name;
+	}
+	smb_rpc_send_command_output(appData, invocation_id, staticReturns, 3);
+}
+
+static void smb_rpc_command_dclose(appdata *appData, uint32_t invocation_id, smb_rpc_command_argument *args, size_t arg_count)
+{
+	if (arg_count != 1) {
+		smb_rpc_command_error("Invalid number of arguments to DCLOSE");
+	}
+	if (args[0].type != smb_rpc_command_argument_type_int) {
+		smb_rpc_command_error("Invalid argument type to DCLOSE");
+	}
+	
+	int arg_fd = args[0].value.int_value - FD_OFFSET;
+	if ((arg_fd >= FD_SETSIZE) || (arg_fd < 0)) {
+		smb_rpc_command_error_nonfatal("Invalid fd passed to DCLOSE");
+		staticReturns[0].type = smb_rpc_command_argument_type_int;
+		staticReturns[0].value.int_value = EBADF;
+		return smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
+	}
+	int smb_fd = appData->dirFds[arg_fd];
+	if (!smb_fd) {
+		smb_rpc_command_error_nonfatal("Unopened fd passed to DCLOSE");
+		staticReturns[0].type = smb_rpc_command_argument_type_int;
+		staticReturns[0].value.int_value = EBADF;
+		return smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
+	}
+	
+	errno = 0;
+	
+	smb_rpc_close_dir(appData->smb_data, smb_fd);
+	free_fd(appData->dirFds, arg_fd);
+	
+	staticReturns[0].type = smb_rpc_command_argument_type_int;
+	staticReturns[0].value.int_value = errno;
+	smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
+}
+
 static int is_command(char *actual_command, char *sent_command, size_t sent_command_length)
 {
 	size_t actual_command_length = strlen(actual_command);
@@ -332,6 +452,11 @@ int smb_rpc_command_execute(appdata *appData, char *command, size_t command_leng
 {
 	if (!is_command("FREAD", command, command_length)) {
 		smb_rpc_command_fread(appData, invocation_id, args, arg_count);
+		return 0;
+	}
+	
+	if (!is_command("DREAD", command, command_length)) {
+		smb_rpc_command_dread(appData, invocation_id, args, arg_count);
 		return 0;
 	}
 	
@@ -359,6 +484,17 @@ int smb_rpc_command_execute(appdata *appData, char *command, size_t command_leng
 		smb_rpc_command_setauth(appData, invocation_id, args, arg_count);
 		return 0;
 	}
+	
+	if (!is_command("DOPEN", command, command_length)) {
+		smb_rpc_command_dopen(appData, invocation_id, args, arg_count);
+		return 0;
+	}
+	
+	if (!is_command("DCLOSE", command, command_length)) {
+		smb_rpc_command_dclose(appData, invocation_id, args, arg_count);
+		return 0;
+	}
+	
 	smb_rpc_command_error("Invalid command\n");
 	return 1;
 }

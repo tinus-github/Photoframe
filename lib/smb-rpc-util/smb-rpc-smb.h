@@ -23,4 +23,8 @@ ssize_t smb_rpc_read_file(smb_rpc_smb_data *data, int fd, void *buf, size_t bufs
 off_t smb_rpc_seek_file(smb_rpc_smb_data *data, int fd, off_t offset, int whence);
 void smb_rpc_close_file(smb_rpc_smb_data *data, int fd);
 
+int smb_rpc_open_dir(smb_rpc_smb_data *data, const char *url);
+const smb_rpc_dirent *smb_rpc_read_dir(smb_rpc_smb_data *data, int fd);
+void smb_rpc_close_dir(smb_rpc_smb_data *data, int fd);
+
 #endif /* smb_rpc_smb_h */

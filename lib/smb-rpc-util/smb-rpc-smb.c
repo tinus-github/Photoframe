@@ -136,7 +136,7 @@ void smb_rpc_close_dir(smb_rpc_smb_data *data, int fd)
 	}
 }
 
-const smb_rpc_dirent *smb_read_dir(smb_rpc_smb_data *data, int fd)
+const smb_rpc_dirent *smb_rpc_read_dir(smb_rpc_smb_data *data, int fd)
 {
 	activate_smb_data(data);
 	

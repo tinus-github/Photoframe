@@ -332,7 +332,173 @@ int do_fclose(int commandFd, int responseFd, int smbfd)
 		exit(1);
 	}
 	
+	return cmd_args[0].value.int_value;
+}
+
+int do_dopen(int commandFd, int responseFd, char *url)
+{
+	char packetbuf[1024];
+	size_t packetSize = 1024;
+	smb_rpc_command_argument cmd_args[2];
+	uint32_t invocationId = get_invocationId();
+	
+	cmd_args[0].type = smb_rpc_command_argument_type_string;
+	cmd_args[0].value.string_value.string = "DOPEN";
+	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
+	cmd_args[1].type = smb_rpc_command_argument_type_string;
+	
+	cmd_args[1].value.string_value.string = url;
+	cmd_args[1].value.string_value.length = strlen(url);
+	
+	packetSize = smb_rpc_encode_return_packet(packetbuf, packetbufSize, invocationId,
+						  cmd_args, 2);
+	write_completely(commandFd, packetbuf, packetSize);
+	
+	size_t numread;
+	read_packet(responseFd, packetbuf, 1024, &numread);
+	size_t packetContentSize;
+	char *packetContents;
+	
+	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
+	
+	uint32_t responseInvocationId;
+	size_t argCount;
+	
+	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
+					  &responseInvocationId,
+					  cmd_args, &argCount);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Can't parse response on DOPEN\n");
+		abort();
+	}
+	if (responseInvocationId != invocationId) {
+		fprintf(stderr, "Wrong invocationId on DOPEN\n");
+		abort();
+	}
+	ret = smb_rpc_check_response(cmd_args, argCount, 2,
+				     smb_rpc_command_argument_type_int,
+				     smb_rpc_command_argument_type_int);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Wrong response to DOPEN\n");
+		abort();
+	}
+	
+	if (cmd_args[0].value.int_value != 0) {
+		errno = cmd_args[0].value.int_value;
+		perror("DOPEN");
+		exit(1);
+	}
+	
 	return cmd_args[1].value.int_value;
+}
+
+int do_dread(int commandFd, int responseFd, int smbfd, smb_rpc_dirent_type *entryType, char **entryName)
+{
+	static char packetbuf[1024];
+	size_t packetSize = 1024;
+	smb_rpc_command_argument cmd_args[3];
+	uint32_t invocationId = get_invocationId();
+	
+	cmd_args[0].type = smb_rpc_command_argument_type_string;
+	cmd_args[0].value.string_value.string = "DREAD";
+	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
+	cmd_args[1].type = smb_rpc_command_argument_type_int;
+	cmd_args[1].value.int_value = smbfd;
+
+	packetSize = smb_rpc_encode_return_packet(packetbuf, packetbufSize, invocationId,
+						  cmd_args, 2);
+	write_completely(commandFd, packetbuf, packetSize);
+	
+	size_t numread;
+	read_packet(responseFd, packetbuf, 1024, &numread);
+	size_t packetContentSize;
+	char *packetContents;
+	
+	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
+	
+	uint32_t responseInvocationId;
+	size_t argCount;
+	
+	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
+					  &responseInvocationId,
+					  cmd_args, &argCount);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Can't parse response on DREAD\n");
+		abort();
+	}
+	if (responseInvocationId != invocationId) {
+		fprintf(stderr, "Wrong invocationId on DREAD\n");
+		abort();
+	}
+	ret = smb_rpc_check_response(cmd_args, argCount, 3,
+				     smb_rpc_command_argument_type_int,
+				     smb_rpc_command_argument_type_int,
+				     smb_rpc_command_argument_type_string);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Wrong response to DREAD\n");
+		abort();
+	}
+	if (cmd_args[0].value.int_value) {
+		return cmd_args[0].value.int_value;
+	}
+	
+	*entryType = cmd_args[1].value.int_value;
+	*entryName = strndup(cmd_args[2].value.string_value.string, cmd_args[2].value.string_value.length);
+	
+	return 0;
+}
+
+int do_dclose(int commandFd, int responseFd, int smbfd)
+{
+	char packetbuf[1024];
+	size_t packetSize = 1024;
+	smb_rpc_command_argument cmd_args[2];
+	uint32_t invocationId = get_invocationId();
+	
+	cmd_args[0].type = smb_rpc_command_argument_type_string;
+	cmd_args[0].value.string_value.string = "DCLOSE";
+	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
+	cmd_args[1].type = smb_rpc_command_argument_type_int;
+	cmd_args[1].value.int_value = smbfd;
+	
+	packetSize = smb_rpc_encode_return_packet(packetbuf, packetbufSize, invocationId,
+						  cmd_args, 2);
+	write_completely(commandFd, packetbuf, packetSize);
+	
+	size_t numread;
+	read_packet(responseFd, packetbuf, 1024, &numread);
+	size_t packetContentSize;
+	char *packetContents;
+	
+	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
+	
+	uint32_t responseInvocationId;
+	size_t argCount;
+	
+	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
+					  &responseInvocationId,
+					  cmd_args, &argCount);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Can't parse response on DCLOSE\n");
+		abort();
+	}
+	if (responseInvocationId != invocationId) {
+		fprintf(stderr, "Wrong invocationId on DCLOSE\n");
+		abort();
+	}
+	ret = smb_rpc_check_response(cmd_args, argCount, 1,
+				     smb_rpc_command_argument_type_int);
+	if (ret != smb_rpc_decode_result_ok) {
+		fprintf(stderr, "Wrong response to DCLOSE\n");
+		abort();
+	}
+	if (cmd_args[0].value.int_value) {
+		errno = cmd_args[0].value.int_value;
+		perror("DCLOSE");
+		exit(1);
+	}
+	
+	return cmd_args[0].value.int_value;
 }
 
 int main(int argv, char **argc)
@@ -396,7 +562,45 @@ int main(int argv, char **argc)
 		
 		write_completely(outputFd, readbuf, num_read);
 	}
-	do_fclose(commandfds[1], responsefds[0], smbfd);
 	close (outputFd);
 	
+	ini_gets("", "dirurl", "", urlbuf, 1024, argc[1]);
+
+	do_fclose(commandfds[1], responsefds[0], smbfd);
+	smbfd = do_dopen(commandfds[1], responsefds[0], urlbuf);
+	
+	do {
+		smb_rpc_dirent_type entryType;
+		char *entryName;
+		
+		int ret = do_dread(commandfds[1], responsefds[0], smbfd, &entryType, &entryName);
+		if (ret) {
+			errno = ret;
+			perror("Reading dir");
+			abort();
+		}
+		char typeChar;
+	
+		if (entryType == smb_rpc_dirent_type_none) {
+			break;
+		}
+
+		switch(entryType) {
+			case smb_rpc_dirent_type_file:
+				typeChar = 'F';
+				break;
+			case smb_rpc_dirent_type_dir:
+				typeChar = 'D';
+				break;
+			default:
+				fprintf(stderr, "Bad direntry type %i\n", entryType);
+				abort();
+		}
+		
+		fprintf(stderr, "%c %s\n", typeChar, entryName);
+		free(entryName);
+		entryName = NULL;
+	} while (1);
+
+	do_dclose(commandfds[1], responsefds[0], smbfd);
 }

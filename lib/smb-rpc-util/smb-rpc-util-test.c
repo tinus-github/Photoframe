@@ -7,7 +7,7 @@
 //
 
 #include "smb-rpc-util-test.h"
-#include "smb-rpc-encode.h"
+#include "smb-rpc-client.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>

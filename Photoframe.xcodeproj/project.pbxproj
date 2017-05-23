@@ -498,6 +498,7 @@
 		0D3ADC761E0B1C5D009A40B1 /* gl-container-2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-container-2d.h"; sourceTree = "<group>"; };
 		0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-stream-rewindable.c"; sourceTree = "<group>"; };
 		0D3B098A1E5E20F700C4E97E /* gl-stream-rewindable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-stream-rewindable.h"; sourceTree = "<group>"; };
+		0D41B2401ED45DC400F81C79 /* smb-rpc-client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "smb-rpc-client.h"; sourceTree = "<group>"; };
 		0D4767B51EB92A9D004CF39B /* smb-rpc-util-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "smb-rpc-util-test"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D4767BD1EB92AD7004CF39B /* smb-rpc-util-test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "smb-rpc-util-test.c"; sourceTree = "<group>"; };
 		0D4767BE1EB92AD7004CF39B /* smb-rpc-util-test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "smb-rpc-util-test.h"; sourceTree = "<group>"; };
@@ -5060,6 +5061,7 @@
 			isa = PBXGroup;
 			children = (
 				0D5721971EB2B4DF007A1073 /* Doc */,
+				0D41B2401ED45DC400F81C79 /* smb-rpc-client.h */,
 				0D2D19691EB370660049A16E /* smb-rpc-encode.c */,
 				0D2D196A1EB370660049A16E /* smb-rpc-encode.h */,
 				0D2D196D1EB4B3810049A16E /* smb-rpc-auth.c */,

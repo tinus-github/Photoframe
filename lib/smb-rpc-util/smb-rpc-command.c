@@ -19,9 +19,14 @@
 
 static smb_rpc_command_argument staticReturns[SMB_RPC_COMMAND_MAX_RETURNS];
 
-static void smb_rpc_command_error(char *msg)
+static void smb_rpc_command_error_nonfatal(char *msg)
 {
 	fprintf(stderr, "%s\n", msg);
+}
+
+static void smb_rpc_command_error(char *msg)
+{
+	smb_rpc_command_error_nonfatal(msg);
 	abort();
 }
 
@@ -51,6 +56,7 @@ static char *stringz_from_buf(char *buf, size_t buflen)
 {
 	char *ret = malloc(buflen + 1);
 	strncpy(ret, buf, buflen);
+	ret[buflen] = '\0';
 	
 	return ret;
 }
@@ -187,14 +193,22 @@ static void smb_rpc_command_fread(appdata *appData, uint32_t invocation_id, smb_
 		smb_rpc_command_error("Invalid argument 2 type to FREAD");
 	}
 	
+	staticReturns[0].type = smb_rpc_command_argument_type_int;
+	staticReturns[1].type = smb_rpc_command_argument_type_string;
+	staticReturns[1].value.string_value.length = 0;
+	staticReturns[1].value.string_value.string = "";
+	
 	int arg_fd = args[0].value.int_value - FD_OFFSET;
 	if ((arg_fd >= FD_SETSIZE) || (arg_fd < 0)) {
-		smb_rpc_command_error("Invalid fd passed to FREAD");
+		smb_rpc_command_error_nonfatal("Invalid fd passed to FREAD");
+		staticReturns[0].value.int_value = EBADF;
+		return smb_rpc_send_command_output(appData, invocation_id, staticReturns, 2);
 	}
 	int smb_fd = appData->fileFds[arg_fd];
 	if (!smb_fd) {
-		// Might want to make this non fatal
-		smb_rpc_command_error("Unopened fd passed to FREAD");
+		smb_rpc_command_error_nonfatal("Unopened fd passed to FREAD");
+		staticReturns[0].value.int_value = EBADF;
+		return smb_rpc_send_command_output(appData, invocation_id, staticReturns, 2);
 	}
 	size_t bufsize = args[1].value.int_value;
 	if (bufsize > MAX_READ_SIZE) {
@@ -203,9 +217,7 @@ static void smb_rpc_command_fread(appdata *appData, uint32_t invocation_id, smb_
 	
 	ssize_t num_read = smb_rpc_read_file(appData->smb_data, smb_fd, readBuf, bufsize);
 	
-	staticReturns[0].type = smb_rpc_command_argument_type_int;
 	staticReturns[0].value.int_value = errno;
-	staticReturns[1].type = smb_rpc_command_argument_type_string;
 	
 	if (num_read < 1) {
 		staticReturns[1].value.string_value.length = 0;
@@ -231,16 +243,21 @@ static void smb_rpc_command_fseek(appdata *appData, uint32_t invocation_id, smb_
 	}
 	if (args[2].type != smb_rpc_command_argument_type_int) {
 		smb_rpc_command_error("Invalid argument 3 type to FSEEK");
-	}
 	
+	}
+	staticReturns[0].type = smb_rpc_command_argument_type_int;
+
 	int arg_fd = args[0].value.int_value - FD_OFFSET;
 	if ((arg_fd >= FD_SETSIZE) || (arg_fd < 0)) {
-		smb_rpc_command_error("Invalid fd passed to FSEEK");
+		smb_rpc_command_error_nonfatal("Invalid fd passed to FSEEK");
+		staticReturns[0].value.int_value = EBADF;
+		return smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
 	}
 	int smb_fd = appData->fileFds[arg_fd];
 	if (!smb_fd) {
-		// Might want to make this non fatal
-		smb_rpc_command_error("Unopened fd passed to FSEEK");
+		smb_rpc_command_error_nonfatal("Unopened fd passed to FSEEK");
+		staticReturns[0].value.int_value = EBADF;
+		return smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
 	}
 	
 	int offset = args[1].value.int_value;
@@ -256,7 +273,6 @@ static void smb_rpc_command_fseek(appdata *appData, uint32_t invocation_id, smb_
 	
 	off_t seek_ret = smb_rpc_seek_file(appData->smb_data, smb_fd, offset, whence);
 	
-	staticReturns[0].type = smb_rpc_command_argument_type_int;
 	if (seek_ret == -1) {
 		staticReturns[0].value.int_value = errno;
 	} else {
@@ -278,12 +294,17 @@ static void smb_rpc_command_fclose(appdata *appData, uint32_t invocation_id, smb
 	
 	int arg_fd = args[0].value.int_value - FD_OFFSET;
 	if ((arg_fd >= FD_SETSIZE) || (arg_fd < 0)) {
-		smb_rpc_command_error("Invalid fd passed to FCLOSE");
+		smb_rpc_command_error_nonfatal("Invalid fd passed to FCLOSE");
+		staticReturns[0].type = smb_rpc_command_argument_type_int;
+		staticReturns[0].value.int_value = EBADF;
+		return smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
 	}
 	int smb_fd = appData->fileFds[arg_fd];
 	if (!smb_fd) {
-		// Might want to make this non fatal
-		smb_rpc_command_error("Unopened fd passed to FCLOSE");
+		smb_rpc_command_error_nonfatal("Unopened fd passed to FCLOSE");
+		staticReturns[0].type = smb_rpc_command_argument_type_int;
+		staticReturns[0].value.int_value = EBADF;
+		return smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
 	}
 	
 	errno = 0;

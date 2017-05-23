@@ -10,21 +10,9 @@
 #define smb_rpc_smb_h
 
 #include <stdio.h>
+#include "smb-rpc-client.h"
 
 typedef struct smb_rpc_smb_data smb_rpc_smb_data;
-
-typedef enum {
-	smb_rpc_dirent_type_file = 1,
-	smb_rpc_dirent_type_dir = 2,
-} smb_rpc_dirent_type;
-
-typedef struct smb_rpc_dirent {
-	smb_rpc_dirent_type type;
-	char *name;
-	
-	// excluding the terminating \0
-	size_t namelen;
-} smb_rpc_dirent;
 
 smb_rpc_smb_data *smb_rpc_smb_new_data();
 // Must make sure to close everything associaled with this context,

@@ -32,15 +32,15 @@ $(SMBCLIENT_CFLAGS)
 COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) -c
 
 smb-rpc-util: $(OBJECTS_UTIL)
-cc -o smb-rpc-util -Wl,--whole-archive $(OBJECTS) \
--Wl,--no-whole-archive -rdynamic $(OPTFLAGS) \
-$(SMBCLIENT_LIBS)
+	cc -o smb-rpc-util -Wl,--whole-archive $(OBJECTS) \
+	-Wl,--no-whole-archive -rdynamic $(OPTFLAGS) \
+	$(SMBCLIENT_LIBS)
 
 %.o : %.c
 
 %.o : %.c $(DEPDIR)/%.d
-$(COMPILE.c) $(OUTPUT_OPTION) $<
-$(POSTCOMPILE)
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
 
 clean:
 rm -f smb-rpc-util $(OBJECTS)

@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdint.h>
 
 #define SMB_RPC_COMMAND_MAX_ARGUMENTS 5
 #define SMB_RPC_COMMAND_MAX_RETURNS 3

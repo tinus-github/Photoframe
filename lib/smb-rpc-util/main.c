@@ -64,10 +64,6 @@ static void handle_io(appdata *appData)
 	if (appData->outbuf->contentSize) {
 		FD_SET(appData->outfilefd, &appData->outputset);
 	}
-
-	struct timeval timeout;
-	timeout.tv_sec = 1;
-	timeout.tv_usec = 0;
 	
 	errno = 0;
 	int selectret = select(appData->maxfd,

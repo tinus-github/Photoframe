@@ -11,6 +11,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 static smb_rpc_auth_data *auth_data_default = NULL;
 static smb_rpc_auth_data *auth_data = NULL;
@@ -74,6 +75,9 @@ void smb_rpc_auth_get_auth_fn(const char *server,
 			      char *password,
 			      int passwordSpace)
 {
+	assert (workgroupSpace > 0);
+	assert (usernameSpace > 0);
+	assert (passwordSpace > 0);
 	smb_rpc_auth_data *current_entry = auth_data;
 	
 	while (current_entry) {
@@ -92,9 +96,12 @@ void smb_rpc_auth_get_auth_fn(const char *server,
 	}
 	
 	if (current_entry->workgroup) {
-		strlcpy(workgroup, current_entry->workgroup, workgroupSpace);
+		strncpy(workgroup, current_entry->workgroup, workgroupSpace);
+		workgroup[workgroupSpace - 1] = '\0';
 	}
-	strlcpy(username, current_entry->username, usernameSpace);
-	strlcpy(password, current_entry->password, passwordSpace);
+	strncpy(username, current_entry->username, usernameSpace);
+	username[usernameSpace - 1] = '\0';
+	strncpy(password, current_entry->password, passwordSpace);
+	password[passwordSpace - 1] = '\0';
 }
 

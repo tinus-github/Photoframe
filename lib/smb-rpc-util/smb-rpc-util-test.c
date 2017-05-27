@@ -14,7 +14,7 @@
 #include <string.h>
 #include <assert.h>
 #include <fcntl.h>
-#include "minini.h"
+#include "minIni.h"
 
 #define MAXARGS 5
 

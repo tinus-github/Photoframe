@@ -220,7 +220,11 @@ static void smb_rpc_command_fread(appdata *appData, uint32_t invocation_id, smb_
 	
 	ssize_t num_read = smb_rpc_read_file(appData->smb_data, smb_fd, readBuf, bufsize);
 	
-	staticReturns[0].value.int_value = errno;
+	if (num_read < 0) {
+		staticReturns[0].value.int_value = errno;
+	} else {
+		staticReturns[0].value.int_value = 0;
+	}
 	
 	if (num_read < 1) {
 		staticReturns[1].value.string_value.length = 0;

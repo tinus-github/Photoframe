@@ -47,7 +47,7 @@ smb-rpc-util: $(OBJECTS_UTIL)
 smb-rpc-util-test: $(OBJECTS_TEST)
 	cc -o smb-rpc-util-test -Wl,--whole-archive $(OBJECTS_TEST) \
 	-Wl,--no-whole-archive -rdynamic $(OPTFLAGS) \
-	$(MININI_CFLAGS)
+	$(MININI_LIBS)
 
 %.o : %.c
 

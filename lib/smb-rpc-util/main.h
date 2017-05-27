@@ -10,6 +10,7 @@
 #define main_h
 
 #include <stdio.h>
+#include <sys/select.h>
 #include "smb-rpc-buffer.h"
 #include "smb-rpc-smb.h"
 

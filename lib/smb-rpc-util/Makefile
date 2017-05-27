@@ -43,7 +43,7 @@ smb-rpc-util: $(OBJECTS_UTIL)
 	$(POSTCOMPILE)
 
 clean:
-rm -f smb-rpc-util $(OBJECTS)
+	rm -f smb-rpc-util $(OBJECTS)
 
 $(DEPDIR)/%.d: ;
 .PRECIOUS: $(DEPDIR)/%.d

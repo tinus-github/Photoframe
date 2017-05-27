@@ -98,15 +98,16 @@ off_t smb_rpc_seek_file(smb_rpc_smb_data *data, int fd, off_t offset, int whence
 }
 
 // can only fail due to programming errors
-void smb_rpc_close_file(smb_rpc_smb_data *data, int fd)
+int smb_rpc_close_file(smb_rpc_smb_data *data, int fd)
 {
 	activate_smb_data(data);
 
 	errno = 0;
-	if (smbc_close(fd)) {
+	int ret = smbc_close(fd);
+	if (ret) {
 		fprintf(stderr, "Failed to close file, errno=%d\n", errno);
-		abort();
 	}
+	return ret;
 }
 
 ssize_t smb_rpc_read_file(smb_rpc_smb_data *data, int fd, void *buf, size_t bufsize)

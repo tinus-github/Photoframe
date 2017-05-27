@@ -316,11 +316,15 @@ static void smb_rpc_command_fclose(appdata *appData, uint32_t invocation_id, smb
 	
 	errno = 0;
 	
-	smb_rpc_close_file(appData->smb_data, smb_fd);
+	int closeRet = smb_rpc_close_file(appData->smb_data, smb_fd);
 	free_fd(appData->fileFds, arg_fd);
 	
 	staticReturns[0].type = smb_rpc_command_argument_type_int;
-	staticReturns[0].value.int_value = errno;
+	if (closeRet) {
+		staticReturns[0].value.int_value = errno;
+	} else {
+		staticReturns[0].value.int_value = 0;
+	}
 	smb_rpc_send_command_output(appData, invocation_id, staticReturns, 1);
 }
 

@@ -32,11 +32,15 @@ int main(int argv, char **argc)
 	appdata *appData = calloc(1, sizeof(appdata));
 	
 	appData->inbuf = smb_rpc_buffer_new();
-	appData->infile = stdin;
-	appData->infilefd = fileno(appData->infile);
+	appData->infilefd = fileno(stdin);
 	appData->outbuf = smb_rpc_buffer_new();
-	appData->outfile = stdout;
-	appData->outfilefd = fileno(appData->outfile);
+	
+	// depending on smb.conf, which isn't really controlled,
+ 	// libsmbclient may spew stuff into stdout. So we redirect that to stderr.
+	appData->outfilefd = dup(fileno(stdout));
+	close(fileno(stdout));
+	dup2(fileno(stderr), fileno(stdout));
+	
 	appData->maxfd = appData->infilefd;
 	if (appData->maxfd < appData->outfilefd) {
 		appData->maxfd = appData->outfilefd;

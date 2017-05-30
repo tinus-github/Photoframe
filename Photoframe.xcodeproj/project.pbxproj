@@ -571,6 +571,7 @@
 		0DAFDA531E477D6100C5100E /* libexif.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libexif.a; path = lib/libexif/build/lib/libexif.a; sourceTree = "<group>"; };
 		0DAFDA751E47811300C5100E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		0DAFDA771E47817600C5100E /* gl-includes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-includes.h"; sourceTree = "<group>"; };
+		0DBC5D301ED9A1880059825F /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		0DC0F05D1EAE95E00029FB1E /* gl-timer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-timer.c"; sourceTree = "<group>"; };
 		0DC0F05E1EAE95E00029FB1E /* gl-timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-timer.h"; sourceTree = "<group>"; };
 		0DC0F0611EAEB0B50029FB1E /* gl-timer-queue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-timer-queue.c"; sourceTree = "<group>"; };
@@ -5077,6 +5078,7 @@
 				0D8D74CB1EB7C8810015445E /* main.h */,
 				0D4767BD1EB92AD7004CF39B /* smb-rpc-util-test.c */,
 				0D4767BE1EB92AD7004CF39B /* smb-rpc-util-test.h */,
+				0DBC5D301ED9A1880059825F /* Makefile */,
 			);
 			path = "smb-rpc-util";
 			sourceTree = "<group>";

@@ -20,9 +20,7 @@ typedef struct appdata {
 	fd_set inputset;
 	fd_set outputset;
 	
-	FILE *infile;
 	int infilefd;
-	FILE *outfile;
 	int outfilefd;
 	
 	int maxfd;

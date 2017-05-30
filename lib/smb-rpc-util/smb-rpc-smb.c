@@ -85,8 +85,15 @@ void smb_rpc_smb_free_data(smb_rpc_smb_data *data)
 int smb_rpc_open_file(smb_rpc_smb_data *data, const char *url)
 {
 	activate_smb_data(data);
+
+	errno = 0;
+	int ret = smbc_open(url, O_RDONLY, 0);
 	
-	return smbc_open(url, O_RDONLY, 0);
+	if (ret >= 0) {
+		errno = 0;
+	}
+	
+	return ret;
 }
 
 off_t smb_rpc_seek_file(smb_rpc_smb_data *data, int fd, off_t offset, int whence)
@@ -94,7 +101,13 @@ off_t smb_rpc_seek_file(smb_rpc_smb_data *data, int fd, off_t offset, int whence
 	activate_smb_data(data);
 	
 	errno = 0;
-	return smbc_lseek(fd, offset, whence);
+	off_t ret = smbc_lseek(fd, offset, whence);
+	
+	if (ret != -1) {
+		errno = 0;
+	}
+	
+	return ret;
 }
 
 // can only fail due to programming errors
@@ -106,6 +119,8 @@ int smb_rpc_close_file(smb_rpc_smb_data *data, int fd)
 	int ret = smbc_close(fd);
 	if (ret) {
 		fprintf(stderr, "Failed to close file, errno=%d\n", errno);
+	} else {
+		errno = 0;
 	}
 	return ret;
 }
@@ -115,7 +130,12 @@ ssize_t smb_rpc_read_file(smb_rpc_smb_data *data, int fd, void *buf, size_t bufs
 	activate_smb_data(data);
 	
 	errno = 0;
-	return smbc_read(fd, buf, bufsize);
+	ssize_t ret = smbc_read(fd, buf, bufsize);
+	
+	if (ret >= 0) {
+		errno = 0;
+	}
+	return ret;
 }
 
 int smb_rpc_open_dir(smb_rpc_smb_data *data, const char *url)
@@ -123,7 +143,13 @@ int smb_rpc_open_dir(smb_rpc_smb_data *data, const char *url)
 	activate_smb_data(data);
 	
 	errno = 0;
-	return smbc_opendir(url);
+	int ret = smbc_opendir(url);
+	
+	if (ret >= 0) {
+		errno = 0;
+	}
+	
+	return ret;
 }
 
 void smb_rpc_close_dir(smb_rpc_smb_data *data, int fd)
@@ -131,10 +157,12 @@ void smb_rpc_close_dir(smb_rpc_smb_data *data, int fd)
 	activate_smb_data(data);
 	
 	errno = 0;
+	
 	if (smbc_closedir(fd)) {
 		fprintf(stderr, "Failed to close directory, errno=%d\n", errno);
 		abort();
 	}
+	errno = 0;
 }
 
 const smb_rpc_dirent *smb_rpc_read_dir(smb_rpc_smb_data *data, int fd)
@@ -159,6 +187,7 @@ const smb_rpc_dirent *smb_rpc_read_dir(smb_rpc_smb_data *data, int fd)
 	
 	data->dirent.name = smbc_d->name;
 	data->dirent.namelen = smbc_d->namelen;
-	
+
+	errno = 0;
 	return &data->dirent;
 }

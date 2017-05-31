@@ -39,6 +39,16 @@ void args_add_string(smb_rpc_command_argument *arglist, int *offset, char *strin
 	(*offset)++;
 }
 
+void args_add_int(smb_rpc_command_argument *arglist, int *offset, int value)
+{
+	assert(*offset < MAXARGS);
+	
+	arglist[*offset].type = smb_rpc_command_argument_type_int;
+	arglist[*offset].value.int_value = value;
+	
+	(*offset)++;
+}
+
 void write_completely(int fd, char *buf, size_t buflen)
 {
 	ssize_t num_written;
@@ -113,7 +123,7 @@ void read_packet(int fd, char *buf, size_t buflen, size_t *packetSize)
 	} while (numread);
 }
 
-void auth(int commandFd, int responseFd, const char *iniFilename)
+void do_auth(int commandFd, int responseFd, const char *iniFilename)
 {
 	char usernamebuf[1024];
 	char passwdbuf[1024];
@@ -172,16 +182,12 @@ int do_fopen(int commandFd, int responseFd, char *url)
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 	
-	cmd_args[0].type = smb_rpc_command_argument_type_string;
-	cmd_args[0].value.string_value.string = "FOPEN";
-	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
-	cmd_args[1].type = smb_rpc_command_argument_type_string;
-	
-	cmd_args[1].value.string_value.string = url;
-	cmd_args[1].value.string_value.length = strlen(url);
-	
+	int argCounter = 0;
+	args_add_string(cmd_args, &argCounter, "FOPEN");
+	args_add_string(cmd_args, &argCounter, url);
+
 	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, 2);
+						  cmd_args, argCounter);
 	write_completely(commandFd, packetbuf, packetSize);
 	
 	size_t numread;
@@ -230,18 +236,13 @@ ssize_t do_read(int commandFd, int responseFd, int smb_fd, char *buf, size_t buf
 	smb_rpc_command_argument cmd_args[3];
 	uint32_t invocationId = get_invocationId();
 	
-	cmd_args[0].type = smb_rpc_command_argument_type_string;
-	cmd_args[0].value.string_value.string = "FREAD";
-	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
-	
-	cmd_args[1].type = smb_rpc_command_argument_type_int;
-	cmd_args[1].value.int_value = smb_fd;
-	
-	cmd_args[2].type = smb_rpc_command_argument_type_int;
-	cmd_args[2].value.int_value = (int)bufSize;
+	int argCounter = 0;
+	args_add_string(cmd_args, &argCounter, "FREAD");
+	args_add_int(cmd_args, &argCounter, smb_fd);
+	args_add_int(cmd_args, &argCounter, (int)bufSize);
 	
 	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, 3);
+						  cmd_args, argCounter);
 	write_completely(commandFd, packetbuf, packetSize);
 
 	size_t numread;
@@ -288,15 +289,14 @@ int do_fclose(int commandFd, int responseFd, int smbfd)
 	size_t packetSize = 1024;
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
-	
-	cmd_args[0].type = smb_rpc_command_argument_type_string;
-	cmd_args[0].value.string_value.string = "FCLOSE";
-	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
-	cmd_args[1].type = smb_rpc_command_argument_type_int;
-	cmd_args[1].value.int_value = smbfd;
+
+	int argCounter = 0;
+	args_add_string(cmd_args, &argCounter, "FCLOSE");
+	args_add_int(cmd_args, &argCounter, smbfd);
 	
 	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, 2);
+						  cmd_args, argCounter);
+	
 	write_completely(commandFd, packetbuf, packetSize);
 	
 	size_t numread;
@@ -342,16 +342,13 @@ int do_dopen(int commandFd, int responseFd, char *url)
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 	
-	cmd_args[0].type = smb_rpc_command_argument_type_string;
-	cmd_args[0].value.string_value.string = "DOPEN";
-	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
-	cmd_args[1].type = smb_rpc_command_argument_type_string;
-	
-	cmd_args[1].value.string_value.string = url;
-	cmd_args[1].value.string_value.length = strlen(url);
+	int argCounter = 0;
+	args_add_string(cmd_args, &argCounter, "DOPEN");
+	args_add_string(cmd_args, &argCounter, url);
 	
 	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, 2);
+						  cmd_args, argCounter);
+
 	write_completely(commandFd, packetbuf, packetSize);
 	
 	size_t numread;
@@ -399,14 +396,13 @@ int do_dread(int commandFd, int responseFd, int smbfd, smb_rpc_dirent_type *entr
 	smb_rpc_command_argument cmd_args[3];
 	uint32_t invocationId = get_invocationId();
 	
-	cmd_args[0].type = smb_rpc_command_argument_type_string;
-	cmd_args[0].value.string_value.string = "DREAD";
-	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
-	cmd_args[1].type = smb_rpc_command_argument_type_int;
-	cmd_args[1].value.int_value = smbfd;
-
+	int argCounter = 0;
+	args_add_string(cmd_args, &argCounter, "DREAD");
+	args_add_int(cmd_args, &argCounter, smbfd);
+	
 	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, 2);
+						  cmd_args, argCounter);
+	
 	write_completely(commandFd, packetbuf, packetSize);
 	
 	size_t numread;
@@ -454,15 +450,14 @@ int do_dclose(int commandFd, int responseFd, int smbfd)
 	size_t packetSize = 1024;
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
-	
-	cmd_args[0].type = smb_rpc_command_argument_type_string;
-	cmd_args[0].value.string_value.string = "DCLOSE";
-	cmd_args[0].value.string_value.length = strlen(cmd_args[0].value.string_value.string);
-	cmd_args[1].type = smb_rpc_command_argument_type_int;
-	cmd_args[1].value.int_value = smbfd;
+
+	int argCounter = 0;
+	args_add_string(cmd_args, &argCounter, "DCLOSE");
+	args_add_int(cmd_args, &argCounter, smbfd);
 	
 	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, 2);
+						  cmd_args, argCounter);
+	
 	write_completely(commandFd, packetbuf, packetSize);
 	
 	size_t numread;
@@ -537,7 +532,7 @@ int main(int argv, char **argc)
 		fprintf(stderr, "Notreached\n");
 	}
 	
-	auth(commandfds[1], responsefds[0], argc[1]);
+	do_auth(commandfds[1], responsefds[0], argc[1]);
 	
 	char urlbuf[1024];
 	ini_gets("", "url", "", urlbuf, 1024, argc[1]);

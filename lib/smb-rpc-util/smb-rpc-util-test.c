@@ -28,7 +28,7 @@ uint32_t get_invocationId()
 	return currentId++;
 }
 
-void args_add_string(smb_rpc_command_argument *arglist, int *offset, char *string)
+void args_add_string(smb_rpc_command_argument *arglist, int *offset, const char *string)
 {
 	assert(*offset < MAXARGS);
 	
@@ -70,6 +70,43 @@ void write_completely(int fd, char *buf, size_t buflen)
 			buflen -= num_written;
 		}
 	}
+}
+
+size_t encode_command_packet(char *packetbuf, size_t packetbufSize,
+			     uint32_t invocationId,
+			     const smb_rpc_command_argument_type *argTypes,
+			     ...)
+{
+	int argCounter = 0;
+	
+	va_list ap;
+	
+	va_start(ap, argTypes);
+	size_t counter = 0;
+	
+	const char *commandName = va_arg(ap, const char *);
+	args_add_string(cmd_args, &argCounter, commandName);
+	
+	while (argTypes[counter]) {
+		switch (argTypes[counter]) {
+			case smb_rpc_command_argument_type_string:
+				args_add_string(cmd_args, &argCounter, va_arg(ap, const char *));
+				break;
+			case smb_rpc_command_argument_type_int:
+				args_add_int(cmd_args, &argCounter, va_arg(ap, uint32_t));
+				break;
+			default:
+				fprintf(stderr, "Illegal command argument type\n");
+				abort();
+		}
+		counter++;
+	}
+	
+	va_end(ap);
+
+	return smb_rpc_encode_packet(packetbuf, packetbufSize,
+				     invocationId,
+				     cmd_args, argCounter);
 }
 
 void read_packet(int fd, char *buf, size_t buflen, size_t *packetSize)
@@ -135,15 +172,15 @@ void do_auth(int commandFd, int responseFd, const char *iniFilename)
 	ini_gets("auth", "username", "", usernamebuf, 1024, iniFilename);
 	ini_gets("auth", "password", "", passwdbuf, 1024, iniFilename);
 	
-	int argCounter = 0;
-	args_add_string(cmd_args, &argCounter, "SETAUTH");
-	args_add_string(cmd_args, &argCounter, ""); //specific server
-	args_add_string(cmd_args, &argCounter, "WORKGROUP"); //workgroup
-	args_add_string(cmd_args, &argCounter, usernamebuf);
-	args_add_string(cmd_args, &argCounter, passwdbuf);
-	
-	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, argCounter);
+	packetSize = encode_command_packet(packetbuf, packetbufSize,
+					   invocationId,
+					   smb_rpc_arguments_setauth,
+					   "SETAUTH",
+					   "", 		//specific server
+					   "WORKGROUP", //workgroup
+					   usernamebuf,
+					   passwdbuf
+					   );
 	write_completely(commandFd, packetbuf, packetSize);
 	
 	size_t numread;
@@ -182,12 +219,11 @@ int do_fopen(int commandFd, int responseFd, char *url)
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 	
-	int argCounter = 0;
-	args_add_string(cmd_args, &argCounter, "FOPEN");
-	args_add_string(cmd_args, &argCounter, url);
-
-	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, argCounter);
+	packetSize = encode_command_packet(packetbuf, packetbufSize,
+					   invocationId,
+					   smb_rpc_arguments_fopen,
+					   "FOPEN",
+					   url);
 	write_completely(commandFd, packetbuf, packetSize);
 	
 	size_t numread;
@@ -236,13 +272,13 @@ ssize_t do_read(int commandFd, int responseFd, int smb_fd, char *buf, size_t buf
 	smb_rpc_command_argument cmd_args[3];
 	uint32_t invocationId = get_invocationId();
 	
-	int argCounter = 0;
-	args_add_string(cmd_args, &argCounter, "FREAD");
-	args_add_int(cmd_args, &argCounter, smb_fd);
-	args_add_int(cmd_args, &argCounter, (int)bufSize);
+	packetSize = encode_command_packet(packetbuf, packetbufSize,
+					   invocationId,
+					   smb_rpc_arguments_fread,
+					   "FREAD",
+					   smb_fd,
+					   (int)bufSize);
 	
-	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, argCounter);
 	write_completely(commandFd, packetbuf, packetSize);
 
 	size_t numread;
@@ -290,13 +326,12 @@ int do_fclose(int commandFd, int responseFd, int smbfd)
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 
-	int argCounter = 0;
-	args_add_string(cmd_args, &argCounter, "FCLOSE");
-	args_add_int(cmd_args, &argCounter, smbfd);
-	
-	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, argCounter);
-	
+	packetSize = encode_command_packet(packetbuf, packetbufSize,
+					   invocationId,
+					   smb_rpc_arguments_fclose,
+					   "FCLOSE",
+					   smbfd);
+
 	write_completely(commandFd, packetbuf, packetSize);
 	
 	size_t numread;
@@ -342,12 +377,11 @@ int do_dopen(int commandFd, int responseFd, char *url)
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 	
-	int argCounter = 0;
-	args_add_string(cmd_args, &argCounter, "DOPEN");
-	args_add_string(cmd_args, &argCounter, url);
-	
-	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, argCounter);
+	packetSize = encode_command_packet(packetbuf, packetbufSize,
+					   invocationId,
+					   smb_rpc_arguments_dopen,
+					   "DOPEN",
+					   url);
 
 	write_completely(commandFd, packetbuf, packetSize);
 	
@@ -396,13 +430,11 @@ int do_dread(int commandFd, int responseFd, int smbfd, smb_rpc_dirent_type *entr
 	smb_rpc_command_argument cmd_args[3];
 	uint32_t invocationId = get_invocationId();
 	
-	int argCounter = 0;
-	args_add_string(cmd_args, &argCounter, "DREAD");
-	args_add_int(cmd_args, &argCounter, smbfd);
-	
-	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, argCounter);
-	
+	packetSize = encode_command_packet(packetbuf, packetbufSize,
+					   invocationId,
+					   smb_rpc_arguments_dread,
+					   "DREAD",
+					   smbfd);
 	write_completely(commandFd, packetbuf, packetSize);
 	
 	size_t numread;
@@ -451,13 +483,11 @@ int do_dclose(int commandFd, int responseFd, int smbfd)
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 
-	int argCounter = 0;
-	args_add_string(cmd_args, &argCounter, "DCLOSE");
-	args_add_int(cmd_args, &argCounter, smbfd);
-	
-	packetSize = smb_rpc_encode_packet(packetbuf, packetbufSize, invocationId,
-						  cmd_args, argCounter);
-	
+	packetSize = encode_command_packet(packetbuf, packetbufSize,
+					   invocationId,
+					   smb_rpc_arguments_dclose,
+					   "DCLOSE",
+					   smbfd);
 	write_completely(commandFd, packetbuf, packetSize);
 	
 	size_t numread;

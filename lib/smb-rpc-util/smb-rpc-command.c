@@ -52,7 +52,7 @@ static void free_fd(int *fds, int fd)
 	fds[fd] = 0;
 }
 
-static char *stringz_from_buf(char *buf, size_t buflen)
+static char *stringz_from_buf(const char *buf, size_t buflen)
 {
 	char *ret = malloc(buflen + 1);
 	strncpy(ret, buf, buflen);

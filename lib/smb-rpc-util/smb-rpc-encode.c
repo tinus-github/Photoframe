@@ -6,8 +6,10 @@
 //
 //
 
-#include "smb-rpc-encode.h"
+#define SMB_RPC_DECLARE_COMMAND_DEFINITIONS
+#include "smb-rpc-client.h"
 #include <string.h>
+#include <stdlib.h>
 
 static smb_rpc_command_argument staticArguments[SMB_RPC_COMMAND_MAX_ARGUMENTS];
 
@@ -55,7 +57,7 @@ static size_t output_int(char *output, int value, size_t *space)
 	return 4;
 }
 
-static size_t output_string(char *output, char *string, size_t length, size_t *space)
+static size_t output_string(char *output, const char *string, size_t length, size_t *space)
 {
 	if (*space < length) {
 		*space = 0;
@@ -82,7 +84,7 @@ size_t smb_rpc_encode_int(char *output, size_t *output_length, int value)
 	return cursor;
 }
 
-size_t smb_rpc_encode_string(char *output, size_t *output_size, char *string, size_t length)
+size_t smb_rpc_encode_string(char *output, size_t *output_size, const char *string, size_t length)
 {
 	size_t cursor = 0;
 	
@@ -124,6 +126,8 @@ size_t smb_rpc_encode_packet(char *output, size_t output_length,
 								values[value_counter].value.string_value.string,
 								values[value_counter].value.string_value.length);
 				break;
+			default:
+				abort();
 		}
 	}
 	

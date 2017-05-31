@@ -33,6 +33,8 @@ typedef enum {
 typedef enum {
 	smb_rpc_command_argument_type_int = 1,
 	smb_rpc_command_argument_type_string = 2,
+	smb_rpc_command_argument_type_buffer = 101, // return value only
+	smb_rpc_command_argument_type_end_of_list = 0,
 } smb_rpc_command_argument_type;
 
 typedef struct {
@@ -41,7 +43,7 @@ typedef struct {
 		int int_value;
 		struct {
 			size_t length;
-			char *string;
+			const char *string;
 		} string_value;
 	} value;
 } smb_rpc_command_argument;
@@ -49,7 +51,7 @@ typedef struct {
 // Pass NULL for output to get the required size
 
 size_t smb_rpc_encode_stringz(char *output, size_t *output_length, char *string);
-size_t smb_rpc_encode_string(char *output, size_t *output_length, char *string, size_t length);
+size_t smb_rpc_encode_string(char *output, size_t *output_length, const char *string, size_t length);
 size_t smb_rpc_encode_int(char *output, size_t *output_length, int value);
 size_t smb_rpc_encode_packet(char *output, size_t output_length,
 				    uint32_t invocation_id,

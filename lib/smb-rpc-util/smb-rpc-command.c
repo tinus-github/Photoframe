@@ -73,7 +73,7 @@ static void smb_rpc_send_command_output(appdata *appData,
 	
 	do {
 		retry = 0;
-		required_size = smb_rpc_encode_return_packet(outBuf, outBufSize,
+		required_size = smb_rpc_encode_packet(outBuf, outBufSize,
 							     invocation_id,
 							     values, value_count);
 		while (required_size > outBufSize) {

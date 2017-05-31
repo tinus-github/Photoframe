@@ -51,7 +51,7 @@ typedef struct {
 size_t smb_rpc_encode_stringz(char *output, size_t *output_length, char *string);
 size_t smb_rpc_encode_string(char *output, size_t *output_length, char *string, size_t length);
 size_t smb_rpc_encode_int(char *output, size_t *output_length, int value);
-size_t smb_rpc_encode_return_packet(char *output, size_t output_length,
+size_t smb_rpc_encode_packet(char *output, size_t output_length,
 				    uint32_t invocation_id,
 				    smb_rpc_command_argument *values, size_t value_count);
 

@@ -57,7 +57,10 @@ size_t smb_rpc_encode_int(char *output, size_t *output_length, int value);
 size_t smb_rpc_encode_packet(char *output, size_t output_length,
 				    uint32_t invocation_id,
 				    smb_rpc_command_argument *values, size_t value_count);
-
+size_t encode_command_packet(char *packetbuf, size_t packetbufSize,
+			     uint32_t invocationId,
+			     const smb_rpc_command_argument_type *argTypes,
+			     ...);
 smb_rpc_decode_result smb_rpc_decode_packet(char *input, size_t buflen, size_t *used_bytes, char **contents, size_t *contents_length);
 smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,
 					     char **command, size_t *command_length,

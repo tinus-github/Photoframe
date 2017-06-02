@@ -25,7 +25,7 @@ typedef struct smb_rpc_dirent {
 	size_t namelen;
 } smb_rpc_dirent;
 
-
+#define SMB_RPC_COMMAND_MAXARGS 6
 
 #ifdef SMB_RPC_DECLARE_COMMAND_DEFINITIONS
 

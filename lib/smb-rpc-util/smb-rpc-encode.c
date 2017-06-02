@@ -10,6 +10,7 @@
 #include "smb-rpc-client.h"
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 static smb_rpc_command_argument staticArguments[SMB_RPC_COMMAND_MAX_ARGUMENTS];
 
@@ -369,4 +370,65 @@ smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,
 	
 	*args = &staticArguments[0];
 	return smb_rpc_decode_result_ok;
+}
+
+static void args_add_string(smb_rpc_command_argument *arglist, int *offset, const char *string)
+{
+	assert(*offset < SMB_RPC_COMMAND_MAXARGS);
+	
+	arglist[*offset].type = smb_rpc_command_argument_type_string;
+	arglist[*offset].value.string_value.string = string;
+	arglist[*offset].value.string_value.length = strlen(string);
+	
+	(*offset)++;
+}
+
+static void args_add_int(smb_rpc_command_argument *arglist, int *offset, int value)
+{
+	assert(*offset < SMB_RPC_COMMAND_MAXARGS);
+	
+	arglist[*offset].type = smb_rpc_command_argument_type_int;
+	arglist[*offset].value.int_value = value;
+	
+	(*offset)++;
+}
+
+
+size_t encode_command_packet(char *packetbuf, size_t packetbufSize,
+			     uint32_t invocationId,
+			     const smb_rpc_command_argument_type *argTypes,
+			     ...)
+{
+	smb_rpc_command_argument cmd_args[SMB_RPC_COMMAND_MAXARGS];
+
+	int argCounter = 0;
+	
+	va_list ap;
+	
+	va_start(ap, argTypes);
+	size_t counter = 0;
+	
+	const char *commandName = va_arg(ap, const char *);
+	args_add_string(cmd_args, &argCounter, commandName);
+	
+	while (argTypes[counter]) {
+		switch (argTypes[counter]) {
+			case smb_rpc_command_argument_type_string:
+				args_add_string(cmd_args, &argCounter, va_arg(ap, const char *));
+				break;
+			case smb_rpc_command_argument_type_int:
+				args_add_int(cmd_args, &argCounter, va_arg(ap, uint32_t));
+				break;
+			default:
+				fprintf(stderr, "Illegal command argument type\n");
+				abort();
+		}
+		counter++;
+	}
+	
+	va_end(ap);
+	
+	return smb_rpc_encode_packet(packetbuf, packetbufSize,
+				     invocationId,
+				     cmd_args, argCounter);
 }

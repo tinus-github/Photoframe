@@ -190,23 +190,11 @@ void do_auth(int commandFd, int responseFd, const char *iniFilename)
 	
 	smb_rpc_decode_packet(inbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
-	uint32_t responseInvocationId;
-	size_t argCount;
-	
-	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
-				      &responseInvocationId,
-				      cmd_args, &argCount);
+	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
+				      invocationId,
+				      cmd_args, smb_rpc_arguments_setauth);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Can't parse response on SETAUTH\n");
-		abort();
-	}
-	if (responseInvocationId != invocationId) {
-		fprintf(stderr, "Wrong invocationId on SETAUTH\n");
-		abort();
-	}
-	ret = smb_rpc_check_response(cmd_args, argCount, 0);
-	if (ret != smb_rpc_decode_result_ok) {
-		fprintf(stderr, "Wrong response to SETAUTH\n");
 		abort();
 	}
 	return;
@@ -233,23 +221,9 @@ int do_fopen(int commandFd, int responseFd, char *url)
 	
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
-	uint32_t responseInvocationId;
-	size_t argCount;
-	
-	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
-					  &responseInvocationId,
-					  cmd_args, &argCount);
-	if (ret != smb_rpc_decode_result_ok) {
-		fprintf(stderr, "Can't parse response on FOPEN\n");
-		abort();
-	}
-	if (responseInvocationId != invocationId) {
-		fprintf(stderr, "Wrong invocationId on FOPEN\n");
-		abort();
-	}
-	ret = smb_rpc_check_response(cmd_args, argCount, 2,
-				     smb_rpc_command_argument_type_int,
-				     smb_rpc_command_argument_type_int);
+	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
+						   invocationId,
+						   cmd_args, smb_rpc_arguments_fopen);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to FOPEN\n");
 		abort();
@@ -288,23 +262,9 @@ ssize_t do_read(int commandFd, int responseFd, int smb_fd, char *buf, size_t buf
 
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
-	uint32_t responseInvocationId;
-	size_t argCount;
-	
-	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
-					  &responseInvocationId,
-					  cmd_args, &argCount);
-	if (ret != smb_rpc_decode_result_ok) {
-		fprintf(stderr, "Can't parse response on FREAD\n");
-		abort();
-	}
-	if (responseInvocationId != invocationId) {
-		fprintf(stderr, "Wrong invocationId on FREAD\n");
-		abort();
-	}
-	ret = smb_rpc_check_response(cmd_args, argCount, 2,
-				     smb_rpc_command_argument_type_int,
-				     smb_rpc_command_argument_type_string);
+	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
+						   invocationId,
+						   cmd_args, smb_rpc_arguments_fread);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to FREAD\n");
 		abort();
@@ -341,22 +301,10 @@ int do_fclose(int commandFd, int responseFd, int smbfd)
 	
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
-	uint32_t responseInvocationId;
-	size_t argCount;
-	
-	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
-					  &responseInvocationId,
-					  cmd_args, &argCount);
-	if (ret != smb_rpc_decode_result_ok) {
-		fprintf(stderr, "Can't parse response on FCLOSE\n");
-		abort();
-	}
-	if (responseInvocationId != invocationId) {
-		fprintf(stderr, "Wrong invocationId on FCLOSE\n");
-		abort();
-	}
-	ret = smb_rpc_check_response(cmd_args, argCount, 1,
-				     smb_rpc_command_argument_type_int);
+	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
+					  invocationId,
+					  cmd_args, smb_rpc_arguments_fclose);
+
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to FCLOSE\n");
 		abort();
@@ -392,23 +340,9 @@ int do_dopen(int commandFd, int responseFd, char *url)
 	
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
-	uint32_t responseInvocationId;
-	size_t argCount;
-	
-	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
-					  &responseInvocationId,
-					  cmd_args, &argCount);
-	if (ret != smb_rpc_decode_result_ok) {
-		fprintf(stderr, "Can't parse response on DOPEN\n");
-		abort();
-	}
-	if (responseInvocationId != invocationId) {
-		fprintf(stderr, "Wrong invocationId on DOPEN\n");
-		abort();
-	}
-	ret = smb_rpc_check_response(cmd_args, argCount, 2,
-				     smb_rpc_command_argument_type_int,
-				     smb_rpc_command_argument_type_int);
+	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
+					  invocationId,
+					  cmd_args, smb_rpc_arguments_dopen);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to DOPEN\n");
 		abort();
@@ -444,24 +378,9 @@ int do_dread(int commandFd, int responseFd, int smbfd, smb_rpc_dirent_type *entr
 	
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
-	uint32_t responseInvocationId;
-	size_t argCount;
-	
-	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
-					  &responseInvocationId,
-					  cmd_args, &argCount);
-	if (ret != smb_rpc_decode_result_ok) {
-		fprintf(stderr, "Can't parse response on DREAD\n");
-		abort();
-	}
-	if (responseInvocationId != invocationId) {
-		fprintf(stderr, "Wrong invocationId on DREAD\n");
-		abort();
-	}
-	ret = smb_rpc_check_response(cmd_args, argCount, 3,
-				     smb_rpc_command_argument_type_int,
-				     smb_rpc_command_argument_type_int,
-				     smb_rpc_command_argument_type_string);
+	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
+					  invocationId,
+					  cmd_args, smb_rpc_arguments_dread);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to DREAD\n");
 		abort();
@@ -497,22 +416,9 @@ int do_dclose(int commandFd, int responseFd, int smbfd)
 	
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
-	uint32_t responseInvocationId;
-	size_t argCount;
-	
-	int ret = smb_rpc_decode_response(packetContents, packetContentSize,
-					  &responseInvocationId,
-					  cmd_args, &argCount);
-	if (ret != smb_rpc_decode_result_ok) {
-		fprintf(stderr, "Can't parse response on DCLOSE\n");
-		abort();
-	}
-	if (responseInvocationId != invocationId) {
-		fprintf(stderr, "Wrong invocationId on DCLOSE\n");
-		abort();
-	}
-	ret = smb_rpc_check_response(cmd_args, argCount, 1,
-				     smb_rpc_command_argument_type_int);
+	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
+					  invocationId,
+					  cmd_args, smb_rpc_arguments_dclose);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to DCLOSE\n");
 		abort();

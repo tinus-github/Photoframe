@@ -221,6 +221,7 @@ smb_rpc_decode_result smb_rpc_decode_response(char *input, size_t inputlen,
 	}
 }
 
+
 smb_rpc_decode_result smb_rpc_check_response(smb_rpc_command_argument *args, size_t arg_count, size_t expected_arg_count, ...)
 {
 	if (expected_arg_count != arg_count) {
@@ -242,6 +243,67 @@ smb_rpc_decode_result smb_rpc_check_response(smb_rpc_command_argument *args, siz
 	va_end(ap);
 	
 	return smb_rpc_decode_result_ok;
+}
+
+smb_rpc_decode_result smb_rpc_check_response_va(smb_rpc_command_argument *args, size_t arg_count,
+						smb_rpc_command_argument_type *template)
+{
+	size_t counter = 0;
+	
+	while (template[counter]) {
+		if (counter >= arg_count) {
+			return smb_rpc_decode_result_invalid;
+		}
+		switch (template[counter]) {
+			case smb_rpc_command_argument_type_int:
+				if (args[counter].type != smb_rpc_command_argument_type_int) {
+					return smb_rpc_decode_result_invalid;
+				}
+				break;
+			case smb_rpc_command_argument_type_string:
+			case smb_rpc_command_argument_type_buffer:
+				if (args[counter].type != smb_rpc_command_argument_type_string) {
+					return smb_rpc_decode_result_invalid;
+				}
+				break;
+			default: // can't happen
+				abort();
+				
+		}
+		counter++;
+	}
+	
+	if (counter != arg_count) { // leftover args
+		return smb_rpc_decode_result_invalid;
+	}
+	
+	return smb_rpc_decode_result_ok;
+}
+
+smb_rpc_decode_result smb_rpc_decode_response_complete(char *input, size_t inputlen,
+						       uint32_t wanted_invocation_id,
+						       smb_rpc_command_argument *args,
+						       smb_rpc_command_argument_type *template)
+{
+	size_t arg_count;
+	uint32_t received_invocation_id;
+	smb_rpc_decode_result ret = smb_rpc_decode_response(input, inputlen,
+							    &received_invocation_id,
+							    args, &arg_count);
+	
+	if (ret != smb_rpc_decode_result_ok) {
+		return ret;
+	}
+	if (received_invocation_id != wanted_invocation_id) {
+		return smb_rpc_decode_result_nomatch;
+	}
+	size_t counter = 0;
+	while (template[counter]) {
+		counter++;
+	}
+	counter++;
+	
+	return smb_rpc_check_response_va(args, arg_count, template+counter);
 }
 
 smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,

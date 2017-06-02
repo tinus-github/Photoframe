@@ -27,7 +27,8 @@ typedef enum {
 typedef enum {
 	smb_rpc_decode_result_ok = 0,
 	smb_rpc_decode_result_tooshort = 1,
-	smb_rpc_decode_result_invalid = 2
+	smb_rpc_decode_result_invalid = 2,
+	smb_rpc_decode_result_nomatch = 3
 } smb_rpc_decode_result;
 
 typedef enum {
@@ -67,4 +68,9 @@ smb_rpc_decode_result smb_rpc_decode_response(char *input, size_t inputlen,
 					      smb_rpc_command_argument *args, size_t *arg_count);
 smb_rpc_decode_result smb_rpc_check_response(smb_rpc_command_argument *args, size_t arg_count,
 					     size_t expected_arg_count, ...);
+smb_rpc_decode_result smb_rpc_decode_response_complete(char *input, size_t inputlen,
+						       uint32_t wanted_invocation_id,
+						       smb_rpc_command_argument *args,
+						       smb_rpc_command_argument_type *template);
+
 #endif /* smb_rpc_encode_h */

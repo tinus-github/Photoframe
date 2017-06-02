@@ -159,11 +159,22 @@ smb_rpc_decode_result smb_rpc_decode_packet(char *input, size_t buflen, size_t *
 	return smb_rpc_decode_result_ok;
 }
 
+smb_rpc_decode_result smb_rpc_decode_packet_get_invocation_id(char *input, size_t inputlen,
+							      uint32_t *invocation_id)
+{
+	if (inputlen < 8) {
+		return smb_rpc_decode_result_tooshort;
+	}
+	
+	struct smb_rpc_response *response = (struct smb_rpc_response *)input;
+	*invocation_id = response->invocation_id;
+	
+	return smb_rpc_decode_result_ok;
+}
 
-
-smb_rpc_decode_result smb_rpc_decode_response(char *input, size_t inputlen,
-					      uint32_t *invocation_id,
-					      smb_rpc_command_argument *args, size_t *arg_count)
+static smb_rpc_decode_result smb_rpc_decode_response(char *input, size_t inputlen,
+						     uint32_t *invocation_id,
+						     smb_rpc_command_argument *args, size_t *arg_count)
 {
 	size_t used_bytes = 0;
 	if (inputlen < 8) {
@@ -221,32 +232,8 @@ smb_rpc_decode_result smb_rpc_decode_response(char *input, size_t inputlen,
 	}
 }
 
-
-smb_rpc_decode_result smb_rpc_check_response(smb_rpc_command_argument *args, size_t arg_count, size_t expected_arg_count, ...)
-{
-	if (expected_arg_count != arg_count) {
-		return smb_rpc_decode_result_invalid;
-	}
-	
-	va_list ap;
-	
-	va_start(ap, expected_arg_count);
-	size_t counter;
-	for (counter = 0; counter < arg_count; counter++) {
-		smb_rpc_command_argument_type expected_type = va_arg(ap, smb_rpc_command_argument_type);
-		
-		if (expected_type != args[counter].type) {
-			return smb_rpc_decode_result_invalid;
-		}
-	}
-	
-	va_end(ap);
-	
-	return smb_rpc_decode_result_ok;
-}
-
-smb_rpc_decode_result smb_rpc_check_response_va(smb_rpc_command_argument *args, size_t arg_count,
-						smb_rpc_command_argument_type *template)
+static smb_rpc_decode_result smb_rpc_check_response_va(smb_rpc_command_argument *args, size_t arg_count,
+						       smb_rpc_command_argument_type *template)
 {
 	size_t counter = 0;
 	

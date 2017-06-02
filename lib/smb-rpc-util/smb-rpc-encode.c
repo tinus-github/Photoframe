@@ -396,7 +396,7 @@ static void args_add_int(smb_rpc_command_argument *arglist, int *offset, int val
 
 size_t encode_command_packet(char *packetbuf, size_t packetbufSize,
 			     uint32_t invocationId,
-			     const smb_rpc_command_argument_type *argTypes,
+			     const smb_rpc_command_definition *commandDefinition,
 			     ...)
 {
 	smb_rpc_command_argument cmd_args[SMB_RPC_COMMAND_MAXARGS];
@@ -405,14 +405,13 @@ size_t encode_command_packet(char *packetbuf, size_t packetbufSize,
 	
 	va_list ap;
 	
-	va_start(ap, argTypes);
+	va_start(ap, commandDefinition);
 	size_t counter = 0;
 	
-	const char *commandName = va_arg(ap, const char *);
-	args_add_string(cmd_args, &argCounter, commandName);
+	args_add_string(cmd_args, &argCounter, commandDefinition->command);
 	
-	while (argTypes[counter]) {
-		switch (argTypes[counter]) {
+	while (commandDefinition->definition[counter]) {
+		switch (commandDefinition->definition[counter]) {
 			case smb_rpc_command_argument_type_string:
 				args_add_string(cmd_args, &argCounter, va_arg(ap, const char *));
 				break;

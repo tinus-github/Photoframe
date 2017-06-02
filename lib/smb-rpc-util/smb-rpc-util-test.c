@@ -115,8 +115,7 @@ void do_auth(int commandFd, int responseFd, const char *iniFilename)
 	
 	packetSize = encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
-					   smb_rpc_arguments_setauth,
-					   "SETAUTH",
+					   &smb_rpc_arguments_setauth,
 					   "", 		//specific server
 					   "WORKGROUP", //workgroup
 					   usernamebuf,
@@ -133,7 +132,7 @@ void do_auth(int commandFd, int responseFd, const char *iniFilename)
 	
 	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
 				      invocationId,
-				      cmd_args, smb_rpc_arguments_setauth);
+				      cmd_args, smb_rpc_arguments_setauth.definition);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Can't parse response on SETAUTH\n");
 		abort();
@@ -150,8 +149,7 @@ int do_fopen(int commandFd, int responseFd, char *url)
 	
 	packetSize = encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
-					   smb_rpc_arguments_fopen,
-					   "FOPEN",
+					   &smb_rpc_arguments_fopen,
 					   url);
 	write_completely(commandFd, packetbuf, packetSize);
 	
@@ -164,7 +162,7 @@ int do_fopen(int commandFd, int responseFd, char *url)
 	
 	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
 						   invocationId,
-						   cmd_args, smb_rpc_arguments_fopen);
+						   cmd_args, smb_rpc_arguments_fopen.definition);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to FOPEN\n");
 		abort();
@@ -189,8 +187,7 @@ ssize_t do_read(int commandFd, int responseFd, int smb_fd, char *buf, size_t buf
 	
 	packetSize = encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
-					   smb_rpc_arguments_fread,
-					   "FREAD",
+					   &smb_rpc_arguments_fread,
 					   smb_fd,
 					   (int)bufSize);
 	
@@ -205,7 +202,7 @@ ssize_t do_read(int commandFd, int responseFd, int smb_fd, char *buf, size_t buf
 	
 	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
 						   invocationId,
-						   cmd_args, smb_rpc_arguments_fread);
+						   cmd_args, smb_rpc_arguments_fread.definition);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to FREAD\n");
 		abort();
@@ -229,8 +226,7 @@ int do_fclose(int commandFd, int responseFd, int smbfd)
 
 	packetSize = encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
-					   smb_rpc_arguments_fclose,
-					   "FCLOSE",
+					   &smb_rpc_arguments_fclose,
 					   smbfd);
 
 	write_completely(commandFd, packetbuf, packetSize);
@@ -244,7 +240,7 @@ int do_fclose(int commandFd, int responseFd, int smbfd)
 	
 	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
 					  invocationId,
-					  cmd_args, smb_rpc_arguments_fclose);
+					  cmd_args, smb_rpc_arguments_fclose.definition);
 
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to FCLOSE\n");
@@ -268,8 +264,7 @@ int do_dopen(int commandFd, int responseFd, char *url)
 	
 	packetSize = encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
-					   smb_rpc_arguments_dopen,
-					   "DOPEN",
+					   &smb_rpc_arguments_dopen,
 					   url);
 
 	write_completely(commandFd, packetbuf, packetSize);
@@ -283,7 +278,7 @@ int do_dopen(int commandFd, int responseFd, char *url)
 	
 	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
 					  invocationId,
-					  cmd_args, smb_rpc_arguments_dopen);
+					  cmd_args, smb_rpc_arguments_dopen.definition);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to DOPEN\n");
 		abort();
@@ -307,8 +302,7 @@ int do_dread(int commandFd, int responseFd, int smbfd, smb_rpc_dirent_type *entr
 	
 	packetSize = encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
-					   smb_rpc_arguments_dread,
-					   "DREAD",
+					   &smb_rpc_arguments_dread,
 					   smbfd);
 	write_completely(commandFd, packetbuf, packetSize);
 	
@@ -321,7 +315,7 @@ int do_dread(int commandFd, int responseFd, int smbfd, smb_rpc_dirent_type *entr
 	
 	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
 					  invocationId,
-					  cmd_args, smb_rpc_arguments_dread);
+					  cmd_args, smb_rpc_arguments_dread.definition);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to DREAD\n");
 		abort();
@@ -345,8 +339,7 @@ int do_dclose(int commandFd, int responseFd, int smbfd)
 
 	packetSize = encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
-					   smb_rpc_arguments_dclose,
-					   "DCLOSE",
+					   &smb_rpc_arguments_dclose,
 					   smbfd);
 	write_completely(commandFd, packetbuf, packetSize);
 	
@@ -359,7 +352,7 @@ int do_dclose(int commandFd, int responseFd, int smbfd)
 	
 	int ret = smb_rpc_decode_response_complete(packetContents, packetContentSize,
 					  invocationId,
-					  cmd_args, smb_rpc_arguments_dclose);
+					  cmd_args, smb_rpc_arguments_dclose.definition);
 	if (ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Wrong response to DCLOSE\n");
 		abort();

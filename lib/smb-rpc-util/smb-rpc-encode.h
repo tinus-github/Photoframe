@@ -18,7 +18,6 @@
 #define SMB_RPC_MAX_PACKET_SIZE 10240000
 #define SMB_RPC_VERSION 1
 
-
 typedef enum {
 	SMB_RPC_VALUE_TYPE_STRING = 0xaa01,
 	SMB_RPC_VALUE_TYPE_INT = 0xaa02,
@@ -49,6 +48,11 @@ typedef struct {
 	} value;
 } smb_rpc_command_argument;
 
+typedef struct smb_rpc_command_definition {
+	const char *command;
+	smb_rpc_command_argument_type definition[];
+} smb_rpc_command_definition;
+
 // Pass NULL for output to get the required size
 
 size_t smb_rpc_encode_stringz(char *output, size_t *output_length, char *string);
@@ -59,7 +63,7 @@ size_t smb_rpc_encode_packet(char *output, size_t output_length,
 				    smb_rpc_command_argument *values, size_t value_count);
 size_t encode_command_packet(char *packetbuf, size_t packetbufSize,
 			     uint32_t invocationId,
-			     const smb_rpc_command_argument_type *argTypes,
+			     const smb_rpc_command_definition *commandDefinition,
 			     ...);
 smb_rpc_decode_result smb_rpc_decode_packet(char *input, size_t buflen, size_t *used_bytes, char **contents, size_t *contents_length);
 smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,

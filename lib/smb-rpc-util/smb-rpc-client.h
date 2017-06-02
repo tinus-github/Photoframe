@@ -29,96 +29,119 @@ typedef struct smb_rpc_dirent {
 
 #ifdef SMB_RPC_DECLARE_COMMAND_DEFINITIONS
 
-smb_rpc_command_argument_type smb_rpc_arguments_connect[] = {
-	// arguments
-	smb_rpc_command_argument_type_int, //client version
-	smb_rpc_command_argument_type_end_of_list,
-	// return values
-	smb_rpc_command_argument_type_int, //util version
-	smb_rpc_command_argument_type_end_of_list
+smb_rpc_command_definition smb_rpc_arguments_connect = {
+	"CONNECT",
+	{
+		// arguments
+		smb_rpc_command_argument_type_int, //client version
+		smb_rpc_command_argument_type_end_of_list,
+		// return values
+		smb_rpc_command_argument_type_int, //util version
+		smb_rpc_command_argument_type_end_of_list
+	}
+};
+smb_rpc_command_definition smb_rpc_arguments_setauth = {
+	"SETAUTH",
+	{
+		// arguments
+		smb_rpc_command_argument_type_string, //server
+		smb_rpc_command_argument_type_string, //workgroup
+		smb_rpc_command_argument_type_string, //user
+		smb_rpc_command_argument_type_string, //password
+		smb_rpc_command_argument_type_end_of_list,
+		// return values
+		smb_rpc_command_argument_type_end_of_list // nothing
+	}
 };
 
-smb_rpc_command_argument_type smb_rpc_arguments_setauth[] = {
-	// arguments
-	smb_rpc_command_argument_type_string, //server
-	smb_rpc_command_argument_type_string, //workgroup
-	smb_rpc_command_argument_type_string, //user
-	smb_rpc_command_argument_type_string, //password
-	smb_rpc_command_argument_type_end_of_list,
-	// return values
-	smb_rpc_command_argument_type_end_of_list // nothing
+smb_rpc_command_definition smb_rpc_arguments_fopen = {
+	"FOPEN",
+	{
+		// arguments
+		smb_rpc_command_argument_type_string, //url
+		smb_rpc_command_argument_type_end_of_list,
+		// return values
+		smb_rpc_command_argument_type_int, //errno
+		smb_rpc_command_argument_type_int, //fd
+		smb_rpc_command_argument_type_end_of_list
+	}
 };
 
-smb_rpc_command_argument_type smb_rpc_arguments_fopen[] = {
-	// arguments
-	smb_rpc_command_argument_type_string, //url
-	smb_rpc_command_argument_type_end_of_list,
-	// return values
-	smb_rpc_command_argument_type_int, //errno
-	smb_rpc_command_argument_type_int, //fd
-	smb_rpc_command_argument_type_end_of_list
+smb_rpc_command_definition smb_rpc_arguments_fread = {
+	"FREAD",
+	{
+		// arguments
+		smb_rpc_command_argument_type_int, //fd
+		smb_rpc_command_argument_type_int, //length
+		smb_rpc_command_argument_type_end_of_list,
+		// return values
+		smb_rpc_command_argument_type_int, //errno
+		smb_rpc_command_argument_type_buffer, // data
+		smb_rpc_command_argument_type_end_of_list
+	}
 };
 
-smb_rpc_command_argument_type smb_rpc_arguments_fread[] = {
-	// arguments
-	smb_rpc_command_argument_type_int, //fd
-	smb_rpc_command_argument_type_int, //length
-	smb_rpc_command_argument_type_end_of_list,
-	// return values
-	smb_rpc_command_argument_type_int, //errno
-	smb_rpc_command_argument_type_buffer, // data
-	smb_rpc_command_argument_type_end_of_list
+smb_rpc_command_definition smb_rpc_arguments_fclose = {
+	"FCLOSE",
+	{
+		// arguments
+		smb_rpc_command_argument_type_int, //fd
+		smb_rpc_command_argument_type_end_of_list,
+		// return values
+		smb_rpc_command_argument_type_int, //errno
+		smb_rpc_command_argument_type_end_of_list
+	}
 };
 
-smb_rpc_command_argument_type smb_rpc_arguments_fclose[] = {
-	// arguments
-	smb_rpc_command_argument_type_int, //fd
-	smb_rpc_command_argument_type_end_of_list,
-	// return values
-	smb_rpc_command_argument_type_int, //errno
-	smb_rpc_command_argument_type_end_of_list
+smb_rpc_command_definition smb_rpc_arguments_dopen = {
+	"DOPEN",
+	{
+		// arguments
+		smb_rpc_command_argument_type_string, //url
+		smb_rpc_command_argument_type_end_of_list,
+		// return values
+		smb_rpc_command_argument_type_int, //errno
+		smb_rpc_command_argument_type_int, //fd
+		smb_rpc_command_argument_type_end_of_list
+	}
 };
 
-smb_rpc_command_argument_type smb_rpc_arguments_dopen[] = {
-	// arguments
-	smb_rpc_command_argument_type_string, //url
-	smb_rpc_command_argument_type_end_of_list,
-	// return values
-	smb_rpc_command_argument_type_int, //errno
-	smb_rpc_command_argument_type_int, //fd
-	smb_rpc_command_argument_type_end_of_list
+smb_rpc_command_definition smb_rpc_arguments_dread = {
+	"DREAD",
+	{
+		// arguments
+		smb_rpc_command_argument_type_int, //fd
+		smb_rpc_command_argument_type_end_of_list,
+		// return values
+		smb_rpc_command_argument_type_int, //errno
+		smb_rpc_command_argument_type_int, //entrytype
+		smb_rpc_command_argument_type_string, //entryname
+		smb_rpc_command_argument_type_end_of_list
+	}
 };
 
-smb_rpc_command_argument_type smb_rpc_arguments_dread[] = {
-	// arguments
-	smb_rpc_command_argument_type_int, //fd
-	smb_rpc_command_argument_type_end_of_list,
-	// return values
-	smb_rpc_command_argument_type_int, //errno
-	smb_rpc_command_argument_type_int, //entrytype
-	smb_rpc_command_argument_type_string, //entryname
-	smb_rpc_command_argument_type_end_of_list
-};
-
-smb_rpc_command_argument_type smb_rpc_arguments_dclose[] = {
-	// arguments
-	smb_rpc_command_argument_type_int, //fd
-	smb_rpc_command_argument_type_end_of_list,
-	// return values
-	smb_rpc_command_argument_type_int, //errno
-	smb_rpc_command_argument_type_end_of_list
+smb_rpc_command_definition smb_rpc_arguments_dclose = {
+	"DCLOSE",
+	{
+		// arguments
+		smb_rpc_command_argument_type_int, //fd
+		smb_rpc_command_argument_type_end_of_list,
+		// return values
+		smb_rpc_command_argument_type_int, //errno
+		smb_rpc_command_argument_type_end_of_list
+	}
 };
 
 #else
 
-extern smb_rpc_command_argument_type smb_rpc_arguments_setauth[];
-extern smb_rpc_command_argument_type smb_rpc_arguments_fopen[];
-extern smb_rpc_command_argument_type smb_rpc_arguments_fread[];
-extern smb_rpc_command_argument_type smb_rpc_arguments_fclose[];
+extern smb_rpc_command_definition smb_rpc_arguments_setauth;
+extern smb_rpc_command_definition smb_rpc_arguments_fopen;
+extern smb_rpc_command_definition smb_rpc_arguments_fread;
+extern smb_rpc_command_definition smb_rpc_arguments_fclose;
 
-extern smb_rpc_command_argument_type smb_rpc_arguments_dopen[];
-extern smb_rpc_command_argument_type smb_rpc_arguments_dread[];
-extern smb_rpc_command_argument_type smb_rpc_arguments_dclose[];
+extern smb_rpc_command_definition smb_rpc_arguments_dopen;
+extern smb_rpc_command_definition smb_rpc_arguments_dread;
+extern smb_rpc_command_definition smb_rpc_arguments_dclose;
 
 #endif
 

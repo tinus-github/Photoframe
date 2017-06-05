@@ -17,8 +17,6 @@
 #include "minIni.h"
 
 static smb_rpc_command_argument cmd_args[SMB_RPC_COMMAND_MAXARGS];
-static char packetbuf[1024];
-static size_t packetbufSize = 1024;
 
 uint32_t get_invocationId()
 {
@@ -105,6 +103,8 @@ void do_auth(int commandFd, int responseFd, const char *iniFilename)
 {
 	char usernamebuf[1024];
 	char passwdbuf[1024];
+	char packetbuf[1024];
+	const size_t packetbufSize = 1024;
 	size_t packetSize;
 	
 	uint32_t invocationId = get_invocationId();
@@ -143,7 +143,8 @@ void do_auth(int commandFd, int responseFd, const char *iniFilename)
 int do_fopen(int commandFd, int responseFd, char *url)
 {
 	char packetbuf[1024];
-	size_t packetSize = 1024;
+	const size_t packetbufSize = 1024;
+	size_t packetSize;
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 	
@@ -181,7 +182,8 @@ int do_fopen(int commandFd, int responseFd, char *url)
 ssize_t do_read(int commandFd, int responseFd, int smb_fd, char *buf, size_t bufSize)
 {
 	char packetbuf[PACKETSIZE];
-	size_t packetSize = PACKETSIZE;
+	const size_t packetbufSize = PACKETSIZE;
+	size_t packetSize;
 	smb_rpc_command_argument cmd_args[3];
 	uint32_t invocationId = get_invocationId();
 	
@@ -220,7 +222,9 @@ ssize_t do_read(int commandFd, int responseFd, int smb_fd, char *buf, size_t buf
 int do_fclose(int commandFd, int responseFd, int smbfd)
 {
 	char packetbuf[1024];
-	size_t packetSize = 1024;
+	const size_t packetbufSize = 1024;
+	size_t packetSize;
+	
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 
@@ -258,7 +262,9 @@ int do_fclose(int commandFd, int responseFd, int smbfd)
 int do_dopen(int commandFd, int responseFd, char *url)
 {
 	char packetbuf[1024];
-	size_t packetSize = 1024;
+	const size_t packetbufSize = 1024;
+	size_t packetSize;
+	
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 	
@@ -296,7 +302,9 @@ int do_dopen(int commandFd, int responseFd, char *url)
 int do_dread(int commandFd, int responseFd, int smbfd, smb_rpc_dirent_type *entryType, char **entryName)
 {
 	static char packetbuf[1024];
-	size_t packetSize = 1024;
+	const size_t packetbufSize = 1024;
+	size_t packetSize;
+	
 	smb_rpc_command_argument cmd_args[3];
 	uint32_t invocationId = get_invocationId();
 	
@@ -333,7 +341,9 @@ int do_dread(int commandFd, int responseFd, int smbfd, smb_rpc_dirent_type *entr
 int do_dclose(int commandFd, int responseFd, int smbfd)
 {
 	char packetbuf[1024];
-	size_t packetSize = 1024;
+	const size_t packetbufSize = 1024;
+	size_t packetSize;
+	
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 

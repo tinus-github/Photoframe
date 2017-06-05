@@ -161,13 +161,14 @@ static int run_commands(appdata *appData) {
 	char *command;
 	size_t command_length;
 	uint32_t invocation_id;
-	smb_rpc_command_argument *args;
+	smb_rpc_command_argument args[SMB_RPC_COMMAND_MAX_ARGUMENTS];
+
 	size_t arg_count;
 	
 	decode_result = smb_rpc_decode_command(packet_contents, packet_length,
 					       &command, &command_length,
 					       &invocation_id,
-					       &args, &arg_count);
+					       args, &arg_count);
 	switch(decode_result) {
 		case smb_rpc_decode_result_invalid:
 		case smb_rpc_decode_result_tooshort:

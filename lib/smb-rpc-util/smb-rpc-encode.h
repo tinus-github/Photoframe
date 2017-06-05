@@ -69,7 +69,7 @@ smb_rpc_decode_result smb_rpc_decode_packet(char *input, size_t buflen, size_t *
 smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,
 					     char **command, size_t *command_length,
 					     uint32_t *invocation_id,
-					     smb_rpc_command_argument **args, size_t *arg_count);
+					     smb_rpc_command_argument *args, size_t *arg_count);
 smb_rpc_decode_result smb_rpc_decode_packet_get_invocation_id(char *input, size_t inputlen,
 							      uint32_t *invocation_id);
 smb_rpc_decode_result smb_rpc_decode_response_complete(char *input, size_t inputlen,

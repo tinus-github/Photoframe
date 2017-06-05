@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <assert.h>
 
-static smb_rpc_command_argument staticArguments[SMB_RPC_COMMAND_MAX_ARGUMENTS];
 
 struct smb_rpc_command {
 	uint32_t invocation_id;
@@ -297,7 +296,7 @@ smb_rpc_decode_result smb_rpc_decode_response_complete(char *input, size_t input
 smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,
 					     char **command, size_t *command_length,
 					     uint32_t *invocation_id,
-					     smb_rpc_command_argument **args, size_t *arg_count)
+					     smb_rpc_command_argument *args, size_t *arg_count)
 {
 	size_t used_bytes = 0;
 	if (inputlen < 17) {
@@ -336,8 +335,8 @@ smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,
 				if ((inputlen - used_bytes) < 8) {
 					return smb_rpc_decode_result_tooshort;
 				}
-				staticArguments[argument_counter].type = smb_rpc_command_argument_type_int;
-				staticArguments[argument_counter].value.int_value = currentArgument->value.int_value;
+				args[argument_counter].type = smb_rpc_command_argument_type_int;
+				args[argument_counter].value.int_value = currentArgument->value.int_value;
 				used_bytes += 8;
 				break;
 			case SMB_RPC_VALUE_TYPE_STRING:
@@ -350,9 +349,9 @@ smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,
 					return smb_rpc_decode_result_tooshort;
 				}
 				
-				staticArguments[argument_counter].type = smb_rpc_command_argument_type_string;
-				staticArguments[argument_counter].value.string_value.length = currentArgument->value.string_length;
-				staticArguments[argument_counter].value.string_value.string = currentArgument->string;
+				args[argument_counter].type = smb_rpc_command_argument_type_string;
+				args[argument_counter].value.string_value.length = currentArgument->value.string_length;
+				args[argument_counter].value.string_value.string = currentArgument->string;
 				used_bytes += string_length;
 				break;
 			default:
@@ -368,7 +367,6 @@ smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,
 		return smb_rpc_decode_result_invalid;
 	}
 	
-	*args = &staticArguments[0];
 	return smb_rpc_decode_result_ok;
 }
 

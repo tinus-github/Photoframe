@@ -134,6 +134,7 @@ smb_rpc_command_definition smb_rpc_arguments_dclose = {
 
 #else
 
+extern smb_rpc_command_definition smb_rpc_arguments_connect;
 extern smb_rpc_command_definition smb_rpc_arguments_setauth;
 extern smb_rpc_command_definition smb_rpc_arguments_fopen;
 extern smb_rpc_command_definition smb_rpc_arguments_fread;

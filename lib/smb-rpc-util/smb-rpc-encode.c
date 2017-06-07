@@ -136,7 +136,7 @@ size_t smb_rpc_encode_packet(char *output, size_t output_length,
 	return cursor;
 }
 
-smb_rpc_decode_result smb_rpc_decode_packet(char *input, size_t buflen, size_t *used_bytes, char **contents, size_t *contents_length )
+smb_rpc_decode_result smb_rpc_decode_packet(char *input, size_t buflen, size_t *used_bytes, const char **contents, size_t *contents_length )
 {
 	struct smb_rpc_packet *packet = (struct smb_rpc_packet *)input;
 	*contents_length = (size_t)packet->length;
@@ -172,7 +172,7 @@ smb_rpc_decode_result smb_rpc_decode_packet_get_invocation_id(char *input, size_
 	return smb_rpc_decode_result_ok;
 }
 
-static smb_rpc_decode_result smb_rpc_decode_response(char *input, size_t inputlen,
+static smb_rpc_decode_result smb_rpc_decode_response(const char *input, size_t inputlen,
 						     uint32_t *invocation_id,
 						     smb_rpc_command_argument *args, size_t *arg_count)
 {
@@ -233,7 +233,7 @@ static smb_rpc_decode_result smb_rpc_decode_response(char *input, size_t inputle
 }
 
 static smb_rpc_decode_result smb_rpc_check_response_va(smb_rpc_command_argument *args, size_t arg_count,
-						       smb_rpc_command_argument_type *template)
+						       const smb_rpc_command_argument_type *template)
 {
 	size_t counter = 0;
 	
@@ -267,10 +267,10 @@ static smb_rpc_decode_result smb_rpc_check_response_va(smb_rpc_command_argument 
 	return smb_rpc_decode_result_ok;
 }
 
-smb_rpc_decode_result smb_rpc_decode_response_complete(char *input, size_t inputlen,
+smb_rpc_decode_result smb_rpc_decode_response_complete(const char *input, size_t inputlen,
 						       uint32_t wanted_invocation_id,
 						       smb_rpc_command_argument *args,
-						       smb_rpc_command_argument_type *template)
+						       const smb_rpc_command_argument_type *template)
 {
 	size_t arg_count;
 	uint32_t received_invocation_id;
@@ -392,18 +392,14 @@ static void args_add_int(smb_rpc_command_argument *arglist, int *offset, int val
 }
 
 
-size_t encode_command_packet(char *packetbuf, size_t packetbufSize,
+size_t smb_rpc_vencode_command_packet(char *packetbuf, size_t packetbufSize,
 			     uint32_t invocationId,
 			     const smb_rpc_command_definition *commandDefinition,
-			     ...)
+			     va_list ap)
 {
 	smb_rpc_command_argument cmd_args[SMB_RPC_COMMAND_MAXARGS];
-
+	
 	int argCounter = 0;
-	
-	va_list ap;
-	
-	va_start(ap, commandDefinition);
 	size_t counter = 0;
 	
 	args_add_string(cmd_args, &argCounter, commandDefinition->command);
@@ -423,9 +419,24 @@ size_t encode_command_packet(char *packetbuf, size_t packetbufSize,
 		counter++;
 	}
 	
-	va_end(ap);
-	
 	return smb_rpc_encode_packet(packetbuf, packetbufSize,
 				     invocationId,
 				     cmd_args, argCounter);
+}
+size_t smb_rpc_encode_command_packet(char *packetbuf, size_t packetbufSize,
+			     uint32_t invocationId,
+			     const smb_rpc_command_definition *commandDefinition,
+			     ...)
+{
+	va_list ap;
+	
+	va_start(ap, commandDefinition);
+
+	size_t ret = smb_rpc_vencode_command_packet(packetbuf, packetbufSize,
+					    invocationId,
+					    commandDefinition, ap);
+	
+	va_end(ap);
+	
+	return ret;
 }

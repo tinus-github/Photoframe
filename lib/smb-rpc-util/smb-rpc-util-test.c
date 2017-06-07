@@ -113,7 +113,7 @@ void do_auth(int commandFd, int responseFd, const char *iniFilename)
 	ini_gets("auth", "username", "", usernamebuf, 1024, iniFilename);
 	ini_gets("auth", "password", "", passwdbuf, 1024, iniFilename);
 	
-	packetSize = encode_command_packet(packetbuf, packetbufSize,
+	packetSize = smb_rpc_encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
 					   &smb_rpc_arguments_setauth,
 					   "", 		//specific server
@@ -148,7 +148,7 @@ int do_fopen(int commandFd, int responseFd, char *url)
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 	
-	packetSize = encode_command_packet(packetbuf, packetbufSize,
+	packetSize = smb_rpc_encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
 					   &smb_rpc_arguments_fopen,
 					   url);
@@ -187,7 +187,7 @@ ssize_t do_read(int commandFd, int responseFd, int smb_fd, char *buf, size_t buf
 	smb_rpc_command_argument cmd_args[3];
 	uint32_t invocationId = get_invocationId();
 	
-	packetSize = encode_command_packet(packetbuf, packetbufSize,
+	packetSize = smb_rpc_encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
 					   &smb_rpc_arguments_fread,
 					   smb_fd,
@@ -228,7 +228,7 @@ int do_fclose(int commandFd, int responseFd, int smbfd)
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 
-	packetSize = encode_command_packet(packetbuf, packetbufSize,
+	packetSize = smb_rpc_encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
 					   &smb_rpc_arguments_fclose,
 					   smbfd);
@@ -268,7 +268,7 @@ int do_dopen(int commandFd, int responseFd, char *url)
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 	
-	packetSize = encode_command_packet(packetbuf, packetbufSize,
+	packetSize = smb_rpc_encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
 					   &smb_rpc_arguments_dopen,
 					   url);
@@ -308,7 +308,7 @@ int do_dread(int commandFd, int responseFd, int smbfd, smb_rpc_dirent_type *entr
 	smb_rpc_command_argument cmd_args[3];
 	uint32_t invocationId = get_invocationId();
 	
-	packetSize = encode_command_packet(packetbuf, packetbufSize,
+	packetSize = smb_rpc_encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
 					   &smb_rpc_arguments_dread,
 					   smbfd);
@@ -347,7 +347,7 @@ int do_dclose(int commandFd, int responseFd, int smbfd)
 	smb_rpc_command_argument cmd_args[2];
 	uint32_t invocationId = get_invocationId();
 
-	packetSize = encode_command_packet(packetbuf, packetbufSize,
+	packetSize = smb_rpc_encode_command_packet(packetbuf, packetbufSize,
 					   invocationId,
 					   &smb_rpc_arguments_dclose,
 					   smbfd);

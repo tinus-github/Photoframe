@@ -49,7 +49,6 @@
 		0D1806131E4D2C6200449219 /* qdbmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D1805FD1E4D2BC800449219 /* qdbmp.c */; };
 		0D1806141E4D2CA300449219 /* qdbmp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D1805FE1E4D2BC800449219 /* qdbmp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0D2A8EB91E9D3A77004A3B01 /* libqrencode.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D9C655B1E9D0713000222BB /* libqrencode.3.dylib */; };
-		0D2D196B1EB370660049A16E /* smb-rpc-encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D19691EB370660049A16E /* smb-rpc-encode.c */; };
 		0D2D196C1EB370660049A16E /* smb-rpc-encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D19691EB370660049A16E /* smb-rpc-encode.c */; };
 		0D2D197D1EB4B53D0049A16E /* smb-rpc-auth.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D196D1EB4B3810049A16E /* smb-rpc-auth.c */; };
 		0D2D197E1EB4B5410049A16E /* smb-rpc-encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D19691EB370660049A16E /* smb-rpc-encode.c */; };
@@ -62,6 +61,7 @@
 		0D3B098C1E5E20F700C4E97E /* gl-stream-rewindable.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */; };
 		0D4767BC1EB92ABD004CF39B /* smb-rpc-encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D19691EB370660049A16E /* smb-rpc-encode.c */; };
 		0D4767BF1EB92AD7004CF39B /* smb-rpc-util-test.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D4767BD1EB92AD7004CF39B /* smb-rpc-util-test.c */; };
+		0D5F02BB1EE57D5D00BB20B4 /* gl-smb-util-connection.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D5F02B91EE57D5D00BB20B4 /* gl-smb-util-connection.c */; };
 		0D74EEDC1E4DF09600A4CE92 /* libqdbmp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D18060F1E4D2C5500449219 /* libqdbmp.dylib */; };
 		0D74EEDF1E4DF15C00A4CE92 /* loadimage-jpg.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */; };
 		0D74EEE01E4DF17B00A4CE92 /* loadimage-jpg.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D74EEDD1E4DF15C00A4CE92 /* loadimage-jpg.c */; };
@@ -503,6 +503,8 @@
 		0D4767BD1EB92AD7004CF39B /* smb-rpc-util-test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "smb-rpc-util-test.c"; sourceTree = "<group>"; };
 		0D4767BE1EB92AD7004CF39B /* smb-rpc-util-test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "smb-rpc-util-test.h"; sourceTree = "<group>"; };
 		0D5721981EB2B508007A1073 /* comm.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = comm.rtf; sourceTree = "<group>"; };
+		0D5F02B91EE57D5D00BB20B4 /* gl-smb-util-connection.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-smb-util-connection.c"; sourceTree = "<group>"; };
+		0D5F02BA1EE57D5D00BB20B4 /* gl-smb-util-connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-smb-util-connection.h"; sourceTree = "<group>"; };
 		0D6515341CD8E314007A3C9E /* gl-object.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-object.c"; sourceTree = "<group>"; };
 		0D6515351CD8E314007A3C9E /* gl-object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gl-object.h"; sourceTree = "<group>"; };
 		0D67E7F31DDB5C2400A2B16C /* gl-tile.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "gl-tile.c"; sourceTree = "<group>"; };
@@ -2620,6 +2622,8 @@
 				0D1149EA1EACEBA4007488A9 /* gl-tree-cache-directory-reloading.h */,
 				0D96D9641EA57BC700AE022A /* gl-source-manager.c */,
 				0D96D9651EA57BC700AE022A /* gl-source-manager.h */,
+				0D5F02B91EE57D5D00BB20B4 /* gl-smb-util-connection.c */,
+				0D5F02BA1EE57D5D00BB20B4 /* gl-smb-util-connection.h */,
 			);
 			path = fs;
 			sourceTree = "<group>";
@@ -5063,8 +5067,8 @@
 			children = (
 				0D5721971EB2B4DF007A1073 /* Doc */,
 				0D41B2401ED45DC400F81C79 /* smb-rpc-client.h */,
-				0D2D19691EB370660049A16E /* smb-rpc-encode.c */,
 				0D2D196A1EB370660049A16E /* smb-rpc-encode.h */,
+				0D2D19691EB370660049A16E /* smb-rpc-encode.c */,
 				0D2D196D1EB4B3810049A16E /* smb-rpc-auth.c */,
 				0D2D196E1EB4B3810049A16E /* smb-rpc-auth.h */,
 				0D2D19711EB4B3AC0049A16E /* smb-rpc-auth-int.h */,
@@ -5430,6 +5434,7 @@
 				0D13C2181E47E55C00FB9F43 /* gl-value-animation-easing.c in Sources */,
 				0D9C65651E9D2112000222BB /* gl-qrcode-image.c in Sources */,
 				0D13C2191E47E55C00FB9F43 /* gl-image.c in Sources */,
+				0D5F02BB1EE57D5D00BB20B4 /* gl-smb-util-connection.c in Sources */,
 				0DC36DC61E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.c in Sources */,
 				0D96D9671EA57BC700AE022A /* gl-source-manager.c in Sources */,
 				0DE7864F1E8AC4920051D3B5 /* gl-sequence.c in Sources */,
@@ -5515,7 +5520,6 @@
 				0DAFDA591E477E3900C5100E /* gl-slide-image.c in Sources */,
 				0DAFDA5A1E477E3900C5100E /* gl-slide.c in Sources */,
 				0DE7863F1E7C31830051D3B5 /* gl-directory-file.c in Sources */,
-				0D2D196B1EB370660049A16E /* smb-rpc-encode.c in Sources */,
 				0DE7863B1E79E6AF0051D3B5 /* gl-directory.c in Sources */,
 				0D74EEE31E4DF34A00A4CE92 /* loadimage-png.c in Sources */,
 				0D893B7E1E47A9E6000DD5BF /* common-driver.c in Sources */,

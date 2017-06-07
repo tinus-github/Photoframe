@@ -29,6 +29,7 @@
 #include "slideshow/gl-slideshow-images.h"
 #include "config/gl-configuration.h"
 #include "../lib/linmath/linmath.h"
+#include "fs/gl-smb-util-connection.h"
 
 #ifndef __APPLE__
 #include "arc4random.h"
@@ -103,6 +104,8 @@ void slideshow_init()
 		global_stage->f->show_message(global_stage, "Configuration section for main slideshow not found", 1);
 		return;
 	}
+	
+	gl_smb_util_connection *s = gl_smb_util_connection_get_global_connection();
 	
 	slideshow->f->set_configuration(slideshow, cf_section);
 	

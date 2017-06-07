@@ -54,6 +54,7 @@
 #include "qrcode/gl-qrcode-data.h"
 #include "qrcode/gl-qrcode-image.h"
 #include "config/gl-configuration.h"
+#include "fs/gl-smb-util-connection.h"
 
 #ifdef __APPLE__
 #include "macosx/GLWindow-C.h"
@@ -112,6 +113,7 @@ void gl_objects_setup()
 	gl_config_value_setup();
 	gl_qrcode_data_setup();
 	gl_qrcode_image_setup();
+	gl_smb_util_connection_setup();
 }
 
 GLuint driver_load_program ( const GLchar *vertShaderSrc, const GLchar *fragShaderSrc )

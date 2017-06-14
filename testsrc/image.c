@@ -86,6 +86,65 @@ int main(int argc, char *argv[])
 #endif
 }
 
+static int smb_util_connection_load_config(gl_smb_util_connection *obj)
+{
+#define SECTIONNAMELENGTH 13
+	gl_configuration *config = gl_configuration_get_global_configuration();
+	
+	assert(config);
+	
+	uint32_t counter = 1;
+	char sectionName[SECTIONNAMELENGTH]; // 999 servers should be enough for anyone
+	do {
+		int l = snprintf(sectionName, SECTIONNAMELENGTH, "SmbServer%i", counter);
+		if (l >= SECTIONNAMELENGTH) {
+			return -1; // Shouldn't happen
+		}
+		
+		gl_config_section *config_section = config->f->get_section(config, sectionName);
+		
+		if (!config_section) {
+			return 0;
+		}
+		
+		gl_config_value *val = config_section->f->get_value(config_section, "username");
+		if (!val) {
+			fprintf(stderr, "Config error: No username in SmbServer section %i\n", counter);
+			return 0;
+		}
+		const char *username = val->f->get_value_string(val);
+		if (!username) {
+			fprintf(stderr, "Config error: Username is not a string in SmbServer section %i\n", counter);
+			return 0;
+		}
+		val = config_section->f->get_value(config_section, "password");
+		if (!val) {
+			fprintf(stderr, "Config error: No password in SmbServer section %i\n", counter);
+			return 0;
+		}
+		const char *password = val->f->get_value_string(val);
+		if (!username) {
+			fprintf(stderr, "Config error: Password is not a string in SmbServer section %i\n", counter);
+			return 0;
+		}
+		
+		const char *server = "";
+		val = config_section->f->get_value(config_section, "server");
+		if (val) {
+			server = val->f->get_value_string(val);
+			if (!server) {
+				fprintf(stderr, "Config error: Server is not a string in SmbServer section %i\n", counter);
+				return 0;
+			}
+		}
+		
+		obj->f->authenticate(obj, server, "workgroup", username, password);
+		counter++;
+	} while(counter < 999);
+	
+	return 0;
+}
+
 void slideshow_init()
 {
 	gl_stage *global_stage = gl_stage_get_global_stage();
@@ -106,6 +165,7 @@ void slideshow_init()
 	}
 	
 	gl_smb_util_connection *s = gl_smb_util_connection_get_global_connection();
+	smb_util_connection_load_config(s);
 	
 	slideshow->f->set_configuration(slideshow, cf_section);
 	

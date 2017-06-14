@@ -23,7 +23,19 @@ static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util
 					smb_rpc_command_argument *args,
 					const smb_rpc_command_definition *commandDefinition,
 					...);
-static int load_config(gl_smb_util_connection *obj);
+static void gl_smb_util_connection_authenticate(gl_smb_util_connection *obj, const char *server, const char *workgroup, const char *username, const char *password);
+
+static int do_auth(gl_smb_util_connection *obj,
+		   const char *server,
+		   const char *workgroup,
+		   const char *username,
+		   const char *password);
+static void append_authentication(gl_smb_util_connection *obj,
+				  const char *server,
+				  const char *workgroup,
+				  const char *username,
+				  const char *password);
+static int rerun_auth(gl_smb_util_connection *obj);
 static void gl_smb_util_connection_free(gl_object *obj_obj);
 
 static int check_packet_buffer_size(gl_smb_util_connection *obj, size_t requiredSpace);
@@ -32,7 +44,7 @@ static int read_packet(gl_smb_util_connection *obj, size_t *packetSize);
 
 static struct gl_smb_util_connection_funcs gl_smb_util_connection_funcs_global = {
 	.run_command_sync = &gl_smb_util_connection_run_command_sync,
-	.load_config = &load_config,
+	.authenticate = &gl_smb_util_connection_authenticate,
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
@@ -113,6 +125,17 @@ static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util
 	return smb_rpc_decode_result_ok;
 }
 
+static void gl_smb_util_connection_authenticate(gl_smb_util_connection *obj, const char *server, const char *workgroup, const char *username, const char *password)
+{
+	assert(server);
+	assert(workgroup);
+	assert(username);
+	assert(password);
+	
+	append_authentication(obj, server, workgroup, username, password);
+	do_auth(obj, server, workgroup, username, password);
+}
+
 static int do_connect(gl_smb_util_connection *obj)
 {
 	const char *responsePacket;
@@ -133,6 +156,7 @@ static int do_connect(gl_smb_util_connection *obj)
 
 static int do_auth(gl_smb_util_connection *obj,
 		   const char *server,
+		   const char *workgroup,
 		   const char *username,
 		   const char *password)
 {
@@ -143,7 +167,7 @@ static int do_auth(gl_smb_util_connection *obj,
 	run_ret = obj->f->run_command_sync(obj, &responsePacket, &responsePacketSize,
 					   args, &smb_rpc_arguments_setauth,
 					   server,
-					   "workgroup",
+					   workgroup,
 					   username,
 					   password);
 	
@@ -151,68 +175,6 @@ static int do_auth(gl_smb_util_connection *obj,
 		return 0;
 	}
 	return run_ret;
-}
-
-static int load_config(gl_smb_util_connection *obj)
-{
-#define SECTIONNAMELENGTH 13
-	gl_configuration *config = gl_configuration_get_global_configuration();
-	
-	assert(config);
-	
-	uint32_t counter = 1;
-	char sectionName[SECTIONNAMELENGTH]; // 999 servers should be enough for anyone
-	do {
-		int l = snprintf(sectionName, SECTIONNAMELENGTH, "SmbServer%i", counter);
-		if (l >= SECTIONNAMELENGTH) {
-			return -1; // Shouldn't happen
-		}
-		
-		gl_config_section *config_section = config->f->get_section(config, sectionName);
-		
-		if (!config_section) {
-			return 0;
-		}
-		
-		gl_config_value *val = config_section->f->get_value(config_section, "username");
-		if (!val) {
-			fprintf(stderr, "Config error: No username in SmbServer section %i\n", counter);
-			return 0;
-		}
-		const char *username = val->f->get_value_string(val);
-		if (!username) {
-			fprintf(stderr, "Config error: Username is not a string in SmbServer section %i\n", counter);
-			return 0;
-		}
-		val = config_section->f->get_value(config_section, "password");
-		if (!val) {
-			fprintf(stderr, "Config error: No password in SmbServer section %i\n", counter);
-			return 0;
-		}
-		const char *password = val->f->get_value_string(val);
-		if (!username) {
-			fprintf(stderr, "Config error: Password is not a string in SmbServer section %i\n", counter);
-			return 0;
-		}
-		
-		const char *server = "";
-		val = config_section->f->get_value(config_section, "server");
-		if (val) {
-			server = val->f->get_value_string(val);
-			if (!server) {
-				fprintf(stderr, "Config error: Server is not a string in SmbServer section %i\n", counter);
-				return 0;
-			}
-		}
-		
-		int res = do_auth(obj, server, username, password);
-		if (res) {
-			return res;
-		}
-		counter++;
-	} while(counter < 999);
-	
-	return 0;
 }
 
 static int check_packet_buffer_size(gl_smb_util_connection *obj, size_t requiredSpace)
@@ -325,6 +287,64 @@ static int read_packet(gl_smb_util_connection *obj, size_t *packetSize)
 	} while (1);
 }
 
+static void update_last_authentication(gl_smb_util_connection *obj)
+{
+	if (!obj->data.authentication) {
+		return;
+	}
+	if (!obj->data.last_authentication) {
+		obj->data.last_authentication = obj->data.authentication;
+	}
+	
+	while (obj->data.last_authentication->next) {
+		obj->data.last_authentication = obj->data.last_authentication->next;
+	}
+}
+
+static void append_authentication(gl_smb_util_connection *obj,
+				  const char *server,
+				  const char *workgroup,
+				  const char *username,
+				  const char *password)
+{
+	assert(server);
+	assert(workgroup);
+	assert(username);
+	assert(password);
+	
+	gl_smb_util_connection_auth *auth_entry = calloc(1, sizeof(gl_smb_util_connection_auth));
+	// TODO out of memory checks?
+	
+	auth_entry->server = strdup(server);
+	auth_entry->workgroup = strdup(workgroup);
+	auth_entry->username = strdup(username);
+	auth_entry->password = strdup(password);
+	
+	update_last_authentication(obj);
+	if (obj->data.last_authentication) {
+		obj->data.last_authentication->next = auth_entry;
+	} else {
+		obj->data.authentication = auth_entry;
+	}
+	obj->data.last_authentication = auth_entry;
+}
+
+static int rerun_auth(gl_smb_util_connection *obj)
+{
+	int ret;
+	gl_smb_util_connection_auth *auth_entry = obj->data.authentication;
+	
+	while (auth_entry) {
+		ret = do_auth(obj, auth_entry->server, auth_entry->workgroup, auth_entry->username, auth_entry->password);
+
+		if (ret != smb_rpc_decode_result_ok) {
+			return ret;
+		}
+		auth_entry = auth_entry->next;
+	}
+	return smb_rpc_decode_result_ok;
+}
+
 static void setup_connection(gl_smb_util_connection *obj)
 {
 	int commandfds[2];
@@ -363,7 +383,7 @@ static void setup_connection(gl_smb_util_connection *obj)
 		fprintf(stderr, "smb-rpc-util: Bad response to connect\n");
 		abort();
 	}
-	obj->f->load_config(obj);
+	rerun_auth(obj);
 }
 
 static void gl_smb_util_connection_free(gl_object *obj_obj)
@@ -372,6 +392,15 @@ static void gl_smb_util_connection_free(gl_object *obj_obj)
 	
 	free(obj->data.packetBuf);
 	obj->data.packetBuf = NULL;
+	
+	if (obj->data.commandFd) {
+		close (obj->data.commandFd);
+		obj->data.commandFd = 0;
+	}
+	if (obj->data.responseFd) {
+		close (obj->data.responseFd);
+		obj->data.responseFd = 0;
+	}
 	
 	gl_object_free_org_global(obj_obj);
 }

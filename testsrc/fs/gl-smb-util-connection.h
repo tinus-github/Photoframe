@@ -15,6 +15,17 @@
 
 #include "infrastructure/gl-object.h"
 
+typedef struct gl_smb_util_connection_auth gl_smb_util_connection_auth;
+
+struct gl_smb_util_connection_auth {
+	const char *server;
+	const char *workgroup;
+	const char *username;
+	const char *password;
+	gl_smb_util_connection_auth *next;
+};
+
+
 typedef struct gl_smb_util_connection gl_smb_util_connection;
 
 typedef struct gl_smb_util_connection_funcs {
@@ -24,7 +35,7 @@ typedef struct gl_smb_util_connection_funcs {
 						   smb_rpc_command_argument *args,
 						   const smb_rpc_command_definition *commandDefinition,
 						   ...);
-	int (*load_config) (gl_smb_util_connection *obj);
+	void (*authenticate) (gl_smb_util_connection *obj, const char *server, const char *workgroup, const char *username, const char *password);
 } gl_smb_util_connection_funcs;
 
 typedef struct gl_smb_util_connection_data {
@@ -37,6 +48,9 @@ typedef struct gl_smb_util_connection_data {
 	
 	char *packetBuf;
 	size_t packetBufSize;
+	
+	gl_smb_util_connection_auth *authentication;
+	gl_smb_util_connection_auth *last_authentication;
 } gl_smb_util_connection_data;
 
 struct gl_smb_util_connection {

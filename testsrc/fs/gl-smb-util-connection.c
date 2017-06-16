@@ -66,11 +66,27 @@ static uint32_t get_invocation_id(gl_smb_util_connection *obj)
 }
 
 static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util_connection *obj,
-					   const char **responsePacket, size_t *responsePacketSize,
+					   const char **responsePacketRet, size_t *responsePacketSizeRet,
 					   smb_rpc_command_argument *args,
 					   const smb_rpc_command_definition *commandDefinition,
 					   ...)
 {
+	const char **responsePacket;
+	const char *responsePacketStore;
+	size_t *responsePacketSize;
+	size_t responsePacketSizeStore;
+	
+	if (responsePacketRet) {
+		responsePacket = responsePacketRet;
+	} else {
+		responsePacket = &responsePacketStore;
+	}
+	if (responsePacketSizeRet) {
+		responsePacketSize = responsePacketSizeRet;
+	} else {
+		responsePacketSize = &responsePacketSizeStore;
+	}
+	
 	va_list ap;
 	
 	uint32_t invocationId = get_invocation_id(obj);

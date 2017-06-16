@@ -49,8 +49,6 @@ static gl_stream_error gl_directory_smb_open(gl_directory *obj_dir)
 	
 	errno = 0;
 
-	const char *responsePacket;
-	size_t responsePacketSize;
 	smb_rpc_command_argument args[3];
 	smb_rpc_decode_result run_ret;
 	
@@ -61,7 +59,7 @@ static gl_stream_error gl_directory_smb_open(gl_directory *obj_dir)
 		return obj_dir->f->return_error(obj_dir, gl_stream_error_unspecified_error);
 	}
 	
-	run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, &responsePacket, &responsePacketSize,
+	run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, NULL, NULL,
 							    args, &smb_rpc_arguments_dopen,
 							    urlString);
 	
@@ -103,8 +101,6 @@ static const gl_directory_read_entry *gl_directory_smb_read(gl_directory *obj_di
 	
 	errno = 0;
 	
-	const char *responsePacket;
-	size_t responsePacketSize;
 	smb_rpc_command_argument args[3];
 	smb_rpc_decode_result run_ret;
 	
@@ -113,7 +109,7 @@ static const gl_directory_read_entry *gl_directory_smb_read(gl_directory *obj_di
 		obj->data._current_entry.name = NULL;
 	}
 	
-	run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, &responsePacket, &responsePacketSize,
+	run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, NULL, NULL,
 							    args, &smb_rpc_arguments_dread,
 							    obj->data.dirFd);
 	switch (run_ret) {
@@ -158,12 +154,10 @@ static gl_stream_error gl_directory_smb_close(gl_directory *obj_dir)
 		return obj_dir->f->return_error(obj_dir, gl_stream_error_invalid_operation);
 	}
 	
-	const char *responsePacket;
-	size_t responsePacketSize;
 	smb_rpc_command_argument args[1];
 	smb_rpc_decode_result run_ret;
 	
-	run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, &responsePacket, &responsePacketSize,
+	run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, NULL, NULL,
 							    args, &smb_rpc_arguments_dclose,
 							    obj->data.dirFd);
 	switch (run_ret) {

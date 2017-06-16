@@ -89,6 +89,8 @@ static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util
 	
 	va_list ap;
 	
+	pthread_mutex_lock(&obj->data.syncMutex);
+	
 	uint32_t invocationId = get_invocation_id(obj);
 	
 	va_start(ap, commandDefinition);
@@ -99,6 +101,7 @@ static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util
 	
 	if (check_packet_buffer_size(obj, packetSize)) {
 		// out of memory
+		pthread_mutex_unlock(&obj->data.syncMutex);
 		return smb_rpc_decode_result_invalid;
 	}
 	
@@ -110,12 +113,14 @@ static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util
 	int write_ret = write_packet(obj, packetSize);
 	if (write_ret) {
 		// TODO: socket failed, reopen?
+		pthread_mutex_unlock(&obj->data.syncMutex);
 		return smb_rpc_decode_result_invalid;
 	}
 	size_t packetLength;
 	int read_ret = read_packet(obj, &packetLength);
 	
 	if (read_ret) {
+		pthread_mutex_unlock(&obj->data.syncMutex);
 		return smb_rpc_decode_result_invalid;
 	}
 	
@@ -126,6 +131,7 @@ static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util
 	
 	if (decode_ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Packet decode error\n");
+		pthread_mutex_unlock(&obj->data.syncMutex);
 		return decode_ret;
 	}
 	
@@ -134,6 +140,8 @@ static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util
 						      invocationId,
 						      args,
 						      commandDefinition->definition);
+	pthread_mutex_unlock(&obj->data.syncMutex);
+	
 	if (decode_ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Decode error\n");
 		return decode_ret;
@@ -429,6 +437,13 @@ gl_smb_util_connection *gl_smb_util_connection_init(gl_smb_util_connection *obj)
 	
 	obj->data.packetBuf = calloc(1, INITIAL_PACKET_BUFFER_SIZE);
 	obj->data.packetBufSize = INITIAL_PACKET_BUFFER_SIZE;
+	
+	pthread_mutexattr_t attributes;
+	pthread_mutexattr_init(&attributes);
+	
+	pthread_mutexattr_settype(&attributes, PTHREAD_MUTEX_ERRORCHECK);
+	
+	pthread_mutex_init(&obj->data.syncMutex, &attributes);
 	
 	setup_connection(obj);
 	

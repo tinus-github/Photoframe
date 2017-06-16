@@ -11,6 +11,8 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <pthread.h>
+
 #include "../../lib/smb-rpc-util/smb-rpc-client.h"
 
 #include "infrastructure/gl-object.h"
@@ -51,6 +53,8 @@ typedef struct gl_smb_util_connection_data {
 	
 	gl_smb_util_connection_auth *authentication;
 	gl_smb_util_connection_auth *last_authentication;
+	
+	pthread_mutex_t syncMutex;
 } gl_smb_util_connection_data;
 
 struct gl_smb_util_connection {

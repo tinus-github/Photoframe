@@ -45,6 +45,7 @@
 #include "fs/gl-stream.h"
 #include "fs/gl-stream-file.h"
 #include "fs/gl-stream-rewindable.h"
+#include "fs/gl-stream-smb.h"
 #include "fs/gl-directory.h"
 #include "fs/gl-directory-file.h"
 #include "fs/gl-directory-smb.h"
@@ -102,6 +103,7 @@ void gl_objects_setup()
 	gl_url_setup();
 	gl_stream_setup();
 	gl_stream_file_setup();
+	gl_stream_smb_setup();
 	gl_stream_rewindable_setup();
 	gl_directory_setup();
 	gl_directory_file_setup();

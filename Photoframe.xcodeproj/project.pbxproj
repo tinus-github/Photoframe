@@ -78,6 +78,8 @@
 		0D96D9671EA57BC700AE022A /* gl-source-manager.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D96D9641EA57BC700AE022A /* gl-source-manager.c */; };
 		0D9BCFD91EF420FE00B3F2F6 /* gl-directory-smb.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9BCFD71EF420FE00B3F2F6 /* gl-directory-smb.c */; };
 		0D9BCFDA1EF420FE00B3F2F6 /* gl-directory-smb.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9BCFD71EF420FE00B3F2F6 /* gl-directory-smb.c */; };
+		0D9BCFDD1EF4972E00B3F2F6 /* gl-stream-smb.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9BCFDB1EF4972E00B3F2F6 /* gl-stream-smb.c */; };
+		0D9BCFDE1EF4972E00B3F2F6 /* gl-stream-smb.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9BCFDB1EF4972E00B3F2F6 /* gl-stream-smb.c */; };
 		0D9C65601E9D07C8000222BB /* gl-qrcode-data.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9C655E1E9D07C8000222BB /* gl-qrcode-data.c */; };
 		0D9C65611E9D07C8000222BB /* gl-qrcode-data.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9C655E1E9D07C8000222BB /* gl-qrcode-data.c */; };
 		0D9C65641E9D2112000222BB /* gl-qrcode-image.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9C65621E9D2112000222BB /* gl-qrcode-image.c */; };
@@ -557,6 +559,8 @@
 		0D96D9651EA57BC700AE022A /* gl-source-manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-source-manager.h"; sourceTree = "<group>"; };
 		0D9BCFD71EF420FE00B3F2F6 /* gl-directory-smb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-directory-smb.c"; sourceTree = "<group>"; };
 		0D9BCFD81EF420FE00B3F2F6 /* gl-directory-smb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-directory-smb.h"; sourceTree = "<group>"; };
+		0D9BCFDB1EF4972E00B3F2F6 /* gl-stream-smb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-stream-smb.c"; sourceTree = "<group>"; };
+		0D9BCFDC1EF4972E00B3F2F6 /* gl-stream-smb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-stream-smb.h"; sourceTree = "<group>"; };
 		0D9C65591E9D0478000222BB /* libqrencode.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqrencode.3.dylib; path = lib/libqrencode/build/.libs/libqrencode.3.dylib; sourceTree = "<group>"; };
 		0D9C655B1E9D0713000222BB /* libqrencode.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqrencode.3.dylib; path = lib/libqrencode/install/lib/libqrencode.3.dylib; sourceTree = "<group>"; };
 		0D9C655E1E9D07C8000222BB /* gl-qrcode-data.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-qrcode-data.c"; sourceTree = "<group>"; };
@@ -2612,6 +2616,8 @@
 				0DE5123D1E537F7700CB0DA1 /* gl-url.h */,
 				0DD9DCAC1E573EAE00CB187D /* gl-stream-file.c */,
 				0DD9DCAD1E573EAE00CB187D /* gl-stream-file.h */,
+				0D9BCFDB1EF4972E00B3F2F6 /* gl-stream-smb.c */,
+				0D9BCFDC1EF4972E00B3F2F6 /* gl-stream-smb.h */,
 				0D3B09891E5E20F700C4E97E /* gl-stream-rewindable.c */,
 				0D3B098A1E5E20F700C4E97E /* gl-stream-rewindable.h */,
 				0DE786391E79E6AF0051D3B5 /* gl-directory.c */,
@@ -5073,8 +5079,8 @@
 			children = (
 				0D5721971EB2B4DF007A1073 /* Doc */,
 				0D41B2401ED45DC400F81C79 /* smb-rpc-client.h */,
-				0D2D196A1EB370660049A16E /* smb-rpc-encode.h */,
 				0D2D19691EB370660049A16E /* smb-rpc-encode.c */,
+				0D2D196A1EB370660049A16E /* smb-rpc-encode.h */,
 				0D2D196E1EB4B3810049A16E /* smb-rpc-auth.h */,
 				0D2D19711EB4B3AC0049A16E /* smb-rpc-auth-int.h */,
 				0D2D197F1EB4C0EA0049A16E /* smb-rpc-smb.c */,
@@ -5450,6 +5456,7 @@
 				0D13C21B1E47E55C00FB9F43 /* common-driver.c in Sources */,
 				0D9C65611E9D07C8000222BB /* gl-qrcode-data.c in Sources */,
 				0DE786441E8081F30051D3B5 /* gl-tree-cache-directory.c in Sources */,
+				0D9BCFDE1EF4972E00B3F2F6 /* gl-stream-smb.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5545,6 +5552,7 @@
 				0DE77D841E74B41C0051D3B5 /* gl-configuration.c in Sources */,
 				0DAFDA571E477E2B00C5100E /* loadexif.c in Sources */,
 				0DE77D8C1E74B83F0051D3B5 /* gl-config-value.c in Sources */,
+				0D9BCFDD1EF4972E00B3F2F6 /* gl-stream-smb.c in Sources */,
 				0DAFDA581E477E2B00C5100E /* gl-bitmap-scaler.c in Sources */,
 				0D9C65601E9D07C8000222BB /* gl-qrcode-data.c in Sources */,
 				0DE75B2D1E6F21CA0051D3B5 /* README.md in Sources */,

@@ -8,6 +8,7 @@
 
 #include "fs/gl-stream.h"
 #include "fs/gl-stream-file.h"
+#include "fs/gl-stream-smb.h"
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -158,6 +159,8 @@ gl_stream *gl_stream_new_for_url(const char *URLstring)
 	
 	if (!strcmp(url->data.scheme, "file")) {
 		ret = (gl_stream *)gl_stream_file_new();
+	} else if (!strcmp(url->data.scheme, "smb")) {
+		ret = (gl_stream *)gl_stream_smb_new();
 	}
 	
 	if (!ret) {

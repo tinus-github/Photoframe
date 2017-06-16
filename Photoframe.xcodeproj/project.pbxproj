@@ -76,6 +76,8 @@
 		0D96D9631EA4FC8500AE022A /* gl-slideshow-images.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D96D9601EA4FC8500AE022A /* gl-slideshow-images.c */; };
 		0D96D9661EA57BC700AE022A /* gl-source-manager.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D96D9641EA57BC700AE022A /* gl-source-manager.c */; };
 		0D96D9671EA57BC700AE022A /* gl-source-manager.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D96D9641EA57BC700AE022A /* gl-source-manager.c */; };
+		0D9BCFD91EF420FE00B3F2F6 /* gl-directory-smb.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9BCFD71EF420FE00B3F2F6 /* gl-directory-smb.c */; };
+		0D9BCFDA1EF420FE00B3F2F6 /* gl-directory-smb.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9BCFD71EF420FE00B3F2F6 /* gl-directory-smb.c */; };
 		0D9C65601E9D07C8000222BB /* gl-qrcode-data.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9C655E1E9D07C8000222BB /* gl-qrcode-data.c */; };
 		0D9C65611E9D07C8000222BB /* gl-qrcode-data.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9C655E1E9D07C8000222BB /* gl-qrcode-data.c */; };
 		0D9C65641E9D2112000222BB /* gl-qrcode-image.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D9C65621E9D2112000222BB /* gl-qrcode-image.c */; };
@@ -553,6 +555,8 @@
 		0D96D9611EA4FC8500AE022A /* gl-slideshow-images.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-slideshow-images.h"; sourceTree = "<group>"; };
 		0D96D9641EA57BC700AE022A /* gl-source-manager.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-source-manager.c"; sourceTree = "<group>"; };
 		0D96D9651EA57BC700AE022A /* gl-source-manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-source-manager.h"; sourceTree = "<group>"; };
+		0D9BCFD71EF420FE00B3F2F6 /* gl-directory-smb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-directory-smb.c"; sourceTree = "<group>"; };
+		0D9BCFD81EF420FE00B3F2F6 /* gl-directory-smb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gl-directory-smb.h"; sourceTree = "<group>"; };
 		0D9C65591E9D0478000222BB /* libqrencode.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqrencode.3.dylib; path = lib/libqrencode/build/.libs/libqrencode.3.dylib; sourceTree = "<group>"; };
 		0D9C655B1E9D0713000222BB /* libqrencode.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqrencode.3.dylib; path = lib/libqrencode/install/lib/libqrencode.3.dylib; sourceTree = "<group>"; };
 		0D9C655E1E9D07C8000222BB /* gl-qrcode-data.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gl-qrcode-data.c"; sourceTree = "<group>"; };
@@ -2614,6 +2618,8 @@
 				0DE7863A1E79E6AF0051D3B5 /* gl-directory.h */,
 				0DE7863D1E7C31830051D3B5 /* gl-directory-file.c */,
 				0DE7863E1E7C31830051D3B5 /* gl-directory-file.h */,
+				0D9BCFD71EF420FE00B3F2F6 /* gl-directory-smb.c */,
+				0D9BCFD81EF420FE00B3F2F6 /* gl-directory-smb.h */,
 				0DE786411E8081F30051D3B5 /* gl-tree-cache-directory.c */,
 				0DE786421E8081F30051D3B5 /* gl-tree-cache-directory.h */,
 				0DC36DC31E8C4FA0003DF7D2 /* gl-tree-cache-directory-ordered.c */,
@@ -5069,7 +5075,6 @@
 				0D41B2401ED45DC400F81C79 /* smb-rpc-client.h */,
 				0D2D196A1EB370660049A16E /* smb-rpc-encode.h */,
 				0D2D19691EB370660049A16E /* smb-rpc-encode.c */,
-				0D2D196D1EB4B3810049A16E /* smb-rpc-auth.c */,
 				0D2D196E1EB4B3810049A16E /* smb-rpc-auth.h */,
 				0D2D19711EB4B3AC0049A16E /* smb-rpc-auth-int.h */,
 				0D2D197F1EB4C0EA0049A16E /* smb-rpc-smb.c */,
@@ -5082,6 +5087,7 @@
 				0D8D74CB1EB7C8810015445E /* main.h */,
 				0D4767BD1EB92AD7004CF39B /* smb-rpc-util-test.c */,
 				0D4767BE1EB92AD7004CF39B /* smb-rpc-util-test.h */,
+				0D2D196D1EB4B3810049A16E /* smb-rpc-auth.c */,
 				0DBC5D301ED9A1880059825F /* Makefile */,
 			);
 			path = "smb-rpc-util";
@@ -5385,6 +5391,7 @@
 			files = (
 				0D13C1FC1E47E55C00FB9F43 /* loadimage.c in Sources */,
 				0D13C1FD1E47E55C00FB9F43 /* loadexif.c in Sources */,
+				0D9BCFDA1EF420FE00B3F2F6 /* gl-directory-smb.c in Sources */,
 				0D13C1FE1E47E55C00FB9F43 /* gl-bitmap-scaler.c in Sources */,
 				0DE5123B1E537B7400CB0DA1 /* gl-stream.c in Sources */,
 				0DC36DCA1E8E7981003DF7D2 /* gl-sequence-random.c in Sources */,
@@ -5533,6 +5540,7 @@
 				0DC36DC91E8E7981003DF7D2 /* gl-sequence-random.c in Sources */,
 				0DAFDA601E477E3900C5100E /* gl-workqueue-job.c in Sources */,
 				0DAFDA561E477E2B00C5100E /* loadimage.c in Sources */,
+				0D9BCFD91EF420FE00B3F2F6 /* gl-directory-smb.c in Sources */,
 				0DC0F05F1EAE95E00029FB1E /* gl-timer.c in Sources */,
 				0DE77D841E74B41C0051D3B5 /* gl-configuration.c in Sources */,
 				0DAFDA571E477E2B00C5100E /* loadexif.c in Sources */,

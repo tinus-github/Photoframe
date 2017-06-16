@@ -47,6 +47,7 @@
 #include "fs/gl-stream-rewindable.h"
 #include "fs/gl-directory.h"
 #include "fs/gl-directory-file.h"
+#include "fs/gl-directory-smb.h"
 #include "fs/gl-tree-cache-directory.h"
 #include "fs/gl-tree-cache-directory-ordered.h"
 #include "fs/gl-tree-cache-directory-reloading.h"
@@ -104,6 +105,7 @@ void gl_objects_setup()
 	gl_stream_rewindable_setup();
 	gl_directory_setup();
 	gl_directory_file_setup();
+	gl_directory_smb_setup();
 	gl_tree_cache_directory_setup();
 	gl_tree_cache_directory_ordered_setup();
 	gl_tree_cache_directory_reloading_setup();

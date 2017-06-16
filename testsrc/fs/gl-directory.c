@@ -8,6 +8,7 @@
 
 #include "fs/gl-directory.h"
 #include "fs/gl-directory-file.h"
+#include "fs/gl-directory-smb.h"
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
@@ -253,6 +254,8 @@ gl_directory *gl_directory_new_for_url(const char *URLstring)
 	
 	if (!strcmp(url->data.scheme, "file")) {
 		ret = (gl_directory *)gl_directory_file_new();
+	} else if (!strcmp(url->data.scheme, "smb")) {
+		ret = (gl_directory *)gl_directory_smb_new();
 	}
 	
 	if (!ret) {

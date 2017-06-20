@@ -576,7 +576,7 @@ static void setup_connection(gl_smb_util_connection *obj)
 		close(commandfds[1]);
 		close(responsefds[0]);
 		
-		execl("./smb-rpc-util", "smb-rpc-util", 0);
+		execl("./smb-rpc-util", "smb-rpc-util", (char *)NULL);
 		// TODO: Check if this is even possible in the parent process
 		perror("Exec smb-rpc-util");
 		abort();

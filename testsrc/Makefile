@@ -65,6 +65,7 @@ ARC4RANDOM_CFLAGS = -I../lib/mt-arc4random
 ARC4RANDOM_LIBS = ../lib/mt-arc4random/arc4random.a
 QRENCODE_LIBS = ../lib/libqrencode/install/lib/libqrencode.a
 QRENCODE_CFLAGS = `PKG_CONFIG_PATH=../lib/libqrencode/install/lib/pkgconfig pkg-config --cflags libqrencode`
+SMBUTIL_LIBS = ../lib/smb-rpc-util/smb-rpc-encode.o
 
 CFLAGS = $(CFLAGS_ALL) \
 	$(OPTFLAGS) \
@@ -87,7 +88,8 @@ image: $(OBJECTS) $(LIBEXIF_A)
 	-L/opt/vc/src/hello_pi/libs/vgfont -ldl -lm -ljpeg \
 	-Wl,--no-whole-archive $(LIBEXIF_A) -rdynamic $(OPTFLAGS) \
 	$(LIBFREETYPE_LIBS) $(LIBHARFBUZZ_LIBS) $(PTHREAD_LIBS) \
-	$(LIBPNG_LIBS) $(QDBMP_LIBS) $(MININI_LIBS) $(ARC4RANDOM_LIBS) $(QRENCODE_LIBS)
+	$(LIBPNG_LIBS) $(QDBMP_LIBS) $(MININI_LIBS) $(ARC4RANDOM_LIBS) $(QRENCODE_LIBS) \
+	$(SMBUTIL_LIBS)
 
 image.o: image.c images/loadimage.h gl-texture.h gl-shape.h gl-container.h
 	cc -g  -DUSE_OPENGL -DUSE_EGL -DIS_RPI -DSTANDALONE \

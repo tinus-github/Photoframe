@@ -59,9 +59,9 @@ static gl_stream_error gl_directory_smb_open(gl_directory *obj_dir)
 		return obj_dir->f->return_error(obj_dir, gl_stream_error_unspecified_error);
 	}
 	
-	run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, NULL, NULL,
-							    args, &smb_rpc_arguments_dopen,
-							    urlString);
+	run_ret = obj->data.connection->f->run_command_async(obj->data.connection, NULL, NULL,
+							     args, &smb_rpc_arguments_dopen,
+							     urlString);
 	
 	free (urlString);
 	
@@ -70,12 +70,15 @@ static gl_stream_error gl_directory_smb_open(gl_directory *obj_dir)
 		case smb_rpc_decode_result_nomatch:
 		case smb_rpc_decode_result_tooshort:
 		default:
+			obj->data.connection->f->run_command_async_completed(obj->data.connection);
 			return obj_dir->f->return_error(obj_dir, gl_stream_error_unspecified_error);
 		case smb_rpc_decode_result_ok:
 			break;
 	}
+	int ret0 = args[0].value.int_value;
+	obj->data.connection->f->run_command_async_completed(obj->data.connection);
 	
-	switch (args[0].value.int_value) {
+	switch (ret0) {
 		case EMFILE:
 		case ENFILE:
 		case ENOMEM:
@@ -109,14 +112,15 @@ static const gl_directory_read_entry *gl_directory_smb_read(gl_directory *obj_di
 		obj->data._current_entry.name = NULL;
 	}
 	
-	run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, NULL, NULL,
-							    args, &smb_rpc_arguments_dread,
-							    obj->data.dirFd);
+	run_ret = obj->data.connection->f->run_command_async(obj->data.connection, NULL, NULL,
+							     args, &smb_rpc_arguments_dread,
+							     obj->data.dirFd);
 	switch (run_ret) {
 		case smb_rpc_decode_result_invalid:
 		case smb_rpc_decode_result_nomatch:
 		case smb_rpc_decode_result_tooshort:
 		default:
+			obj->data.connection->f->run_command_async_completed(obj->data.connection);
 			obj_dir->f->return_error(obj_dir, gl_stream_error_unspecified_error);
 			return NULL;
 		case smb_rpc_decode_result_ok:
@@ -127,9 +131,11 @@ static const gl_directory_read_entry *gl_directory_smb_read(gl_directory *obj_di
 		case 0:
 			break;
 		case EBADF:
+			obj->data.connection->f->run_command_async_completed(obj->data.connection);
 			obj_dir->f->return_error(obj_dir, gl_stream_error_invalid_operation);
 			return NULL;
 		default:
+			obj->data.connection->f->run_command_async_completed(obj->data.connection);
 			obj_dir->f->return_error(obj_dir, gl_stream_error_unspecified_error);
 			return NULL;
 	}
@@ -137,11 +143,13 @@ static const gl_directory_read_entry *gl_directory_smb_read(gl_directory *obj_di
 	obj->data._current_entry.type = args[1].value.int_value;
 	
 	if (obj->data._current_entry.type == gl_directory_entry_type_none) {
+		obj->data.connection->f->run_command_async_completed(obj->data.connection);
 		obj_dir->f->return_error(obj_dir, gl_stream_error_end_of_file);
 		return NULL;
 	}
 	
 	obj->data._current_entry.name = strndup(args[2].value.string_value.string, args[2].value.string_value.length);
+	obj->data.connection->f->run_command_async_completed(obj->data.connection);
 	
 	return &obj->data._current_entry;
 }
@@ -157,20 +165,22 @@ static gl_stream_error gl_directory_smb_close(gl_directory *obj_dir)
 	smb_rpc_command_argument args[1];
 	smb_rpc_decode_result run_ret;
 	
-	run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, NULL, NULL,
-							    args, &smb_rpc_arguments_dclose,
-							    obj->data.dirFd);
+	run_ret = obj->data.connection->f->run_command_async(obj->data.connection, NULL, NULL,
+							     args, &smb_rpc_arguments_dclose,
+							     obj->data.dirFd);
 	switch (run_ret) {
 		case smb_rpc_decode_result_invalid:
 		case smb_rpc_decode_result_nomatch:
 		case smb_rpc_decode_result_tooshort:
 		default:
+			obj->data.connection->f->run_command_async_completed(obj->data.connection);
 			return obj_dir->f->return_error(obj_dir, gl_stream_error_unspecified_error);
 		case smb_rpc_decode_result_ok:
 			break;
 	}
 
 	obj->data.dirFd = -1;
+	obj->data.connection->f->run_command_async_completed(obj->data.connection);
 	
 	return gl_stream_error_ok;
 }
@@ -197,6 +207,7 @@ gl_directory_smb *gl_directory_smb_init(gl_directory_smb *obj)
 	obj->f = &gl_directory_smb_funcs_global;
 	
 	obj->data.connection = gl_smb_util_connection_get_global_connection();
+	obj->data.connection->f->set_async(obj->data.connection);
 	
 	obj->data.dirFd = -1;
 	

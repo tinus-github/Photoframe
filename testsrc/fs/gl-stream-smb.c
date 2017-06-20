@@ -45,9 +45,9 @@ static gl_stream_error gl_stream_smb_open(gl_stream *obj_stream)
 	smb_rpc_command_argument args[3];
 	smb_rpc_decode_result run_ret;
 	
-	run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, NULL, NULL,
-							    args, &smb_rpc_arguments_fopen,
-							    urlString);
+	run_ret = obj->data.connection->f->run_command_async(obj->data.connection, NULL, NULL,
+							     args, &smb_rpc_arguments_fopen,
+							     urlString);
 	
 	free (urlString);
 	
@@ -56,12 +56,16 @@ static gl_stream_error gl_stream_smb_open(gl_stream *obj_stream)
 		case smb_rpc_decode_result_nomatch:
 		case smb_rpc_decode_result_tooshort:
 		default:
+			obj->data.connection->f->run_command_async_completed(obj->data.connection);
 			return obj_stream->f->return_error(obj_stream, gl_stream_error_unspecified_error);
 		case smb_rpc_decode_result_ok:
 			break;
 	}
+	int arg0 = args[0].value.int_value;
+	int arg1 = args[1].value.int_value;
+	obj->data.connection->f->run_command_async_completed(obj->data.connection);
 	
-	switch (args[0].value.int_value) {
+	switch (arg0) {
 		case ENOMEM:
 		default:
 			return obj_stream->f->return_error(obj_stream, gl_stream_error_unspecified_error);
@@ -77,7 +81,7 @@ static gl_stream_error gl_stream_smb_open(gl_stream *obj_stream)
 			break;
 	}
 	
-	obj->data.fd = args[1].value.int_value;
+	obj->data.fd = arg1;
 	
 	return gl_stream_error_ok;
 }
@@ -93,20 +97,23 @@ static gl_stream_error gl_stream_smb_close(gl_stream *obj_stream)
 	smb_rpc_command_argument args[3];
 	smb_rpc_decode_result run_ret;
 	
-	run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, NULL, NULL,
-							    args, &smb_rpc_arguments_fclose,
-							    obj->data.fd);
+	run_ret = obj->data.connection->f->run_command_async(obj->data.connection, NULL, NULL,
+							     args, &smb_rpc_arguments_fclose,
+							     obj->data.fd);
 	switch (run_ret) {
 		case smb_rpc_decode_result_invalid:
 		case smb_rpc_decode_result_nomatch:
 		case smb_rpc_decode_result_tooshort:
 		default:
+			obj->data.connection->f->run_command_async_completed(obj->data.connection);
 			return obj_stream->f->return_error(obj_stream, gl_stream_error_unspecified_error);
 		case smb_rpc_decode_result_ok:
 			break;
 	}
+	int arg1 = args[1].value.int_value;
+	obj->data.connection->f->run_command_async_completed(obj->data.connection);
 
-	switch (args[1].value.int_value) {
+	switch (arg1) {
 		case 0:
 			break;
 		case EBADF:
@@ -141,26 +148,30 @@ static size_t gl_stream_smb_read (gl_stream *obj_stream, void *buffer, size_t si
 	smb_rpc_decode_result run_ret;
 	
 	while (cursor < size) {
-		run_ret = obj->data.connection->f->run_command_sync(obj->data.connection, NULL, NULL,
+		run_ret = obj->data.connection->f->run_command_async(obj->data.connection, NULL, NULL,
 								    args, &smb_rpc_arguments_fread,
 								    obj->data.fd, size - cursor);
+
 		switch (run_ret) {
 			case smb_rpc_decode_result_invalid:
 			case smb_rpc_decode_result_nomatch:
 			case smb_rpc_decode_result_tooshort:
 			default:
+				obj->data.connection->f->run_command_async_completed(obj->data.connection);
 				return obj_stream->f->return_error(obj_stream, gl_stream_error_unspecified_error);
 			case smb_rpc_decode_result_ok:
 				break;
 		}
+		int arg0 = args[0].value.int_value;
 		
 		num_read = args[1].value.string_value.length;
 		if (num_read > 0) {
 			memcpy(buffer + cursor, args[1].value.string_value.string, num_read);
 		}
+		obj->data.connection->f->run_command_async_completed(obj->data.connection);
 		
 		if (num_read < (size - cursor)) {
-			switch (args[0].value.int_value) {
+			switch (arg0) {
 				case EAGAIN:
 					break;
 				case 0:
@@ -212,6 +223,7 @@ gl_stream_smb *gl_stream_smb_init(gl_stream_smb *obj)
 	
 	obj->data.fd = -1;
 	obj->data.connection = gl_smb_util_connection_get_global_connection();
+	obj->data.connection->f->set_async(obj->data.connection);
 	
 	return obj;
 }

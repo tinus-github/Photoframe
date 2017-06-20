@@ -23,7 +23,13 @@ static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util
 					smb_rpc_command_argument *args,
 					const smb_rpc_command_definition *commandDefinition,
 					...);
+static smb_rpc_decode_result gl_smb_util_connection_run_command_async(gl_smb_util_connection *obj,
+								      const char **responsePacket, size_t *responsePacketSize,
+								      smb_rpc_command_argument *args,
+								      const smb_rpc_command_definition *commandDefinition,
+								      ...);
 static void gl_smb_util_connection_authenticate(gl_smb_util_connection *obj, const char *server, const char *workgroup, const char *username, const char *password);
+static void async_run_packet_completed(gl_smb_util_connection *obj);
 
 static int do_auth(gl_smb_util_connection *obj,
 		   const char *server,
@@ -38,13 +44,21 @@ static void append_authentication(gl_smb_util_connection *obj,
 static int rerun_auth(gl_smb_util_connection *obj);
 static void gl_smb_util_connection_free(gl_object *obj_obj);
 
-static int check_packet_buffer_size(gl_smb_util_connection *obj, size_t requiredSpace);
+static int check_output_packet_buffer_size(gl_smb_util_connection *obj, size_t requiredSpace);
+static int check_input_packet_buffer_size(gl_smb_util_connection *obj, size_t requiredSpace);
 static int write_packet(gl_smb_util_connection *obj, size_t packetSize);
-static int read_packet(gl_smb_util_connection *obj, size_t *packetSize);
+static int read_packet(gl_smb_util_connection *obj);
+static void discard_read_packet(gl_smb_util_connection *obj);
+static gl_smb_util_connection_request *gl_smb_util_connection_request_new(gl_smb_util_connection *obj);
+static void gl_smb_util_connection_set_async(gl_smb_util_connection *obj);
+static void gl_smb_util_connection_request_free(gl_smb_util_connection *obj, gl_smb_util_connection_request *request);
 
 static struct gl_smb_util_connection_funcs gl_smb_util_connection_funcs_global = {
 	.run_command_sync = &gl_smb_util_connection_run_command_sync,
+	.run_command_async = &gl_smb_util_connection_run_command_async,
+	.run_command_async_completed = &async_run_packet_completed,
 	.authenticate = &gl_smb_util_connection_authenticate,
+	.set_async = &gl_smb_util_connection_set_async,
 };
 
 static void (*gl_object_free_org_global) (gl_object *obj);
@@ -62,19 +76,64 @@ void gl_smb_util_connection_setup()
 
 static uint32_t get_invocation_id(gl_smb_util_connection *obj)
 {
-	return obj->data.currentInvocationId++;
+	pthread_mutex_lock(&obj->data.syncMutex);
+	uint32_t ret = obj->data.currentInvocationId++;
+	pthread_mutex_unlock(&obj->data.syncMutex);
+	return ret;
 }
 
-static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util_connection *obj,
+// Call with syncMutex locked
+// Returns with it locked again
+static smb_rpc_decode_result async_run_packet(gl_smb_util_connection *obj, uint32_t invocationId, size_t packetSize)
+{
+	gl_smb_util_connection_request *request = gl_smb_util_connection_request_new(obj);
+	request->next = obj->data.requestQueue;
+	request->invocationId = invocationId;
+	obj->data.requestQueue = request;
+	
+	write_packet(obj, packetSize);
+	pthread_cond_wait(&request->responseReady, &obj->data.syncMutex);
+	
+	gl_smb_util_connection_request_free(obj, request);
+	return smb_rpc_decode_result_ok;
+}
+
+static void async_run_packet_completed(gl_smb_util_connection *obj)
+{
+	pthread_cond_signal(&obj->data.readingCompleteCondition);
+}
+
+// Call with syncMutex locked
+// Returns with it locked again
+static smb_rpc_decode_result sync_run_packet(gl_smb_util_connection *obj, uint32_t invocationId, size_t packetSize)
+{
+	int write_ret = write_packet(obj, packetSize);
+	if (write_ret) {
+		// TODO: socket failed, reopen?
+		return smb_rpc_decode_result_invalid;
+	}
+	
+	int read_ret = read_packet(obj);
+	
+	if (read_ret) {
+		return smb_rpc_decode_result_invalid;
+	}
+	
+	return smb_rpc_decode_result_ok;
+}
+
+static smb_rpc_decode_result gl_smb_util_connection_run_command_v(gl_smb_util_connection *obj,
 					   const char **responsePacketRet, size_t *responsePacketSizeRet,
 					   smb_rpc_command_argument *args,
 					   const smb_rpc_command_definition *commandDefinition,
-					   ...)
+					   va_list ap)
 {
 	const char **responsePacket;
 	const char *responsePacketStore;
 	size_t *responsePacketSize;
 	size_t responsePacketSizeStore;
+	
+	va_list apc;
 	
 	if (responsePacketRet) {
 		responsePacket = responsePacketRet;
@@ -87,47 +146,42 @@ static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util
 		responsePacketSize = &responsePacketSizeStore;
 	}
 	
-	va_list ap;
-	
+	uint32_t invocationId = get_invocation_id(obj);
 	pthread_mutex_lock(&obj->data.syncMutex);
 	
-	uint32_t invocationId = get_invocation_id(obj);
+	va_copy(apc, ap);
 	
-	va_start(ap, commandDefinition);
 	size_t packetSize = smb_rpc_vencode_command_packet(NULL, 0,
 						   invocationId,
-						   commandDefinition, ap);
-	va_end(ap);
+						   commandDefinition, apc);
 	
-	if (check_packet_buffer_size(obj, packetSize)) {
+	va_end(apc);
+	
+	if (check_output_packet_buffer_size(obj, packetSize)) {
 		// out of memory
 		pthread_mutex_unlock(&obj->data.syncMutex);
 		return smb_rpc_decode_result_invalid;
 	}
 	
-	va_start(ap, commandDefinition);
-	packetSize = smb_rpc_vencode_command_packet(obj->data.packetBuf, obj->data.packetBufSize,
+	packetSize = smb_rpc_vencode_command_packet(obj->data.oPacketBuf, obj->data.oPacketBufSize,
 					    invocationId,
 					    commandDefinition,
 					    ap);
-	int write_ret = write_packet(obj, packetSize);
-	if (write_ret) {
-		// TODO: socket failed, reopen?
-		pthread_mutex_unlock(&obj->data.syncMutex);
-		return smb_rpc_decode_result_invalid;
-	}
-	size_t packetLength;
-	int read_ret = read_packet(obj, &packetLength);
 	
-	if (read_ret) {
-		pthread_mutex_unlock(&obj->data.syncMutex);
-		return smb_rpc_decode_result_invalid;
+	smb_rpc_decode_result run_ret;
+	if (!obj->data._isAsync) {
+		run_ret = sync_run_packet(obj, invocationId, packetSize);
+	} else {
+		run_ret = async_run_packet(obj, invocationId, packetSize);
 	}
-	
+	if (run_ret != smb_rpc_decode_result_ok) {
+		pthread_mutex_unlock(&obj->data.syncMutex);
+		return run_ret;
+	}
 	smb_rpc_decode_result decode_ret;
 	size_t used_bytes;
 	
-	decode_ret = smb_rpc_decode_packet(obj->data.packetBuf, packetLength, &used_bytes, responsePacket, responsePacketSize);
+	decode_ret = smb_rpc_decode_packet(obj->data.iPacketBuf, obj->data.iPacketSize, &used_bytes, responsePacket, responsePacketSize);
 	
 	if (decode_ret != smb_rpc_decode_result_ok) {
 		fprintf(stderr, "Packet decode error\n");
@@ -147,6 +201,107 @@ static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util
 		return decode_ret;
 	}
 	return smb_rpc_decode_result_ok;
+}
+
+static smb_rpc_decode_result gl_smb_util_connection_run_command_sync(gl_smb_util_connection *obj,
+					   const char **responsePacketRet, size_t *responsePacketSizeRet,
+					   smb_rpc_command_argument *args,
+					   const smb_rpc_command_definition *commandDefinition,
+					   ...)
+{
+	assert (!obj->data._isAsync);
+	va_list ap;
+	va_start(ap, commandDefinition);
+	
+	smb_rpc_decode_result ret = gl_smb_util_connection_run_command_v(obj, responsePacketRet, responsePacketSizeRet, args, commandDefinition, ap);
+	discard_read_packet(obj);
+	
+	va_end(ap);
+	return ret;
+}
+
+static smb_rpc_decode_result gl_smb_util_connection_run_command_async(gl_smb_util_connection *obj,
+								     const char **responsePacketRet, size_t *responsePacketSizeRet,
+								     smb_rpc_command_argument *args,
+								     const smb_rpc_command_definition *commandDefinition,
+								     ...)
+{
+	assert (obj->data._isAsync);
+	va_list ap;
+	va_start(ap, commandDefinition);
+	
+	return gl_smb_util_connection_run_command_v(obj, responsePacketRet, responsePacketSizeRet, args, commandDefinition, ap);
+	
+	va_end(ap);
+}
+
+static void *gl_smb_util_connection_async_thread_runloop(void *obj_void)
+{
+	gl_smb_util_connection *obj = (gl_smb_util_connection *)obj_void;
+	
+	do {
+		int read_ret = read_packet(obj);
+		if (read_ret) {
+			fprintf(stderr, "Packet read error\n");
+			break;
+		}
+		
+		// There is a packet ready in obj
+		uint32_t invocationId;
+		smb_rpc_decode_result decode_ret = smb_rpc_decode_packet_get_invocation_id(obj->data.iPacketBuf, obj->data.iPacketSize, &invocationId);
+		if (decode_ret != smb_rpc_decode_result_ok) {
+			fprintf(stderr, "Error getting invocation id\n");
+			break;
+		}
+		pthread_mutex_lock(&obj->data.syncMutex);
+		gl_smb_util_connection_request *currentRequest = obj->data.requestQueue;
+		gl_smb_util_connection_request *lastRequest = NULL;
+		while (currentRequest) {
+			if (currentRequest->invocationId == invocationId) {
+				if (!lastRequest) {
+					obj->data.requestQueue = currentRequest->next;
+				} else {
+					lastRequest->next = currentRequest->next;
+				}
+				currentRequest->next = NULL;
+				break;
+			}
+			lastRequest = currentRequest;
+			currentRequest = currentRequest->next;
+		}
+		// if the request was found it is out of the queue now
+		if (!currentRequest) {
+			fprintf(stderr, "Invocation Id not found\n");
+			abort();
+		}
+		pthread_cond_signal(&currentRequest->responseReady);
+		
+		pthread_cond_wait(&obj->data.readingCompleteCondition, &obj->data.syncMutex);
+		
+		discard_read_packet(obj);
+		pthread_mutex_unlock(&obj->data.syncMutex);
+	} while (1);
+	
+	return NULL;
+}
+
+static void spawn_async_thread(gl_smb_util_connection *obj)
+{
+	assert (obj->data.commandFd);
+	assert (obj->data.responseFd);
+	assert (!obj->data._isAsync);
+	assert (!obj->data.iPacketBufContents);
+	
+	obj->data._isAsync = 1;
+
+	pthread_attr_t attr;
+	pthread_t thread_id;
+	
+	assert (!pthread_attr_init(&attr));
+	
+	assert (!pthread_create(&thread_id, &attr, &gl_smb_util_connection_async_thread_runloop, obj));
+	
+	assert (!pthread_attr_destroy(&attr));
 }
 
 static void gl_smb_util_connection_authenticate(gl_smb_util_connection *obj, const char *server, const char *workgroup, const char *username, const char *password)
@@ -201,9 +356,9 @@ static int do_auth(gl_smb_util_connection *obj,
 	return run_ret;
 }
 
-static int check_packet_buffer_size(gl_smb_util_connection *obj, size_t requiredSpace)
+static int check_packet_buffer_size(gl_smb_util_connection *obj, char **packetBufp, size_t *bufSize, size_t requiredSpace)
 {
-	if (requiredSpace <= obj->data.packetBufSize) {
+	if (requiredSpace <= *bufSize) {
 		return 0;
 	}
 	if (requiredSpace > MAX_PACKET_BUFFER_SIZE) {
@@ -211,23 +366,33 @@ static int check_packet_buffer_size(gl_smb_util_connection *obj, size_t required
 	}
 	
 	do {
-		obj->data.packetBufSize = obj->data.packetBufSize * 2;
-	} while (obj->data.packetBufSize <= requiredSpace);
+		*bufSize = (*bufSize) * 2;
+	} while (*bufSize <= requiredSpace);
 	// It's not an exact limit
 	
-	char *newPacketBuf = realloc(obj->data.packetBuf, obj->data.packetBufSize);
+	char *newPacketBuf = realloc(*packetBufp, *bufSize);
 	if (!newPacketBuf) {
 		return -1;
 	}
 	
-	obj->data.packetBuf = newPacketBuf;
+	*packetBufp = newPacketBuf;
 	return 0;
+}
+
+static int check_input_packet_buffer_size(gl_smb_util_connection *obj, size_t requiredSpace)
+{
+	return check_packet_buffer_size(obj, &obj->data.iPacketBuf, &obj->data.iPacketBufSize, requiredSpace);
+}
+
+static int check_output_packet_buffer_size(gl_smb_util_connection *obj, size_t requiredSpace)
+{
+	return check_packet_buffer_size(obj, &obj->data.oPacketBuf, &obj->data.oPacketBufSize, requiredSpace);
 }
 
 static int write_packet(gl_smb_util_connection *obj, size_t packetSize)
 {
 	ssize_t num_written;
-	char *buf = obj->data.packetBuf;
+	char *buf = obj->data.oPacketBuf;
 	while (packetSize) {
 		errno = 0;
 		num_written = write(obj->data.commandFd, buf, packetSize);
@@ -249,56 +414,76 @@ static int write_packet(gl_smb_util_connection *obj, size_t packetSize)
 	return 0;
 }
 
-static int read_packet(gl_smb_util_connection *obj, size_t *packetSize)
+static void discard_read_packet(gl_smb_util_connection *obj)
 {
-	size_t to_read;
-	size_t have_read = 0;
-	char *packetBufCursor = obj->data.packetBuf;
+	if ((obj->data.iPacketSize) && (obj->data.iPacketSize < obj->data.iPacketBufContents)) {
+		memmove(obj->data.iPacketBuf, obj->data.iPacketBuf + obj->data.iPacketSize, obj->data.iPacketBufContents - obj->data.iPacketSize);
+	}
+	obj->data.iPacketBufContents -= obj->data.iPacketSize;
+	obj->data.iPacketSize = 0;
+}
+
+static int read_packet(gl_smb_util_connection *obj)
+{
+	char *packetBufCursor = obj->data.iPacketBuf + obj->data.iPacketBufContents;
 	ssize_t numread = 0;
+	int tried_initial_contents = 0;
+	
+	if (!obj->data.iPacketBufContents) {
+		tried_initial_contents = 1;
+	}
 	
 	do {
-		to_read = obj->data.packetBufSize - have_read;
-		if (!to_read) {
-			int enlarge_ret = check_packet_buffer_size(obj, have_read * 2);
-			if (enlarge_ret) {
-				// The utility sent a unexpectantly large packet
-				// or we're out of memory
-				return enlarge_ret;
+		if (tried_initial_contents) {
+			size_t to_read;
+			to_read = obj->data.iPacketBufSize - obj->data.iPacketBufContents;
+			if (!to_read) {
+				int enlarge_ret = check_input_packet_buffer_size(obj, obj->data.iPacketBufContents * 2);
+				if (enlarge_ret) {
+					// The utility sent a unexpectantly large packet
+					// or we're out of memory
+					return enlarge_ret;
+				}
+				to_read = obj->data.iPacketBufSize - obj->data.iPacketBufContents;
+				packetBufCursor = obj->data.iPacketBuf + obj->data.iPacketBufContents;
+				assert (to_read);
 			}
-			to_read = obj->data.packetBufSize - have_read;
-			assert (to_read);
-		}
-		errno = 0;
-		numread = read(obj->data.responseFd, packetBufCursor, to_read);
-		if (numread < 0) {
-			switch (errno) {
-				case EAGAIN:
-				case EINTR:
-				case 0:
-					continue; //try again
-				default:
-					perror("read_packet");
-					return -1;
+			errno = 0;
+			numread = read(obj->data.responseFd, packetBufCursor, to_read);
+			if (numread < 0) {
+				switch (errno) {
+					case EAGAIN:
+					case EINTR:
+					case 0:
+						continue; //try again
+					default:
+						perror("read_packet");
+						return -1;
+				}
 			}
+			if (!numread) {
+				fprintf(stderr, "EOF\n");
+				return -1;
+			}
+			packetBufCursor += numread;
+			obj->data.iPacketBufContents += numread;
+		} else {
+			tried_initial_contents = 1;
 		}
-		if (!numread) {
-			fprintf(stderr, "EOF\n");
-			return -1;
-		}
-		have_read += numread;
 		const char *packetContents;
 		size_t packetContentsLength;
-		smb_rpc_decode_result parseRet = smb_rpc_decode_packet(obj->data.packetBuf, have_read,
-								       packetSize,
+		smb_rpc_decode_result parseRet = smb_rpc_decode_packet(obj->data.iPacketBuf, obj->data.iPacketBufContents,
+								       &obj->data.iPacketSize,
 								       &packetContents, &packetContentsLength);
 		switch (parseRet) {
 			case smb_rpc_decode_result_ok:
-				if (*packetSize != have_read) {
+				if ((!obj->data._isAsync) && (obj->data.iPacketSize != obj->data.iPacketBufContents)) {
 					fprintf(stderr, "Extra data after packet.\n");
 				}
 				return 0;
 			case smb_rpc_decode_result_invalid:
 				fprintf(stderr, "Invalid packet.\n");
+				abort();
 				return -1;
 			case smb_rpc_decode_result_tooshort:
 				break;
@@ -306,8 +491,6 @@ static int read_packet(gl_smb_util_connection *obj, size_t *packetSize)
 				// This isn't supposed to happen
 				abort();
 		}
-		
-		packetBufCursor += numread;
 	} while (1);
 }
 
@@ -410,12 +593,43 @@ static void setup_connection(gl_smb_util_connection *obj)
 	rerun_auth(obj);
 }
 
+static void gl_smb_util_connection_set_async(gl_smb_util_connection *obj)
+{
+	if (obj->data._isAsync) {
+		return;
+	}
+	
+	assert (!obj->data.iPacketBufContents);
+	
+	spawn_async_thread(obj);
+}
+
+static gl_smb_util_connection_request *gl_smb_util_connection_request_new(gl_smb_util_connection *obj)
+{
+	gl_smb_util_connection_request *ret = calloc(1, sizeof(gl_smb_util_connection_request));
+	if (!ret) {
+		return ret;
+	}
+	
+	pthread_cond_init(&ret->responseReady, NULL);
+	
+	return ret;
+}
+
+static void gl_smb_util_connection_request_free(gl_smb_util_connection *obj, gl_smb_util_connection_request *request)
+{
+	pthread_cond_destroy(&request->responseReady);
+	free (request);
+}
+
 static void gl_smb_util_connection_free(gl_object *obj_obj)
 {
 	gl_smb_util_connection *obj = (gl_smb_util_connection *)obj_obj;
 	
-	free(obj->data.packetBuf);
-	obj->data.packetBuf = NULL;
+	free(obj->data.iPacketBuf);
+	obj->data.iPacketBuf = NULL;
+	free(obj->data.oPacketBuf);
+	obj->data.oPacketBuf = NULL;
 	
 	if (obj->data.commandFd) {
 		close (obj->data.commandFd);
@@ -426,6 +640,9 @@ static void gl_smb_util_connection_free(gl_object *obj_obj)
 		obj->data.responseFd = 0;
 	}
 	
+	pthread_mutex_destroy(&obj->data.syncMutex);
+	pthread_cond_destroy(&obj->data.readingCompleteCondition);
+	
 	gl_object_free_org_global(obj_obj);
 }
 
@@ -435,8 +652,10 @@ gl_smb_util_connection *gl_smb_util_connection_init(gl_smb_util_connection *obj)
 	
 	obj->f = &gl_smb_util_connection_funcs_global;
 	
-	obj->data.packetBuf = calloc(1, INITIAL_PACKET_BUFFER_SIZE);
-	obj->data.packetBufSize = INITIAL_PACKET_BUFFER_SIZE;
+	obj->data.iPacketBuf = calloc(1, INITIAL_PACKET_BUFFER_SIZE);
+	obj->data.iPacketBufSize = INITIAL_PACKET_BUFFER_SIZE;
+	obj->data.oPacketBuf = calloc(1, INITIAL_PACKET_BUFFER_SIZE);
+	obj->data.oPacketBufSize = INITIAL_PACKET_BUFFER_SIZE;
 	
 	pthread_mutexattr_t attributes;
 	pthread_mutexattr_init(&attributes);
@@ -444,6 +663,9 @@ gl_smb_util_connection *gl_smb_util_connection_init(gl_smb_util_connection *obj)
 	pthread_mutexattr_settype(&attributes, PTHREAD_MUTEX_ERRORCHECK);
 	
 	pthread_mutex_init(&obj->data.syncMutex, &attributes);
+	pthread_mutexattr_destroy(&attributes);
+	
+	pthread_cond_init(&obj->data.readingCompleteCondition, NULL);
 	
 	setup_connection(obj);
 	

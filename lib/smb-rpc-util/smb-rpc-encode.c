@@ -136,7 +136,7 @@ size_t smb_rpc_encode_packet(char *output, size_t output_length,
 	return cursor;
 }
 
-smb_rpc_decode_result smb_rpc_decode_packet(char *input, size_t buflen, size_t *used_bytes, const char **contents, size_t *contents_length )
+smb_rpc_decode_result smb_rpc_decode_packet(const char *input, size_t buflen, size_t *used_bytes, const char **contents, size_t *contents_length )
 {
 	struct smb_rpc_packet *packet = (struct smb_rpc_packet *)input;
 	*contents_length = (size_t)packet->length;
@@ -159,14 +159,23 @@ smb_rpc_decode_result smb_rpc_decode_packet(char *input, size_t buflen, size_t *
 	return smb_rpc_decode_result_ok;
 }
 
-smb_rpc_decode_result smb_rpc_decode_packet_get_invocation_id(char *input, size_t inputlen,
+smb_rpc_decode_result smb_rpc_decode_packet_get_invocation_id(const char *input, size_t inputlen,
 							      uint32_t *invocation_id)
 {
-	if (inputlen < 8) {
+	const char *packetContents;
+	size_t contentsLength;
+	size_t used_bytes;
+	
+	smb_rpc_decode_result r = smb_rpc_decode_packet(input, inputlen, &used_bytes, &packetContents, &contentsLength);
+	if (r != smb_rpc_decode_result_ok) {
+		return r;
+	}
+	
+	if (contentsLength < 8) {
 		return smb_rpc_decode_result_tooshort;
 	}
 	
-	struct smb_rpc_response *response = (struct smb_rpc_response *)input;
+	const struct smb_rpc_response *response = (const struct smb_rpc_response *)packetContents;
 	*invocation_id = response->invocation_id;
 	
 	return smb_rpc_decode_result_ok;

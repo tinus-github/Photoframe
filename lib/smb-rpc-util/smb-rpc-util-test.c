@@ -53,7 +53,7 @@ void read_packet(int fd, char *buf, size_t buflen, size_t *packetSize)
 	char *packetbufCursor = buf;
 	size_t remaining = buflen;
 	size_t bufUsed = 0;
-	char *packetContents;
+	const char *packetContents;
 	size_t packetContentsLength;
 	ssize_t numread;
 	
@@ -126,7 +126,7 @@ void do_auth(int commandFd, int responseFd, const char *iniFilename)
 	size_t numread;
 	read_packet(responseFd, inbuf, 1024, &numread);
 	size_t packetContentSize;
-	char *packetContents;
+	const char *packetContents;
 	
 	smb_rpc_decode_packet(inbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
@@ -157,7 +157,7 @@ int do_fopen(int commandFd, int responseFd, char *url)
 	size_t numread;
 	read_packet(responseFd, packetbuf, 1024, &numread);
 	size_t packetContentSize;
-	char *packetContents;
+	const char *packetContents;
 	
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
@@ -198,7 +198,7 @@ ssize_t do_read(int commandFd, int responseFd, int smb_fd, char *buf, size_t buf
 	size_t numread;
 	read_packet(responseFd, packetbuf, PACKETSIZE, &numread);
 	size_t packetContentSize;
-	char *packetContents;
+	const char *packetContents;
 
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
@@ -238,7 +238,7 @@ int do_fclose(int commandFd, int responseFd, int smbfd)
 	size_t numread;
 	read_packet(responseFd, packetbuf, 1024, &numread);
 	size_t packetContentSize;
-	char *packetContents;
+	const char *packetContents;
 	
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
@@ -278,7 +278,7 @@ int do_dopen(int commandFd, int responseFd, char *url)
 	size_t numread;
 	read_packet(responseFd, packetbuf, 1024, &numread);
 	size_t packetContentSize;
-	char *packetContents;
+	const char *packetContents;
 	
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
@@ -317,7 +317,7 @@ int do_dread(int commandFd, int responseFd, int smbfd, smb_rpc_dirent_type *entr
 	size_t numread;
 	read_packet(responseFd, packetbuf, 1024, &numread);
 	size_t packetContentSize;
-	char *packetContents;
+	const char *packetContents;
 	
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	
@@ -356,7 +356,7 @@ int do_dclose(int commandFd, int responseFd, int smbfd)
 	size_t numread;
 	read_packet(responseFd, packetbuf, 1024, &numread);
 	size_t packetContentSize;
-	char *packetContents;
+	const char *packetContents;
 	
 	smb_rpc_decode_packet(packetbuf, numread, &packetSize, &packetContents, &packetContentSize);
 	

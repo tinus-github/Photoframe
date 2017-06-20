@@ -14,7 +14,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#define SMB_RPC_DEBUG
+//#define SMB_RPC_DEBUG
 
 struct smb_rpc_smb_data {
 	SMBCCTX *smb_context;

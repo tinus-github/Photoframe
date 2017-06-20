@@ -141,7 +141,7 @@ static void handle_output(appdata *appData)
 
 static int run_commands(appdata *appData) {
 	size_t used_bytes;
-	char *packet_contents;
+	const char *packet_contents;
 	size_t packet_length;
 	smb_rpc_decode_result decode_result;
 	decode_result = smb_rpc_decode_packet(appData->inbuf->buffer, appData->inbuf->contentSize,

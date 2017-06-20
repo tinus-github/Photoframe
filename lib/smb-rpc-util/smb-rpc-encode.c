@@ -302,7 +302,7 @@ smb_rpc_decode_result smb_rpc_decode_response_complete(const char *input, size_t
 	return smb_rpc_check_response_va(args, arg_count, template+counter);
 }
 
-smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,
+smb_rpc_decode_result smb_rpc_decode_command(const char *input, size_t inputlen,
 					     char **command, size_t *command_length,
 					     uint32_t *invocation_id,
 					     smb_rpc_command_argument *args, size_t *arg_count)

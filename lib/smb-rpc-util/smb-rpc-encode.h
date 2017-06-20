@@ -70,7 +70,7 @@ size_t smb_rpc_vencode_command_packet(char *packetbuf, size_t packetbufSize,
 			      const smb_rpc_command_definition *commandDefinition,
 			      va_list ap);
 smb_rpc_decode_result smb_rpc_decode_packet(const char *input, size_t buflen, size_t *used_bytes, const char **contents, size_t *contents_length);
-smb_rpc_decode_result smb_rpc_decode_command(char *input, size_t inputlen,
+smb_rpc_decode_result smb_rpc_decode_command(const char *input, size_t inputlen,
 					     char **command, size_t *command_length,
 					     uint32_t *invocation_id,
 					     smb_rpc_command_argument *args, size_t *arg_count);
